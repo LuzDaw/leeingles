@@ -31,7 +31,7 @@ $email = trim($_POST['email'] ?? '');
         // Generar token
         $user_id = $result['user_id'];
         $token = bin2hex(random_bytes(32));
-        $token_hash = password_hash($token, PASSWORD_DEFAULT);
+        $token_hash = hash('sha256', $token); // Usar SHA256 para consistencia
         $expira_en = date('Y-m-d H:i:s', strtotime('+24 hours'));
 
         // Guardar token
@@ -55,6 +55,7 @@ $email = trim($_POST['email'] ?? '');
     } else {
     echo json_encode(['success' => false, 'error' => $result['error']]);
     }
+} 
 } catch (Exception $e) {
     error_log("Excepción en ajax_register.php: " . $e->getMessage());
        echo json_encode(['success' => false, 'error' => 'Error interno del servidor.']);
