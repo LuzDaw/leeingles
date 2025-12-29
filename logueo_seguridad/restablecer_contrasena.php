@@ -4,7 +4,7 @@ require_once '../db/connection.php';
 require_once 'auth_functions.php'; // Para funciones como hashPassword
 
 $message = '';
-$message_type = ''; // 'success' or 'error'
+$message_type = ''; // 'success' or 'error'  
 $show_form = false;
 $token_valid = false;
 $user_id = null;
@@ -108,28 +108,28 @@ $conn->close();
     <?php endif; ?>
 
     <?php if ($show_form && $token_valid): ?>
-        <form id="reset-password-form" action="logueo_seguridad/restablecer_contrasena.php" method="POST">
-            <input type="hidden" name="token" value="<?php echo htmlspecialchars($token); ?>">
-            <div class="form-group">
-                <label for="new_password">Nueva Contraseña:</label>
-                <div class="password-input-wrapper">
-                    <input type="password" id="new_password" name="new_password" required>
-                    <span id="toggleNewPassword" class="password-toggle-icon">👁️</span>
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="confirm_password">Confirmar Nueva Contraseña:</label>
-                <div class="password-input-wrapper">
-                    <input type="password" id="confirm_password" name="confirm_password" required>
-                    <span id="toggleConfirmPassword" class="password-toggle-icon">👁️</span>
-                </div>
-            </div>
-            <button type="submit" class="btn-submit">Restablecer Contraseña</button>
-        </form>
+    <form id="reset-password-form" action="logueo_seguridad/restablecer_contrasena.php" method="POST">
+    <input type="hidden" name="token" value="<?php echo htmlspecialchars($token); ?>">
+    <div class="form-group">
+    <label for="new_password">Nueva Contraseña:</label>
+    <div class="password-input-wrapper">
+    <input type="password" id="new_password" name="new_password" required style="width: 100%; padding: 8px; border: 2px solid #e0e0e0; border-radius: 6px; font-size: 14px; box-sizing: border-box;">
+    <span id="toggleNewPassword" class="password-toggle-icon" style="cursor: pointer; margin-left: 8px;">👁️</span>
+    </div>
+    </div>
+    <div class="form-group" style="margin-top: 12px;">
+    <label for="confirm_password">Confirmar Nueva Contraseña:</label>
+    <div class="password-input-wrapper">
+    <input type="password" id="confirm_password" name="confirm_password" required style="width: 100%; padding: 8px; border: 2px solid #e0e0e0; border-radius: 6px; font-size: 14px; box-sizing: border-box;">
+    <span id="toggleConfirmPassword" class="password-toggle-icon" style="cursor: pointer; margin-left: 8px;">👁️</span>
+    </div>
+    </div>
+    <button type="submit" class="btn-submit" style="width: 100%; padding: 10px; background: #3B82F6; color: white; border: none; border-radius: 6px; font-size: 16px; font-weight: 600; cursor: pointer; margin-top: 12px;">Restablecer Contraseña</button>
+    </form>
     <?php endif; ?>
-</div>
-
-<script src="password_visibility.js"></script>
+    </div>
+    
+    <script src="logueo_seguridad/password_visibility.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         setupPasswordVisibilityToggle('new_password', 'toggleNewPassword');

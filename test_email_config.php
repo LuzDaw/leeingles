@@ -3,7 +3,7 @@
  * Test Email Configuration
  * 
  * Este script prueba la configuración de PHPMailer y conectividad SMTP
- * Se puede acceder en: http://localhost/traductor/test_email_config.php
+ * Se puede acceder en: http://localhost/test_email_config.php
  */
 
 // Configurar para mostrar errores (solo en desarrollo)

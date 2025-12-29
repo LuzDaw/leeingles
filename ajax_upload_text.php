@@ -70,7 +70,7 @@ try {
                 // Construir URL dinámica basada en el servidor actual
                 $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
                 $host = $_SERVER['HTTP_HOST'];
-                $translate_url = $protocol . '://' . $host . '/traductor/translate.php';
+                $translate_url = $protocol . '://' . $host . '/translate.php';
                 
                 // Llamar a la API de traducción
                 $ch = curl_init();

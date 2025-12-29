@@ -5,42 +5,11 @@
 require_once __DIR__ . '/../email_handler.php';
 
 // Determinar la URL base (se usa para generar links en los emails)
-$base_url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://" . $_SERVER['HTTP_HOST'] . "/traductor";
+$base_url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://" . $_SERVER['HTTP_HOST'];
 
 function enviarEmailConPHPMailer($destinatarioEmail, $destinatarioNombre, $subject, $body) {
-    // Validar parámetros
-    if (empty($destinatarioEmail) || !filter_var($destinatarioEmail, FILTER_VALIDATE_EMAIL)) {
-        return [
-            'success' => false,
-            'error' => 'Email de destinatario inválido: ' . htmlspecialchars($destinatarioEmail)
-        ];
-    }
-
-    if (empty($subject)) {
-        return [
-            'success' => false,
-            'error' => 'Asunto del email no puede estar vacío'
-        ];
-    }
-
-    if (empty($body)) {
-        return [
-            'success' => false,
-            'error' => 'Cuerpo del email no puede estar vacío'
-        ];
-    }
-
-    // Log de inicio
-    error_log("Enviando email a: $destinatarioEmail, Asunto: $subject");
-
     // Llamar directamente a la función sendEmail de email_handler.php
-    $result = sendEmail($destinatarioEmail, $destinatarioNombre, $subject, $body);
-    
-    if (!$result['success']) {
-        error_log("Fallo al enviar email a $destinatarioEmail: " . ($result['error'] ?? 'Error desconocido'));
-    }
-    
-    return $result;
+    return sendEmail($destinatarioEmail, $destinatarioNombre, $subject, $body);
 }
 
 function enviarEmailVerificacion($destinatarioEmail, $destinatarioNombre, $token) {

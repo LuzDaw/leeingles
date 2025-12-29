@@ -30,11 +30,11 @@ function sendEmail($toEmail, $toName, $subject, $body) {
         // Configuración SMTP para leeingles.com con TLS
         $mail->isSMTP();
         $mail->Host = 'leeingles.com';
-        $mail->Port = 587;  // Puerto TLS (alternativa a 465 SSL)
+        $mail->Port = 465;  // Puerto SSL según los datos proporcionados
         $mail->SMTPAuth = true;
         $mail->Username = 'info@leeingles.com';
         $mail->Password = 'Holamundo25__';
-        $mail->SMTPSecure = 'tls';  // Usar TLS en lugar de SSL
+        $mail->SMTPSecure = 'ssl';  // Usar SSL según los datos proporcionados
         $mail->CharSet = 'UTF-8';
         $mail->Timeout = 10;  // Timeout de 10 segundos
 
@@ -53,10 +53,10 @@ function sendEmail($toEmail, $toName, $subject, $body) {
             $log("[SMTP DEBUG] " . $str);
         };
 
-        $log("Configuración SMTP establecida (Host: leeingles.com, Puerto: 587, Método: TLS)");
+        $log("Configuración SMTP establecida (Host: leeingles.com, Puerto: 465, Método: SSL)");
 
         // Configurar remitente y destinatario
-        $mail->setFrom('info@leeingles.com', 'Traductor App');
+        $mail->setFrom('info@leeingles.com', 'Leer Inglés');
         $mail->addAddress($toEmail, $toName);
         
         // Contenido del email
@@ -87,31 +87,7 @@ function sendEmail($toEmail, $toName, $subject, $body) {
         
         return [
             'success' => false, 
-            'error' => 'Error al enviar email: ' . $e->getMessage(),
-            'details' => 'Por favor, verifica la configuración SMTP y la conectividad del servidor.'
+            'error' => 'Error de PHPMailer: ' . $e->getMessage()
         ];
-    }
-}
-
-// Si el script es accedido directamente como proxy HTTP
-if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST') {
-    header('Content-Type: application/json');
-    ob_start();
-    error_reporting(E_ALL);
-    ini_set('display_errors', 0);
-
-    try {
-        if (!isset($_POST['email']) || !isset($_POST['subject']) || !isset($_POST['body'])) {
-            throw new Exception('Parámetros faltantes (email, subject, body requeridos)');
-        }
-        $result = sendEmail($_POST['email'], $_POST['name'] ?? 'Usuario', $_POST['subject'], $_POST['body']);
-        ob_end_clean();
-        echo json_encode($result);
-        exit();
-    } catch (Exception $e) {
-        ob_end_clean();
-        error_log("Error en email_handler.php (acceso directo): " . $e->getMessage());
-        echo json_encode(['success' => false, 'error' => 'Error en el proxy de email: ' . $e->getMessage()]);
-        exit();
     }
 }

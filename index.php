@@ -1112,7 +1112,14 @@ function render_text_clickable($text)
 
       if (resetToken) {
         // Si hay un token de restablecimiento, mostrar el modal de restablecimiento de contraseña
-        window.showResetPasswordModal(resetToken);
+        // Esperar a que modal-functions.js esté completamente cargado
+        setTimeout(() => {
+          if (typeof window.showResetPasswordModal === 'function') {
+            window.showResetPasswordModal(resetToken);
+          } else {
+            console.warn('showResetPasswordModal no está disponible aún');
+          }
+        }, 500);
       } else if (tab === 'texts') {
         tab = 'my-texts';
         loadTabContent(tab);

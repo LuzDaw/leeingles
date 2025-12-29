@@ -203,7 +203,7 @@ if (file_exists('test_email_config.php')) {
     $checks[] = ['Archivo', 'test_email_config.php', 'Existencia', 'OK'];
     echo "<div style='margin: 10px 0; padding: 10px; background-color: #e7f3ff; border-left: 4px solid #2196F3;'>";
     echo "  <strong>Para probar la configuración de email, accede a:</strong><br>";
-    echo "  <a href='test_email_config.php' target='_blank'>http://localhost/traductor/test_email_config.php</a>";
+    echo "  <a href='test_email_config.php' target='_blank'>http://localhost/test_email_config.php</a>";
     echo "</div>";
 } else {
     echo "<div class='check warning'>⚠ Archivo test_email_config.php NO encontrado</div>";

@@ -37,25 +37,41 @@ window.showResetPasswordModal = async function(token) {
 
     try {
         const response = await fetch(`logueo_seguridad/restablecer_contrasena.php?token=${token}`);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
         const htmlContent = await response.text();
         DOMUtils.updateHTML('reset-password-modal-content', htmlContent);
         
         // Ejecutar scripts dentro del contenido cargado (password_visibility.js y el script inline)
-        const scripts = DOMUtils.getElement('reset-password-modal-content').querySelectorAll('script');
-        scripts.forEach(script => {
+        const modalContent = DOMUtils.getElement('reset-password-modal-content');
+        const scripts = modalContent.querySelectorAll('script');
+        
+        console.log(`Encontrados ${scripts.length} scripts para ejecutar`);
+        
+        scripts.forEach((script, index) => {
             const newScript = document.createElement('script');
             if (script.src) {
+                console.log(`Cargando script externo: ${script.src}`);
                 newScript.src = script.src;
             } else {
+                console.log(`Ejecutando script inline ${index + 1}`);
                 newScript.textContent = script.textContent;
             }
+            newScript.type = 'text/javascript';
             document.body.appendChild(newScript);
-            script.remove(); // Eliminar el script original para evitar duplicados
+            
+            // Eliminar el script original después de crear el nuevo
+            setTimeout(() => {
+                if (script.parentNode) {
+                    script.remove();
+                }
+            }, 100);
         });
 
     } catch (error) {
         console.error('Error al cargar el formulario de restablecimiento:', error);
-        DOMUtils.updateHTML('reset-password-modal-content', '<div class="message error">Error al cargar el formulario de restablecimiento. Por favor, inténtalo de nuevo.</div>');
+        DOMUtils.updateHTML('reset-password-modal-content', '<div class="message error" style="color: #dc3545; padding: 10px; background: #f8d7da; border-radius: 4px; margin: 10px 0;">Error al cargar el formulario de restablecimiento. Por favor, inténtalo de nuevo.</div>');
     }
 }
 

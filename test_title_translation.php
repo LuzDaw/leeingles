@@ -42,7 +42,7 @@ $test_translation = null;
 try {
     $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
     $host = $_SERVER['HTTP_HOST'];
-    $translate_url = $protocol . '://' . $host . '/traductor/translate.php';
+    $translate_url = $protocol . '://' . $host . '/translate.php';
     
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $translate_url);
