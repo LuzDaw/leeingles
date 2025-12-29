@@ -1,0 +1,590 @@
+/* Estilos para el sistema de Explain Sidebar */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f5f5f5;
+    overflow-x: hidden;
+}
+
+/* Botón flotante de explicar */
+.explain-floating-btn {
+    position: fixed;
+    top: 130px; /* Posicionar arriba de todo */
+    right: 0; /* Pegado al lado derecho */
+    background: linear-gradient(135deg, #A8DADC 0%, #457B9D 100%);
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 10px 0 0 10px; /* Bordes redondeados solo en el lado izquierdo */
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Centrar el icono */
+    gap: 0; /* Sin gap ya que solo hay un icono */
+    font-size: 16px; /* Icono más grande */
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(0); /* Sin centrado vertical ya que está arriba */
+    text-decoration: none;
+    width: 40px; /* Ancho fijo para el icono */
+    height: 40px; /* Alto fijo para hacerlo cuadrado */
+}
+
+.explain-floating-btn.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.explain-floating-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+    text-decoration: none;
+    color: white;
+}
+
+.explain-floating-btn.active {
+    background: linear-gradient(135deg, #F97316, #FB923C);
+    display: none;
+}
+
+.explain-floating-btn .explain-icon {
+    font-size: 16px;
+    color: white;
+}
+
+/* Header */
+.app-header {
+    background-color: #2c3e50;
+    color: white;
+    padding: 15px 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.header-content h1 {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.profile-icon {
+    width: 32px;
+    height: 32px;
+    background-color: #3498db;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+}
+
+.user-score {
+    font-weight: 600;
+    color: #ecf0f1;
+}
+
+.action-menu {
+    cursor: pointer;
+    font-size: 20px;
+    color: #bdc3c7;
+}
+
+/* Botón Explain */
+.explain-btn {
+    background: linear-gradient(135deg, #3B82F6, #60A5FA);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+    text-decoration: none;
+}
+
+.explain-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+    text-decoration: none;
+    color: white;
+}
+
+.explain-btn.active {
+    background: linear-gradient(135deg, #F97316, #FB923C);
+}
+
+.explain-icon {
+    font-size: 16px;
+}
+
+.other-actions {
+    display: flex;
+    gap: 15px;
+    color: #bdc3c7;
+    font-size: 14px;
+}
+
+.other-actions span {
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.other-actions span:hover {
+    color: white;
+}
+
+/* Contenido principal */
+.main-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    transition: margin-right 0.3s ease;
+}
+
+.content-area {
+    background: white;
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.text-content h2 {
+    color: #2c3e50;
+    margin-bottom: 20px;
+    font-size: 24px;
+}
+
+.text-content p {
+    margin-bottom: 15px;
+    line-height: 1.6;
+    color: #34495e;
+}
+
+.highlighted-word {
+    background-color: #3B82F6;
+    color: white;
+    padding: 2px 6px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.highlighted-word:hover {
+    background-color: #60A5FA;
+}
+
+.subjects-list {
+    margin: 20px 0;
+    padding-left: 20px;
+}
+
+.subjects-list li {
+    margin-bottom: 8px;
+    color: #34495e;
+}
+
+.progress-section {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #ecf0f1;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 8px;
+    background-color: #ecf0f1;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #3B82F6, #60A5FA);
+    transition: width 0.3s ease;
+}
+
+.progress-text {
+    font-weight: 600;
+    color: #2c3e50;
+    margin-right: 15px;
+}
+
+.navigation-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+
+
+.play-btn {
+    background: #3B82F6;
+    color: white;
+}
+
+.play-btn:hover {
+    background: #60A5FA;
+}
+
+/* Sidebar de explicaciones */
+.explain-sidebar {
+    position: fixed;
+    top: 0;
+    right: -400px;
+    width: 400px;
+    height: 100vh;
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+    transition: right 0.3s ease;
+    z-index: 1000;
+    overflow-y: auto;
+}
+
+.explain-sidebar.open {
+    right: 0;
+}
+
+.sidebar-header {
+    background: linear-gradient(135deg, #2c3e50, #34495e);
+    color: white;
+    padding: 20px 25px;
+    position: relative;
+}
+
+.close-sidebar {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s ease;
+}
+
+.close-sidebar:hover {
+    background-color: rgba(255,255,255,0.1);
+}
+
+.word-info {
+    margin-top: 10px;
+}
+
+.word-display {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.selected-word {
+    font-size: 16px;
+    font-weight: 700;
+    color: #ecf0f1;
+}
+
+.word-translation {
+    color: #bdc3c7;
+    font-size: 16px;
+}
+
+.word-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.pronounce-btn {
+    background: #e3f2fd24;
+    color: #1976D2;
+    padding: 4px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.pronounce-btn:hover {
+    background: #BBDEFB;
+    color: #1565C0;
+}
+
+.edit-word-btn {
+    background: #3498db;
+    border: none;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.2s ease;
+}
+
+.edit-word-btn:hover {
+    background: #2980b9;
+}
+
+/* Contenido del sidebar */
+.sidebar-content {
+    padding: 15px;
+}
+
+.explanation-section {
+    margin-bottom: 25px;
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.section-icon {
+    font-size: 18px;
+}
+
+.section-header h3 {
+    color: #2c3e50;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.explanation-text p {
+    color: #34495e;
+    line-height: 1.6;
+    margin-bottom: 12px;
+    font-size: 14px;
+}
+
+/* Overlay */
+.sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 999;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.sidebar-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Ajuste del contenido principal cuando el sidebar está abierto */
+.main-content.sidebar-open {
+    margin-right: 400px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .explain-sidebar {
+        width: 100%;
+        right: -100%;
+    }
+    
+    .main-content.sidebar-open {
+        margin-right: 0;
+    }
+    
+    .header-actions {
+        gap: 10px;
+    }
+    
+    .other-actions {
+        display: none;
+    }
+    
+    .explain-floating-btn {
+        top: 20px; /* Mantener arriba de todo */
+        right: 0; /* Mantener pegado al lado derecho */
+        padding: 8px 10px;
+        font-size: 14px; /* Icono un poco más pequeño en móvil */
+        border-radius: 10px 0 0 10px; /* Mantener bordes redondeados solo en el lado izquierdo */
+        transform: translateY(0); /* Sin centrado vertical */
+        width: 35px; /* Un poco más pequeño en móvil */
+        height: 35px; /* Un poco más pequeño en móvil */
+    }
+} 
+
+/* Mejorar separación y visual de las secciones */
+.explain-section {
+  margin-bottom: 15px;
+  padding: 0 10px 8px 10px;
+  border-bottom: 1px solid #e0e7ef;
+}
+.explain-section:last-child {
+  border-bottom: none;
+}
+.section-title {
+  font-size: 0.95em;
+  font-weight: 600;
+  color: #1a237e;
+  margin-bottom: 4px;
+}
+.section-content {
+  font-size: 0.95em;
+  color: #222;
+  line-height: 1.5;
+  margin-left: 0;
+  word-wrap: break-word;
+}
+.sinonimos-section .section-content, .antonimos-section .section-content {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  width: 100%;
+}
+.synonym-tag, .antonym-tag {
+  background: #e3f2fd;
+  color: #1976d2;
+  border-radius: 10px;
+  padding: 2px 8px;
+  font-size: 0.9em;
+  cursor: pointer;
+  border: 1px solid #bbdefb;
+  transition: background 0.2s;
+}
+.synonym-tag:hover, .antonym-tag:hover {
+  background: #bbdefb;
+}
+.ejemplos-list {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.ejemplo-item {
+  background: #f5f7fa;
+  border-radius: 5px;
+  padding: 4px 8px;
+  font-size: 0.9em;
+  color: #333;
+  margin-bottom: 2px;
+  border-left: 2px solid #1976d2;
+}
+.ejemplo-es {
+  font-weight: 500;
+  color: #1976d2;
+}
+.ejemplo-en {
+  color: #757575;
+  font-style: italic;
+  margin-left: 4px;
+}
+.tipo-section .section-content, .uso-section .section-content {
+  color: #444;
+  font-size: 0.9em;
+}
+.pronunciation {
+  color: #ff9800;
+  font-weight: 500;
+  margin-left: 6px;
+}
+
+/* Tooltip para sinónimos y antónimos */
+.explain-tooltip {
+  opacity: 1;
+  transition: opacity 0.2s ease;
+} 
+
+
+
+/* Estilos para sinónimos */
+.sinonimos-list {
+    margin-top: 10px;
+}
+
+.sinonimo-item {
+    margin-bottom: 8px;
+    padding: 8px 12px;
+    background: #f8f9fa;
+    border-radius: 6px;
+    border-left: 3px solid #007bff;
+}
+
+.sinonimo-en {
+    display: inline;
+    font-weight: 500;
+    color: #333;
+    margin-right: 8px;
+}
+
+.sinonimo-es {
+    display: inline;
+    font-size: 0.9em;
+    color: #666;
+    font-style: italic;
+}
+
+/* Estilos para antónimos */
+.antonimos-list {
+    margin-top: 10px;
+}
+
+.antonimo-item {
+    margin-bottom: 8px;
+    padding: 8px 12px;
+    background: #f8f9fa;
+    border-radius: 6px;
+    border-left: 3px solid #dc3545;
+}
+
+.antonimo-en {
+    display: inline;
+    font-weight: 500;
+    color: #333;
+    margin-right: 8px;
+}
+
+.antonimo-es {
+    display: inline;
+    font-size: 0.9em;
+    color: #666;
+    font-style: italic;
+} 

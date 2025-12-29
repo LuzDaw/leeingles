@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test ResponsiveVoice Integration</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .test-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .test-button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .test-button:hover {
+            background: #0056b3;
+        }
+        .status {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .status.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🧪 Test de Integración ResponsiveVoice</h1>
+        
+        <div id="status-container"></div>
+        
+        <h3>🎤 Controles de Voz</h3>
+        <button class="test-button" onclick="testLeerTexto()">🔊 Leer Texto de Prueba</button>
+        <button class="test-button" onclick="testDetener()">⏹️ Detener</button>
+        <button class="test-button" onclick="testPausar()">⏸️ Pausar</button>
+        <button class="test-button" onclick="testReanudar()">▶️ Reanudar</button>
+        <button class="test-button" onclick="testEstado()">📊 Ver Estado</button>
+        
+        <h3>⚙️ Configuración</h3>
+        <button class="test-button" onclick="testVelocidad(0.5)">🐌 Lento (0.5x)</button>
+        <button class="test-button" onclick="testVelocidad(1.0)">⚡ Normal (1.0x)</button>
+        <button class="test-button" onclick="testVelocidad(1.5)">🚀 Rápido (1.5x)</button>
+    </div>
+
+    <!-- Cargar la integración de ResponsiveVoice -->
+    <script src="js/electron-voice-integration.js"></script>
+    
+    <script>
+        function mostrarEstado(mensaje, tipo = 'info') {
+            const container = document.getElementById('status-container');
+            const div = document.createElement('div');
+            div.className = `status ${tipo}`;
+            div.innerHTML = `<strong>${new Date().toLocaleTimeString()}:</strong> ${mensaje}`;
+            container.appendChild(div);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function testLeerTexto() {
+            const texto = "Hello, this is a test of ResponsiveVoice integration. The system should work both in web browsers and in the desktop application.";
+            const resultado = window.leerTextoConResponsiveVoice(texto, 1.0);
+            mostrarEstado(`Leer texto: ${resultado ? '✅ Éxito' : '❌ Falló'}`, resultado ? 'success' : 'error');
+        }
+
+        function testDetener() {
+            const resultado = window.detenerLecturaResponsiveVoice();
+            mostrarEstado(`Detener: ${resultado ? '✅ Éxito' : '❌ Falló'}`, resultado ? 'success' : 'error');
+        }
+
+        function testPausar() {
+            const resultado = window.pausarLecturaResponsiveVoice();
+            mostrarEstado(`Pausar: ${resultado ? '✅ Éxito' : '❌ Falló'}`, resultado ? 'success' : 'error');
+        }
+
+        function testReanudar() {
+            const resultado = window.reanudarLecturaResponsiveVoice();
+            mostrarEstado(`Reanudar: ${resultado ? '✅ Éxito' : '❌ Falló'}`, resultado ? 'success' : 'error');
+        }
+
+        function testEstado() {
+            const estado = window.verificarEstadoVoz();
+            mostrarEstado(`Estado: Entorno=${estado.entorno}, ResponsiveVoice=${estado.responsiveVoiceDisponible}, Cargado=${estado.responsiveVoiceLoaded}`, 'info');
+        }
+
+        function testVelocidad(velocidad) {
+            const resultado = window.cambiarVelocidadResponsiveVoice(velocidad);
+            mostrarEstado(`Velocidad ${velocidad}x: ${resultado ? '✅ Éxito' : '❌ Falló'}`, resultado ? 'success' : 'error');
+            
+            // Leer un texto con la nueva velocidad
+            setTimeout(() => {
+                const texto = `Testing speed ${velocidad}x. This should be read at ${velocidad} times the normal speed.`;
+                window.leerTextoConResponsiveVoice(texto, velocidad);
+            }, 100);
+        }
+
+        // Verificar estado al cargar
+        setTimeout(() => {
+            testEstado();
+        }, 1000);
+    </script>
+</body>
+</html>

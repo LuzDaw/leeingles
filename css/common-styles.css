@@ -1,0 +1,295 @@
+/**
+ * ESTILOS COMUNES - Centralización de elementos duplicados
+ * 
+ * Este archivo contiene estilos que se repiten en múltiples archivos CSS
+ * para evitar duplicación y mantener consistencia en toda la aplicación.
+ */
+
+
+/* === VARIABLES CSS GLOBALES === */
+:root {
+    /* Colores principales - Paleta unificada: Naranja, Azul, Negro */
+    --primary-color: #1D3557;      /* Azul oscuro */
+    --secondary-color: #457B9D;     /* Azul medio */
+    --accent-color: #ff8a00;        /* Naranja principal */
+    --accent-hover: #e67e00;        /* Naranja hover */
+    --background-color: #F5F7FA;    /* Gris muy claro */
+    --text-color: #1f1c1c;          /* Negro */
+    --text-muted: #666666;          /* Gris medio */
+    --success-color: #457B9D;       /* Azul para éxito */
+    --warning-color: #ff8a00;       /* Naranja para advertencias */
+    --error-color: #1D3557;         /* Azul oscuro para errores */
+    
+    /* Colores de tema - Reemplazando lila/morado por azul/naranja */
+    --theme-success: #457B9D;
+    --theme-success-light: #A8DADC;
+    --theme-success-dark: #1D3557;
+    --theme-background: #F0F4F8;
+    
+    /* Espaciado */
+    --spacing-xs: 4px;
+    --spacing-sm: 8px;
+    --spacing-md: 16px;
+    --spacing-lg: 24px;
+    --spacing-xl: 32px;
+    
+    /* Tamaños de fuente */
+    --font-xs: 12px;
+    --font-sm: 14px;
+    --font-md: 16px;
+    --font-lg: 18px;
+    --font-xl: 24px;
+    
+    /* Bordes */
+    --border-radius-sm: 4px;
+    --border-radius-md: 8px;
+    --border-radius-lg: 12px;
+    
+    /* Sombras */
+    --shadow-sm: 0 2px 4px rgba(0,0,0,0.1);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.2);
+    --shadow-lg: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+/* === ELEMENTOS DE FORMULARIO COMUNES === */
+
+/* Grupo de formulario */
+.form-group {
+    margin-bottom: 15px;
+}
+
+/* Etiqueta de formulario */
+.form-label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+/* Input de formulario */
+.form-input {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid #e0e0e0;
+    border-radius: var(--border-radius-md);
+    font-size: var(--font-md);
+    box-sizing: border-box;
+    transition: border-color 0.3s ease;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: var(--secondary-color);
+    box-shadow: 0 0 0 3px rgba(69, 123, 157, 0.1);
+}
+
+/* Botón de formulario */
+.form-button {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(135deg, var(--secondary-color) 0%, var(--primary-color) 100%);
+    color: white;
+    border: none;
+    border-radius: var(--border-radius-md);
+    font-size: var(--font-md);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.form-button:hover {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+/* Mensajes de error */
+.error-message {
+    color: var(--error-color);
+    margin-top: 10px;
+    padding: 8px;
+    background: #f0f4f8;
+    border-radius: var(--border-radius-sm);
+    display: none;
+    font-size: var(--font-sm);
+}
+
+/* Mensajes de éxito */
+.success-message {
+    color: var(--theme-success-dark);
+    margin-top: 10px;
+    padding: 8px;
+    background: var(--theme-background);
+    border-radius: var(--border-radius-sm);
+    display: none;
+    font-size: var(--font-sm);
+}
+
+/* === ELEMENTOS CLICKEABLES === */
+
+/* Palabras clickeables */
+.clickable-word {
+        cursor: pointer;
+    color: #457B9D;
+    border-radius: var(--border-radius-sm);
+    transition: all 0.2s ease;
+    font-weight: 500;
+}
+
+.clickable-word:hover {
+    background: rgb(255 157 0 / 75%);
+    color: #ffffffd9;
+    transform: translateY(-1px);
+}
+
+.clickable-word:focus {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+}
+
+/* === HEADER COMÚN === */
+
+/* Controles de header */
+.header-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-lg);
+    padding: var(--spacing-md);
+    background: white;
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-sm);
+}
+
+.header-controls h2 {
+    margin: 0;
+    color: var(--primary-color);
+    font-size: var(--font-xl);
+    font-weight: bold;
+}
+
+/* === BOTONES COMUNES === */
+
+/* Botón primario */
+.btn-primary {
+    background: var(--secondary-color);
+    color: white;
+    border: none;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--border-radius-sm);
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    background: var(--primary-color);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
+}
+
+/* Botón de éxito */
+.btn-success {
+    background: var(--accent-color);
+    color: white;
+    border: none;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--border-radius-sm);
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn-success:hover {
+    background: var(--accent-hover);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
+}
+
+/* === UTILIDADES === */
+
+/* Estados de visibilidad */
+.hidden {
+    display: none !important;
+}
+
+.visible {
+    display: block !important;
+}
+
+/* Estados de opacidad */
+.fade-out {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.fade-in {
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+/* === RESPONSIVE === */
+
+@media (max-width: 768px) {
+    .form-input {
+        font-size: var(--font-sm);
+        padding: 8px;
+    }
+    
+    .form-button {
+        font-size: var(--font-sm);
+        padding: 10px;
+    }
+    
+    .header-controls {
+        flex-direction: column;
+        gap: var(--spacing-sm);
+        text-align: center;
+    }
+    
+    .header-controls h2 {
+        font-size: var(--font-lg);
+    }
+}
+
+/* === ANIMACIONES COMUNES === */
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+/* === ACCESIBILIDAD === */
+
+/* Estados focus mejorados */
+button:focus,
+input:focus,
+.clickable-word:focus {
+    outline: 1px solid #f2790073;
+    outline-offset: 2px;
+    
+}
+
+/* Reducción de movimiento */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+} 

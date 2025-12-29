@@ -1,0 +1,245 @@
+/* Estilos específicos para modales */
+/* Los estilos comunes están en common-styles.css */
+
+/* Modal de login */
+#login-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.6);
+    z-index: 1000;
+}
+
+.login-modal-content {
+    background: #fff;
+    padding: 25px;
+    width: 350px;
+    margin: 120px auto;
+    position: relative;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.modal-close-btn {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: #666666;
+}
+
+.modal-title {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #1f1c1c;
+    font-size: 24px;
+}
+
+.modal-divider {
+    margin: 15px 0;
+    border: none;
+    border-top: 1px solid #A8DADC;
+}
+
+.modal-text {
+    text-align: center;
+    margin: 10px 0;
+    color: #666666;
+}
+
+.register-link {
+    display: block;
+    text-align: center;
+    background: #ff8a00;
+    color: white;
+    padding: 10px;
+    text-decoration: none;
+    border-radius: 8px;
+    margin-top: 10px;
+}
+
+/* Modal de registro */
+#register-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.6);
+    z-index: 1000;
+}
+
+.register-modal-content {
+    background: #fff;
+    padding: 20px;
+    width: 350px;
+    margin: 80px auto;
+    position: relative;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.register-form-group {
+    margin-bottom: 12px;
+}
+
+.register-form-label {
+    display: block;
+    margin-bottom: 3px;
+    font-weight: 600;
+    color: #1f1c1c;
+    font-size: 14px;
+}
+
+.register-form-input {
+    width: 100%;
+    padding: 8px;
+    border: 2px solid #A8DADC;
+    border-radius: 6px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+.register-form-button {
+    width: 100%;
+    padding: 10px;
+    background: #ff8a00;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.register-error {
+    color: #1D3557;
+    margin-top: 10px;
+    padding: 8px;
+    background: #F0F4F8;
+    border-radius: 5px;
+    display: none;
+    font-size: 14px;
+}
+
+.register-success-tooltip {
+    position: absolute;
+    background-color: #ff8a00; /* Naranja para éxito */
+    color: white;
+    padding: 12px 15px;
+    border-radius: 8px;
+    font-size: 14px;
+    z-index: 10001 !important; /* Asegurar que esté por encima de todo */
+    box-shadow: 0 4px 15px rgba(255, 138, 0, 0.4);
+    pointer-events: auto; /* Permitir interacción con los enlaces */
+    white-space: normal; /* Permitir múltiples líneas */
+    display: none;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+    max-width: 300px;
+    text-align: center;
+    line-height: 1.5;
+}
+
+.register-success-tooltip::before {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 10px;
+    border-style: solid;
+    border-color: #ff8a00 transparent transparent transparent; /* Color de la flecha */
+}
+
+/* Asegurar que los enlaces dentro del tooltip sean clicables */
+.register-success-tooltip a {
+    pointer-events: auto;
+    cursor: pointer;
+    display: inline-block;
+    margin-top: 8px;
+}
+
+/* Estilos para el cartelito de error (tooltip) */
+#login-error {
+    background-color: transparent !important;
+    color: transparent;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+    overflow: visible !important;
+}
+
+#login-error.login-error-tooltip {
+    position: absolute;
+    background-color: #0882a4 !important; /* Rojo para errores */
+    color: white !important;
+    padding: 8px 12px !important;
+    border-radius: 6px;
+    font-size: 14px;
+    z-index: 1001; /* Asegura que esté por encima del modal */
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    pointer-events: none; /* Permite hacer clic a través del tooltip */
+    white-space: nowrap; /* Evita que el texto se rompa en varias líneas */
+    display: none; /* Por defecto oculto */
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+    margin: 0 !important;
+}
+
+#login-error.login-error-tooltip::before {
+    content: '';
+    position: absolute;
+    bottom: -8px; /* Posiciona la flecha debajo del tooltip */
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 8px;
+    border-style: solid;
+    border-color: #ff8a00 transparent transparent transparent; /* Color de la flecha */
+}
+
+/* Tooltip de cuenta pendiente de verificación */
+#login-error.login-pending-verification-tooltip {
+    position: absolute;
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important; /* Azul para pendiente */
+    color: white !important;
+    padding: 12px 15px !important;
+    border-radius: 8px;
+    font-size: 14px;
+    z-index: 1001;
+    box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4);
+    pointer-events: auto; /* Permitir interacción con los enlaces */
+    white-space: normal; /* Permitir múltiples líneas */
+    display: none;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+    max-width: 320px;
+    text-align: center;
+    margin: 0 !important;
+}
+
+#login-error.login-pending-verification-tooltip::before {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 10px;
+    border-style: solid;
+    border-color: #2563eb transparent transparent transparent;
+}
+
+/* Asegurar que los enlaces dentro del tooltip sean clicables */
+#login-error.login-pending-verification-tooltip a {
+    pointer-events: auto;
+    cursor: pointer;
+}

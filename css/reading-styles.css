@@ -1,0 +1,121 @@
+/* Estilos para la lectura de textos */
+.page {
+    margin-bottom: 20px;
+}
+#pages-container{
+    padding: 2%;
+}
+
+/* Los estilos de .clickable-word están en common-styles.css */
+
+
+
+.currently-reading {
+    background-color: #F5F7FA !important;
+    border: 2px solid #A8DADC !important;
+    border-radius: 8px;
+    padding: 10px;
+    margin: 5px 0;
+    transition: all 0.3s ease;
+}
+
+#pagination-controls {
+    margin-top: 20px;
+    text-align: center;
+}
+
+/* Estilos para pantalla completa */
+html:fullscreen, html:-webkit-full-screen, html:-moz-full-screen {
+    background: var(--bg-secondary) !important;
+}
+
+:fullscreen #pagination-controls, 
+:-webkit-full-screen #pagination-controls, 
+:-moz-full-screen #pagination-controls {
+    position: fixed !important;
+    bottom: 20px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    z-index: 1000 !important;
+    background: rgba(255,255,255,0.9) !important;
+    padding: 10px 20px !important;
+    border-radius: 25px !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3) !important;
+}
+
+#end-message {
+    display: none;
+    margin-top: 20px;
+    font-size: 18px;
+    color: #ff9813;
+    font-weight: bold;
+    text-align: center;
+}
+
+/* Formulario de subir texto */
+#upload-form-container {
+    display: none;
+}
+
+.upload-form {
+    background: #F5F7FA;
+    padding: 20px;
+    border-radius: 8px;
+    margin: 20px 0;
+}
+
+.upload-form h3 {
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.upload-form-group {
+    margin-bottom: 15px;
+}
+
+.upload-form-label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+    color: #555;
+}
+
+.upload-form-input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.upload-form-textarea {
+    width: 100%;
+    min-height: 200px;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    resize: vertical;
+    box-sizing: border-box;
+}
+
+.upload-form-checkbox {
+    margin-right: 8px;
+}
+
+.upload-form-button {
+    background: #3B82F6;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+.upload-form-button.secondary {
+    background: #6c757d;
+}
+
+.upload-form-button:hover {
+    opacity: 0.9;
+}

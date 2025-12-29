@@ -1,0 +1,134 @@
+// Cargar categorías de textos públicos al abrir el dropdown
+function togglePublicTextsDropdown(e) {
+    e.stopPropagation();
+    const dropdown = document.getElementById('publicTextsDropdown');
+    const content = document.getElementById('publicCategoriesContent');
+    dropdown.classList.toggle('show');
+    if (content.innerHTML.includes('Cargando')) {
+        fetch('textoPublic/categories.php?ajax=1')
+            .then(res => res.json())
+            .then(data => {
+                if (Array.isArray(data)) {
+                    // Agregar botón 'Mostrar todo' al principio
+                    let allBtn = `<button type='button' onclick='loadAllPublicTexts()' style='font-weight:bold;color:#eaa827;'>🌍 Mostrar todo</button>`;
+                    let cats = data.map(cat => `<button type='button' onclick='loadPublicTextsByCategory(${cat.id}, "${cat.name.replace(/'/g, "\\'")}")'>${cat.name}</button>`).join('');
+                    content.innerHTML = allBtn + cats;
+                } else {
+                    content.innerHTML = '<div style="padding:10px; color:#dc2626;">No hay categorías públicas.</div>';
+                }
+            })
+            .catch(() => {
+                content.innerHTML = '<div style="padding:10px; color:#dc2626;">Error al cargar categorías.</div>';
+            });
+    }
+}
+// Cerrar dropdown al hacer click fuera
+window.addEventListener('click', function(e) {
+    const dropdown = document.getElementById('publicTextsDropdown');
+    if (dropdown) dropdown.classList.remove('show');
+});
+// Función placeholder para cargar textos públicos por categoría
+function loadPublicTextsByCategory(catId, catName) {
+    const form = document.getElementById('bulkForm');
+    if (!form) return;
+    form.innerHTML = `<div style='padding:20px; text-align:center; color:#64748b;'>Cargando textos públicos de <b>${catName}</b>...</div>`;
+    fetch(`textoPublic/public_texts.php?ajax=1&category_id=${catId}`)
+        .then(res => res.json())
+        .then(async data => {
+            // Actualizar el número de textos encontrados en la cabecera
+            const numSpan = document.querySelector('.bulk-actions-container span');
+            if (numSpan) numSpan.textContent = data.texts.length;
+            if (Array.isArray(data.texts) && data.texts.length > 0) {
+                // Para cada texto, obtener el número de palabras por AJAX
+                const wordCounts = await Promise.all(data.texts.map(txt =>
+                    fetch(`textoPublic/get_text_content.php?id=${txt.id}`)
+                        .then(res => res.json())
+                        .then(obj => obj && obj.content ? countWordsInText(obj.content) : '?')
+                        .catch(() => '?')
+                ));
+                let html = '<h3 style="color:#374151; margin-bottom:10px;">Textos públicos de <span style="color:#3b82f6;">' + data.category + '</span></h3>';
+                html += '<ul class="text-list">';
+                
+                data.texts.forEach((txt, i) => {
+                    html += '<li class="text-item">';
+                    html += '<a href="index.php?public_text_id=' + txt.id + '" class="text-title">';
+                    html += '<span class="title-english">' + txt.title + '</span>';
+                    
+                    if (txt.title_translation) {
+                        html += '<span class="title-spanish" style="color:#eaa827; font-size:0.9em; margin-left:8px; font-weight:500;">• ' + txt.title_translation + '</span>';
+                    } else {
+                        html += '<span class="title-spanish" style="color:#6b7280; font-size:0.9em; margin-left:8px;"></span>';
+                    }
+                    
+                    html += '</a>';
+                    html += '<span class="text-date">' + wordCounts[i] + ' palabras</span>';
+                    html += '</li>';
+                });
+                
+                html += '</ul>';
+                form.innerHTML = html;
+            } else {
+                form.innerHTML = `<div style='padding:20px; text-align:center; color:#dc2626;'>No hay textos públicos en esta categoría.</div>`;
+            }
+        })
+        .catch(() => {
+            form.innerHTML = `<div style='padding:20px; text-align:center; color:#dc2626;'>Error al cargar los textos públicos.</div>`;
+        });
+}
+
+
+
+// Función para cargar todos los textos públicos
+function loadAllPublicTexts() {
+    const form = document.getElementById('bulkForm');
+    if (!form) return;
+    form.innerHTML = `<div style='padding:20px; text-align:center; color:#64748b;'>Cargando todos los textos públicos...</div>`;
+    fetch(`textoPublic/public_texts.php?ajax=1`)
+        .then(res => res.json())
+        .then(async data => {
+            // Actualizar el número de textos encontrados en la cabecera
+            const numSpan = document.querySelector('.bulk-actions-container span');
+            if (numSpan) numSpan.textContent = data.texts.length;
+            if (Array.isArray(data.texts) && data.texts.length > 0) {
+                // Para cada texto, obtener el número de palabras por AJAX
+                const wordCounts = await Promise.all(data.texts.map(txt =>
+                    fetch(`textoPublic/get_text_content.php?id=${txt.id}`)
+                        .then(res => res.json())
+                        .then(obj => obj && obj.content ? countWordsInText(obj.content) : '?')
+                        .catch(() => '?')
+                ));
+                let html = '<h3 style="color:#374151; margin-bottom:10px;">Todos los textos públicos</h3>';
+                html += '<ul class="text-list">';
+                
+                data.texts.forEach((txt, i) => {
+                    html += '<li class="text-item">';
+                    html += '<a href="index.php?public_text_id=' + txt.id + '" class="text-title">';
+                    html += '<span class="title-english">' + txt.title + '</span>';
+                    
+                    if (txt.title_translation) {
+                        html += '<span class="title-spanish" style="color:#eaa827; font-size:0.9em; margin-left:8px; font-weight:500;">• ' + txt.title_translation + '</span>';
+                    } else {
+                        html += '<span class="title-spanish" style="color:#6b7280; font-size:0.9em; margin-left:8px;"></span>';
+                    }
+                    
+                    html += '</a>';
+                    html += '<span class="text-date">' + wordCounts[i] + ' palabras</span>';
+                    html += '</li>';
+                });
+                
+                html += '</ul>';
+                form.innerHTML = html;
+            } else {
+                form.innerHTML = `<div style='padding:20px; text-align:20px; color:#dc2626;'>No hay textos públicos disponibles.</div>`;
+            }
+        })
+        .catch(() => {
+            form.innerHTML = `<div style='padding:20px; text-align:center; color:#dc2626;'>Error al cargar los textos públicos.</div>`;
+        });
+}
+
+// Función local para contar palabras en un texto
+function countWordsInText(text) {
+    if (!text || typeof text !== 'string') return 0;
+    return text.trim().split(/\s+/).filter(Boolean).length;
+} 

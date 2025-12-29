@@ -1,0 +1,153 @@
+// ============================================
+// FUNCIONES PARA TRADUCCIONES DE CONTENIDO
+// ============================================
+
+// Guardar traducción de contenido
+window.saveContentTranslation = async function(textId, content, translation) {
+    try {
+        const formData = new FormData();
+        formData.append('text_id', textId);
+        formData.append('content', content);
+        formData.append('translation', translation);
+        
+        const response = await fetch('save_content_translation.php', {
+            method: 'POST',
+            body: formData
+        });
+        
+        const data = await response.json();
+        if (data.success) {
+            return true;
+        } else {
+            return false;
+        }
+    } catch (error) {
+        return false;
+    }
+}
+
+// Obtener traducción de contenido desde la base de datos
+window.getContentTranslation = async function(textId) {
+    try {
+        const response = await fetch(`get_content_translation.php?text_id=${textId}`);
+        const data = await response.json();
+        
+        if (data.success && data.translation) {
+            return {
+                translation: data.translation,
+                source: 'database'
+            };
+        } else {
+            return {
+                translation: null,
+                needs_translation: true
+            };
+        }
+    } catch (error) {
+
+        return {
+            translation: null,
+            needs_translation: true
+        };
+    }
+}
+
+// Función mejorada para traducir contenido con caché en base de datos
+window.translateContentWithCache = async function(englishElement, spanishElement, textId) {
+    const englishContent = englishElement.textContent.trim();
+    
+    if (!englishContent) {
+        spanishElement.textContent = '';
+        return;
+    }
+    
+    // Evitar procesar el mismo elemento múltiples veces
+    if (spanishElement.dataset.translated === 'true') {
+        return;
+    }
+    
+    // Marcar como procesado
+    spanishElement.dataset.translated = 'true';
+    
+    // Primero intentar obtener desde la base de datos
+    const cachedTranslation = await getContentTranslation(textId);
+    
+    if (cachedTranslation.translation) {
+        // Usar traducción de la base de datos
+        spanishElement.textContent = cachedTranslation.translation;
+        spanishElement.style.color = '#eaa827';
+        spanishElement.style.fontWeight = '500';
+        return;
+    }
+    
+    // Si no hay traducción en BD, traducir y guardar
+    try {
+        const response = await fetch('translate.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: 'word=' + encodeURIComponent(englishContent)
+        });
+
+        const data = await response.json();
+
+        if (data.translation) {
+            // Mostrar traducción
+            spanishElement.textContent = data.translation;
+            spanishElement.style.color = '#eaa827';
+            spanishElement.style.fontWeight = '500';
+            
+            // Guardar en base de datos
+            if (textId) {
+                await saveContentTranslation(textId, englishContent, data.translation);
+            }
+        } else {
+            spanishElement.textContent = '';
+        }
+    } catch (error) {
+        spanishElement.textContent = '';
+    }
+}
+
+// Función para mostrar/ocultar traducción de contenido
+window.toggleContentTranslation = async function(textId, englishElement, spanishElement) {
+    if (!spanishElement) {
+        return;
+    }
+    
+    // Si ya está traducido, alternar visibilidad
+    if (spanishElement.dataset.translated === 'true') {
+        if (spanishElement.style.display === 'none') {
+            spanishElement.style.display = 'block';
+        } else {
+            spanishElement.style.display = 'none';
+        }
+        return;
+    }
+    
+    // Si no está traducido, traducir
+    await translateContentWithCache(englishElement, spanishElement, textId);
+}
+
+// Función para inicializar traducciones de contenido en una página
+window.initContentTranslations = async function() {
+    const contentElements = document.querySelectorAll('[data-content-translation]');
+    
+    for (const element of contentElements) {
+        const textId = element.dataset.textId;
+        const spanishElement = document.querySelector(`[data-content-translation-target="${textId}"]`);
+        
+        if (textId && spanishElement) {
+            // Verificar si ya hay traducción en BD
+            const cachedTranslation = await getContentTranslation(textId);
+            
+            if (cachedTranslation.translation) {
+                spanishElement.textContent = cachedTranslation.translation;
+                spanishElement.style.color = '#eaa827';
+                spanishElement.style.fontWeight = '500';
+                spanishElement.dataset.translated = 'true';
+            }
+        }
+    }
+}

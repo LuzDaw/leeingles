@@ -1,0 +1,966 @@
+/* ============================================
+   ESTILOS PARA PRÁCTICA Y EJERCICIOS
+   ============================================ */
+
+/* Instrucciones de ejercicio */
+.practice-instruction {
+    text-align: center;
+    font-weight: bold;
+    color: #1f1c1c;
+    margin-bottom: 31px;
+}
+.write-input {
+    color: rgb(68, 21, 21);
+  }
+  #text-selector {
+    color: black;
+    background-color: white; /* opcional, mejora visibilidad */
+  }
+
+/* Frase del ejercicio */
+.practice-sentence {
+    font-size: 18px;
+    font-weight: 500;
+    text-align: center;
+    margin: 0px 0;
+    padding: 0px;
+    background: #F5F7FA;
+    border-radius: 8px;
+    border-left: 4px solid #ff8a00;
+    COLOR: #000000;
+}
+
+/* Botón de ayuda de traducción */
+.translation-help-container {
+    text-align: right;
+    margin: 2px 0;
+}
+
+.translation-help-btn {
+    background: #ff9813;
+    color: #ffffff;
+    border: none;
+    padding: 4px 9px;
+    border-radius: 5px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-right: 10px;
+}
+
+.translation-help-btn:hover {
+    background: #457B9D;
+    color: white;
+    transform: translateY(-1px);
+}
+
+/* Resaltado del título del texto en las instrucciones */
+.text-title-highlight {
+    color: #ff8a00;
+    font-weight: bold;
+}
+
+/* ============================================
+   ESTILOS PARA MODO ESCRITURA DE FRASES
+   ============================================ */
+
+.text-selector-container {
+    text-align: center;
+    padding: 20px;
+}
+
+.text-select {
+    width: 100%;
+    max-width: 400px;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #A8DADC;
+    border-radius: 5px;
+    font-size: 14px;
+    color: #1B263B !important;
+    background: #fff !important;
+}
+
+.text-select option {
+    color: #1B263B !important;
+    background: #fff !important;
+}
+
+.sentence-practice-container {
+    padding: 20px;
+}
+
+.spanish-sentence {
+    font-size: 18px;
+    font-weight: 500;
+    text-align: center;
+    margin: 8px 0;
+    padding: 5px;
+    background: #F5F7FA;
+    border-radius: 8px;
+    border-left: 4px solid #ff8a00;
+    color: #1f1c1c;
+}
+
+.english-sentence {
+    font-size: 16px;
+    font-weight: 500;
+    margin: 0px 0;
+    padding: 5px;
+    background: #1c5db717;
+    border-radius: 6px;
+    border: 1px solid #ff98131a;
+    color: #ff8100;
+    display: flex;
+    justify-content: center;
+}
+
+.sentence-input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 16px;
+    color: #3d62c5;
+    border: 1px solid #ddd;
+    font-weight: bold;
+
+}
+
+/* Contenedor de entrada con pista */
+.input-container {
+    position: relative;
+    margin: 0px 0;
+}
+
+.word-hint {
+    width: 25%;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 0px 8px;
+    font-size: 14px;
+    background: rgb(232 236 241 / 80%);
+    border: 1px solid #e5e7eb;
+    border-top: none;
+    border-radius: 0 0 6px 6px;
+    font-family: monospace;
+    z-index: 10;
+    text-align: center;
+}
+
+
+/* Destacar palabra que se está leyendo */
+.reading-highlight {
+    background-color: #9ca3af !important;
+    color: #111827 !important;
+    border-radius: 3px !important;
+}
+
+@keyframes pulseReading {
+    0% {
+        box-shadow: 0 2px 8px rgba(255, 215, 0, 0.4);
+    }
+    50% {
+        box-shadow: 0 4px 16px rgba(255, 215, 0, 0.8);
+    }
+    100% {
+        box-shadow: 0 2px 8px rgba(255, 215, 0, 0.4);
+    }
+}
+
+
+
+/* Spinner de carga */
+.loading-spinner {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid #F0F4F8;
+    border-top: 3px solid #ff8a00;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-left: 10px;
+}
+
+.loading-container {
+    text-align: center;
+    padding: 40px;
+    color: #666666;
+}
+
+.loading-container h3 {
+    color: #ff8a00;
+    margin-bottom: 20px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Mensaje de éxito */
+.success-message {
+    background: linear-gradient(135deg, #ff991383, #ff9813 );
+    color: white;
+    padding: 15px 20px;
+    border-radius: 8px;
+    text-align: center;
+    margin: 20px 0;
+    font-weight: bold;
+    font-size: 18px;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    animation: slideInSuccess 0.5s ease-out;
+}
+
+.success-message .emoji {
+    font-size: 24px;
+    margin-right: 10px;
+}
+
+@keyframes slideInSuccess {
+    0% {
+        opacity: 0;
+        transform: translateY(-20px) scale(0.8);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes slideOutSuccess {
+    0% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-20px) scale(0.8);
+    }
+}
+
+/* Auto-complete visual feedback */
+.sentence-complete {
+    border: 2px solid #ff9813 !important !important;
+    background: #F0FDF4 !important;
+    animation: pulseGreen 0.6s ease-out;
+}
+
+@keyframes pulseGreen {
+    0% {
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(16, 185, 129, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+    }
+}
+
+
+
+.sentence-controls {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+/* Traducción española */
+.spanish-translation {
+    margin-bottom: 2px;
+    margin-top: 5px;
+    padding: 5px;
+    background: #f8fafc;
+    border-radius: 6px;
+    font-style: italic;
+    color: #6b7280;
+    border: 1px solid #e5e7eb;
+    transition: all 0.3s ease;
+        color: #0d5bca;
+    font-weight: bold;
+    text-align: center;
+}
+
+.spanish-translation.hidden {
+    display: none;
+}
+
+/* Palabra resaltada */
+.highlighted-word {
+    background: #3b82f6a3;
+    padding: 2px 3px;
+    border-radius: 4px;
+    color: #ffffff;
+}
+
+/* Animación pulse para la pista */
+@keyframes pulse {
+    0% { opacity: 0.8; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.05); }
+    100% { opacity: 0.8; transform: scale(1); }
+}
+
+/* Grid de opciones */
+.practice-options {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+    margin: 0px 0 !important;
+    justify-content: center !important;
+}
+
+/* Controles de práctica */
+.practice-controls {
+    display: flex !important;
+    gap: 10px !important;
+    margin: 15px 0 !important;
+    justify-content: center !important;
+}
+
+/* Botones de opción */
+.option-btn {
+    padding: 6px 12px !important;
+    border: 2px solid #e5e7eb !important;
+    border-radius: 6px !important;
+    background: white !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+    font-size: 12px !important;
+    font-weight: 500 !important;
+    min-height: 32px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    white-space: nowrap !important;
+    max-width: 120px !important;
+    color: #000000;
+    margin-top: 15px;
+}
+
+/* Estilos específicos para botones de control */
+.hint-btn {
+    background: #f3f4f6 !important;
+    color: #6b7280 !important;
+    border-color: #d1d5db !important;
+}
+
+.verify-btn {
+    background: #2980b9 !important;
+    color: white !important;
+    border-color: #2980b9 !important;
+}
+
+
+
+.option-btn:hover {
+    border-color: #506aff;
+    background: #f0f9ff;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.option-btn:active {
+    transform: translateY(0);
+}
+
+.option-btn.correct {
+    background: #506aff !important;
+    color: white;
+    border-color: #506aff;
+}
+
+.option-btn.incorrect {
+    background: #ff6e008f !important;
+    color: #ffffff !important;
+}
+
+.option-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* Input de escritura */
+.write-input {
+    width: 100%;
+    padding: 15px;
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    font-size: 16px;
+    margin: 15px 0;
+    transition: border-color 0.2s ease;
+    box-sizing: border-box;
+}
+
+.write-input:focus {
+    outline: none;
+    border-color: #506aff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+.write-input:disabled {
+    background: #f3f4f6;
+    color: #6b7280;
+    cursor: not-allowed;
+}
+
+/* Botones de verificación */
+.check-btn {
+    background: #506aff;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin: 0 5px;
+}
+
+.check-btn:hover {
+    background: #0056b3;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.check-btn:active {
+    transform: translateY(0);
+}
+
+.check-btn:disabled {
+    background: #6b7280;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Botón siguiente */
+
+
+.next-btn:hover {
+    background: #0056b3;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Selector de modo */
+.mode-selector {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.mode-btn {
+    padding: 10px 20px;
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    background: white;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 14px;
+    font-weight: 500;
+    min-width: 150px;
+    COLOR: black;
+}
+
+.mode-btn:hover {
+    border-color: #506aff;
+    background: #f0f9ff;
+}
+
+.mode-btn.active {
+    background: #506aff;
+    color: white;
+    border-color: #506aff;
+}
+
+/* Estadísticas */
+.practice-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+    padding: 20px;
+    background: #f8fafc;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-number {
+    font-size: 24px;
+    font-weight: bold;
+    color: #506aff;
+    display: block;
+}
+
+.stat-label {
+    font-size: 12px;
+    color: #6b7280;
+    text-transform: uppercase;
+    font-weight: 500;
+    margin-top: 4px;
+}
+
+/* Barra de progreso */
+.progress {
+    width: 100%;
+    height: 8px;
+    background: #e5e7eb;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+.progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #506aff, #0056b3);
+    transition: width 0.3s ease;
+    border-radius: 4px;
+}
+
+/* Tarjeta de ejercicio */
+.exercise-card {
+    background: #60a5fa1c;
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    border: 1px solid #e5e7eb;
+    position: relative;
+}
+
+/* Resultados */
+.practice-results {
+    text-align: center;
+    padding: 40px;
+}
+
+.practice-results h3 {
+    color: #1f2937;
+    margin-bottom: 20px;
+    font-size: 24px;
+}
+
+.practice-score {
+    font-size: 32px;
+    margin: 20px 0;
+    font-weight: bold;
+    color: #506aff;
+}
+
+.practice-results p {
+    color: #6b7280;
+    margin-bottom: 30px;
+    font-size: 16px;
+}
+
+/* Navegación */
+.nav-btn {
+    display: inline-block;
+     padding: 12px 15px;
+    color:  #334866;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.nav-btn:hover {
+    background: #4b5563;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Animaciones */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.exercise-card {
+    animation: fadeInUp 0.3s ease;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .practice-options {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+    
+    .mode-selector {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .mode-btn {
+        width: 100%;
+        max-width: 250px;
+    }
+    
+    .practice-stats {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        padding: 15px;
+    }
+    
+    .exercise-card {
+        padding: 20px;
+        margin: 10px;
+    }
+    
+    .practice-sentence {
+        font-size: 16px;
+        padding: 12px;
+    }
+}
+
+/* Estilos para selector de texto */
+.text-selector-container {
+    text-align: center;
+    padding: 30px;
+}
+
+.text-selector-container h3 {
+    color: #1f2937;
+    margin-bottom: 20px;
+    font-size: 1.3rem;
+}
+
+.text-select {
+    width: 100%;
+    max-width: 500px;
+    padding: 12px 16px;
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    font-size: 16px;
+    background: white;
+    color: #374151;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.text-select:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.text-select:hover {
+    border-color: #3b82f6;
+}
+
+.text-selector-info {
+    margin-top: 20px;
+    padding: 15px;
+    background: #f8fafc;
+    border-radius: 8px;
+    border-left: 4px solid #3b82f6;
+}
+
+.text-selector-info p {
+    margin: 8px 0;
+    font-size: 14px;
+    color: #6b7280;
+    line-height: 1.4;
+}
+
+.text-selector-info p strong {
+    color: #374151;
+}
+
+/* Estilos para los grupos de opciones */
+.text-select optgroup {
+    font-weight: bold;
+    color: #374151;
+    background: #f8fafc;
+}
+
+.text-select optgroup[label*="Mis textos"] {
+    color: #eaa827;
+}
+
+.text-select optgroup[label*="Textos públicos"] {
+    color: #3b82f6;
+}
+
+.loading-container {
+    text-align: center;
+    padding: 40px;
+}
+
+.loading-container h3 {
+    color: #3b82f6;
+    margin-bottom: 15px;
+    font-size: 1.3rem;
+}
+
+.loading-spinner::after {
+    content: '';
+    animation: dots 1.5s infinite;
+}
+
+@keyframes dots {
+    0%, 20% { content: ''; }
+    40% { content: '.'; }
+    60% { content: '..'; }
+    80%, 100% { content: '...'; }
+}
+
+@media (max-width: 480px) {
+    .practice-stats {
+        grid-template-columns: 1fr;
+    }
+    
+    .stat-number {
+        font-size: 20px;
+    }
+    
+    .text-selector-container {
+        padding: 20px;
+    }
+    
+    .text-select {
+        font-size: 14px;
+        padding: 10px 12px;
+    }
+    
+    .check-btn,
+    .next-btn,
+    .nav-btn {
+        width: 100%;
+        margin: 5px 0;
+    }
+}
+
+/* Estilos migrados desde practice.php */
+.practice-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+.mode-selector {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 30px;
+  justify-content: center;
+}
+.mode-btn {
+  padding: 12px 24px;
+  border: 2px solid #3b82f6;
+  border-radius: 8px;
+  background: white;
+  color: #3b82f6;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s;
+}
+.mode-btn.active {
+  background: #3b82f6;
+  color: white;
+}
+.mode-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+.exercise-card {
+  background: white;
+  border-radius: 12px;
+  padding: 0px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2px;
+  padding: 14px;
+}
+.sentence {
+  font-size: 20px;
+  line-height: 1.6;
+  margin-bottom: 25px;
+  text-align: center;
+  color: #1f2937;
+}
+.blank {
+  display: inline-block;
+  min-width: 80px;
+  border-bottom: 3px solid #3b82f6;
+  margin: 0 5px;
+  text-align: center;
+  font-weight: bold;
+}
+.options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.option-btn:hover {
+  border-color: #3b82f6;
+  background: #f0f9ff;
+}
+.option-btn.selected {
+  background: #3b82f6;
+  color: white;
+  border-color: #3b82f6;
+}
+.option-btn.correct {
+  background: #ff8a0087;
+  color: white;
+  border-color: #ff8a0087;
+}
+.option-btn.incorrect {
+  background: #ef4444;
+  color: white;
+  border-color: #ef4444;
+}
+.write-input {
+  width: 100%;
+  padding: 15px;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 18px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+.write-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+}
+.check-btn {
+  background: #3b82f6;
+  color: white;
+  padding: 12px 30px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.check-btn:hover {
+  background: #2563eb;
+  transform: translateY(-2px);
+}
+.feedback {
+  padding: 15px;
+  border-radius: 8px;
+  margin-top: 20px;
+  text-align: center;
+  font-weight: bold;
+}
+.feedback.correct {
+  background: #dbeafe;
+  color: #1e40af;
+  border: 2px solid #3b82f6;
+}
+.feedback.incorrect {
+  background: #dbeafe;
+  color: #1d4ed8;
+  border: 2px solid #60a5fa;
+}
+
+
+.next-btn:hover {
+  background: #2563eb;
+  transform: translateY(-2px);
+}
+.progress {
+  background: #f3f4f6;
+  border-radius: 8px;
+  height: 8px;
+  margin-bottom: 20px;
+}
+.progress-bar {
+  background: #3b82f6;
+  height: 100%;
+  border-radius: 8px;
+  transition: width 0.3s;
+}
+.stats {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+  text-align: center;
+  font-size: 14px;
+  opacity: 0.7;
+}
+.stat {
+  background: #f8fafc;
+  padding: 10px;
+  border-radius: 8px;
+  flex: 1;
+  margin: 0 5px;
+}
+.stat-number {
+  font-size: 18px;
+  font-weight: bold;
+  color: #3b82f6;
+}
+.no-words {
+    text-align: center;
+    padding: 40px;
+    color: #6b7280;
+}
+
+/* ============================================
+   ESTILOS PARA PALABRAS CLICKEABLES EN PRÁCTICA
+   ============================================ */
+
+.practice-word {
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-radius: 3px;
+    padding: 1px 2px;
+}
+
+.practice-word:hover {
+    background-color: #e5e7eb;
+    color: #374151;
+    transform: translateY(-1px);
+}
+
+.practice-word:active {
+    background-color: #d1d5db;
+    transform: translateY(0);
+}
+
+.practice-gap {
+    color: #6b7280;
+    font-weight: bold;
+    background-color: #f3f4f6;
+    padding: 2px 6px;
+    border-radius: 4px;
+    border: 1px dashed #d1d5db;
+}
+
+/* Tooltip específico para práctica */
+.practice-tooltip {
+    animation: fadeInTooltip 0.2s ease-in;
+}
+
+@keyframes fadeInTooltip {
+    from {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+

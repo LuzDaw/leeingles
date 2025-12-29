@@ -1,0 +1,127 @@
+/* index-page.css: estilos movidos desde index.php */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+/* Cards y contenedores */
+.card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+  margin-bottom: 24px;
+  padding: 24px;
+}
+.card-body {
+  padding: 12px 0;
+}
+
+/* Inputs y selects */
+
+
+/* Etiquetas y textos */
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+
+
+.text-list {
+  list-style: none;
+  padding: 0;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.text-item {
+  display: flex;
+  align-items: center;
+  padding: 15px 20px;
+  border-bottom: 1px solid #f1f3f4;
+  gap: 15px;
+  transition: all 0.2s ease;
+}
+.text-item:last-child {
+  border-bottom: none;
+}
+.text-item:hover {
+  background-color: #f8f9fa;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.text-title {
+  flex-grow: 1;
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+  font-size: 1.1rem;
+}
+.text-title:hover {
+  color: #4A90E2;
+}
+
+.text-author {
+  color: #888;
+  font-size: 0.95em;
+  margin-left: 10px;
+}
+
+/* Otros estilos comunes */
+.main-container {
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+#upload-form-container {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.progress-dashboard {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.progress-stats-grid {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.progress-stat-card {
+  background: #f3f4f6;
+  border-radius: 8px;
+  padding: 18px 24px;
+  flex: 1 1 180px;
+  text-align: center;
+}
+
+.stat-icon {
+  font-size: 2rem;
+  margin-bottom: 8px;
+}
+
+.stat-number {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #3b82f6;
+}
+
+.stat-label {
+  color: #64748b;
+  font-size: 1rem;
+} 

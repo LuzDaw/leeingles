@@ -1,0 +1,183 @@
+<?php
+session_start();
+require_once '../db/connection.php';
+require_once 'auth_functions.php'; // Para funciones como hashPassword
+
+$message = '';
+$message_type = ''; // 'success' or 'error'
+$show_form = false;
+$token_valid = false;
+$user_id = null;
+
+if (isset($_GET['token'])) {
+    $token = $_GET['token'];
+    $token_hash = hash('sha256', $token);
+    $current_time = date('Y-m-d H:i:s');
+
+    $stmt = $conn->prepare("SELECT id_usuario, expira_en FROM verificaciones_email WHERE token_hash = ? AND tipo = 'password_reset'");
+    $stmt->bind_param("s", $token_hash);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $verification = $result->fetch_assoc();
+    $stmt->close();
+
+    if ($verification) {
+        if ($current_time < $verification['expira_en']) {
+            $show_form = true;
+            $token_valid = true;
+            $user_id = $verification['id_usuario'];
+        } else {
+            $message = 'El enlace para restablecer la contraseña ha caducado. Por favor, solicita uno nuevo.';
+            $message_type = 'error';
+        }
+    } else {
+        $message = 'El enlace para restablecer la contraseña no es válido.';
+        $message_type = 'error';
+    }
+} elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Este bloque ahora manejará la solicitud AJAX del formulario del modal
+    header('Content-Type: application/json'); // Asegurar respuesta JSON para AJAX
+
+    $token = $_POST['token'] ?? '';
+    $new_password = $_POST['new_password'] ?? '';
+    $confirm_password = $_POST['confirm_password'] ?? '';
+
+    if (empty($token) || empty($new_password) || empty($confirm_password)) {
+        echo json_encode(['success' => false, 'message' => 'Todos los campos son obligatorios.']);
+        exit();
+    } elseif ($new_password !== $confirm_password) {
+        echo json_encode(['success' => false, 'message' => 'Las contraseñas no coinciden.']);
+        exit();
+    } elseif (strlen($new_password) < 6) { // Ejemplo de validación de longitud
+        echo json_encode(['success' => false, 'message' => 'La contraseña debe tener al menos 6 caracteres.']);
+        exit();
+    } else {
+        $token_hash = hash('sha256', $token);
+        $current_time = date('Y-m-d H:i:s');
+
+        $stmt = $conn->prepare("SELECT id_usuario, expira_en FROM verificaciones_email WHERE token_hash = ? AND tipo = 'password_reset'");
+        $stmt->bind_param("s", $token_hash);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $verification = $result->fetch_assoc();
+        $stmt->close();
+
+        if ($verification && $current_time < $verification['expira_en']) {
+            $user_id = $verification['id_usuario'];
+            $hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
+
+            // Actualizar la contraseña del usuario
+            $stmt = $conn->prepare("UPDATE users SET password = ? WHERE id = ?");
+            $stmt->bind_param("si", $hashed_password, $user_id);
+            if ($stmt->execute()) {
+                // Eliminar el token de restablecimiento usado
+                $stmt = $conn->prepare("DELETE FROM verificaciones_email WHERE token_hash = ? AND tipo = 'password_reset'");
+                $stmt->bind_param("s", $token_hash);
+                $stmt->execute();
+                $stmt->close();
+
+                echo json_encode(['success' => true, 'message' => 'Tu contraseña ha sido restablecida exitosamente. Ahora puedes iniciar sesión.']);
+                exit();
+            } else {
+                error_log("Error al actualizar la contraseña para el usuario $user_id: " . $stmt->error);
+                echo json_encode(['success' => false, 'message' => 'Error al actualizar la contraseña. Por favor, inténtalo de nuevo.']);
+                exit();
+            }
+        } else {
+            echo json_encode(['success' => false, 'message' => 'El enlace para restablecer la contraseña no es válido o ha caducado.']);
+            exit();
+        }
+    }
+} else {
+    // Si se accede directamente sin POST, se muestra el formulario o mensaje
+    // No se envía JSON aquí, ya que es una carga de página inicial
+}
+
+$conn->close();
+?>
+<div class="reset-container">
+    <h2>Restablecer Contraseña</h2>
+
+    <?php if ($message): ?>
+        <div class="message <?php echo $message_type; ?>">
+            <?php echo $message; ?>
+        </div>
+        <?php if ($message_type === 'success'): ?>
+            <a href="login.php" class="login-link">Ir a Iniciar Sesión</a>
+        <?php endif; ?>
+    <?php endif; ?>
+
+    <?php if ($show_form && $token_valid): ?>
+        <form id="reset-password-form" action="logueo_seguridad/restablecer_contrasena.php" method="POST">
+            <input type="hidden" name="token" value="<?php echo htmlspecialchars($token); ?>">
+            <div class="form-group">
+                <label for="new_password">Nueva Contraseña:</label>
+                <div class="password-input-wrapper">
+                    <input type="password" id="new_password" name="new_password" required>
+                    <span id="toggleNewPassword" class="password-toggle-icon">👁️</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="confirm_password">Confirmar Nueva Contraseña:</label>
+                <div class="password-input-wrapper">
+                    <input type="password" id="confirm_password" name="confirm_password" required>
+                    <span id="toggleConfirmPassword" class="password-toggle-icon">👁️</span>
+                </div>
+            </div>
+            <button type="submit" class="btn-submit">Restablecer Contraseña</button>
+        </form>
+    <?php endif; ?>
+</div>
+
+<script src="password_visibility.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        setupPasswordVisibilityToggle('new_password', 'toggleNewPassword');
+        setupPasswordVisibilityToggle('confirm_password', 'toggleConfirmPassword');
+
+        // Manejar el envío del formulario de restablecimiento de contraseña vía AJAX
+        const resetPasswordForm = document.getElementById('reset-password-form');
+        if (resetPasswordForm) {
+            resetPasswordForm.onsubmit = async function(e) {
+                e.preventDefault();
+                const formData = new FormData(this);
+                
+                try {
+                    const response = await fetch(this.action, {
+                        method: 'POST',
+                        body: formData
+                    });
+                    const data = await response.json();
+
+                    const messageDiv = document.querySelector('.reset-container .message');
+                    if (messageDiv) {
+                        messageDiv.remove(); // Eliminar mensaje anterior
+                    }
+
+                    const newMessageDiv = document.createElement('div');
+                    newMessageDiv.classList.add('message');
+                    if (data.success) {
+                        newMessageDiv.classList.add('success');
+                        newMessageDiv.innerHTML = data.message + ' <a href="login.php" class="login-link">Ir a Iniciar Sesión</a>';
+                        resetPasswordForm.style.display = 'none'; // Ocultar formulario al éxito
+                    } else {
+                        newMessageDiv.classList.add('error');
+                        newMessageDiv.textContent = data.message;
+                    }
+                    document.querySelector('.reset-container').insertBefore(newMessageDiv, document.querySelector('.reset-container h2').nextSibling);
+
+                } catch (error) {
+                    console.error('Error en solicitud de restablecimiento:', error);
+                    const messageDiv = document.querySelector('.reset-container .message');
+                    if (messageDiv) {
+                        messageDiv.remove();
+                    }
+                    const newMessageDiv = document.createElement('div');
+                    newMessageDiv.classList.add('message', 'error');
+                    newMessageDiv.textContent = 'Error del servidor al restablecer la contraseña.';
+                    document.querySelector('.reset-container').insertBefore(newMessageDiv, document.querySelector('.reset-container h2').nextSibling);
+                }
+            };
+        }
+    });
+</script>
