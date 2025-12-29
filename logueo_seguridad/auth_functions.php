@@ -51,14 +51,10 @@ function validateUsername($username) {
 function authenticateUser($username, $password, $remember_me = false) {
     global $conn;
     
-    $username_input = (string)$username; // Asegurar que $username sea una cadena antes de trim
-    $username_input = trim($username_input); // Renombrar para evitar confusión
-    $password_input = $password;
-
-    // Asegurarse de que los parámetros para bind_param sean siempre cadenas no vacías
-    // Usar un valor que no colisione con usuarios reales si se busca por username o email
-    $username_for_query = !empty($username_input) ? $username_input : '___EMPTY_USERNAME_PLACEHOLDER___'; 
-    $email_for_query = !empty($username_input) ? $username_input : '___EMPTY_EMAIL_PLACEHOLDER___@example.com'; 
+    // Asegurar que $username sea una cadena desde el principio y luego trim
+    $username_input = (string)$username; 
+    $username_input = trim($username_input); 
+    $password_input = (string)$password; // Asegurar que $password sea una cadena
 
     if (empty($username_input) || empty($password_input)) {
         return ['success' => false, 'error' => 'Usuario y contraseña son requeridos.'];
@@ -69,7 +65,9 @@ function authenticateUser($username, $password, $remember_me = false) {
         return ['success' => false, 'error' => 'Error en la base de datos.'];
     }
     
-    $stmt->bind_param("ss", (string)$username_for_query, (string)$email_for_query);
+    // Asegurarse de que los parámetros para bind_param sean siempre cadenas no vacías
+    // Usar los valores de input directamente, ya que la validación empty() ya se hizo
+    $stmt->bind_param("ss", $username_input, $username_input); // Buscar por username o email con el mismo input
     $stmt->execute();
     $stmt->store_result();
 
@@ -77,7 +75,7 @@ function authenticateUser($username, $password, $remember_me = false) {
         $stmt->bind_result($user_id, $real_username, $hashed_password, $is_admin, $estado);
         $stmt->fetch();
 
-        if (password_verify($password, $hashed_password)) {
+        if (password_verify($password_input, $hashed_password)) { // Usar $password_input
             // Verificar si cuenta está activa
             if (isset($estado) && $estado === 'pendiente') {
                 $stmt->close();
