@@ -51,8 +51,16 @@ function validateUsername($username) {
 function authenticateUser($username, $password, $remember_me = false) {
     global $conn;
     
-    $username = trim($username);
-    if (empty($username) || empty($password)) {
+    $username_input = (string)$username; // Asegurar que $username sea una cadena antes de trim
+    $username_input = trim($username_input); // Renombrar para evitar confusión
+    $password_input = $password;
+
+    // Asegurarse de que los parámetros para bind_param sean siempre cadenas no vacías
+    // Usar un valor que no colisione con usuarios reales si se busca por username o email
+    $username_for_query = !empty($username_input) ? $username_input : '___EMPTY_USERNAME_PLACEHOLDER___'; 
+    $email_for_query = !empty($username_input) ? $username_input : '___EMPTY_EMAIL_PLACEHOLDER___@example.com'; 
+
+    if (empty($username_input) || empty($password_input)) {
         return ['success' => false, 'error' => 'Usuario y contraseña son requeridos.'];
     }
     
@@ -61,7 +69,7 @@ function authenticateUser($username, $password, $remember_me = false) {
         return ['success' => false, 'error' => 'Error en la base de datos.'];
     }
     
-    $stmt->bind_param("ss", $username, $username);
+    $stmt->bind_param("ss", (string)$username_for_query, (string)$email_for_query);
     $stmt->execute();
     $stmt->store_result();
 
@@ -131,22 +139,33 @@ function registerUser($username, $email, $password, $send_verification = false) 
         return ['success' => false, 'error' => $pwd_validation['errors'][0]];
     }
     
-    // Comprobar si el usuario o email ya existe
-    $stmt = $conn->prepare("SELECT id FROM users WHERE username = ? OR email = ?");
-    if ($stmt === false) {
-        return ['success' => false, 'error' => 'Error en la base de datos.'];
+    // Comprobar si el nombre de usuario ya existe
+    $stmt_username = $conn->prepare("SELECT id FROM users WHERE username = ?");
+    if ($stmt_username === false) {
+        return ['success' => false, 'error' => 'Error en la base de datos al verificar usuario.'];
     }
-    
-    $stmt->bind_param("ss", $username, $email);
-    $stmt->execute();
-    $stmt->store_result();
+    $stmt_username->bind_param("s", $username);
+    $stmt_username->execute();
+    $stmt_username->store_result();
+    if ($stmt_username->num_rows > 0) {
+        $stmt_username->close();
+        return ['success' => false, 'error' => 'El nombre de usuario ya existe.'];
+    }
+    $stmt_username->close();
 
-    if ($stmt->num_rows > 0) {
-        $stmt->close();
-        return ['success' => false, 'error' => 'El usuario o email ya existe'];
+    // Comprobar si el email ya existe
+    $stmt_email = $conn->prepare("SELECT id FROM users WHERE email = ?");
+    if ($stmt_email === false) {
+        return ['success' => false, 'error' => 'Error en la base de datos al verificar email.'];
     }
-    
-    $stmt->close();
+    $stmt_email->bind_param("s", $email);
+    $stmt_email->execute();
+    $stmt_email->store_result();
+    if ($stmt_email->num_rows > 0) {
+        $stmt_email->close();
+        return ['success' => false, 'error' => 'El email ya existe.'];
+    }
+    $stmt_email->close();
     
     // Insertar nuevo usuario
     $hashed_password = password_hash($password, PASSWORD_DEFAULT);

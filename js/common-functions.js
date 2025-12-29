@@ -245,9 +245,23 @@ window.MessageUtils = {
      * Muestra un mensaje de error
      * @param {string} id - ID del contenedor
      * @param {string} message - Mensaje a mostrar
+     * @param {number} duration - Duración en milisegundos (default: 3000)
      */
-    showError: function(id, message) {
-        DOMUtils.updateHTML(id, `<p style="color: red;">${message}</p>`);
+    showError: function(id, message, duration = 3000) {
+        const element = DOMUtils.getElement(id);
+        if (element) {
+            DOMUtils.updateHTML(id, `<p style="color: #dc3545; margin: 0;">${message}</p>`);
+            element.style.display = 'block';
+            element.style.opacity = '1'; // Asegurar que sea visible para la transición
+
+            setTimeout(() => {
+                element.style.opacity = '0';
+                setTimeout(() => {
+                    element.style.display = 'none';
+                    DOMUtils.clearMessages(id); // Limpiar el contenido después de ocultar
+                }, 300); // Coincidir con la duración de la transición CSS
+            }, duration);
+        }
     },
     
     /**
