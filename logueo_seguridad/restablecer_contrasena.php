@@ -66,6 +66,21 @@ if (isset($_GET['token'])) {
             $user_id = $verification['id_usuario'];
             $hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
 
+            // Obtener el username del usuario
+            $user_stmt = $conn->prepare("SELECT username FROM users WHERE id = ?");
+            $user_stmt->bind_param("i", $user_id);
+            $user_stmt->execute();
+            $user_result = $user_stmt->get_result();
+            $user_data = $user_result->fetch_assoc();
+            $user_stmt->close();
+
+            if (!$user_data) {
+                error_log("Error: Usuario $user_id no encontrado después de restablecer contraseña.");
+                echo json_encode(['success' => false, 'message' => 'Error interno: Usuario no encontrado.']);
+                exit();
+            }
+            $username = $user_data['username'];
+
             // Actualizar la contraseña del usuario
             $stmt = $conn->prepare("UPDATE users SET password = ? WHERE id = ?");
             $stmt->bind_param("si", $hashed_password, $user_id);
@@ -76,7 +91,13 @@ if (isset($_GET['token'])) {
                 $stmt->execute();
                 $stmt->close();
 
-                echo json_encode(['success' => true, 'message' => 'Tu contraseña ha sido restablecida exitosamente. Ahora puedes iniciar sesión.']);
+                // Iniciar sesión del usuario
+                $_SESSION['user_id'] = $user_id;
+                $_SESSION['username'] = $username;
+                $_SESSION['loggedin'] = true;
+
+                // Redirigir al usuario a la página principal
+                header('Location: /');
                 exit();
             } else {
                 error_log("Error al actualizar la contraseña para el usuario $user_id: " . $stmt->error);
