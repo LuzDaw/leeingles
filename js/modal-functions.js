@@ -13,11 +13,8 @@ EventUtils.addOptionalListener('close-login-modal', 'click', () => {
 
 // Funciones para modal de registro
 window.showRegisterModal = function() {
-    console.log('showRegisterModal called');
     DOMUtils.hideElement('login-modal');
     DOMUtils.showElement('register-modal');
-    console.log('login-modal display:', DOMUtils.getElement('login-modal').style.display);
-    console.log('register-modal display:', DOMUtils.getElement('register-modal').style.display);
 }
 
 // Funciones para modal de "Olvidé mi Contraseña"
@@ -47,15 +44,11 @@ window.showResetPasswordModal = async function(token) {
         const modalContent = DOMUtils.getElement('reset-password-modal-content');
         const scripts = modalContent.querySelectorAll('script');
         
-        console.log(`Encontrados ${scripts.length} scripts para ejecutar`);
-        
         scripts.forEach((script, index) => {
             const newScript = document.createElement('script');
             if (script.src) {
-                console.log(`Cargando script externo: ${script.src}`);
                 newScript.src = script.src;
             } else {
-                console.log(`Ejecutando script inline ${index + 1}`);
                 newScript.textContent = script.textContent;
             }
             newScript.type = 'text/javascript';
@@ -109,12 +102,6 @@ EventUtils.onDOMReady(() => {
                     const registerSuccessElement = DOMUtils.getElement('register-success');
                     const registerFormButton = registerForm.querySelector('button[type="submit"]');
 
-                    console.log('registerSuccessElement:', registerSuccessElement);
-                    if (!registerSuccessElement) {
-                        console.error('Error: register-success element not found.');
-                        return;
-                    }
-
                     // Construir el HTML completo del mensaje de éxito
                     const userEmail = formData.get('email');
                     const successMessageHtml = `
@@ -128,20 +115,19 @@ EventUtils.onDOMReady(() => {
                     `;
                     
                     // Limpiar y preparar el elemento
-                    registerSuccessElement.innerHTML = '';
-                    registerSuccessElement.className = 'register-success-tooltip';
-                    registerSuccessElement.innerHTML = successMessageHtml;
-                    
-                    // Asegurar que el elemento sea visible para calcular dimensiones
-                    registerSuccessElement.style.display = 'block';
-                    registerSuccessElement.style.visibility = 'hidden'; // Oculto pero ocupando espacio para calcular
-                    registerSuccessElement.style.opacity = '0';
+                    if (registerSuccessElement) {
+                        registerSuccessElement.innerHTML = '';
+                        registerSuccessElement.className = 'register-success-tooltip';
+                        registerSuccessElement.innerHTML = successMessageHtml;
+                        
+                        // Asegurar que el elemento sea visible para calcular dimensiones
+                        registerSuccessElement.style.display = 'block';
+                        registerSuccessElement.style.visibility = 'hidden'; // Oculto pero ocupando espacio para calcular
+                        registerSuccessElement.style.opacity = '0';
+                    }
 
-                    console.log('registerSuccessElement display after setting to block:', registerSuccessElement.style.display);
-                    console.log('registerSuccessElement innerHTML length:', registerSuccessElement.innerHTML.length);
 
-
-                    if (registerFormButton) {
+                    if (registerFormButton && registerSuccessElement) {
                         const rect = registerFormButton.getBoundingClientRect();
                         // Seleccionar el div principal del modal de registro - buscar por posición relativa dentro del modal
                         const registerModal = DOMUtils.getElement('register-modal');
@@ -160,14 +146,7 @@ EventUtils.onDOMReady(() => {
                             registerSuccessElement.style.top = calculatedTop + 'px';
                             registerSuccessElement.style.transform = 'translateX(-50%)';
                             registerSuccessElement.style.position = 'absolute';
-
-                            console.log('registerFormButton rect:', rect);
-                            console.log('registerModalContent rect:', modalRect);
-                            console.log('Calculated left:', calculatedLeft, 'px');
-                            console.log('Calculated top:', calculatedTop, 'px');
-                            console.log('Tooltip height:', tooltipHeight);
                         } else {
-                            console.error('registerModalContent not found, using fallback positioning');
                             // Posicionamiento de respaldo: centrado sobre el botón
                             const calculatedLeft = rect.left + rect.width / 2;
                             const calculatedTop = rect.top - 150;
@@ -177,26 +156,25 @@ EventUtils.onDOMReady(() => {
                             registerSuccessElement.style.position = 'fixed';
                         }
                     } else {
-                        console.warn('registerFormButton not found, tooltip positioning might be off.');
+                        console.warn('registerFormButton or registerSuccessElement not found, tooltip positioning might be off.');
                     }
 
                     // Hacer visible y mostrar con fade-in
-                    setTimeout(() => {
-                        registerSuccessElement.style.visibility = 'visible';
-                        registerSuccessElement.style.opacity = '1';
-                        console.log('registerSuccessElement opacity after setting to 1 (fade in):', registerSuccessElement.style.opacity);
-                        console.log('registerSuccessElement computed style display:', window.getComputedStyle(registerSuccessElement).display);
-                        console.log('registerSuccessElement computed style visibility:', window.getComputedStyle(registerSuccessElement).visibility);
-                    }, 50); // Aumentar ligeramente el delay para asegurar que el DOM está listo
-
-                    // Ocultar el tooltip después de 2 segundos y recargar página
-                    setTimeout(() => {
-                        registerSuccessElement.style.opacity = '0';
+                    if (registerSuccessElement) {
                         setTimeout(() => {
-                            // Recargar página para que el usuario esté logueado
-                            location.reload();
-                        }, 300);
-                    }, 2000);
+                            registerSuccessElement.style.visibility = 'visible';
+                            registerSuccessElement.style.opacity = '1';
+                        }, 50); // Aumentar ligeramente el delay para asegurar que el DOM está listo
+
+                        // Ocultar el tooltip después de 2 segundos y recargar página
+                        setTimeout(() => {
+                            registerSuccessElement.style.opacity = '0';
+                            setTimeout(() => {
+                                // Recargar página para que el usuario esté logueado
+                                location.reload();
+                            }, 300);
+                        }, 2000);
+                    }
 
                     DOMUtils.hideElement('register-error');
                     // No recargar la página para que el usuario pueda ver el mensaje y el botón
@@ -208,77 +186,76 @@ EventUtils.onDOMReady(() => {
             }
         };
     }
+});
 
-    // Manejar formulario de "Olvidé mi Contraseña"
-    const forgotPasswordForm = DOMUtils.getElement('forgot-password-form');
-    if (forgotPasswordForm) {
-        forgotPasswordForm.onsubmit = async function(e) {
-            e.preventDefault();
-            const formData = new FormData(this);
-            const email = formData.get('email');
-            const messagesDiv = DOMUtils.getElement('forgot-password-messages');
+// Manejar formulario de "Olvidé mi Contraseña"
+const forgotPasswordForm = DOMUtils.getElement('forgot-password-form');
+if (forgotPasswordForm) {
+    forgotPasswordForm.onsubmit = async function(e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+        const email = formData.get('email');
+        const messagesDiv = DOMUtils.getElement('forgot-password-messages');
 
-            if (!email || !ValidationUtils.isValidEmail(email)) {
-                MessageUtils.showError('forgot-password-messages', 'Por favor, introduce un email válido.');
-                return;
+        if (!email || !ValidationUtils.isValidEmail(email)) {
+            MessageUtils.showError('forgot-password-messages', 'Por favor, introduce un email válido.');
+            return;
+        }
+
+        // Ocultar el modal de "Olvidé mi Contraseña" y mostrar el modal de carga
+        DOMUtils.hideElement('forgot-password-modal');
+        // Mostrar el modal de carga con un delay mínimo de 1 segundo para el mensaje "Enviando email"
+        window.showLoadingRedirectModal('Enviando email', 'Por favor, espera...', '', 1000); // Delay de 1 segundo, sin redirección automática
+
+        try {
+            const response = await fetch('logueo_seguridad/solicitar_restablecimiento_contrasena.php', {
+                method: 'POST',
+                body: formData
+            });
+            const text = await response.text();
+            const data = JSON.parse(text);
+            
+            // Ocultar el modal de carga (el de "Enviando email")
+            const loadingModal = DOMUtils.getElement('loading-redirect-modal');
+            if (loadingModal) {
+                loadingModal.classList.remove('show');
             }
 
-            // Ocultar el modal de "Olvidé mi Contraseña" y mostrar el modal de carga
-            DOMUtils.hideElement('forgot-password-modal');
-            // Mostrar el modal de carga con un delay mínimo de 1 segundo para el mensaje "Enviando email"
-            window.showLoadingRedirectModal('Enviando email', 'Por favor, espera...', '', 1000); // Delay de 1 segundo, sin redirección automática
-
-            try {
-                console.log('Enviando solicitud de restablecimiento con email:', email);
-                const response = await fetch('logueo_seguridad/solicitar_restablecimiento_contrasena.php', {
-                    method: 'POST',
-                    body: formData
-                });
-                console.log('Response status:', response.status);
-                const text = await response.text();
-                console.log('Response text:', text);
-                const data = JSON.parse(text);
-                console.log('Respuesta recibida:', data);
-                
-                // Ocultar el modal de carga (el de "Enviando email")
-                const loadingModal = DOMUtils.getElement('loading-redirect-modal');
-                if (loadingModal) {
-                    loadingModal.classList.remove('show');
-                }
-
-                if (data.success) {
-                    // Mostrar un modal de éxito con redirección, aumentando el delay a 5 segundos
-                    window.showLoadingRedirectModal(
-                        'Email enviado',
-                        'Revisa tu bandeja de entrada para restablecer tu contraseña.',
-                        'index.php', // Redirigir a la página principal o a una página de confirmación
-                        5000 // Redirigir después de 5 segundos
-                    );
-                } else {
-                    // Si hay un error, mostrar el modal de "Olvidé mi Contraseña" de nuevo con el mensaje de error
-                    window.showForgotPasswordModal(); // Reabrir el modal
-                    const messagesDiv = DOMUtils.getElement('forgot-password-messages');
+            if (data.success) {
+                // Mostrar un modal de éxito con redirección, aumentando el delay a 5 segundos
+                window.showLoadingRedirectModal(
+                    'Email enviado',
+                    'Revisa tu bandeja de entrada para restablecer tu contraseña.',
+                    'index.php', // Redirigir a la página principal o a una página de confirmación
+                    5000 // Redirigir después de 5 segundos
+                );
+            } else {
+                // Si hay un error, mostrar el modal de "Olvidé mi Contraseña" de nuevo con el mensaje de error
+                window.showForgotPasswordModal(); // Reabrir el modal
+                const messagesDiv = DOMUtils.getElement('forgot-password-messages');
+                if (messagesDiv) {
                     messagesDiv.textContent = data.message || 'Error al solicitar restablecimiento de contraseña.';
                     messagesDiv.style.color = '#dc3545';
                     messagesDiv.style.display = 'block';
                 }
-            } catch (error) {
-                console.error('Error en solicitud de restablecimiento:', error);
-                // Ocultar el modal de carga en caso de error
-                const loadingModal = DOMUtils.getElement('loading-redirect-modal');
-                if (loadingModal) {
-                    loadingModal.classList.remove('show');
-                }
-                // Mostrar el modal de "Olvidé mi Contraseña" de nuevo con el mensaje de error
-                window.showForgotPasswordModal(); // Reabrir el modal
-                const messagesDiv = DOMUtils.getElement('forgot-password-messages');
+            }
+        } catch (error) {
+            // Ocultar el modal de carga en caso de error
+            const loadingModal = DOMUtils.getElement('loading-redirect-modal');
+            if (loadingModal) {
+                loadingModal.classList.remove('show');
+            }
+            // Mostrar el modal de "Olvidé mi Contraseña" de nuevo con el mensaje de error
+            window.showForgotPasswordModal(); // Reabrir el modal
+            const messagesDiv = DOMUtils.getElement('forgot-password-messages');
+            if (messagesDiv) {
                 messagesDiv.textContent = 'Error del servidor al solicitar restablecimiento.';
                 messagesDiv.style.color = '#dc3545';
                 messagesDiv.style.display = 'block';
             }
-        };
-    }
-});
+        }
+    };
+}
 
 // Manejar formulario de login
 EventUtils.addOptionalListener('login-form', 'submit', async (e) => {
@@ -311,22 +288,28 @@ EventUtils.addOptionalListener('login-form', 'submit', async (e) => {
                         <p style="margin: 10px 0 0 0; color: #d0d0d0; font-size: 0.9em;">Si no ves el email, revisa spam o promociones.</p>
                     </div>
                 `;
-                loginErrorElement.innerHTML = tooltipHtml;
-                
-                // Usar clase especial para este tipo de tooltip
-                loginErrorElement.classList.add('login-pending-verification-tooltip');
-                loginErrorElement.classList.remove('login-error-tooltip');
+                if (loginErrorElement) {
+                    loginErrorElement.innerHTML = tooltipHtml;
+                    
+                    // Usar clase especial para este tipo de tooltip
+                    loginErrorElement.classList.add('login-pending-verification-tooltip');
+                    loginErrorElement.classList.remove('login-error-tooltip');
+                }
             } else {
                 // Tooltip normal de error
-                DOMUtils.updateText('login-error', data.message || 'has introducido mal el usuario o contraseña o usuario no existe');
-                loginErrorElement.classList.add('login-error-tooltip');
-                loginErrorElement.classList.remove('login-pending-verification-tooltip');
+                if (loginErrorElement) {
+                    DOMUtils.updateText('login-error', data.message || 'has introducido mal el usuario o contraseña o usuario no existe');
+                    loginErrorElement.classList.add('login-error-tooltip');
+                    loginErrorElement.classList.remove('login-pending-verification-tooltip');
+                }
             }
             
-            loginErrorElement.style.display = 'block'; // Mostrar para calcular posición
+            if (loginErrorElement) {
+                loginErrorElement.style.display = 'block'; // Mostrar para calcular posición
+            }
             
             // Posicionar el tooltip encima del campo de contraseña
-            if (passwordInput) {
+            if (passwordInput && loginErrorElement) {
                 const rect = passwordInput.getBoundingClientRect();
                 const modalRect = DOMUtils.getElement('login-modal').querySelector('.bg-white').getBoundingClientRect(); // Obtener el contenedor del modal
                 
@@ -337,21 +320,25 @@ EventUtils.addOptionalListener('login-form', 'submit', async (e) => {
             }
             
             // Mostrar con opacidad
-            setTimeout(() => {
-                loginErrorElement.style.opacity = '1';
-            }, 10); // Pequeño retraso para que la transición CSS funcione
-            
-            // Si es pendiente de verificación, mostrar más tiempo; si es error, 3 segundos
-            const hideTimeout = data.pendingVerification ? 8000 : 3000;
-            
-            setTimeout(() => {
-                loginErrorElement.style.opacity = '0';
+            if (loginErrorElement) {
                 setTimeout(() => {
-                    loginErrorElement.style.display = 'none';
-                    loginErrorElement.classList.remove('login-error-tooltip');
-                    loginErrorElement.classList.remove('login-pending-verification-tooltip');
-                }, 300); // Esperar a que termine la transición de opacidad
-            }, hideTimeout);
+                    loginErrorElement.style.opacity = '1';
+                }, 10); // Pequeño retraso para que la transición CSS funcione
+                
+                // Si es pendiente de verificación, mostrar más tiempo; si es error, 3 segundos
+                const hideTimeout = data.pendingVerification ? 8000 : 3000;
+                
+                setTimeout(() => {
+                    loginErrorElement.style.opacity = '0';
+                    setTimeout(() => {
+                        if (loginErrorElement) {
+                            loginErrorElement.style.display = 'none';
+                            loginErrorElement.classList.remove('login-error-tooltip');
+                            loginErrorElement.classList.remove('login-pending-verification-tooltip');
+                        }
+                    }, 300); // Esperar a que termine la transición de opacidad
+                }, hideTimeout);
+            }
             
             if (passwordInput) {
                 passwordInput.value = ''; // Limpiar contraseña
@@ -362,12 +349,14 @@ EventUtils.addOptionalListener('login-form', 'submit', async (e) => {
         const loginErrorElement = DOMUtils.getElement('login-error');
         const passwordInput = DOMUtils.getElement('login-password');
 
-        DOMUtils.updateText('login-error', 'Error del servidor');
-        loginErrorElement.classList.add('login-error-tooltip');
-        loginErrorElement.classList.remove('login-pending-verification-tooltip');
-        loginErrorElement.style.display = 'block';
+        if (loginErrorElement) {
+            DOMUtils.updateText('login-error', 'Error del servidor');
+            loginErrorElement.classList.add('login-error-tooltip');
+            loginErrorElement.classList.remove('login-pending-verification-tooltip');
+            loginErrorElement.style.display = 'block';
+        }
 
-        if (passwordInput) {
+        if (passwordInput && loginErrorElement) {
             const rect = passwordInput.getBoundingClientRect();
             const modalRect = DOMUtils.getElement('login-modal').querySelector('.bg-white').getBoundingClientRect();
             loginErrorElement.style.left = (rect.left + rect.width / 2 - modalRect.left) + 'px';
@@ -375,18 +364,22 @@ EventUtils.addOptionalListener('login-form', 'submit', async (e) => {
             loginErrorElement.style.transform = 'translateX(-50%)';
         }
 
-        setTimeout(() => {
-            loginErrorElement.style.opacity = '1';
-        }, 10);
-
-        setTimeout(() => {
-            loginErrorElement.style.opacity = '0';
+        if (loginErrorElement) {
             setTimeout(() => {
-                loginErrorElement.style.display = 'none';
-                loginErrorElement.classList.remove('login-error-tooltip');
-                loginErrorElement.classList.remove('login-pending-verification-tooltip');
-            }, 300);
-        }, 3000);
+                loginErrorElement.style.opacity = '1';
+            }, 10);
+
+            setTimeout(() => {
+                loginErrorElement.style.opacity = '0';
+                setTimeout(() => {
+                    if (loginErrorElement) {
+                        loginErrorElement.style.display = 'none';
+                        loginErrorElement.classList.remove('login-error-tooltip');
+                        loginErrorElement.classList.remove('login-pending-verification-tooltip');
+                    }
+                }, 300);
+            }, 3000);
+        }
     }
 });
 
@@ -414,8 +407,6 @@ function showUploadFormWithLogin() {
  * @param {number} delay - El tiempo en milisegundos antes de la redirección.
  */
 window.showLoadingRedirectModal = function(mainMessage, subMessage, redirectUrl, delay = 2000) {
-    console.log('showLoadingRedirectModal called with:', { mainMessage, subMessage, redirectUrl, delay });
-
     let modal = DOMUtils.getElement('loading-redirect-modal');
     if (!modal) {
         modal = document.createElement('div');
@@ -429,7 +420,6 @@ window.showLoadingRedirectModal = function(mainMessage, subMessage, redirectUrl,
             </div>
         `;
         document.body.appendChild(modal);
-        console.log('Modal created and appended to body.');
     }
 
     const mainMessageElement = modal.querySelector('.loading-redirect-main-message');
@@ -438,14 +428,12 @@ window.showLoadingRedirectModal = function(mainMessage, subMessage, redirectUrl,
     // Actualizar el texto de los elementos del modal
     if (mainMessageElement) {
         mainMessageElement.innerHTML = mainMessage; // Usar innerHTML directamente
-        console.log('Main message element found. Text set to:', mainMessageElement.innerHTML);
     } else {
         console.error('Main message element not found in loading-redirect-modal');
     }
 
     if (subMessageElement) {
         subMessageElement.innerHTML = subMessage; // Usar innerHTML directamente
-        console.log('Sub message element found. Text set to:', subMessageElement.innerHTML);
     } else {
         console.error('Sub message element not found in loading-redirect-modal');
     }
@@ -455,7 +443,6 @@ window.showLoadingRedirectModal = function(mainMessage, subMessage, redirectUrl,
     // Forzar un reflow para asegurar que la eliminación de la clase 'show' se aplique antes de volver a añadirla
     void modal.offsetWidth; 
     modal.classList.add('show'); // Mostrar el modal con la transición de opacidad
-    console.log('Modal visibility set to show. Current display:', window.getComputedStyle(modal).display, 'opacity:', window.getComputedStyle(modal).opacity);
 
     if (redirectUrl) { // Solo redirigir si se proporciona una URL
         setTimeout(() => {
