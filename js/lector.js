@@ -2,7 +2,7 @@
 let rateInput = null;
 let rateValue = null;
 
-// ===== Debug de lectura (activable) ===== 
+// ===== Debug de lectura (activable) ===== d
 window.READING_DEBUG = window.READING_DEBUG || false;
 window.ReadingLog = window.ReadingLog || [];
 window.enableReadingDebug = function(){ window.READING_DEBUG = true; console.info('[READING][debug] enabled'); };

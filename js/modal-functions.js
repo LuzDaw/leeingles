@@ -223,6 +223,11 @@ EventUtils.onDOMReady(() => {
                 return;
             }
 
+            // Ocultar el modal de "Olvidé mi Contraseña" y mostrar el modal de carga
+            DOMUtils.hideElement('forgot-password-modal');
+            // Mostrar el modal de carga con un delay mínimo de 1 segundo para el mensaje "Enviando email"
+            window.showLoadingRedirectModal('Enviando email', 'Por favor, espera...', '', 1000); // Delay de 1 segundo, sin redirección automática
+
             try {
                 console.log('Enviando solicitud de restablecimiento con email:', email);
                 const response = await fetch('logueo_seguridad/solicitar_restablecimiento_contrasena.php', {
@@ -235,22 +240,23 @@ EventUtils.onDOMReady(() => {
                 const data = JSON.parse(text);
                 console.log('Respuesta recibida:', data);
                 
+                // Ocultar el modal de carga (el de "Enviando email")
+                const loadingModal = DOMUtils.getElement('loading-redirect-modal');
+                if (loadingModal) {
+                    loadingModal.classList.remove('show');
+                }
+
                 if (data.success) {
-                    const messagesDiv = DOMUtils.getElement('forgot-password-messages');
-                    messagesDiv.textContent = data.message;
-                    messagesDiv.style.color = '#28a745';
-                    messagesDiv.style.display = 'block';
-                    // Opcional: cerrar modal después de un tiempo
-                    setTimeout(() => {
-                        DOMUtils.hideElement('forgot-password-modal');
-                        // Si el email se envió con éxito, mostrar el modal de restablecimiento de contraseña
-                        // Esto es para el caso en que el usuario haga clic en el enlace del email
-                        // y la página se recargue con el token en la URL.
-                        // Aquí, simplemente cerramos el modal de "olvidé mi contraseña".
-                        // La lógica para abrir el modal de restablecimiento se manejará en el DOMContentLoaded
-                        // si la URL contiene un token.
-                    }, 3000); // Cerrar después de 3 segundos
+                    // Mostrar un modal de éxito con redirección, aumentando el delay a 5 segundos
+                    window.showLoadingRedirectModal(
+                        'Email enviado',
+                        'Revisa tu bandeja de entrada para restablecer tu contraseña.',
+                        'index.php', // Redirigir a la página principal o a una página de confirmación
+                        5000 // Redirigir después de 5 segundos
+                    );
                 } else {
+                    // Si hay un error, mostrar el modal de "Olvidé mi Contraseña" de nuevo con el mensaje de error
+                    window.showForgotPasswordModal(); // Reabrir el modal
                     const messagesDiv = DOMUtils.getElement('forgot-password-messages');
                     messagesDiv.textContent = data.message || 'Error al solicitar restablecimiento de contraseña.';
                     messagesDiv.style.color = '#dc3545';
@@ -258,6 +264,13 @@ EventUtils.onDOMReady(() => {
                 }
             } catch (error) {
                 console.error('Error en solicitud de restablecimiento:', error);
+                // Ocultar el modal de carga en caso de error
+                const loadingModal = DOMUtils.getElement('loading-redirect-modal');
+                if (loadingModal) {
+                    loadingModal.classList.remove('show');
+                }
+                // Mostrar el modal de "Olvidé mi Contraseña" de nuevo con el mensaje de error
+                window.showForgotPasswordModal(); // Reabrir el modal
                 const messagesDiv = DOMUtils.getElement('forgot-password-messages');
                 messagesDiv.textContent = 'Error del servidor al solicitar restablecimiento.';
                 messagesDiv.style.color = '#dc3545';
@@ -401,11 +414,13 @@ function showUploadFormWithLogin() {
  * @param {number} delay - El tiempo en milisegundos antes de la redirección.
  */
 window.showLoadingRedirectModal = function(mainMessage, subMessage, redirectUrl, delay = 2000) {
+    console.log('showLoadingRedirectModal called with:', { mainMessage, subMessage, redirectUrl, delay });
+
     let modal = DOMUtils.getElement('loading-redirect-modal');
     if (!modal) {
         modal = document.createElement('div');
         modal.id = 'loading-redirect-modal';
-        modal.className = 'loading-redirect-modal';
+        modal.className = 'loading-redirect-modal'; // La clase inicial ya tiene display: none y opacity: 0
         modal.innerHTML = `
             <div class="loading-redirect-content">
                 <div class="loading-redirect-spinner"></div>
@@ -414,14 +429,37 @@ window.showLoadingRedirectModal = function(mainMessage, subMessage, redirectUrl,
             </div>
         `;
         document.body.appendChild(modal);
+        console.log('Modal created and appended to body.');
     }
 
-    DOMUtils.updateText(modal.querySelector('.loading-redirect-main-message'), mainMessage);
-    DOMUtils.updateText(modal.querySelector('.loading-redirect-sub-message'), subMessage);
+    const mainMessageElement = modal.querySelector('.loading-redirect-main-message');
+    const subMessageElement = modal.querySelector('.loading-redirect-sub-message');
 
-    modal.classList.add('show'); // Usar clase para mostrar con transición
+    // Actualizar el texto de los elementos del modal
+    if (mainMessageElement) {
+        mainMessageElement.innerHTML = mainMessage; // Usar innerHTML directamente
+        console.log('Main message element found. Text set to:', mainMessageElement.innerHTML);
+    } else {
+        console.error('Main message element not found in loading-redirect-modal');
+    }
 
-    setTimeout(() => {
-        window.location.href = redirectUrl;
-    }, delay);
+    if (subMessageElement) {
+        subMessageElement.innerHTML = subMessage; // Usar innerHTML directamente
+        console.log('Sub message element found. Text set to:', subMessageElement.innerHTML);
+    } else {
+        console.error('Sub message element not found in loading-redirect-modal');
+    }
+
+    // Asegurarse de que el modal esté oculto antes de mostrarlo para reiniciar la transición
+    modal.classList.remove('show');
+    // Forzar un reflow para asegurar que la eliminación de la clase 'show' se aplique antes de volver a añadirla
+    void modal.offsetWidth; 
+    modal.classList.add('show'); // Mostrar el modal con la transición de opacidad
+    console.log('Modal visibility set to show. Current display:', window.getComputedStyle(modal).display, 'opacity:', window.getComputedStyle(modal).opacity);
+
+    if (redirectUrl) { // Solo redirigir si se proporciona una URL
+        setTimeout(() => {
+            window.location.href = redirectUrl;
+        }, delay);
+    }
 };
