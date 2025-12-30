@@ -2,7 +2,7 @@
 let rateInput = null;
 let rateValue = null;
 
-// ===== Debug de lectura (activable) =====
+// ===== Debug de lectura (activable) ===== 
 window.READING_DEBUG = window.READING_DEBUG || false;
 window.ReadingLog = window.ReadingLog || [];
 window.enableReadingDebug = function(){ window.READING_DEBUG = true; console.info('[READING][debug] enabled'); };
@@ -541,49 +541,35 @@ function initLector() {
                     updateFloatingButton();
                 }
                 
-                // Mostrar modal de finalización
-                const endMsg = document.createElement('div');
-                const isFullscreen = document.fullscreenElement || document.webkitFullscreenElement;
+                // Lectura completamente finalizada
+                console.log('[LECTOR] Lectura completamente finalizada (fin de todas las páginas).');
+                window.autoReading = false;
+                autoReading = false;
                 
-                endMsg.style.cssText = `
-                    position: fixed;
-                    top: 50%;
-                    left: 50%;
-                    transform: translate(-50%, -50%);
-                    background: #F5F7FA;
-                    color: #1D3557;
-                    padding: 25px 35px;
-                    border: 1px solid #A8DADC;
-                    border-radius: 8px;
-                    font-size: 16px;
-                    text-align: center;
-                    z-index: ${isFullscreen ? '2147483647' : '999999'};
-                    box-shadow: 0 2px 10px rgba(29, 53, 87, 0.15);
-                    min-width: 200px;
-                `;
+                // El tiempo se guardará en stopReading, no aquí para evitar duplicaciones
                 
-                endMsg.innerHTML = `
-                    <div style="margin-bottom: 15px;">
-                        <div style="width: 24px; height: 24px; border: 2px solid #A8DADC; border-top: 2px solid #457B9D; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto;"></div>
-                    </div>
-                    <div style="font-weight: 500; color: #1D3557; margin-bottom: 8px;">Lectura finalizada</div>
-                    <div style="font-size: 14px; color: #457B9D;">Redirigiendo...</div>
-                `;
-                
-                // Agregar animación de spin si no existe
-                if (!document.getElementById('spin-animation')) {
-                    const style = document.createElement('style');
-                    style.id = 'spin-animation';
-                    style.textContent = '@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }';
-                    document.head.appendChild(style);
+                // Limpiar intervalo de actualización en tiempo real
+                if (readingUpdateInterval) {
+                    clearInterval(readingUpdateInterval);
+                    readingUpdateInterval = null;
+                    console.log('[LECTOR] readingUpdateInterval limpiado en shouldChangePage.');
                 }
                 
-                document.body.appendChild(endMsg);
+                // CORRECCIÓN: Limpiar estados al finalizar lectura
+                window.cleanupReadingStates();
                 
-                // Redirección a la pestaña de práctica al finalizar la lectura
-                setTimeout(() => {
-                    window.location.href = "index.php?tab=practice";
-                }, 2000);
+                // Actualizar botón flotante
+                if (typeof updateFloatingButton === 'function') {
+                    updateFloatingButton();
+                }
+                
+                // Mostrar modal de finalización usando la función genérica
+                window.showLoadingRedirectModal(
+                    'Lectura finalizada',
+                    'Redirigiendo...',
+                    'index.php?tab=practice',
+                    2000
+                );
             }
             isReadingInProgress = false; // Liberar el flag
             console.log('[LECTOR] isReadingInProgress = false (shouldChangePage).');
@@ -780,39 +766,12 @@ function initLector() {
                                     if (typeof updateFloatingButton === 'function') {
                                         updateFloatingButton();
                                     }
-                                    const endMsg = document.createElement('div');
-                                    const isFullscreen = document.fullscreenElement || document.webkitFullscreenElement;
-                                    endMsg.style.cssText = `
-                                        position: fixed;
-                                        top: 50%;
-                                        left: 50%;
-                                        transform: translate(-50%, -50%);
-                                        background: #F5F7FA;
-                                        color: #1D3557;
-                                        padding: 25px 35px;
-                                        border: 1px solid #A8DADC;
-                                        border-radius: 8px;
-                                        font-size: 16px;
-                                        text-align: center;
-                                        z-index: ${isFullscreen ? '2147483647' : '999999'};
-                                        box-shadow: 0 2px 10px rgba(29, 53, 87, 0.15);
-                                        min-width: 200px;
-                                    `;
-                                    endMsg.innerHTML = `
-                                        <div style="margin-bottom: 15px;">
-                                            <div style="width: 24px; height: 24px; border: 2px solid #A8DADC; border-top: 2px solid #457B9D; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto;"></div>
-                                        </div>
-                                        <div style="font-weight: 500; color: #1D3557; margin-bottom: 8px;">Lectura finalizada</div>
-                                        <div style="font-size: 14px; color: #457B9D;">Redirigiendo...</div>
-                                    `;
-                                    if (!document.getElementById('spin-animation')) {
-                                        const style = document.createElement('style');
-                                        style.id = 'spin-animation';
-                                        style.textContent = '@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }';
-                                        document.head.appendChild(style);
-                                    }
-                                    document.body.appendChild(endMsg);
-                                    setTimeout(() => { window.location.href = "index.php?tab=practice"; }, 2000);
+                                    window.showLoadingRedirectModal(
+                                        'Lectura finalizada',
+                                        'Redirigiendo...',
+                                        'index.php?tab=practice',
+                                        2000
+                                    );
                                 }
                             } else {
                                 readAndTranslate(index + 1).catch(err => {
@@ -1106,39 +1065,12 @@ function initLector() {
                 if (typeof updateFloatingButton === 'function') {
                     updateFloatingButton();
                 }
-                const endMsg = document.createElement('div');
-                const isFullscreen = document.fullscreenElement || document.webkitFullscreenElement;
-                endMsg.style.cssText = `
-                    position: fixed;
-                    top: 50%;
-                    left: 50%;
-                    transform: translate(-50%, -50%);
-                    background: #F5F7FA;
-                    color: #1D3557;
-                    padding: 25px 35px;
-                    border: 1px solid #A8DADC;
-                    border-radius: 8px;
-                    font-size: 16px;
-                    text-align: center;
-                    z-index: ${isFullscreen ? '2147483647' : '999999'};
-                    box-shadow: 0 2px 10px rgba(29, 53, 87, 0.15);
-                    min-width: 200px;
-                `;
-                endMsg.innerHTML = `
-                    <div style="margin-bottom: 15px;">
-                        <div style="width: 24px; height: 24px; border: 2px solid #A8DADC; border-top: 2px solid #457B9D; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto;"></div>
-                    </div>
-                    <div style="font-weight: 500; color: #1D3557; margin-bottom: 8px;">Lectura finalizada</div>
-                    <div style="font-size: 14px; color: #457B9D;">Redirigiendo...</div>
-                `;
-                if (!document.getElementById('spin-animation')) {
-                    const style = document.createElement('style');
-                    style.id = 'spin-animation';
-                    style.textContent = '@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }';
-                    document.head.appendChild(style);
-                }
-                document.body.appendChild(endMsg);
-                setTimeout(() => { window.location.href = "index.php?tab=practice"; }, 2000);
+                window.showLoadingRedirectModal(
+                    'Lectura finalizada',
+                    'Redirigiendo...',
+                    'index.php?tab=practice',
+                    2000
+                );
             }
         }
     }

@@ -26,7 +26,7 @@ function enviarEmailVerificacion($destinatarioEmail, $destinatarioNombre, $token
 <body style='font-family: Arial, sans-serif; background-color: #f5f5f5; padding: 20px;'>
     <div style='background-color: #ffffff; padding: 20px; border-radius: 8px; max-width: 600px; margin: 0 auto;'>
         <div style='text-align: center; margin-bottom: 20px;'>
-            <img src='cid:logo_idoneoweb' alt='Idoneoweb Logo' style='max-width: 150px;'>
+            <img src='cid:logo_idoneoweb' alt='Idoneoweb Logo' style='max-width: 50px;'> 
         </div>
         <h2 style='color: #333;'>Bienvenido a Traductor</h2>
         <p>Hola $destinatarioNombre,</p>

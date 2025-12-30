@@ -4,7 +4,7 @@
 // Variables globales para modal
 let actionAfterLogin = null;
 
-// Eventos de cierre de modales
+// Eventos de cierre de modales 
 EventUtils.addOptionalListener('close-login-modal', 'click', () => {
     DOMUtils.hideElement('login-modal');
     DOMUtils.hideElement('login-error');
@@ -392,3 +392,36 @@ function showUploadFormWithLogin() {
         showUploadForm();
     }
 }
+
+/**
+ * Muestra un modal de carga con un spinner y un mensaje, y redirige después de un tiempo.
+ * @param {string} mainMessage - El mensaje principal a mostrar en el modal (ej. "Lectura finalizada").
+ * @param {string} subMessage - El mensaje secundario (ej. "Redirigiendo...").
+ * @param {string} redirectUrl - La URL a la que se redirigirá después del delay.
+ * @param {number} delay - El tiempo en milisegundos antes de la redirección.
+ */
+window.showLoadingRedirectModal = function(mainMessage, subMessage, redirectUrl, delay = 2000) {
+    let modal = DOMUtils.getElement('loading-redirect-modal');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'loading-redirect-modal';
+        modal.className = 'loading-redirect-modal';
+        modal.innerHTML = `
+            <div class="loading-redirect-content">
+                <div class="loading-redirect-spinner"></div>
+                <div class="loading-redirect-main-message"></div>
+                <div class="loading-redirect-sub-message"></div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+    }
+
+    DOMUtils.updateText(modal.querySelector('.loading-redirect-main-message'), mainMessage);
+    DOMUtils.updateText(modal.querySelector('.loading-redirect-sub-message'), subMessage);
+
+    modal.classList.add('show'); // Usar clase para mostrar con transición
+
+    setTimeout(() => {
+        window.location.href = redirectUrl;
+    }, delay);
+};
