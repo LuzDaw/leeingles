@@ -189,7 +189,9 @@ EventUtils.onDOMReady(() => {
                     // No recargar la página para que el usuario pueda ver el mensaje y el botón
                 } else {
                     MessageUtils.showError('register-error', data.error);
-                    // Limpiar campos de contraseña y re-habilitar el formulario en caso de error
+                    // Limpiar todos los campos del formulario y re-habilitar el formulario en caso de error
+                    DOMUtils.updateValue('register-username', '');
+                    DOMUtils.updateValue('register-email', '');
                     DOMUtils.updateValue('register-password', '');
                     DOMUtils.updateValue('register-confirm-password', '');
                     // Asegurarse de que el botón de envío no esté deshabilitado si se implementó alguna lógica para ello
@@ -205,7 +207,9 @@ EventUtils.onDOMReady(() => {
                     loadingModal.classList.remove('show');
                 }
                 MessageUtils.showError('register-error', 'Error del servidor');
-                // Limpiar campos de contraseña y re-habilitar el formulario en caso de error del servidor
+                // Limpiar todos los campos del formulario y re-habilitar el formulario en caso de error del servidor
+                DOMUtils.updateValue('register-username', '');
+                DOMUtils.updateValue('register-email', '');
                 DOMUtils.updateValue('register-password', '');
                 DOMUtils.updateValue('register-confirm-password', '');
                 const submitButton = registerForm.querySelector('button[type="submit"]');
