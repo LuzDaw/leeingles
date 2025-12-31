@@ -96,8 +96,17 @@ EventUtils.onDOMReady(() => {
             }
             
             try {
+                // Mostrar modal de carga antes de enviar la petición
+                window.showLoadingRedirectModal('Registrando usuario...', 'Por favor, espera...');
+
                 const data = await HTTPUtils.postFormData('logueo_seguridad/ajax_register.php', formData);
                 
+                // Ocultar modal de carga después de recibir la respuesta, independientemente del éxito o fracaso
+                const loadingModal = DOMUtils.getElement('loading-redirect-modal');
+                if (loadingModal) {
+                    loadingModal.classList.remove('show');
+                }
+
                 if (data.success) {
                     const registerSuccessElement = DOMUtils.getElement('register-success');
                     const registerFormButton = registerForm.querySelector('button[type="submit"]');
@@ -180,9 +189,29 @@ EventUtils.onDOMReady(() => {
                     // No recargar la página para que el usuario pueda ver el mensaje y el botón
                 } else {
                     MessageUtils.showError('register-error', data.error);
+                    // Limpiar campos de contraseña y re-habilitar el formulario en caso de error
+                    DOMUtils.updateValue('register-password', '');
+                    DOMUtils.updateValue('register-confirm-password', '');
+                    // Asegurarse de que el botón de envío no esté deshabilitado si se implementó alguna lógica para ello
+                    const submitButton = registerForm.querySelector('button[type="submit"]');
+                    if (submitButton) {
+                        submitButton.disabled = false;
+                    }
                 }
             } catch (error) {
+                // Ocultar modal de carga en caso de error
+                const loadingModal = DOMUtils.getElement('loading-redirect-modal');
+                if (loadingModal) {
+                    loadingModal.classList.remove('show');
+                }
                 MessageUtils.showError('register-error', 'Error del servidor');
+                // Limpiar campos de contraseña y re-habilitar el formulario en caso de error del servidor
+                DOMUtils.updateValue('register-password', '');
+                DOMUtils.updateValue('register-confirm-password', '');
+                const submitButton = registerForm.querySelector('button[type="submit"]');
+                if (submitButton) {
+                    submitButton.disabled = false;
+                }
             }
         };
     }

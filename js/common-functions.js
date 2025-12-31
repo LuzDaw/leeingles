@@ -258,7 +258,7 @@ window.MessageUtils = {
                 element.style.opacity = '0';
                 setTimeout(() => {
                     element.style.display = 'none';
-                    DOMUtils.clearMessages(id); // Limpiar el contenido después de ocultar
+                    MessageUtils.clearMessages(id); // Limpiar el contenido después de ocultar
                 }, 300); // Coincidir con la duración de la transición CSS
             }, duration);
         }
