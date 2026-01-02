@@ -96,8 +96,8 @@ if (isset($_GET['token'])) {
                 $_SESSION['username'] = $username;
                 $_SESSION['loggedin'] = true;
 
-                // Redirigir al usuario a la página principal
-                header('Location: /');
+                // Devolver éxito en JSON para que el modal lo maneje
+                echo json_encode(['success' => true, 'message' => 'Contraseña actualizada correctamente. Iniciando sesión...']);
                 exit();
             } else {
                 error_log("Error al actualizar la contraseña para el usuario $user_id: " . $stmt->error);
@@ -152,53 +152,77 @@ $conn->close();
     
     <script src="logueo_seguridad/password_visibility.js"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        setupPasswordVisibilityToggle('new_password', 'toggleNewPassword');
-        setupPasswordVisibilityToggle('confirm_password', 'toggleConfirmPassword');
+    (function() {
+        // Función para inicializar el formulario (se ejecuta inmediatamente al inyectarse)
+        function initResetForm() {
+            if (typeof setupPasswordVisibilityToggle === 'function') {
+                setupPasswordVisibilityToggle('new_password', 'toggleNewPassword');
+                setupPasswordVisibilityToggle('confirm_password', 'toggleConfirmPassword');
+            }
 
-        // Manejar el envío del formulario de restablecimiento de contraseña vía AJAX
-        const resetPasswordForm = document.getElementById('reset-password-form');
-        if (resetPasswordForm) {
-            resetPasswordForm.onsubmit = async function(e) {
-                e.preventDefault();
-                const formData = new FormData(this);
-                
-                try {
-                    const response = await fetch(this.action, {
-                        method: 'POST',
-                        body: formData
-                    });
-                    const data = await response.json();
+            const resetPasswordForm = document.getElementById('reset-password-form');
+            if (resetPasswordForm) {
+                resetPasswordForm.onsubmit = async function(e) {
+                    e.preventDefault();
+                    const formData = new FormData(this);
+                    
+                    try {
+                        const response = await fetch(this.action, {
+                            method: 'POST',
+                            body: formData
+                        });
+                        const data = await response.json();
 
-                    const messageDiv = document.querySelector('.reset-container .message');
-                    if (messageDiv) {
-                        messageDiv.remove(); // Eliminar mensaje anterior
+                        const container = document.querySelector('.reset-container');
+                        const existingMessage = container.querySelector('.message');
+                        if (existingMessage) existingMessage.remove();
+
+                        const newMessageDiv = document.createElement('div');
+                        newMessageDiv.classList.add('message');
+                        
+                        if (data.success) {
+                            newMessageDiv.classList.add('success');
+                            newMessageDiv.style.color = '#155724';
+                            newMessageDiv.style.background = '#d4edda';
+                            newMessageDiv.style.padding = '10px';
+                            newMessageDiv.style.borderRadius = '4px';
+                            newMessageDiv.style.marginBottom = '15px';
+                            newMessageDiv.innerHTML = data.message;
+                            resetPasswordForm.style.display = 'none';
+                            
+                            // Redirigir después de un momento para que vean el éxito
+                            setTimeout(() => {
+                                window.location.href = 'index.php';
+                            }, 2000);
+                        } else {
+                            newMessageDiv.classList.add('error');
+                            newMessageDiv.style.color = '#721c24';
+                            newMessageDiv.style.background = '#f8d7da';
+                            newMessageDiv.style.padding = '10px';
+                            newMessageDiv.style.borderRadius = '4px';
+                            newMessageDiv.style.marginBottom = '15px';
+                            newMessageDiv.textContent = data.message;
+                        }
+                        container.insertBefore(newMessageDiv, container.querySelector('h2').nextSibling);
+
+                    } catch (error) {
+                        console.error('Error en solicitud de restablecimiento:', error);
+                        const container = document.querySelector('.reset-container');
+                        const newMessageDiv = document.createElement('div');
+                        newMessageDiv.classList.add('message', 'error');
+                        newMessageDiv.style.color = '#721c24';
+                        newMessageDiv.style.background = '#f8d7da';
+                        newMessageDiv.style.padding = '10px';
+                        newMessageDiv.style.borderRadius = '4px';
+                        newMessageDiv.textContent = 'Error del servidor al restablecer la contraseña.';
+                        container.insertBefore(newMessageDiv, container.querySelector('h2').nextSibling);
                     }
-
-                    const newMessageDiv = document.createElement('div');
-                    newMessageDiv.classList.add('message');
-                    if (data.success) {
-                        newMessageDiv.classList.add('success');
-                        newMessageDiv.innerHTML = data.message + ' <a href="login.php" class="login-link">Ir a Iniciar Sesión</a>';
-                        resetPasswordForm.style.display = 'none'; // Ocultar formulario al éxito
-                    } else {
-                        newMessageDiv.classList.add('error');
-                        newMessageDiv.textContent = data.message;
-                    }
-                    document.querySelector('.reset-container').insertBefore(newMessageDiv, document.querySelector('.reset-container h2').nextSibling);
-
-                } catch (error) {
-                    console.error('Error en solicitud de restablecimiento:', error);
-                    const messageDiv = document.querySelector('.reset-container .message');
-                    if (messageDiv) {
-                        messageDiv.remove();
-                    }
-                    const newMessageDiv = document.createElement('div');
-                    newMessageDiv.classList.add('message', 'error');
-                    newMessageDiv.textContent = 'Error del servidor al restablecer la contraseña.';
-                    document.querySelector('.reset-container').insertBefore(newMessageDiv, document.querySelector('.reset-container h2').nextSibling);
-                }
-            };
+                };
+            }
         }
-    });
+
+        // Ejecutar inmediatamente y también en DOMContentLoaded por si acaso
+        initResetForm();
+        document.addEventListener('DOMContentLoaded', initResetForm);
+    })();
 </script>
