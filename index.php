@@ -945,8 +945,8 @@ function render_text_clickable($text)
       <h2 class="text-center mb-20 color-dark fs-24">🔐 Iniciar sesión</h2>
       <form id="login-form">
         <div class="mb-15">
-          <label class="block mb-5 fw-600 color-gray">👤 Usuario:</label>
-          <input type="text" name="username" required class="w-100 p-10 rounded-8 fs-16" style="border:2px solid #e0e0e0; box-sizing:border-box;">
+          <label class="block mb-5 fw-600 color-gray">📧 Email:</label>
+          <input type="email" name="email" required class="w-100 p-10 rounded-8 fs-16" style="border:2px solid #e0e0e0; box-sizing:border-box;">
         </div>
         <div class="mb-20">
           <label class="block mb-5 fw-600 color-gray">🔒 Contraseña:</label>

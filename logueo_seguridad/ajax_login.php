@@ -14,18 +14,18 @@ if ($conn->connect_error) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $username = trim($_POST['username'] ?? '');
+    $email = trim($_POST['email'] ?? '');
     $password = $_POST['password'] ?? '';
     $remember_me = isset($_POST['remember_me']);
 
-    if (empty($username) || empty($password)) {
-        $response['message'] = 'Usuario y contraseña son requeridos.';
+    if (empty($email) || empty($password)) {
+        $response['message'] = 'Email y contraseña son requeridos.';
         echo json_encode($response);
         exit;
     }
 
-    // Usar función centralizada
-    $result = authenticateUser($username, $password, $remember_me);
+    // Usar función centralizada (ahora recibe email)
+    $result = authenticateUser($email, $password, $remember_me);
     
     if ($result['success']) {
         $response['success'] = true;

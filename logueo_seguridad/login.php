@@ -13,12 +13,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($conn->connect_error) {
             $errors[] = "Error de conexión a la base de datos: " . $conn->connect_error;
         } else {
-            $login = trim($_POST['username']); // Puede ser usuario o email
+            $email = trim($_POST['email']); // Ahora es solo email
             $password = $_POST['password'];
             $remember_me = isset($_POST['remember_me']);
 
-            // Usar función centralizada
-            $result = authenticateUser($login, $password, $remember_me);
+            // Usar función centralizada (ahora recibe email)
+            $result = authenticateUser($email, $password, $remember_me);
             
             if ($result['success']) {
                 header("Location: ../index.php");
@@ -56,8 +56,8 @@ $csrf_token = generateCSRFToken();
         <input type="hidden" name="csrf_token" value="<?= $csrf_token ?>">
         
         <div class="form-group">
-            <label>Usuario o Email:</label>
-            <input type="text" name="username" required>
+            <label>Email:</label>
+            <input type="email" name="email" required>
         </div>
         
         <div class="form-group">

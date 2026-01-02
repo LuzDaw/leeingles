@@ -48,26 +48,25 @@ function validateUsername($username) {
 }
 
 // ==================== AUTENTICACIÓN ====================
-function authenticateUser($username, $password, $remember_me = false) {
+function authenticateUser($email, $password, $remember_me = false) {
     global $conn;
     
-    // Asegurar que $username sea una cadena desde el principio y luego trim
-    $username_input = (string)$username; 
-    $username_input = trim($username_input); 
+    // Asegurar que $email sea una cadena desde el principio y luego trim
+    $email_input = (string)$email; 
+    $email_input = trim($email_input); 
     $password_input = (string)$password; // Asegurar que $password sea una cadena
 
-    if (empty($username_input) || empty($password_input)) {
-        return ['success' => false, 'error' => 'Usuario y contraseña son requeridos.'];
+    if (empty($email_input) || empty($password_input)) {
+        return ['success' => false, 'error' => 'Email y contraseña son requeridos.'];
     }
     
-    $stmt = $conn->prepare("SELECT id, username, password, is_admin, estado FROM users WHERE username = ? OR email = ?");
+    // Buscar exclusivamente por email
+    $stmt = $conn->prepare("SELECT id, username, password, is_admin, estado FROM users WHERE email = ?");
     if ($stmt === false) {
         return ['success' => false, 'error' => 'Error en la base de datos.'];
     }
     
-    // Asegurarse de que los parámetros para bind_param sean siempre cadenas no vacías
-    // Usar los valores de input directamente, ya que la validación empty() ya se hizo
-    $stmt->bind_param("ss", $username_input, $username_input); // Buscar por username o email con el mismo input
+    $stmt->bind_param("s", $email_input);
     $stmt->execute();
     $stmt->store_result();
 
@@ -137,19 +136,8 @@ function registerUser($username, $email, $password, $send_verification = false) 
         return ['success' => false, 'error' => $pwd_validation['errors'][0]];
     }
     
-    // Comprobar si el nombre de usuario ya existe
-    $stmt_username = $conn->prepare("SELECT id FROM users WHERE username = ?");
-    if ($stmt_username === false) {
-        return ['success' => false, 'error' => 'Error en la base de datos al verificar usuario.'];
-    }
-    $stmt_username->bind_param("s", $username);
-    $stmt_username->execute();
-    $stmt_username->store_result();
-    if ($stmt_username->num_rows > 0) {
-        $stmt_username->close();
-        return ['success' => false, 'error' => 'El nombre de usuario ya existe.'];
-    }
-    $stmt_username->close();
+    // Nota: Ya no comprobamos si el username existe porque ya no es obligatorio que sea único.
+    // El login se hace por email, que sí debe ser único.
 
     // Comprobar si el email ya existe
     $stmt_email = $conn->prepare("SELECT id FROM users WHERE email = ?");
