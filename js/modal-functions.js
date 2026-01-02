@@ -331,7 +331,7 @@ EventUtils.addOptionalListener('login-form', 'submit', async (e) => {
             } else {
                 // Tooltip normal de error
                 if (loginErrorElement) {
-                    DOMUtils.updateText('login-error', data.message || 'has introducido mal el usuario o contraseña o usuario no existe');
+                    DOMUtils.updateText('login-error', data.message || 'has introducido mal el Email o contraseña');
                     loginErrorElement.classList.add('login-error-tooltip');
                     loginErrorElement.classList.remove('login-pending-verification-tooltip');
                 }
