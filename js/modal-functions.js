@@ -63,7 +63,6 @@ window.showResetPasswordModal = async function(token) {
         });
 
     } catch (error) {
-        console.error('Error al cargar el formulario de restablecimiento:', error);
         DOMUtils.updateHTML('reset-password-modal-content', '<div class="message error" style="color: #dc3545; padding: 10px; background: #f8d7da; border-radius: 4px; margin: 10px 0;">Error al cargar el formulario de restablecimiento. Por favor, inténtalo de nuevo.</div>');
     }
 }
@@ -164,8 +163,6 @@ EventUtils.onDOMReady(() => {
                             registerSuccessElement.style.transform = 'translateX(-50%)';
                             registerSuccessElement.style.position = 'fixed';
                         }
-                    } else {
-                        console.warn('registerFormButton or registerSuccessElement not found, tooltip positioning might be off.');
                     }
 
                     // Hacer visible y mostrar con fade-in
@@ -461,14 +458,10 @@ window.showLoadingRedirectModal = function(mainMessage, subMessage, redirectUrl,
     // Actualizar el texto de los elementos del modal
     if (mainMessageElement) {
         mainMessageElement.innerHTML = mainMessage; // Usar innerHTML directamente
-    } else {
-        console.error('Main message element not found in loading-redirect-modal');
     }
 
     if (subMessageElement) {
         subMessageElement.innerHTML = subMessage; // Usar innerHTML directamente
-    } else {
-        console.error('Sub message element not found in loading-redirect-modal');
     }
 
     // Asegurarse de que el modal esté oculto antes de mostrarlo para reiniciar la transición

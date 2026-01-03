@@ -20,7 +20,6 @@ try {
     }
 
     if ($conn->connect_error) {
-        error_log("Error de conexión a BD en solicitar_restablecimiento_contrasena.php: " . $conn->connect_error);
         echo json_encode(['success' => false, 'message' => 'Error de conexión a la base de datos. Por favor, inténtalo de nuevo más tarde.']);
         exit;
     }
@@ -47,8 +46,6 @@ try {
     $stmt->close();
 
     if (!$user) {
-        // Informar que el email no existe (sin revelar si está registrado por seguridad)
-        error_log("Intento de restablecimiento de contraseña para email no registrado: $email");
         echo json_encode(['success' => false, 'message' => 'Si el email existe en nuestro sistema, recibirás un enlace de restablecimiento.']);
         exit();
     }
@@ -58,10 +55,8 @@ try {
 
     // Generar un token único y seguro
     $token = bin2hex(random_bytes(32));
-    $token_hash = hash('sha256', $token); // Usar SHA256 para consistencia con tokens
-    $expires_at = date('Y-m-d H:i:s', strtotime('+1 hour')); // Token válido por 1 hora
-
-    error_log("Generando token de restablecimiento para usuario ID: $user_id, Email: $email");
+    $token_hash = hash('sha256', $token);
+    $expires_at = date('Y-m-d H:i:s', strtotime('+1 hour'));
 
     // Eliminar tokens antiguos para este usuario (buena práctica)
     $stmt = $conn->prepare("DELETE FROM verificaciones_email WHERE id_usuario = ? AND tipo = 'password_reset'");
@@ -86,21 +81,15 @@ try {
     }
     $stmt->close();
 
-    error_log("Token guardado en BD. Intentando enviar email a: $email");
-
     // Enviar el email de restablecimiento
     $emailResult = enviarEmailRestablecerContrasena($email, $username, $token);
     
     if ($emailResult['success']) {
-        error_log("Email de restablecimiento enviado exitosamente a: $email");
         echo json_encode([
             'success' => true, 
             'message' => 'Se ha enviado un enlace de restablecimiento a tu email. Por favor, revisa tu bandeja de entrada (incluyendo spam).'
         ]);
     } else {
-        error_log("Fallo al enviar email de restablecimiento a $email. Error: " . ($emailResult['error'] ?? 'Desconocido'));
-        
-        // Mostrar mensaje de error descriptivo
         $errorMsg = $emailResult['error'] ?? 'Error desconocido al enviar el email';
         $userMessage = 'No pudimos enviar el email de restablecimiento. Error: ' . $errorMsg;
         
@@ -113,7 +102,6 @@ try {
     exit();
 
 } catch (Exception $e) {
-    error_log("Excepción en solicitar_restablecimiento_contrasena.php: " . $e->getMessage());
     echo json_encode([
         'success' => false, 
         'message' => 'Error interno del servidor. Por favor, inténtalo de nuevo más tarde.',

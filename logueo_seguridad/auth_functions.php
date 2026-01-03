@@ -51,16 +51,13 @@ function validateUsername($username) {
 function authenticateUser($email, $password, $remember_me = false) {
     global $conn;
     
-    // Asegurar que $email sea una cadena desde el principio y luego trim
-    $email_input = (string)$email; 
-    $email_input = trim($email_input); 
-    $password_input = (string)$password; // Asegurar que $password sea una cadena
+    $email_input = trim((string)$email); 
+    $password_input = (string)$password;
 
     if (empty($email_input) || empty($password_input)) {
         return ['success' => false, 'error' => 'Email y contraseña son requeridos.'];
     }
     
-    // Buscar exclusivamente por email
     $stmt = $conn->prepare("SELECT id, username, password, is_admin, estado FROM users WHERE email = ?");
     if ($stmt === false) {
         return ['success' => false, 'error' => 'Error en la base de datos.'];
@@ -74,8 +71,7 @@ function authenticateUser($email, $password, $remember_me = false) {
         $stmt->bind_result($user_id, $real_username, $hashed_password, $is_admin, $estado);
         $stmt->fetch();
 
-        if (password_verify($password_input, $hashed_password)) { // Usar $password_input
-            // Verificar si cuenta está activa
+        if (password_verify($password_input, $hashed_password)) {
             if (isset($estado) && $estado === 'pendiente') {
                 $stmt->close();
                 return [
@@ -86,14 +82,12 @@ function authenticateUser($email, $password, $remember_me = false) {
                 ];
             }
             
-            // Regenerar ID de sesión por seguridad
             session_regenerate_id(true);
             
             $_SESSION['user_id'] = $user_id;
-            $_SESSION['username'] = $real_username;
+            $_SESSION['username'] = (string)($real_username ?? '');
             $_SESSION['is_admin'] = $is_admin;
             
-            // Manejar "Mantener sesión"
             if ($remember_me) {
                 ini_set('session.gc_maxlifetime', 30 * 24 * 60 * 60);
                 session_set_cookie_params(30 * 24 * 60 * 60);
@@ -101,14 +95,11 @@ function authenticateUser($email, $password, $remember_me = false) {
             
             $stmt->close();
             return ['success' => true, 'user_id' => $user_id, 'username' => $real_username, 'is_admin' => $is_admin];
-        } else {
-            $stmt->close();
-            return ['success' => false, 'error' => 'Has introducido mal el usuario o contraseña o usuario no existe'];
         }
-    } else {
-        $stmt->close();
-        return ['success' => false, 'error' => 'Has introducido mal el usuario o contraseña o usuario no existe'];
     }
+    
+    $stmt->close();
+    return ['success' => false, 'error' => 'Has introducido mal el usuario o contraseña o usuario no existe'];
 }
 
 // ==================== REGISTRO ====================

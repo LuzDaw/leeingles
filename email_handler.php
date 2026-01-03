@@ -8,23 +8,7 @@ require_once 'logueo_seguridad/PHPMailer/src/PHPMailer.php';
 require_once 'logueo_seguridad/PHPMailer/src/SMTP.php';
 
 function sendEmail($toEmail, $toName, $subject, $body) {
-    error_reporting(E_ALL);
-    ini_set('display_errors', 0);
-
-    // Log de depuración
-    $logFile = __DIR__ . '/logs/email_debug.log';
-    if (!is_dir(__DIR__ . '/logs')) {
-        @mkdir(__DIR__ . '/logs', 0755, true);
-    }
-
-    // Función auxiliar para logging
-    $log = function($message) use ($logFile) {
-        file_put_contents($logFile, '[' . date('Y-m-d H:i:s') . '] ' . $message . PHP_EOL, FILE_APPEND);
-    };
-
     try {
-        $log("Iniciando envío de email a: $toEmail");
-        
         $mail = new PHPMailer(true);
         
         // Configuración SMTP para leeingles.com con TLS
@@ -47,14 +31,6 @@ function sendEmail($toEmail, $toName, $subject, $body) {
             )
         );
 
-        // Habilitar depuración de PHPMailer (solo a archivo log)
-        $mail->SMTPDebug = \PHPMailer\PHPMailer\SMTP::DEBUG_SERVER;
-        $mail->Debugoutput = function($str, $level) use ($log) {
-            $log("[SMTP DEBUG] " . $str);
-        };
-
-        $log("Configuración SMTP establecida (Host: leeingles.com, Puerto: 465, Método: SSL)");
-
         // Configurar remitente y destinatario
         $mail->setFrom('info@leeingles.com', 'Leer Inglés');
         $mail->addAddress($toEmail, $toName);
@@ -69,21 +45,14 @@ function sendEmail($toEmail, $toName, $subject, $body) {
         $logoPath = __DIR__ . '/img/Originals/Idoneoweb - Imagotipo.png';
         if (file_exists($logoPath)) {
             $mail->AddEmbeddedImage($logoPath, 'logo_idoneoweb', 'Idoneoweb - Imagotipo.png');
-            $log("Logo embebido agregado");
-        } else {
-            $log("Advertencia: Logo no encontrado en $logoPath");
         }
 
-        $log("Intentando enviar email...");
         $mail->send();
         
-        $log("Email enviado exitosamente a $toEmail");
         return ['success' => true, 'message' => 'Email enviado correctamente.'];
         
     } catch (Exception $e) {
-        $errorMsg = "Error en email_handler.php (función sendEmail): " . $e->getMessage();
-        $log($errorMsg);
-        error_log($errorMsg);
+        error_log("Error en email_handler.php (función sendEmail): " . $e->getMessage());
         
         return [
             'success' => false, 

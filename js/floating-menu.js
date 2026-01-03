@@ -110,11 +110,7 @@ window.updateFloatingButton = function() {
 // Botón flotante: alterna entre iniciar y detener (sin pausa intermedia)
 let _playPauseLock = false;
 window.toggleFloatingPlayPause = function() {
-    console.log('[FLOATING_MENU] toggleFloatingPlayPause llamado.');
-    console.log('[FLOATING_MENU] Estado actual: isCurrentlyReading =', window.isCurrentlyReading, ', isCurrentlyPaused =', window.isCurrentlyPaused);
-
     if (_playPauseLock) {
-        console.log('[FLOATING_MENU] _playPauseLock activo, ignorando llamada.');
         return;
     }
 
@@ -123,37 +119,29 @@ window.toggleFloatingPlayPause = function() {
 
     const btn = document.getElementById('floating-btn');
     if (!btn) {
-        console.error('[FLOATING_MENU] Botón flotante no encontrado.');
         return;
     }
 
     if (window.isCurrentlyReading) {
-        console.log('[FLOATING_MENU] Deteniendo lectura...');
         // Detener completamente
         if (typeof window.stopReading === 'function') {
             window.stopReading();
-            console.log('[FLOATING_MENU] window.stopReading() llamado.');
         } else if (window.speechSynthesis) {
             try {
                 window.speechSynthesis.cancel();
-                console.log('[FLOATING_MENU] speechSynthesis.cancel() llamado.');
             } catch (e) {
-                console.error('[FLOATING_MENU] Error al cancelar speechSynthesis:', e);
             }
         }
         btn.textContent = '▶️';
         btn.title = 'Iniciar lectura';
     } else {
-        console.log('[FLOATING_MENU] Iniciando lectura...');
         // Iniciar lectura
         if (typeof window.startReading === 'function') {
             window.startReading();
-            console.log('[FLOATING_MENU] window.startReading() llamado.');
         }
         btn.textContent = '⏹️';
         btn.title = 'Detener lectura';
     }
-    console.log('[FLOATING_MENU] Estado después de toggle: isCurrentlyReading =', window.isCurrentlyReading, ', isCurrentlyPaused =', window.isCurrentlyPaused);
 }
 
 // Función para continuar desde el último párrafo leído
@@ -260,11 +248,9 @@ window.syncButtonWithReadingState = function() {
     if (!floatingBtn) return;
 
     const isActuallySpeaking = window.speechSynthesis && window.speechSynthesis.speaking;
-    // console.log('[FLOATING_MENU] syncButtonWithReadingState: isActuallySpeaking =', isActuallySpeaking, ', btn.textContent =', floatingBtn.textContent);
 
     // Si está hablando pero el botón muestra play, corregirlo a detener
     if (isActuallySpeaking && floatingBtn.textContent === '▶️') {
-        console.log('[FLOATING_MENU] Sincronizando: TTS está hablando, botón a Detener.');
         floatingBtn.textContent = '⏹️';
         floatingBtn.title = 'Detener lectura';
         window.isCurrentlyReading = true;
@@ -272,7 +258,6 @@ window.syncButtonWithReadingState = function() {
     }
     // Si no está hablando pero el botón muestra detener, corregirlo a iniciar
     else if (!isActuallySpeaking && floatingBtn.textContent === '⏹️') {
-        console.log('[FLOATING_MENU] Sincronizando: TTS no está hablando, botón a Iniciar.');
         floatingBtn.textContent = '▶️';
         floatingBtn.title = 'Iniciar lectura';
         window.isCurrentlyReading = false;

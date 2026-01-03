@@ -24,7 +24,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    // Usar función centralizada (ahora recibe email)
     $result = authenticateUser($email, $password, $remember_me);
     
     if ($result['success']) {
@@ -33,11 +32,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         $response['message'] = $result['error'];
         
-        // Verificar si está pendiente de verificación
         if (isset($result['pendingVerification']) && $result['pendingVerification']) {
             $response['pendingVerification'] = true;
             
-            // Obtener email para mostrar en tooltip
             if (isset($result['user_id'])) {
                 $email_stmt = $conn->prepare("SELECT email FROM users WHERE id = ?");
                 $email_stmt->bind_param("i", $result['user_id']);

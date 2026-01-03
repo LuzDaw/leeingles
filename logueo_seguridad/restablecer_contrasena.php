@@ -206,7 +206,6 @@ $conn->close();
                         container.insertBefore(newMessageDiv, container.querySelector('h2').nextSibling);
 
                     } catch (error) {
-                        console.error('Error en solicitud de restablecimiento:', error);
                         const container = document.querySelector('.reset-container');
                         const newMessageDiv = document.createElement('div');
                         newMessageDiv.classList.add('message', 'error');

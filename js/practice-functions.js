@@ -7,9 +7,6 @@ window.configureEnglishVoice = function(utterance) {
     utterance.lang = 'en-US';
 };
 
-// Función para precargar voces en inglés al cargar la página (eliminada - ya no es necesaria)
-// El sistema unificado de voz se encarga de la inicialización
-
 // Variables globales de práctica
 window.practiceWords = [];
 window.practiceRemainingWords = [];
@@ -114,10 +111,8 @@ window.setPracticeMode = function(mode) {
     if (mode === 'sentences') {
         loadSentencePractice();
     } else if (mode === 'selection' || mode === 'writing') {
-        // USAR LA MISMA FUNCIÓN QUE FUNCIONA para frases
         loadSentencePractice();
     } else {
-        // Fallback por si acaso
         loadSentencePractice();
     }
 }
@@ -135,59 +130,59 @@ window.loadPracticeQuestion = function() {
     const currentWord = window.practiceRemainingWords[randomIndex];
     window.practiceCurrentWordIndex = randomIndex;
     
-            // Para palabras: usar el contexto completo CON HUECO
-        if (window.practiceCurrentMode === 'selection' || window.practiceCurrentMode === 'writing') {
-            // MODO PALABRAS: mostrar contexto completo con hueco donde va la palabra
+    // Para palabras: usar el contexto completo CON HUECO
+    if (window.practiceCurrentMode === 'selection' || window.practiceCurrentMode === 'writing') {
+        // MODO PALABRAS: mostrar contexto completo con hueco donde va la palabra
+        
+        // Verificar si el contexto está vacío o no contiene la palabra
+        if (!currentWord.context || currentWord.context.trim() === '') {
+            window.practiceCurrentSentenceData = {
+                en: `The word "${currentWord.word}" is important.`,
+                es: `La palabra "${currentWord.word}" es importante.`
+            };
+        } else {
+            // Intentar crear el hueco con diferentes estrategias
+            let contextWithHole = currentWord.context;
             
-            // Verificar si el contexto está vacío o no contiene la palabra
-            if (!currentWord.context || currentWord.context.trim() === '') {
-                window.practiceCurrentSentenceData = {
-                    en: `The word "${currentWord.word}" is important.`,
-                    es: `La palabra "${currentWord.word}" es importante.`
-                };
+            // Limpiar la palabra de caracteres especiales para la búsqueda
+            const cleanWord = currentWord.word.replace(/[.,!?;:]/g, '').trim();
+            const originalWord = currentWord.word;
+            
+            // Estrategia 1: Buscar la palabra exacta (con caracteres especiales)
+            const regex1 = new RegExp(`\\b${originalWord.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'gi');
+            if (regex1.test(currentWord.context)) {
+                contextWithHole = currentWord.context.replace(regex1, '____');
             } else {
-                // Intentar crear el hueco con diferentes estrategias
-                let contextWithHole = currentWord.context;
-                
-                // Limpiar la palabra de caracteres especiales para la búsqueda
-                const cleanWord = currentWord.word.replace(/[.,!?;:]/g, '').trim();
-                const originalWord = currentWord.word;
-                
-                // Estrategia 1: Buscar la palabra exacta (con caracteres especiales)
-                const regex1 = new RegExp(`\\b${originalWord.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'gi');
-                if (regex1.test(currentWord.context)) {
-                    contextWithHole = currentWord.context.replace(regex1, '____');
+                // Estrategia 2: Buscar la palabra limpia con límites
+                const regex2 = new RegExp(`\\b${cleanWord.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'gi');
+                if (regex2.test(currentWord.context)) {
+                    contextWithHole = currentWord.context.replace(regex2, '____');
                 } else {
-                    // Estrategia 2: Buscar la palabra limpia con límites
-                    const regex2 = new RegExp(`\\b${cleanWord.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'gi');
-                    if (regex2.test(currentWord.context)) {
-                        contextWithHole = currentWord.context.replace(regex2, '____');
+                    // Estrategia 3: Buscar la palabra sin límites
+                    const regex3 = new RegExp(originalWord.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
+                    if (regex3.test(currentWord.context)) {
+                        contextWithHole = currentWord.context.replace(regex3, '____');
                     } else {
-                        // Estrategia 3: Buscar la palabra sin límites
-                        const regex3 = new RegExp(originalWord.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
-                        if (regex3.test(currentWord.context)) {
-                            contextWithHole = currentWord.context.replace(regex3, '____');
+                        // Estrategia 4: Buscar la palabra limpia sin límites
+                        const regex4 = new RegExp(cleanWord.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
+                        if (regex4.test(currentWord.context)) {
+                            contextWithHole = currentWord.context.replace(regex4, '____');
                         } else {
-                            // Estrategia 4: Buscar la palabra limpia sin límites
-                            const regex4 = new RegExp(cleanWord.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
-                            if (regex4.test(currentWord.context)) {
-                                contextWithHole = currentWord.context.replace(regex4, '____');
+                            // Estrategia 5: Búsqueda manual más flexible
+                            const wordLower = cleanWord.toLowerCase();
+                            const contextLower = currentWord.context.toLowerCase();
+                            const index = contextLower.indexOf(wordLower);
+                            if (index !== -1) {
+                                const before = currentWord.context.substring(0, index);
+                                const after = currentWord.context.substring(index + cleanWord.length);
+                                contextWithHole = before + '____' + after;
                             } else {
-                                // Estrategia 5: Búsqueda manual más flexible
-                                const wordLower = cleanWord.toLowerCase();
-                                const contextLower = currentWord.context.toLowerCase();
-                                const index = contextLower.indexOf(wordLower);
-                                if (index !== -1) {
-                                    const before = currentWord.context.substring(0, index);
-                                    const after = currentWord.context.substring(index + cleanWord.length);
-                                    contextWithHole = before + '____' + after;
-                                } else {
-                                    contextWithHole = currentWord.context;
-                                }
+                                contextWithHole = currentWord.context;
                             }
                         }
                     }
                 }
+            }
             window.practiceCurrentSentenceData = {
                 en: contextWithHole,
                 es: '', // Dejar vacío para que se traduzca con la API
@@ -253,10 +248,7 @@ window.loadPracticeQuestion = function() {
         </style>
     `;
     
-    // Resetear el botón de traducción en cada nueva pregunta
-
     if (window.practiceCurrentMode === 'selection') {
-        // OPCIONES CON PALABRAS EN INGLÉS (como antes)
         const distractors = generatePracticeDistractors(currentWord.word);
         const allOptions = [...distractors, currentWord.word];
         
@@ -290,7 +282,6 @@ window.loadPracticeQuestion = function() {
         `;
     }
 
-    // Antes de modificar el innerHTML
     const practiceCard = document.getElementById('practice-exercise-card');
     if (practiceCard) {
         practiceCard.innerHTML = html;
@@ -301,13 +292,11 @@ window.loadPracticeQuestion = function() {
         assignPracticeWordClickHandlers();
     }, 10);
     
-    // Después de cada render de la frase, añade este bloque:
     const englishSentence = document.getElementById('english-sentence');
     if (englishSentence && !englishSentence._delegated) {
         englishSentence.addEventListener('click', function(event) {
             const target = event.target;
             if (target.classList.contains('practice-word')) {
-                // Delegación: traducción por palabra
                 event.preventDefault();
                 event.stopPropagation();
                 const word = target.textContent.trim();
@@ -344,31 +333,24 @@ window.loadPracticeQuestion = function() {
     }, 10);
     
     if (window.practiceCurrentMode === 'writing') {
-        // Buscar el input por el atributo data-practice-input
         const writeInput = document.querySelector('[data-practice-input="true"]');
         if (writeInput) {
             writeInput.focus();
-            // Inicializar variables para errores de palabra
             window.currentWordErrors = 0;
-            
-            // Agregar event listeners de forma aislada
             const correctWord = writeInput.getAttribute('data-correct-word');
             
-            // Event listener para Enter
             writeInput.addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') {
                     checkPracticeWriteAnswer(correctWord);
                 }
             });
             
-            // Event listener para input
             writeInput.addEventListener('input', function() {
                 checkWordInput(correctWord);
             });
         }
     }
     
-    // Agregar listener para mostrar header al hacer clic fuera de botones
     setTimeout(() => {
         const practiceCard = document.getElementById('practice-exercise-card');
         if (practiceCard) {
@@ -383,18 +365,14 @@ window.loadPracticeQuestion = function() {
         }
     }, 100);
 
-    // Sistema de delegación unificado - se maneja en renderPracticeSentence
-    // Si el modo "siempre visible" está activo, mostrar traducción automáticamente
     if (window.practiceAlwaysShowTranslation) {
         setTimeout(() => {
             showPracticeTranslation();
-            // Ocultar el botón si existe
             var btn = document.getElementById('show-translation-btn');
             if(btn) btn.style.display = 'none';
         }, 30);
     }
     
-    // Delegación global para el botón de altavoz en todos los modos de práctica
     if (!window._delegacionAltavozPractica) {
         document.addEventListener('click', async function(e) {
             if (e.target.closest && e.target.closest('#speak-sentence-btn')) {
@@ -404,22 +382,14 @@ window.loadPracticeQuestion = function() {
                     sentence = window.practiceCurrentSentenceData.en;
                 }
                 if (sentence) {
-                    // Usar el sistema unificado de ResponsiveVoice como en la lectura
                     const finalSentence = sentence.replace(/____+/g, window.practiceCurrentSentenceData.word || '');
                     
-                    console.log('🎤 Reproduciendo frase de práctica:', finalSentence);
-                    
-                    // Esperar a que el sistema de voz esté listo
                     if (typeof window.getVoiceSystemReady === 'function') {
                         try {
                             await window.getVoiceSystemReady();
                             
-                            // Usar ResponsiveVoice unificado si está disponible
                             if (typeof window.leerTextoConResponsiveVoice === 'function') {
-                                console.log('✅ Usando ResponsiveVoice para frase de práctica');
                                 const success = window.leerTextoConResponsiveVoice(finalSentence, 1.0, {
-                                    onstart: () => console.log('🎤 Frase de práctica iniciada'),
-                                    onend: () => console.log('✅ Frase de práctica completada'),
                                     onerror: (error) => console.error('❌ Error en frase de práctica:', error)
                                 });
                                 
@@ -430,8 +400,6 @@ window.loadPracticeQuestion = function() {
                                 throw new Error('ResponsiveVoice no disponible');
                             }
                         } catch (error) {
-                            console.log('⚠️ Fallback a sistema nativo para frase de práctica');
-                            // Fallback simplificado
                             if (window.speechSynthesis && window.speechSynthesis.speaking) {
                                 window.speechSynthesis.cancel();
                             }
@@ -441,8 +409,6 @@ window.loadPracticeQuestion = function() {
                             window.speechSynthesis.speak(utter);
                         }
                     } else {
-                        console.log('⚠️ Sistema unificado no disponible, usando fallback directo');
-                        // Fallback directo simplificado
                         if (window.speechSynthesis && window.speechSynthesis.speaking) {
                             window.speechSynthesis.cancel();
                         }
@@ -475,7 +441,6 @@ window.loadPracticeQuestion = function() {
                     if(btn) btn.style.display = '';
                 }
             };
-            // Estado inicial
             if(window.practiceAlwaysShowTranslation) {
                 eye.style.color = '#0ea900';
             } else {
@@ -485,11 +450,6 @@ window.loadPracticeQuestion = function() {
     }, 0);
 }
 
-// Funciones para botones onclick
-// (showPracticeTranslation se define más abajo)
-
-// Las funciones selectPracticeOption, nextPracticeQuestion y checkPracticeWriteAnswer 
-// ya están definidas como window.* más abajo en el archivo
 window.restartPracticeExercise = function() {
     window.practiceRemainingWords = [...window.practiceWords];
     window.practiceCurrentQuestionIndex = 0;
@@ -501,17 +461,13 @@ window.restartPracticeExercise = function() {
 };
 
 window.playClickSound = function() {
-    // Sonido opcional - no es crítico
 };
 
-// Función auxiliar para normalizar palabras (quitar signos de puntuación)
 function normalizeWord(word) {
     return word.toLowerCase().replace(/[.,!?;:'"`~@#$%^&*()_+\-=\[\]{}|\\;:"'<>?\/]/g, '');
 }
 
-// Función auxiliar para obtener pista inteligente basada en el progreso actual
 function getSmartHint(userText, correctWord) {
-    // Encontrar hasta dónde está correcto el texto del usuario
     let correctLength = 0;
     for (let i = 0; i < userText.length && i < correctWord.length; i++) {
         if (userText[i].toLowerCase() === correctWord[i].toLowerCase()) {
@@ -521,26 +477,22 @@ function getSmartHint(userText, correctWord) {
         }
     }
     
-    // Mantener parte correcta + siguiente letra (si no está completa)
     if (correctLength < correctWord.length) {
         return correctWord.substring(0, correctLength + 1);
     } else {
-        return correctWord; // Si ya está completa, devolver la palabra completa
+        return correctWord;
     }
 }
 
-// Validación en tiempo real para modo escribir palabra (reutilizando lógica de frases)
 window.checkWordInput = function(correctWord) {
     const input = document.querySelector('[data-practice-input="true"]');
     const wordHint = document.getElementById('word-hint');
     const userText = input.value;
     const correctText = correctWord;
     
-    // Normalizar para comparación
     const normalizedUserText = normalizeWord(userText);
     const normalizedCorrectText = normalizeWord(correctText);
     
-    // Verificar caracter por caracter de la palabra/frase normalizada
     for (let i = 0; i < normalizedUserText.length; i++) {
         if (i >= normalizedCorrectText.length || 
             normalizedUserText[i].toLowerCase() !== normalizedCorrectText[i].toLowerCase()) {
@@ -573,12 +525,10 @@ window.checkWordInput = function(correctWord) {
             return;
         }
     }
-    // Si la frase está correcta hasta ahora, ocultar pista
     if (normalizedUserText === normalizedCorrectText.substring(0, normalizedUserText.length)) {
         if (wordHint) {
             wordHint.style.display = 'none';
         }
-        // Si la palabra está completamente correcta
         if (normalizedUserText === normalizedCorrectText) {
             if (!input.classList.contains('sentence-input') && !input.disabled) {
                 input.disabled = true;
@@ -591,12 +541,10 @@ window.checkWordInput = function(correctWord) {
                 } else if (translationDiv) {
                     translationDiv.classList.remove('hidden');
                 }
-                if (translationBtn) translationBtn.style.display = 'none'; // Ocultar SIEMPRE el botón tras acertar
+                if (translationBtn) translationBtn.style.display = 'none';
             }
-            // Si la frase está completamente correcta, mostrar feedback de éxito (para frases)
             if (input.classList.contains('sentence-input') && !input.disabled) {
                 input.disabled = true;
-                // Feedback visual para frases
                 let feedbackDiv = document.createElement('div');
                 feedbackDiv.className = 'practice-feedback-toast success';
                 feedbackDiv.textContent = '¡Correcto!';
@@ -616,7 +564,6 @@ window.checkWordInput = function(correctWord) {
                 feedbackDiv.style.pointerEvents = 'none';
                 document.body.appendChild(feedbackDiv);
                 setTimeout(() => feedbackDiv.remove(), 1500);
-                // Mostrar traducción automáticamente
                 const showBtn = document.getElementById('show-english-btn');
                 const englishDiv = document.getElementById('english-reference');
                 if (showBtn && englishDiv) {
@@ -624,10 +571,8 @@ window.checkWordInput = function(correctWord) {
                     englishDiv.innerHTML = correctText;
                     englishDiv.classList.remove('hidden');
                 }
-                // Habilitar botón siguiente
                 const nextButton = document.querySelector('.sentence-controls .next-btn');
                 if (nextButton) nextButton.style.display = 'inline-flex';
-                // Permitir avanzar con Enter
                 function nextSentenceOnEnter(e) {
                     if (e.key === 'Enter') {
                         window.removeEventListener('keydown', nextSentenceOnEnter);
@@ -646,15 +591,12 @@ window.checkWordInput = function(correctWord) {
     }
 };
 
-// Mostrar feedback de éxito cuando palabra esté correcta
 function showWordSuccessFeedback(inputElement) {
     const currentWord = window.practiceRemainingWords[window.practiceCurrentWordIndex];
     
-    // Actualizar estadísticas
     window.practiceCorrectAnswers++;
     window.practiceRemainingWords.splice(window.practiceCurrentWordIndex, 1);
     
-    // Crear cartel de éxito
     const successDiv = document.createElement('div');
     const rect = inputElement.getBoundingClientRect();
     
@@ -674,25 +616,18 @@ function showWordSuccessFeedback(inputElement) {
         animation: fadeInUp 0.3s ease;
     `;
     
-    // Unificar mensaje con selección múltiple
     successDiv.textContent = '¡Correcto!';
-    
     document.body.appendChild(successDiv);
-    
-    // Reproducir sonido de éxito
     playSuccessSound();
     
-    // Mostrar la palabra en el hueco de la frase inglesa destacada
     const englishSentence = document.getElementById('english-sentence');
     if (englishSentence && window.practiceCurrentSentenceData) {
-        // Reemplazar el hueco por la palabra correcta (sin HTML extra)
         const sentenceWithWord = window.practiceCurrentSentenceData.en.replace(
             /____+/g, currentWord.word
         );
         renderPracticeSentence(sentenceWithWord, currentWord.word);
     }
     
-    // Ocultar input y mostrar botón siguiente
     inputElement.style.display = 'none';
     const hintBtn = document.querySelector('.practice-controls .hint-btn');
     if (hintBtn) hintBtn.style.display = 'none';
@@ -700,7 +635,6 @@ function showWordSuccessFeedback(inputElement) {
     const nextButton = document.querySelector('.practice-controls .next-btn');
     if (nextButton) nextButton.style.display = 'inline-flex';
     
-    // Eliminar cartel después de 2 segundos
     setTimeout(() => {
         if (successDiv.parentNode) {
             document.body.removeChild(successDiv);
@@ -709,24 +643,19 @@ function showWordSuccessFeedback(inputElement) {
     }, 2000);
     
     updatePracticeStats();
-    // Asegurar que los handlers se asignan después de cualquier render
     if (typeof assignPracticeWordClickHandlers === 'function') {
         setTimeout(assignPracticeWordClickHandlers, 0);
     }
 }
 
-// Generar frase de práctica
 function generatePracticeSentence(word) {
     const practiceWord = window.practiceWords.find(w => w.word === word);
     if (!practiceWord) {
-        // Fallback a plantilla genérica si no se encuentra la palabra
         return { en: `The ${word} is important.`, es: `El ${word} es importante.` };
     }
     const translation = practiceWord.translation;
     const context = practiceWord.context;
-    // Si hay contexto real, usarlo
     if (context && context.trim().length > 0 && context !== `The ${word} is important.`) {
-        // Escapar la palabra correctamente y usar límites de palabra solo si es seguro
         const escapedWord = word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
         const wordBoundary = /^[a-zA-Z0-9]+$/.test(word) ? '\\b' : '';
         const sentenceWithGap = context.replace(new RegExp(`${wordBoundary}${escapedWord}${wordBoundary}`, 'gi'), '___');
@@ -741,7 +670,6 @@ function generatePracticeSentence(word) {
         };
         return result;
     }
-    // Fallback a plantillas genéricas
     const templates = [
         {
             en: `I can see the ${word} from here.`,
@@ -767,11 +695,10 @@ function generatePracticeSentence(word) {
     return result;
 }
 
-// Función para convertir texto en palabras clickeables (SELECCIÓN MÚLTIPLE - SIN ONCLICK)
 function makeWordsClickable(text, highlightWord = null) {
-    // Separa por palabras y signos de puntuación
     const words = text.match(/\w+|[.,!?;:()"'-]+|\s+/g);
     let result = '';
+    if (!words) return text;
     words.forEach(word => {
         if (word.trim() === '') {
             result += word;
@@ -780,10 +707,8 @@ function makeWordsClickable(text, highlightWord = null) {
         } else if (highlightWord && word.replace(/[.,]/g, '').toLowerCase() === highlightWord.toLowerCase()) {
             result += `<span class="practice-word highlighted-word">${word}</span>`;
         } else if (/^\w+$/.test(word)) {
-            // Solo palabras, no signos de puntuación
             result += `<span class="practice-word">${word}</span>`;
         } else {
-            // Signos de puntuación fuera de span
             result += word;
         }
     });
@@ -813,7 +738,6 @@ window.handlePracticeWordClickInline = function(event, el) {
     });
 }
 
-// Traducir frase de práctica
 function translatePracticeSentence(originalSentence, wordTranslation) {
     fetch('translate.php', {
         method: 'POST',
@@ -825,7 +749,6 @@ function translatePracticeSentence(originalSentence, wordTranslation) {
         const translationElement = document.getElementById('spanish-translation');
         if (data.translation && data.translation !== originalSentence) {
             let translatedSentence = data.translation;
-            // Resaltar variantes de la palabra traducida (género y número)
             let highlightedTranslation = translatedSentence;
             let root = wordTranslation.slice(0, Math.max(3, wordTranslation.length - 2));
             if (root.length >= 3) {
@@ -839,7 +762,6 @@ function translatePracticeSentence(originalSentence, wordTranslation) {
                     `<span class=\"highlighted-word\">${wordTranslation}</span>`
                 );
             }
-            // Si no se encontró, agregar la palabra al final
             if (!highlightedTranslation.includes('highlighted-word')) {
                 highlightedTranslation += ` <span class=\"highlighted-word\">(${wordTranslation})</span>`;
             }
@@ -857,16 +779,12 @@ function translatePracticeSentence(originalSentence, wordTranslation) {
     .catch((error) => {
         const translationElement = document.getElementById('spanish-translation');
         if (translationElement) {
-            // Eliminar mensaje 'Frase que contiene ...'. Mostrar mensaje neutro o dejar vacío.
             translationElement.innerHTML = '';
-            // O si prefieres, puedes poner:
-            // translationElement.innerHTML = '<span style="color: #dc2626;">No se pudo traducir la frase.</span>';
             translationElement.classList.remove('hidden');
         }
     });
 }
 
-// Generar distractores (palabras inglesas)
 function generatePracticeDistractors(correctWord) {
     const allWords = window.practiceWords.filter(w => w.word !== correctWord).map(w => w.word);
     const commonWords = ['house', 'book', 'time', 'water', 'good', 'work', 'think', 'know', 'want', 'say'];
@@ -888,40 +806,15 @@ function generatePracticeDistractors(correctWord) {
     return distractors;
 }
 
-// Generar distractores (traducciones en español)
-function generatePracticeTranslationDistractors(correctTranslation) {
-    const allTranslations = window.practiceWords.filter(w => w.translation !== correctTranslation).map(w => w.translation);
-    const commonTranslations = ['perro', 'gato', 'mesa', 'silla', 'ventana', 'puerta', 'comer', 'beber', 'dormir', 'caminar'];
-    
-    let distractors = [];
-    
-    const shuffledTranslations = [...allTranslations].sort(() => Math.random() - 0.5);
-    for (let i = 0; i < Math.min(3, shuffledTranslations.length); i++) {
-        distractors.push(shuffledTranslations[i]);
-    }
-    
-    while (distractors.length < 3) {
-        const commonTranslation = commonTranslations[Math.floor(Math.random() * commonTranslations.length)];
-        if (!distractors.includes(commonTranslation) && commonTranslation !== correctTranslation) {
-            distractors.push(commonTranslation);
-        }
-    }
-    
-    return distractors;
-}
-
-// Sonido de éxito
 function playSuccessSound() {
     try {
         const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        // Secuencia de dos tonos cortos descendentes (antes error, ahora éxito)
         const now = audioContext.currentTime;
         const gainNode = audioContext.createGain();
         gainNode.gain.setValueAtTime(0.25, now);
         gainNode.gain.linearRampToValueAtTime(0.01, now + 0.35);
         gainNode.connect(audioContext.destination);
 
-        // Primer tono
         const osc1 = audioContext.createOscillator();
         osc1.type = 'sine';
         osc1.frequency.setValueAtTime(220, now);
@@ -929,7 +822,6 @@ function playSuccessSound() {
         osc1.start(now);
         osc1.stop(now + 0.18);
 
-        // Segundo tono, más bajo, empieza tras el primero
         const osc2 = audioContext.createOscillator();
         osc2.type = 'sine';
         osc2.frequency.setValueAtTime(140, now + 0.18);
@@ -937,18 +829,15 @@ function playSuccessSound() {
         osc2.start(now + 0.18);
         osc2.stop(now + 0.35);
     } catch (error) {
-        
     }
 }
 
-// Sonido de error
 function playErrorSound() {
     try {
         const audioContext = new (window.AudioContext || window.webkitAudioContext)();
         const oscillator = audioContext.createOscillator();
         const gainNode = audioContext.createGain();
 
-        // Sonido más agudo y agradable (antes éxito, ahora error)
         oscillator.frequency.setValueAtTime(600, audioContext.currentTime);
         oscillator.frequency.exponentialRampToValueAtTime(800, audioContext.currentTime + 0.1);
         gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
@@ -960,11 +849,9 @@ function playErrorSound() {
         oscillator.start(audioContext.currentTime);
         oscillator.stop(audioContext.currentTime + 0.3);
     } catch (error) {
-        
     }
 }
 
-// Seleccionar opción de práctica
 window.selectPracticeOption = function(selected, correct) {
     if (window.practiceAnswered) {
         return;
@@ -973,13 +860,11 @@ window.selectPracticeOption = function(selected, correct) {
     const buttons = document.querySelectorAll('.option-btn');
     let selectedButton = null;
 
-    // Normalizar ambas palabras para comparación
     const normalizedSelected = normalizeWord(selected);
     const normalizedCorrect = normalizeWord(correct);
 
     buttons.forEach(btn => {
         btn.onclick = null;
-        // Normalizar el texto del botón para comparación
         const btnNormalized = normalizeWord(btn.textContent);
         if (btnNormalized === normalizedCorrect) {
             btn.classList.add('correct');
@@ -991,32 +876,25 @@ window.selectPracticeOption = function(selected, correct) {
         }
     });
 
-    // Mostrar botón siguiente y ocultar pista
     const hintButton = document.querySelector('.practice-controls .hint-btn');
     const nextButton = document.querySelector('.practice-controls .next-btn');
     if (hintButton) hintButton.style.display = 'none';
     if (nextButton) {
         nextButton.style.display = 'inline-flex';
-        // Asignar el evento directamente para asegurar que funcione
         nextButton.onclick = function() {
             nextPracticeQuestion();
         };
     }
 
-    // Usar la comparación normalizada para determinar si es correcto
     const isCorrect = normalizedSelected === normalizedCorrect;
 
-    // Siempre mostrar la palabra correcta en la frase inglesa después de responder
     const englishSentence = document.getElementById('english-sentence');
     if (englishSentence && window.practiceCurrentSentenceData) {
-        // Usar la frase original completa y reemplazar el hueco con la palabra correcta
         let sentenceWithWord = window.practiceCurrentSentenceData.original_en || window.practiceCurrentSentenceData.en;
         sentenceWithWord = sentenceWithWord.replace(/____+/g, correct);
         englishSentence.innerHTML = makeWordsClickable(sentenceWithWord, correct);
-        // Reasignar handlers para que funcione la traducción por palabra
         setTimeout(() => {
             assignPracticeWordClickHandlers();
-            // Reasignar el event listener al botón de altavoz si existe
             const speakBtn = document.getElementById('speak-sentence-btn');
             if (speakBtn) {
                 speakBtn.onclick = function(e) {
@@ -1041,28 +919,21 @@ window.selectPracticeOption = function(selected, correct) {
         }, 10);
     }
 
-    // Actualizar contadores
-    // El código de actualización se maneja en showQuickFeedback
-
-    // Mostrar automáticamente la traducción después de responder
     setTimeout(() => {
         showTranslationAfterAnswer();
-    }, 500); // Pequeño delay para que se vea el feedback primero
+    }, 500);
 
     showQuickFeedback(selectedButton, isCorrect, correct);
 }
 
-// Verificar respuesta escrita
 window.checkPracticeWriteAnswer = function(correct) {
     if (window.practiceAnswered) return;
     
     const inputElement = document.querySelector('[data-practice-input="true"]');
     const userAnswer = inputElement.value.trim();
     
-    // Si el input está vacío, no hacer nada
     if (!userAnswer) return;
     
-    // Normalizar tanto la respuesta del usuario como la correcta (quitar signos de puntuación)
     const normalizedUserAnswer = normalizeWord(userAnswer);
     const normalizedCorrect = normalizeWord(correct);
     const isCorrect = normalizedUserAnswer === normalizedCorrect;
@@ -1070,16 +941,13 @@ window.checkPracticeWriteAnswer = function(correct) {
     window.practiceAnswered = true;
     inputElement.disabled = true;
     
-    // SIEMPRE mostrar la palabra correcta en la frase (correcto o incorrecto)
     const englishSentence = document.getElementById('english-sentence');
     if (englishSentence && window.practiceCurrentSentenceData) {
         let sentenceWithAnswer = window.practiceCurrentSentenceData.original_en;
-        // Reemplazar los guiones bajos con la palabra correcta (texto plano)
         sentenceWithAnswer = sentenceWithAnswer.replace(/____+/g, correct);
         englishSentence.innerHTML = makeWordsClickable(sentenceWithAnswer, correct);
         setTimeout(() => {
             assignPracticeWordClickHandlers();
-            // Reasignar el event listener al botón de altavoz si existe
             const speakBtn = document.getElementById('speak-sentence-btn');
             if (speakBtn) {
                 speakBtn.onclick = function(e) {
@@ -1104,7 +972,6 @@ window.checkPracticeWriteAnswer = function(correct) {
         }, 10);
     }
     
-    // Mostrar botón siguiente y ocultar pista/verificar
     const hintButton = document.querySelector('.practice-controls .hint-btn');
     const verifyButton = document.querySelector('.practice-controls .verify-btn');
     const nextButton = document.querySelector('.practice-controls .next-btn');
@@ -1113,30 +980,25 @@ window.checkPracticeWriteAnswer = function(correct) {
     if (verifyButton) verifyButton.style.display = 'none';
     if (nextButton) nextButton.style.display = 'inline-flex';
 
-    // OCULTAR SIEMPRE el botón de traducción y mostrar la traducción
     const showBtn = document.getElementById('show-translation-btn');
     const translationDiv = document.getElementById('spanish-translation');
     if (showBtn) showBtn.style.display = 'none';
     if (translationDiv) translationDiv.classList.remove('hidden');
     
-    // Mostrar automáticamente la traducción después de responder
     setTimeout(() => {
         showTranslationAfterAnswer();
-    }, 500); // Pequeño delay para que se vea el feedback primero
+    }, 500);
     
     showQuickFeedback(inputElement, isCorrect, correct);
-    // Asegurar que los handlers se asignan después de cualquier render
     if (typeof assignPracticeWordClickHandlers === 'function') {
         setTimeout(assignPracticeWordClickHandlers, 0);
     }
 }
 
-// Mostrar traducción antes de responder (botón de ayuda)
 window.showPracticeTranslation = function() {
     const translationBtn = document.getElementById('show-translation-btn');
     const translationDiv = document.getElementById('spanish-translation');
     if (!translationBtn || !translationDiv) return;
-    // Si el div está vacío, rellenar con la traducción
     if (!translationDiv.innerHTML.trim() && window.practiceCurrentSentenceData) {
         const wordTranslation = window.practiceCurrentSentenceData.translation;
         const currentWord = window.practiceCurrentSentenceData.word;
@@ -1147,7 +1009,6 @@ window.showPracticeTranslation = function() {
             );
         } else if (window.practiceCurrentSentenceData.es) {
             const translation = window.practiceCurrentSentenceData.es;
-            // Escapar caracteres especiales en wordTranslation para la expresión regular
             const escapedWordTranslation = wordTranslation.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
             let highlightedTranslation = translation.replace(
                 new RegExp(`\\b${escapedWordTranslation}\\b`, 'gi'),
@@ -1164,18 +1025,15 @@ window.showPracticeTranslation = function() {
             );
         }
     }
-    // Mostrar traducción y ocultar el botón
     translationDiv.classList.remove('hidden');
     translationBtn.style.display = 'none';
 };
 
-// Mostrar traducción después de responder
 function showTranslationAfterAnswer() {
     const translationDiv = document.getElementById('spanish-translation');
     if (!translationDiv) {
         return;
     }
-    // Ocultar el botón de "ver traducción" siempre que se muestre la traducción
     const showBtn = document.getElementById('show-translation-btn');
     if (showBtn) {
         showBtn.style.display = 'none';
@@ -1191,7 +1049,6 @@ function showTranslationAfterAnswer() {
             );
         } else if (window.practiceCurrentSentenceData.es) {
             const translation = window.practiceCurrentSentenceData.es;
-            // Escapar caracteres especiales en wordTranslation para la expresión regular
             const escapedWordTranslation = wordTranslation.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
             let highlightedTranslation = translation.replace(
                 new RegExp(`\\b${escapedWordTranslation}\\b`, 'gi'),
@@ -1210,7 +1067,6 @@ function showTranslationAfterAnswer() {
     }
 }
 
-// Feedback sin tooltip - solo actualizar datos
 function showQuickFeedback(buttonElement, isCorrect, correctWord) {
     const currentWord = window.practiceRemainingWords[window.practiceCurrentWordIndex];
     if (isCorrect) {
@@ -1222,14 +1078,12 @@ function showQuickFeedback(buttonElement, isCorrect, correctWord) {
         window.practiceRemainingWords.push(wordToRepeat);
     }
     
-    // Reproducir sonidos
     if (isCorrect) {
         playSuccessSound();
     } else {
         playErrorSound();
     }
     
-    // Mostrar cartel visual de feedback (toast) más pequeño y encima del botón elegido
     let feedbackDiv = document.createElement('div');
     feedbackDiv.className = 'practice-feedback-toast ' + (isCorrect ? 'success' : 'error');
     feedbackDiv.textContent = isCorrect ? '¡Correcto!' : `Incorrecto.Correcto:  ${correctWord}`;
@@ -1245,7 +1099,6 @@ function showQuickFeedback(buttonElement, isCorrect, correctWord) {
     feedbackDiv.style.opacity = '0.87';
     feedbackDiv.style.pointerEvents = 'none';
 
-    // Si el botón está visible, posicionar el toast encima del botón
     if (buttonElement && buttonElement.getBoundingClientRect) {
         const rect = buttonElement.getBoundingClientRect();
         const scrollTop = window.scrollY || document.documentElement.scrollTop;
@@ -1255,7 +1108,6 @@ function showQuickFeedback(buttonElement, isCorrect, correctWord) {
         feedbackDiv.style.transform = 'translate(-50%, -100%)';
         document.body.appendChild(feedbackDiv);
     } else {
-        // Fallback: centrado arriba
         feedbackDiv.style.position = 'fixed';
         feedbackDiv.style.top = '30px';
         feedbackDiv.style.left = '50%';
@@ -1266,22 +1118,17 @@ function showQuickFeedback(buttonElement, isCorrect, correctWord) {
 
     showSimplifiedTranslation(currentWord);
     updatePracticeStats();
-    // Terminar ejercicio cuando no quedan palabras
     if (window.practiceRemainingWords.length === 0) {
         showPracticeResults();
         return;
     }
 }
 
-// Mostrar traducción simplificada
 function showSimplifiedTranslation(currentWord) {
     const spanishSentence = window.practiceCurrentSentenceData.es;
-    
-    // NO sobrescribir todo el HTML, solo agregar la traducción al final
     const practiceCard = document.getElementById('practice-exercise-card');
     const existingTranslation = practiceCard.querySelector('.simplified-translation');
     
-    // Si ya existe una traducción, no agregar otra
     if (existingTranslation) return;
     
     const simplifiedFeedback = spanishSentence ? `
@@ -1302,10 +1149,8 @@ function showSimplifiedTranslation(currentWord) {
     });
 }
 
-// Siguiente pregunta
 window.nextPracticeQuestion = function() {
     window.practiceCurrentQuestionIndex++;
-    // Si ya no quedan palabras, mostrar resultados
     if (window.practiceRemainingWords.length === 0) {
         showPracticeResults();
         return;
@@ -1313,26 +1158,22 @@ window.nextPracticeQuestion = function() {
     loadPracticeQuestion();
 }
 
-// Actualizar estadísticas
 function updatePracticeStats() {
     const totalWords = window.practiceWords.length;
-    // El número de preguntas hechas debe ser igual a correctas
     const wordsCompleted = window.practiceCorrectAnswers;
     document.getElementById('practice-current-question').textContent = wordsCompleted;
     document.getElementById('practice-correct-count').textContent = window.practiceCorrectAnswers;
     document.getElementById('practice-incorrect-count').textContent = window.practiceIncorrectAnswers;
-    const progress = (wordsCompleted / totalWords) * 100;
+    const progress = totalWords > 0 ? (wordsCompleted / totalWords) * 100 : 0;
     document.getElementById('practice-progress-bar').style.width = progress + '%';
 }
 
-// Mostrar resultados
 function showPracticeResults() {
     window.practiceResultsActive = true;
     const header = document.querySelector('header');
     if (header) {
         header.style.display = '';
     }
-    // Guardar progreso al completar
     savePracticeProgress(
         window.practiceCurrentMode,
         window.practiceWords.length,
@@ -1340,8 +1181,7 @@ function showPracticeResults() {
         window.practiceIncorrectAnswers
     );
     window.practiceEndTime = Date.now();
-    window.practiceDuration = Math.floor((window.practiceEndTime - window.practiceStartTime) / 1000); // en segundos
-    // Enviar el tiempo al backend
+    window.practiceDuration = Math.floor((window.practiceEndTime - window.practiceStartTime) / 1000);
     if (window.practiceDuration && window.practiceDuration > 0) {
         fetch('save_practice_time.php', {
             method: 'POST',
@@ -1350,7 +1190,6 @@ function showPracticeResults() {
                   '&mode=' + encodeURIComponent(window.practiceCurrentMode)
         });
     }
-    // Reproducir sonido de éxito al terminar
     if (typeof playSuccessSound === 'function') {
         playSuccessSound();
     }
@@ -1370,7 +1209,6 @@ function showPracticeResults() {
     `;
     document.getElementById('practice-exercise-card').innerHTML = resultHtml;
 
-    // Permitir avanzar con Enter SOLO en resultados
     function nextOnEnter(e) {
         if (window.practiceResultsActive && e.key === 'Enter') {
             window.removeEventListener('keydown', nextOnEnter);
@@ -1380,7 +1218,6 @@ function showPracticeResults() {
         }
     }
     window.addEventListener('keydown', nextOnEnter);
-    // También quitar el listener al avanzar manualmente
     const nextBtn = document.getElementById('practice-next-btn');
     if (nextBtn) {
         nextBtn.onclick = function() {
@@ -1389,11 +1226,9 @@ function showPracticeResults() {
             window.location.href = 'index.php?tab=practice';
         };
     }
-    // Resetear el flag al terminar
     window.practiceAlwaysShowTranslation = false;
 }
 
-// Reiniciar ejercicio
 window.restartPracticeExercise = function() {
     window.practiceRemainingWords = [...window.practiceWords];
     
@@ -1411,11 +1246,9 @@ window.restartPracticeExercise = function() {
     loadPracticeQuestion();
 }
 
-// Mostrar pista
 window.showPracticeHint = function(word) {
     const practiceWord = window.practiceWords.find(w => w.word === word);
     if (practiceWord) {
-        // Para modo escritura: usar pista inteligente
         const writeInput = document.querySelector('[data-practice-input="true"]');
         
         if (writeInput && !writeInput.disabled) {
@@ -1426,7 +1259,6 @@ window.showPracticeHint = function(word) {
             writeInput.focus();
             writeInput.setSelectionRange(writeInput.value.length, writeInput.value.length);
             
-            // Mostrar pista visual en la frase inglesa
             const englishSentence = document.getElementById('english-sentence');
             if (englishSentence && window.practiceCurrentSentenceData) {
                 const sentenceWithHint = window.practiceCurrentSentenceData.en.replace(
@@ -1435,7 +1267,6 @@ window.showPracticeHint = function(word) {
                 );
                 englishSentence.innerHTML = sentenceWithHint;
                 
-                // Restaurar frase original después de 3 segundos
                 setTimeout(() => {
                     if (englishSentence && window.practiceCurrentSentenceData) {
                         englishSentence.innerHTML = window.practiceCurrentSentenceData.en;
@@ -1443,13 +1274,11 @@ window.showPracticeHint = function(word) {
                 }, 3000);
             }
             
-            return; // Salir aquí para modo escritura
+            return;
         }
         
-        // Para modo selección múltiple: mostrar primeras 2 letras
         const hint = word.substring(0, 2);
         
-        // Mostrar pista en el hueco de la frase inglesa
         const englishSentence = document.getElementById('english-sentence');
         if (englishSentence && window.practiceCurrentSentenceData) {
             const sentenceWithHint = window.practiceCurrentSentenceData.en.replace(
@@ -1458,7 +1287,6 @@ window.showPracticeHint = function(word) {
             );
             englishSentence.innerHTML = sentenceWithHint;
             
-            // Restaurar frase original después de 3 segundos
             setTimeout(() => {
                 if (englishSentence && window.practiceCurrentSentenceData) {
                     englishSentence.innerHTML = window.practiceCurrentSentenceData.en;
@@ -1466,7 +1294,6 @@ window.showPracticeHint = function(word) {
             }, 3000);
         }
         
-        // Para modo selección múltiple
         const hintElement = document.querySelector('.practice-controls .hint-btn');
         if (hintElement) {
             hintElement.innerHTML = `💡 Pista: ${hint}...`;
@@ -1474,7 +1301,6 @@ window.showPracticeHint = function(word) {
             hintElement.style.color = '#92400e';
             hintElement.style.fontWeight = 'bold';
             
-            // Restaurar botón después de 3 segundos
             setTimeout(() => {
                 hintElement.innerHTML = `💡 Pista`;
                 hintElement.style.background = '';
@@ -1485,11 +1311,6 @@ window.showPracticeHint = function(word) {
     }
 }
 
-// ============================================
-// MODO ESCRITURA DE FRASES
-// ============================================
-
-// Variables para frases
 window.sentenceTexts = [];
 window.currentSentences = [];
 window.currentSentenceIndex = 0;
@@ -1497,11 +1318,9 @@ window.sentenceErrors = 0;
 window.sentenceCorrectAnswers = 0;
 window.sentenceIncorrectAnswers = 0;
 
-// Cargar práctica de frases
 async function loadSentencePractice() {
     try {
         const basePath = (window.location.pathname || '').replace(/[^\/]+$/, '');
-        // Usar ajax_user_texts.php directamente
         const url = basePath + 'ajax_user_texts.php?t=' + Date.now();
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 10000);
@@ -1516,20 +1335,12 @@ async function loadSentencePractice() {
             signal: controller.signal
         });
         
-        // Verificar si la respuesta es exitosa
         if (!response.ok) {
-            // Error de conexión
-            if (response.status === 404 || response.status === 403) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            } else {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
+            throw new Error(`HTTP error! status: ${response.status}`);
         }
         
-        // Verificar si hay contenido en la respuesta
         let responseText = await response.text();
         if (!responseText.trim()) {
-            // Reintentar una vez con GET (algunos hostings filtran POST)
             const retryUrl = basePath + 'ajax_user_texts.php?t=' + Date.now();
             response = await fetch(retryUrl, { credentials: 'same-origin', cache: 'no-store' });
             responseText = await response.text();
@@ -1538,7 +1349,6 @@ async function loadSentencePractice() {
             }
         }
         
-        // Intentar parsear JSON
         let data;
         try {
             data = JSON.parse(responseText);
@@ -1570,19 +1380,15 @@ async function loadSentencePractice() {
     }
 }
 
-// Mostrar selector de textos
 function showTextSelector(texts) {
-    // Detectar el modo actual para cambiar el título
     const isWordMode = window.practiceCurrentMode === 'selection' || window.practiceCurrentMode === 'writing';
     const modeText = isWordMode ? 'palabras' : 'frases';
     const modeIcon = isWordMode ? '📝' : '📖';
 
-    // Separar textos propios y públicos
     const ownTexts = texts.filter(text => text.text_type === 'own');
     const publicTexts = texts.filter(text => text.text_type === 'public');
 
     let optionsHtml = '<option value="">Selecciona un texto...</option>';
-    // Agregar textos propios
     if (ownTexts.length > 0) {
         optionsHtml += '<optgroup label="📚 Mis textos">';
         ownTexts.forEach(text => {
@@ -1594,7 +1400,6 @@ function showTextSelector(texts) {
         });
         optionsHtml += '</optgroup>';
     }
-    // Agregar textos públicos
     if (publicTexts.length > 0) {
         optionsHtml += '<optgroup label="🌍 Textos públicos">';
         publicTexts.forEach(text => {
@@ -1622,12 +1427,10 @@ function showTextSelector(texts) {
     document.getElementById('practice-exercise-card').innerHTML = html;
 }
 
-// Función auxiliar para iniciar la práctica de palabras
 function startWordPractice() {
     initializePractice(window.practiceWords);
 }
 
-// Comenzar práctica (detecta automáticamente frases o palabras)
 window.startSentencePractice = async function() {
     const textSelector = document.getElementById('text-selector');
     const textId = textSelector ? textSelector.value : null;
@@ -1635,7 +1438,6 @@ window.startSentencePractice = async function() {
         alert('Por favor selecciona un texto');
         return;
     }
-    // Detectar si es modo palabra o frase
     const isWordMode = window.practiceCurrentMode === 'selection' || window.practiceCurrentMode === 'writing';
     if (isWordMode) {
         const textTitle = textSelector.options[textSelector.selectedIndex].text;
@@ -1647,24 +1449,20 @@ window.startSentencePractice = async function() {
             </div>
         `;
         try {
-            // Obtener las palabras reales guardadas de este texto
             const response = await fetch(`ajax_saved_words_content.php?get_words_by_text=1&text_id=${textId}`);
             const data = await response.json();
 
             if (data.success && data.words && data.words.length > 0) {
-                // Usar las palabras reales del texto
                 window.practiceWords = data.words;
                 window.practiceRemainingWords = [...data.words];
                 window.practiceCurrentQuestionIndex = 0;
                 window.practiceCorrectAnswers = 0;
                 window.practiceIncorrectAnswers = 0;
                 window.practiceAnswered = false;
-                // Actualizar contador total
                 document.getElementById('practice-total-questions').textContent = data.words.length;
                 updatePracticeStats();
                 loadPracticeQuestion();
             } else {
-                // No hay palabras guardadas para este texto
                 document.getElementById('practice-exercise-card').innerHTML = `
                     <div style="text-align: center; padding: 40px;">
                         <h3 style="color: #6b7280;">No hay palabras guardadas</h3>
@@ -1685,7 +1483,6 @@ window.startSentencePractice = async function() {
         }
         return;
     }
-    // MODO FRASES: igual que antes
     document.getElementById('practice-exercise-card').innerHTML = `
         <div class="loading-container">
             <h3>⚡ Preparando ejercicio</h3>
@@ -1693,7 +1490,6 @@ window.startSentencePractice = async function() {
         </div>
     `;
     try {
-        // Obtener las palabras guardadas igual que en los otros modos
         const response = await fetch(`ajax_saved_words_content.php?get_words_by_text=1&text_id=${textId}`);
         const data = await response.json();
         if (data.success && data.words && data.words.length > 0) {
@@ -1704,7 +1500,6 @@ window.startSentencePractice = async function() {
             window.sentenceErrors = 0;
             window.sentenceCorrectAnswers = 0;
             window.sentenceIncorrectAnswers = 0;
-            // Cargar la primera pregunta inmediatamente sin traducir todo
             loadSentenceQuestion();
         } else {
             document.getElementById('practice-exercise-card').innerHTML = `
@@ -1727,7 +1522,6 @@ window.startSentencePractice = async function() {
     return;
 }
 
-// Cargar pregunta de frase
 function loadSentenceQuestion() {
     if (window.currentSentenceIndex >= window.currentSentences.length) {
         showSentenceResults();
@@ -1738,13 +1532,10 @@ function loadSentenceQuestion() {
     const instruction = textTitle
         ? `Escribe la palabra correcta del texto <span class=\"text-title-highlight\">\"${textTitle}\"</span>`
         : 'Escribe la palabra correcta';
-    // Usar la frase completa (original_en) en el input y validación
     const correctEnglish = sentence.original_en || sentence.en;
     
-    // Si necesita traducción, usar la API
     let spanishSentenceContent = sentence.es;
     if (sentence.needsTranslation && sentence.original_en) {
-        // Traducir la frase original
         fetch('translate.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -1760,7 +1551,6 @@ function loadSentenceQuestion() {
             }
         })
         .catch(() => {
-    
         });
     }
     
@@ -1777,7 +1567,7 @@ function loadSentenceQuestion() {
             </div>
             <div class="english-sentence hidden" id="english-reference"></div>
             <div class="input-container">
-                <input type="text" class="sentence-input" id="sentence-input" data-practice-input="true" placeholder="Escribe la frase en inglés..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-correct-english="${correctEnglish.replace(/"/g, '&quot;')}">
+                <input type="text" class="sentence-input" id="sentence-input" data-practice-input="true" placeholder="Escribe la frase en inglés..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-correct-english="${correctEnglish.replace(/"/g, '"')}">
                 <div class="word-hint" id="word-hint"></div>
             </div>
             <div class="sentence-controls">
@@ -1790,7 +1580,6 @@ function loadSentenceQuestion() {
     updateStatsLabelsForSentences();
     window.initForcedDictationInput(correctEnglish);
     
-    // Dar foco al input automáticamente
     setTimeout(() => {
         const input = document.getElementById('sentence-input');
         if (input) {
@@ -1798,13 +1587,10 @@ function loadSentenceQuestion() {
         }
     }, 100);
     
-    // No traducir el título del texto para evitar peticiones innecesarias
-    // El título ya está en window.currentTextTitle
     if (window.practiceAlwaysShowTranslation) {
         setTimeout(() => { showEnglishSentence(); }, 30);
     }
     
-    // --- Añadir funcionalidad del icono del ojo para sentences ---
     setTimeout(function() {
         var eye = document.getElementById('always-visible-eye-sentences');
         if(eye) {
@@ -1822,14 +1608,12 @@ function loadSentenceQuestion() {
                     var btn = document.getElementById('show-english-btn');
                     if(btn) btn.style.display = '';
                     
-                    // Mostrar el icono del ojo original cuando se desactiva
                     var originalEye = document.getElementById('always-visible-eye-sentences');
                     if(originalEye) {
                         originalEye.style.display = '';
                     }
                 }
             };
-            // Estado inicial
             if(window.practiceAlwaysShowTranslation) {
                 eye.style.color = '#0ea900';
             } else {
@@ -1839,7 +1623,6 @@ function loadSentenceQuestion() {
     }, 0);
 }
 
-// Actualizar etiquetas de estadísticas para modo frases
 function updateStatsLabelsForSentences() {
     const stats = document.querySelectorAll('.practice-stats .stat-label');
     if (stats.length >= 4) {
@@ -1849,7 +1632,6 @@ function updateStatsLabelsForSentences() {
         stats[3].textContent = 'Por hacer';
     }
     
-    // Actualizar los números también
     if (window.currentSentences) {
         const totalSentences = window.currentSentences.length;
         const completedSentences = window.currentSentenceIndex || 0;
@@ -1860,21 +1642,17 @@ function updateStatsLabelsForSentences() {
         document.getElementById('practice-correct-count').textContent = completedSentences;
         document.getElementById('practice-incorrect-count').textContent = remainingSentences;
         
-        // Actualizar barra de progreso
         const progress = totalSentences > 0 ? (completedSentences / totalSentences) * 100 : 0;
         document.getElementById('practice-progress-bar').style.width = progress + '%';
     }
 }
 
-// Mostrar frase en inglés
 window.showEnglishSentence = function() {
     const showBtn = document.getElementById('show-english-btn');
     const englishDiv = document.getElementById('english-reference');
     if (showBtn && englishDiv) {
         showBtn.style.display = 'none';
-        // Insertar frase + altavoz + slider (oculto por defecto)
         let sentence = '';
-        // Usar la frase completa en modo frases
         if (window.practiceCurrentMode === 'sentences' && window.currentSentences && window.currentSentences[window.currentSentenceIndex]) {
             sentence = window.currentSentences[window.currentSentenceIndex].original_en || window.currentSentences[window.currentSentenceIndex].en;
         } else {
@@ -1887,7 +1665,7 @@ window.showEnglishSentence = function() {
                     <span role=\"img\" aria-label=\"Escuchar\">🔊</span>
                 </button>
                 <input type=\"range\" min=\"0\" max=\"2\" step=\"1\" value=\"1\" id=\"speak-speed-slider\" style=\"display:none; position:absolute; left:40px; top:50%; transform:translateY(-50%); width:70px; z-index:10; background:#eee; border-radius:6px; height:4px;\">
-                <div style=\"position:absolute; left:40px; top:28px; width:70px; display:none; z-index:11; pointer-events:none; font-size:11px; color:#888; text-align:center;\" id=\"speak-speed-labels\">
+                <div style=\"position:absolute; left:40px; top:28px; width:70px; display:none; z-index:11; pointer-events:none; font-size:11px; color:#888; text-align:center text-align:center;\" id=\"speak-speed-labels\">
                     <span>50%</span>
                     <span>75%</span>
                     <span>100%</span>
@@ -1896,13 +1674,11 @@ window.showEnglishSentence = function() {
         `;
         englishDiv.classList.remove('hidden');
         
-        // Ocultar el icono del ojo original cuando se muestra la traducción
         var originalEye = document.getElementById('always-visible-eye-sentences');
         if(originalEye) {
             originalEye.style.display = 'none';
         }
         
-        // Agregar el icono del ojo debajo de la traducción
         const eyeContainer = document.createElement('div');
         eyeContainer.style.cssText = 'margin-top: 10px; text-align: right;';
         eyeContainer.innerHTML = `
@@ -1913,18 +1689,12 @@ window.showEnglishSentence = function() {
         `;
         englishDiv.parentNode.insertBefore(eyeContainer, englishDiv.nextSibling);
         
-        const speakBtn = document.getElementById('speak-english-reference-btn');
-        const slider = document.getElementById('speak-speed-slider');
-        const labels = document.getElementById('speak-speed-labels');
-        const speedMap = [0.5, 0.75, 1];
-        
         setTimeout(() => {
             const words = englishDiv.querySelectorAll('.practice-word');
             words.forEach(span => {
                 span.addEventListener('click', handlePracticeWordClick);
             });
             
-            // --- Funcionalidad del icono del ojo movido ---
             var eye = document.getElementById('always-visible-eye-sentences-moved');
             if(eye) {
                 eye.onclick = function() {
@@ -1940,20 +1710,17 @@ window.showEnglishSentence = function() {
                         var btn = document.getElementById('show-english-btn');
                         if(btn) btn.style.display = '';
                         
-                        // Mostrar el icono del ojo original cuando se desactiva
                         var originalEye = document.getElementById('always-visible-eye-sentences');
                         if(originalEye) {
                             originalEye.style.display = '';
                         }
                         
-                        // Eliminar el icono del ojo movido cuando se desactiva
                         var movedEye = document.getElementById('always-visible-eye-sentences-moved');
                         if(movedEye && movedEye.parentNode) {
                             movedEye.parentNode.remove();
                         }
                     }
                 };
-                // Estado inicial
                 if(window.practiceAlwaysShowTranslation) {
                     eye.style.color = '#0ea900';
                 } else {
@@ -1964,7 +1731,6 @@ window.showEnglishSentence = function() {
     }
 }
 
-// Verificar respuesta completa
 window.checkSentenceAnswer = function() {
     const input = document.getElementById('sentence-input');
     const userText = input.value.trim();
@@ -1974,7 +1740,6 @@ window.checkSentenceAnswer = function() {
     
     input.disabled = true;
     
-    // Mostrar botones
     const hintBtn = document.querySelector('.hint-btn');
     const verifyBtn = document.querySelector('.verify-btn');
     const nextBtn = document.querySelector('.next-btn');
@@ -1985,7 +1750,6 @@ window.checkSentenceAnswer = function() {
     if (nextBtn) nextBtn.style.display = 'inline-flex';
     if (showBtn) showBtn.style.display = 'none';
     
-    // Mostrar inglés de referencia
     const englishDiv = document.getElementById('english-reference');
     if (englishDiv) {
         showEnglishSentence();
@@ -1997,7 +1761,6 @@ window.checkSentenceAnswer = function() {
         }, 0);
     }
     
-    // Feedback visual y sonido (cartel flotante)
     let feedbackDiv = document.createElement('div');
     feedbackDiv.className = 'practice-feedback-toast ' + (isCorrect ? 'success' : 'error');
     feedbackDiv.textContent = isCorrect ? '¡Correcto!' : `Incorrecto. Correcto: ${correctText}`;
@@ -2024,15 +1787,12 @@ window.checkSentenceAnswer = function() {
     }
 }
 
-// Siguiente pregunta
 window.nextSentenceQuestion = function() {
     window.sentenceErrors = 0;
-    // Limpiar mensaje de éxito si existe
     const successMsg = document.getElementById('success-message');
     if (successMsg) {
         successMsg.remove();
     }
-    // Si ya no quedan frases, mostrar resultados
     if (window.currentSentenceIndex >= window.currentSentences.length) {
         showSentenceResults();
         return;
@@ -2040,9 +1800,7 @@ window.nextSentenceQuestion = function() {
     loadSentenceQuestion();
 }
 
-// Mostrar resultados finales
 function showSentenceResults() {
-    // Guardar progreso de frases
     savePracticeProgress(
         'sentences',
         window.currentSentences.length,
@@ -2060,14 +1818,8 @@ function showSentenceResults() {
     document.getElementById('practice-exercise-card').innerHTML = html;
 }
 
-// Exportar función para cargar desde index.php
 window.loadPracticeMode = loadPracticeMode;
 
-// ============================================
-// FUNCIONALIDAD DE TRADUCCIÓN EN PRÁCTICA
-// ============================================
-
-// Función para manejar clics en palabras de práctica
 function handlePracticeWordClick(event) {
     event.preventDefault();
     event.stopPropagation();
@@ -2094,7 +1846,6 @@ function handlePracticeWordClick(event) {
 }
 window.handlePracticeWordClick = handlePracticeWordClick;
 
-// Función para mostrar tooltip en práctica (modo normal)
 function showPracticeTooltip(element, word, translation) {
     const existing = document.querySelector('.practice-tooltip');
     if (existing) existing.remove();
@@ -2121,7 +1872,6 @@ function showPracticeTooltip(element, word, translation) {
     
     document.body.appendChild(tooltip);
     
-    // Posicionar justo debajo y centrado respecto a la palabra
     const rect = element.getBoundingClientRect();
     const tooltipRect = tooltip.getBoundingClientRect();
     const scrollY = window.scrollY || window.pageYOffset;
@@ -2132,10 +1882,9 @@ function showPracticeTooltip(element, word, translation) {
     setTimeout(() => {
         tooltip.style.opacity = '0';
         setTimeout(() => tooltip && tooltip.remove(), 200);
-    }, 3000); // 3 segundos
+    }, 3000);
 }
 
-// Función para mostrar tooltip en práctica (modo writing)
 function showPracticeTooltipWriting(element, word, translation) {
     const existing = document.querySelector('.practice-tooltip-writing');
     if (existing) existing.remove();
@@ -2162,7 +1911,6 @@ function showPracticeTooltipWriting(element, word, translation) {
     
     document.body.appendChild(tooltip);
     
-    // Posicionar justo debajo y centrado respecto a la palabra
     const rect = element.getBoundingClientRect();
     const tooltipRect = tooltip.getBoundingClientRect();
     const scrollY = window.scrollY || window.pageYOffset;
@@ -2173,10 +1921,9 @@ function showPracticeTooltipWriting(element, word, translation) {
     setTimeout(() => {
         tooltip.style.opacity = '0';
         setTimeout(() => tooltip && tooltip.remove(), 200);
-    }, 3000); // 3 segundos
+    }, 3000);
 }
 
-// Función para asignar event listeners a palabras de práctica
 function assignPracticeWordClickHandlers() {
     const spans = document.querySelectorAll('.practice-word');
     spans.forEach(span => {
@@ -2185,18 +1932,14 @@ function assignPracticeWordClickHandlers() {
     });
 }
 
-// Hacer función global
 window.assignPracticeWordClickHandlers = assignPracticeWordClickHandlers;
 
-// --- SONIDO DE NOTIFICACIÓN ---
 function playCompletionSound() {
-    const audio = new Audio('https://cdn.pixabay.com/audio/2022/07/26/audio_124bfae6c2.mp3'); // Sonido libre
+    const audio = new Audio('https://cdn.pixabay.com/audio/2022/07/26/audio_124bfae6c2.mp3');
     audio.play();
 }
 
-// --- GUARDAR PROGRESO DE PRÁCTICA ---
 function savePracticeProgress(mode, totalWords, correct, incorrect) {
-    // Obtener el text_id si está disponible
     let textId = null;
     if (window.practiceWords && window.practiceWords.length > 0 && window.practiceWords[0].text_id) {
         textId = window.practiceWords[0].text_id;
@@ -2217,20 +1960,16 @@ function savePracticeProgress(mode, totalWords, correct, incorrect) {
     })
     .then(res => res.json())
     .then(data => {
-        // El progreso se guarda silenciosamente
     })
     .catch(error => {
-        // Error silencioso para no interrumpir la experiencia del usuario
     });
 }
 
-// --- LÓGICA DE DICTADO FORZADO PARA FRASES ---
 window.initForcedDictationInput = function(correctText) {
     const input = document.getElementById('sentence-input');
     const wordHint = document.getElementById('word-hint');
     let errorCount = 0;
 
-    // Limpiar listeners previos
     input.onkeydown = null;
     input.onpaste = null;
     input.onselect = null;
@@ -2240,21 +1979,17 @@ window.initForcedDictationInput = function(correctText) {
     if (wordHint) wordHint.textContent = '';
 
     input.addEventListener('keydown', function(e) {
-        // Permitir borrar hacia atrás
         if (e.key === "Backspace") {
             errorCount = 0;
             if (wordHint) wordHint.textContent = '';
             return;
         }
-        // Permitir solo la siguiente letra correcta
         const valor = input.value;
         const nextChar = correctText[valor.length] || "";
-        // Solo permitir la letra exacta esperada
         if (e.key.length === 1) {
             if (e.key === nextChar) {
                 errorCount = 0;
                 if (wordHint) wordHint.textContent = '';
-                // Si completa la frase, bloquear input y mostrar feedback
                 if (valor + e.key === correctText) {
                     window.sentenceCorrectAnswers = (window.sentenceCorrectAnswers || 0) + 1;
                     window.currentSentenceIndex = (window.currentSentenceIndex || 0) + 1;
@@ -2320,18 +2055,15 @@ window.initForcedDictationInput = function(correctText) {
                         }
                     }, 10);
                 }
-                return; // Permitir escribir la letra correcta
+                return;
             } else {
                 errorCount++;
                 e.preventDefault();
                 if (wordHint && nextChar && errorCount >= 2) {
-                    // Encontrar el final de la palabra actual que está escribiendo el usuario
                     const currentWordEnd = valor.lastIndexOf(' ') + 1;
                     const resto = correctText.substring(currentWordEnd);
-                    // Mejorar la detección de la palabra completa
-                    const match = resto.match(/^[^\s]+/); // palabra siguiente
+                    const match = resto.match(/^[^\s]+/);
                     let palabraPista = match ? match[0] : nextChar;
-                    // Asegurar que mostramos la palabra completa
                     wordHint.textContent = palabraPista;
                     wordHint.style.display = 'block';
                     wordHint.style.color = '#bbb';
@@ -2376,12 +2108,10 @@ window.initForcedDictationInput = function(correctText) {
 window.makeWordsClickable = makeWordsClickable;
 
 function renderPracticeSentence(sentence, highlightWord) {
-    
     const englishSentence = document.getElementById('english-sentence');
     englishSentence.innerHTML = '';
     const words = sentence.split(/(\s+)/);
 
-    
     words.forEach(word => {
         if (word.trim() === '') {
             englishSentence.appendChild(document.createTextNode(word));
@@ -2389,7 +2119,6 @@ function renderPracticeSentence(sentence, highlightWord) {
             const span = document.createElement('span');
             span.className = 'practice-word' + (highlightWord && normalizeWord(word) === normalizeWord(highlightWord) ? ' highlighted-word' : '');
             span.textContent = word;
-            // ASIGNAR LISTENER DIRECTAMENTE A CADA SPAN
             span.addEventListener('click', function(event) {
                 event.preventDefault();
                 event.stopPropagation();
@@ -2415,11 +2144,8 @@ function renderPracticeSentence(sentence, highlightWord) {
             englishSentence.appendChild(span);
         }
     });
-    
-
 }
 
-// --- Botón de pista en modo frase ---
 window.showSentenceHint = function() {
     const input = document.getElementById('sentence-input');
     const wordHint = document.getElementById('word-hint');
@@ -2428,16 +2154,11 @@ window.showSentenceHint = function() {
     
     const valor = input.value;
     
-    // Usar la misma lógica que cuando hay un error
     if (wordHint) {
-        // Calcular nextChar igual que en el error
         const nextChar = correctText[valor.length] || "";
-        
-        // Encontrar el final de la palabra actual que está escribiendo el usuario
         const currentWordEnd = valor.lastIndexOf(' ') + 1;
         const resto = correctText.substring(currentWordEnd);
-        // Mejorar la detección de la palabra completa
-        const match = resto.match(/^[^\s]+/); // palabra siguiente
+        const match = resto.match(/^[^\s]+/);
         let palabraPista = match ? match[0] : nextChar;
         
         if (palabraPista) {
@@ -2448,10 +2169,6 @@ window.showSentenceHint = function() {
     }
 };
 
-// === BOTÓN DE DEPURACIÓN PARA FRASES ===
-
-
-// Delegación global para palabras clicables y altavoz en frases de referencia
 if (!window._delegacionFraseReferencia) {
   let hideSliderTimeout = null;
   const speedMap = [0.5, 0.75, 1];
@@ -2486,19 +2203,12 @@ if (!window._delegacionFraseReferencia) {
       const slider = document.getElementById('speak-speed-slider');
       const text = document.getElementById('english-reference-text')?.innerText || '';
       
-      console.log('🎤 Reproduciendo frase de referencia:', text);
-      
-      // Usar el sistema unificado de ResponsiveVoice como en la lectura
       if (typeof window.getVoiceSystemReady === 'function') {
         window.getVoiceSystemReady().then(async () => {
           try {
-            // Usar ResponsiveVoice unificado si está disponible
             if (typeof window.leerTextoConResponsiveVoice === 'function') {
-              console.log('✅ Usando ResponsiveVoice para frase de referencia');
               const speed = slider ? (speedMap[parseInt(slider.value)] || 1) : 1;
               const success = window.leerTextoConResponsiveVoice(text, speed, {
-                onstart: () => console.log('🎤 Frase de referencia iniciada'),
-                onend: () => console.log('✅ Frase de referencia completada'),
                 onerror: (error) => console.error('❌ Error en frase de referencia:', error)
               });
               
@@ -2509,8 +2219,6 @@ if (!window._delegacionFraseReferencia) {
               throw new Error('ResponsiveVoice no disponible');
             }
           } catch (error) {
-            console.log('⚠️ Fallback a sistema nativo para frase de referencia');
-            // Fallback simplificado
             if (window.speechSynthesis && window.speechSynthesis.speaking) {
               window.speechSynthesis.cancel();
             }
@@ -2521,8 +2229,6 @@ if (!window._delegacionFraseReferencia) {
           }
         });
       } else {
-        console.log('⚠️ Sistema unificado no disponible, usando fallback directo');
-        // Fallback directo simplificado
         if (window.speechSynthesis && window.speechSynthesis.speaking) {
           window.speechSynthesis.cancel();
         }
@@ -2556,19 +2262,12 @@ if (!window._delegacionFraseReferencia) {
       const slider = e.target;
       const text = document.getElementById('english-reference-text')?.innerText || '';
       
-      console.log('🎤 Cambiando velocidad de frase de referencia:', text);
-      
-      // Usar el sistema unificado de ResponsiveVoice como en la lectura
       if (typeof window.getVoiceSystemReady === 'function') {
         window.getVoiceSystemReady().then(async () => {
           try {
-            // Usar ResponsiveVoice unificado si está disponible
             if (typeof window.leerTextoConResponsiveVoice === 'function') {
-              console.log('✅ Usando ResponsiveVoice para cambio de velocidad');
               const speed = speedMap[parseInt(slider.value)] || 1;
               const success = window.leerTextoConResponsiveVoice(text, speed, {
-                onstart: () => console.log('🎤 Frase con nueva velocidad iniciada'),
-                onend: () => console.log('✅ Frase con nueva velocidad completada'),
                 onerror: (error) => console.error('❌ Error en cambio de velocidad:', error)
               });
               
@@ -2579,8 +2278,6 @@ if (!window._delegacionFraseReferencia) {
               throw new Error('ResponsiveVoice no disponible');
             }
           } catch (error) {
-            console.log('⚠️ Fallback a sistema nativo para cambio de velocidad');
-            // Fallback al sistema anterior si ResponsiveVoice no está disponible
             if (window.speechSynthesis && window.speechSynthesis.speaking) {
               window.speechSynthesis.cancel();
             }
@@ -2591,8 +2288,6 @@ if (!window._delegacionFraseReferencia) {
           }
         });
       } else {
-        console.log('⚠️ Sistema unificado no disponible, usando fallback directo');
-        // Fallback directo si no hay sistema unificado
         if (window.speechSynthesis && window.speechSynthesis.speaking) {
           window.speechSynthesis.cancel();
         }

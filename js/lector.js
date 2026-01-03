@@ -5,8 +5,8 @@ let rateValue = null;
 // ===== Debug de lectura (activable) ===== d
 window.READING_DEBUG = window.READING_DEBUG || false;
 window.ReadingLog = window.ReadingLog || [];
-window.enableReadingDebug = function(){ window.READING_DEBUG = true; console.info('[READING][debug] enabled'); };
-window.disableReadingDebug = function(){ window.READING_DEBUG = false; console.info('[READING][debug] disabled'); };
+window.enableReadingDebug = function(){ window.READING_DEBUG = true; };
+window.disableReadingDebug = function(){ window.READING_DEBUG = false; };
 window.dumpReadingState = function(){
   try {
     return {
@@ -28,9 +28,6 @@ function readingLog(event, data) {
   try {
     const entry = { t: Date.now(), event, ...data };
     window.ReadingLog.push(entry);
-    if (window.READING_DEBUG) {
-      console.info('[READING]', event, data || {});
-    }
     // Limitar tamaño del log
     if (window.ReadingLog.length > 500) window.ReadingLog.splice(0, window.ReadingLog.length - 500);
   } catch(e) {}
@@ -191,8 +188,6 @@ function initLector() {
         }
     }
 
-    // Listener movido a initializeRateControl()
-
     let pages = document.querySelectorAll(".page");
     let totalPages = pages.length;
     let prevBtn, nextBtn, pageNumber;
@@ -217,7 +212,6 @@ function initLector() {
                     if (window.autoReading) {
                         setTimeout(() => {
                             readAndTranslate(0).catch(err => {
-                                console.error('[LECTOR] Error al cambiar a página anterior:', err);
                             });
                         }, 300);
                     }
@@ -239,7 +233,6 @@ function initLector() {
                     if (window.autoReading) {
                         setTimeout(() => {
                             readAndTranslate(0).catch(err => {
-                                console.error('[LECTOR] Error al cambiar a página siguiente:', err);
                             });
                         }, 300);
                     }
@@ -279,14 +272,11 @@ function initLector() {
             if (typeof window._resumeIndexPending === 'number' && window._resumeIndexPending >= 0) {
                 nextIdx = window._resumeIndexPending;
                 window._resumeIndexPending = null; // consumir
-                console.log('[LECTOR] updatePageDisplay: Reanudando lectura en página', currentPage, 'con índice', nextIdx);
             }
             window.currentIndex = nextIdx;
             currentIndex = nextIdx;
             setTimeout(() => {
-                console.log('[LECTOR] updatePageDisplay: Llamando a readAndTranslate con índice', nextIdx, 'en página', currentPage);
                 readAndTranslate(nextIdx).catch(err => {
-                    console.error('[LECTOR] Error al reanudar en updatePageDisplay:', err);
                 });
             }, 300);
         }
@@ -373,36 +363,28 @@ function initLector() {
     let activeSpeakSessionId = 0;
     
     async function readAndTranslate(index, startWord = 0) {
-        console.log('[LECTOR] readAndTranslate llamado para index:', index, 'startWord:', startWord, 'sesión:', activeSpeakSessionId);
-        console.log('[LECTOR] Estado actual: isReadingInProgress =', isReadingInProgress, ', onEndHandled =', onEndHandled, ', currentReadingIndex =', currentReadingIndex);
-        
         // CORRECCIÓN: Si intentamos leer un índice diferente, limpiar el flag anterior
         if (isReadingInProgress && currentReadingIndex !== index) {
-            console.warn('[LECTOR] readAndTranslate: cambiando de párrafo, liberando flag anterior.');
             isReadingInProgress = false;
             onEndHandled = false;
         }
         
         // CORRECCIÓN: Protección mejorada contra múltiples llamadas simultáneas
         if (isReadingInProgress) {
-            console.warn('[LECTOR] readAndTranslate bloqueado: isReadingInProgress es true.');
             return;
         }
         
         // CORRECCIÓN: Verificar si ya estamos procesando este índice específico
         if (currentReadingIndex === index && onEndHandled) {
-            
             return;
         }
         
         // Invalidate cualquier callback de una sesión anterior y cancelar TTS
         activeSpeakSessionId = ++speakSessionId;
         cancelAllTTS();
-        console.log('[LECTOR] TTS cancelado, nueva sesión ID:', activeSpeakSessionId);
         
         // Protección contra índices negativos
         if (index < 0) {
-            console.error('[LECTOR] readAndTranslate bloqueado: índice negativo.');
             return;
         }
         
@@ -414,21 +396,16 @@ function initLector() {
         }
         const pageEl = pages[currentPage];
         if (!pageEl) {
-            console.error('[LECTOR] No se encontró la página', currentPage, 'de', pages.length, 'páginas disponibles');
             return;
         }
         
         const paragraphs = pageEl.querySelectorAll("p.paragraph");
         const translationBoxes = pageEl.querySelectorAll(".translation");
         
-        
-        
         // Verificar que el índice sea válido
         if (index >= paragraphs.length) {
-            console.log('[LECTOR] Fin de página detectado. index:', index, 'paragraphs.length:', paragraphs.length, 'currentPage:', currentPage, 'totalPages:', totalPages);
             // Si estamos en modo de lectura automática, intentar avanzar a la siguiente página
             if (window.autoReading && window.currentPage < totalPages - 1) {
-                console.log('[LECTOR] Avanzando a la siguiente página. Página actual:', window.currentPage, '->', window.currentPage + 1);
                 window.currentPage++;
                 window.currentIndex = 0;
                 currentPage = window.currentPage;
@@ -439,13 +416,11 @@ function initLector() {
                 // El readAndTranslate(0) será llamado por updatePageDisplay a través de _resumeIndexPending
                 return; // Detener la ejecución actual para evitar llamadas duplicadas
             }
-            console.log('[LECTOR] No se puede avanzar de página. autoReading:', window.autoReading, 'currentPage:', window.currentPage, 'totalPages:', totalPages);
             isReadingInProgress = false; // Liberar el flag
             return;
         }
         
         if (index >= translationBoxes.length) {
-            
             isReadingInProgress = false; // Liberar el flag
             return;
         }
@@ -455,7 +430,6 @@ function initLector() {
         onEndHandled = false;
         currentReadingIndex = index;
         readingLog('read_start', { index, page: currentPage, session: activeSpeakSessionId });
-        console.log('[LECTOR] Lectura marcada como en progreso. isReadingInProgress = true, onEndHandled = false, currentReadingIndex =', currentReadingIndex);
         
         // CORRECCIÓN: Timeout de seguridad para casos donde onend no se dispare
         const timeoutSessionId = activeSpeakSessionId; // ligar a la sesión actual
@@ -464,37 +438,29 @@ function initLector() {
         let safetyTimeout = setTimeout(() => {
             // Ignorar si cambió la sesión, si ya no estamos auto-leyendo o si ya cambiamos de índice
             if (timeoutSessionId !== activeSpeakSessionId) {
-                console.log('[LECTOR] safetyTimeout ignorado: sesión cambió.');
                 return;
             }
             if (!window.autoReading) {
-                console.log('[LECTOR] safetyTimeout ignorado: autoReading no activo.');
                 return;
             }
             if (!autoReading) {
-                console.log('[LECTOR] safetyTimeout ignorado: autoReading local no activo.');
                 return;
             }
             if (currentReadingIndex !== index) {
-                console.log('[LECTOR] safetyTimeout ignorado: currentReadingIndex cambió.');
                 return;
             }
 
             if (!onEndHandled && isReadingInProgress) {
                 readingLog('safety_fire', { index, page: window.currentPage, session: activeSpeakSessionId });
-                console.error('[READING][error] safety_timeout', { index, page: window.currentPage });
                 onEndHandled = true;
                 isReadingInProgress = false;
                 if (window.autoReading || autoReading) {
-                    console.log('[LECTOR] safetyTimeout disparado, avanzando al siguiente párrafo.');
                     readAndTranslate(index + 1).catch(err => {
-                        console.error('[LECTOR] Error en safetyTimeout:', err);
                     });
                 }
             }
         }, 30000); // 30 segundos de timeout
         try { if (window.ReadingControl) window.ReadingControl.safetyTimeout = safetyTimeout; } catch(e) {}
-        console.log('[LECTOR] safetyTimeout establecido para sesión:', timeoutSessionId);
 
         // En fullscreen, verificar si hemos leído 6 líneas o si terminamos la página
         const isFullscreen = document.fullscreenElement || document.webkitFullscreenElement;
@@ -503,12 +469,8 @@ function initLector() {
         (index >= maxLinesInFullscreen || index >= paragraphs.length) : 
         (index >= paragraphs.length);
         
-        // console.log('[READING DEBUG] shouldChangePage:', shouldChangePage, 'index:', index, 'paragraphs.length:', paragraphs.length, 'isFullscreen:', isFullscreen);
-
         if (shouldChangePage) {
-            console.log('[LECTOR] shouldChangePage detectado. index:', index, 'currentPage:', window.currentPage, 'totalPages:', totalPages);
             if (window.currentPage < totalPages - 1) {
-                console.log('[LECTOR] Avanzando a la siguiente página (shouldChangePage). Página actual:', window.currentPage, '->', window.currentPage + 1);
                 window.currentPage++;
                 window.currentIndex = 0;
                 currentPage = window.currentPage;
@@ -520,7 +482,6 @@ function initLector() {
                 return; // Detener la ejecución actual para evitar llamadas duplicadas
             } else {
                 // Lectura completamente finalizada
-                console.log('[LECTOR] Lectura completamente finalizada (fin de todas las páginas).');
                 window.autoReading = false;
                 autoReading = false;
                 
@@ -530,29 +491,6 @@ function initLector() {
                 if (readingUpdateInterval) {
                     clearInterval(readingUpdateInterval);
                     readingUpdateInterval = null;
-                    console.log('[LECTOR] readingUpdateInterval limpiado en shouldChangePage.');
-                }
-                
-                // CORRECCIÓN: Limpiar estados al finalizar lectura
-                window.cleanupReadingStates();
-                
-                // Actualizar botón flotante
-                if (typeof updateFloatingButton === 'function') {
-                    updateFloatingButton();
-                }
-                
-                // Lectura completamente finalizada
-                console.log('[LECTOR] Lectura completamente finalizada (fin de todas las páginas).');
-                window.autoReading = false;
-                autoReading = false;
-                
-                // El tiempo se guardará en stopReading, no aquí para evitar duplicaciones
-                
-                // Limpiar intervalo de actualización en tiempo real
-                if (readingUpdateInterval) {
-                    clearInterval(readingUpdateInterval);
-                    readingUpdateInterval = null;
-                    console.log('[LECTOR] readingUpdateInterval limpiado en shouldChangePage.');
                 }
                 
                 // CORRECCIÓN: Limpiar estados al finalizar lectura
@@ -572,31 +510,22 @@ function initLector() {
                 );
             }
             isReadingInProgress = false; // Liberar el flag
-            console.log('[LECTOR] isReadingInProgress = false (shouldChangePage).');
             return;
         }
 
-
-
         const text = paragraphs[index].innerText.trim();
-        console.log('[LECTOR] Texto a leer:', text);
         
         // Verificar que tenemos un control de velocidad válido
         if (!rateInput) {
             rateInput = document.getElementById('rate');
-            console.log('[LECTOR] rateInput no encontrado, buscando de nuevo.');
         }
         const rate = rateInput ? parseFloat(rateInput.value) : 1;
         const box = translationBoxes[index];
-        
-        // Verificar el contenido de todas las cajas de traducción para debug
-        // translationBoxes.forEach((box, idx) => { const content = box.innerText.trim(); console.log(`[LECTOR] Translation Box ${idx}: "${content}"`); });
         
         // Guardar posición actual para función de continuar
         if (typeof window.lastReadParagraphIndex !== 'undefined') {
             window.lastReadParagraphIndex = index;
             window.lastReadPageIndex = currentPage;
-            console.log('[LECTOR] Posición de lectura guardada: párrafo', index, 'página', currentPage);
         }
 
         // Limpiar resaltado anterior
@@ -612,16 +541,13 @@ function initLector() {
         paragraphs[index].style.border = '2px solid #93c5fd';
         paragraphs[index].style.borderRadius = '5px';
         paragraphs[index].style.padding = '5px';
-        console.log('[LECTOR] Párrafo', index, 'resaltado.');
 
         // Mostrar traducción SOLO del párrafo actual (línea a línea)
         if (box) {
             const showTranslations = (typeof window.translationsVisible === 'undefined') ? true : !!window.translationsVisible;
-            console.log('[LECTOR] showTranslations:', showTranslations);
             if (showTranslations) {
                 // Solo traducir si es el párrafo actual o si ya tiene traducción
                 if (box.innerText.trim() === '') {
-                    console.log('[LECTOR] Traduciendo y guardando párrafo', index);
                     const textId = document.querySelector('#pages-container')?.dataset?.textId;
                     if (textId) {
                         // Traducir y guardar de forma asíncrona (sin bloquear la lectura)
@@ -630,16 +556,11 @@ function initLector() {
                         // No hay textId, traducir sin guardar
                         translateParagraphOnly(text, box);
                     }
-                } else {
-                    console.log('[LECTOR] Traducción ya existe para párrafo', index, ':', box.innerText.trim());
                 }
             } else {
                 // Si las traducciones están ocultas, asegurar que no se muestre ninguna
                 box.innerText = '';
-                console.log('[LECTOR] Traducciones ocultas, limpiando caja de traducción.');
             }
-        } else {
-            console.warn('[LECTOR] Caja de traducción no encontrada para párrafo', index);
         }
 
         // Solo hacer scroll si el párrafo y su traducción no están completamente visibles
@@ -654,19 +575,16 @@ function initLector() {
         // Hacer scroll con más margen para que no se corte la traducción
         if (topLimit < 50 || bottomLimit > windowHeight - 50) {
             paragraphs[index].scrollIntoView({ behavior: 'smooth', block: 'start' });
-            console.log('[LECTOR] Scroll a párrafo', index);
         }
 
         // CANCELAR cualquier speech anterior antes de crear uno nuevo
         if (speechSynthesis.speaking) {
             speechSynthesis.cancel();
-            console.log('[LECTOR] speechSynthesis.speaking activo, cancelando antes de nuevo speech.');
         }
         
         // Cancelar eSpeak si está disponible
         if (window.eSpeakAPI && window.eSpeakAPI.cancel) {
             window.eSpeakAPI.cancel();
-            console.log('[LECTOR] eSpeakAPI.cancel() llamado.');
         }
 
         let repeatCount = 0;
@@ -678,14 +596,9 @@ function initLector() {
                 speakText = words.slice(startWordBoundary).join(' ');
             }
             
-            // Preparar sistema de TTS unificado (sin iniciar múltiples motores)
-            
-            
             // Esperar a que el sistema de voz esté listo
             if (typeof window.getVoiceSystemReady === 'function') {
-                console.log('[LECTOR] Esperando a getVoiceSystemReady()...');
                 await window.getVoiceSystemReady();
-                console.log('[LECTOR] getVoiceSystemReady() completado.');
             }
             
             // Capturar sesión actual
@@ -694,11 +607,9 @@ function initLector() {
             window.useResponsiveVoiceForParagraphs = false;
             const useRV = false; // Mantener en false para usar SpeechSynthesis nativo
             if (useRV) {
-                console.log('[LECTOR] Intentando usar ResponsiveVoice.');
                 const success = window.leerTextoConResponsiveVoice(speakText, rate, {
                                                              onend: async (event) => {
                         if (localId !== activeSpeakSessionId) {
-                            console.warn('[LECTOR] ResponsiveVoice onend ignorado: sesión cambió. Actual:', activeSpeakSessionId, 'Esperado:', localId);
                             return;
                         }
                         
@@ -706,17 +617,14 @@ function initLector() {
                         if (event && event.rvIndex !== undefined && event.rvTotal !== undefined) {
                             // Si es un fragmento intermedio, ignorarlo
                             if (event.rvIndex < event.rvTotal - 1) {
-                                console.log('[LECTOR] ResponsiveVoice onend ignorado: fragmento intermedio.');
                                 return;
                             }
-                            console.log('[LECTOR] ResponsiveVoice onend: último fragmento.');
                         }
                         
                         // CORRECCIÓN: Solo aplicar protección contra duplicados si NO estamos en modo lectura doble
                         if (!window.doubleReadingMode) {
                             // CORRECCIÓN: Evitar múltiples llamadas al evento onend solo en lectura normal
                             if (onEndHandled) {
-                                console.warn('[LECTOR] ResponsiveVoice onEndHandled ya es true, ignorando onend duplicado.');
                                 return;
                             }
                             onEndHandled = true;
@@ -725,16 +633,13 @@ function initLector() {
                         // CORRECCIÓN: Limpiar timeout de seguridad
                         if (typeof safetyTimeout !== 'undefined') {
                             clearTimeout(safetyTimeout);
-                            console.log('[LECTOR] ResponsiveVoice safetyTimeout limpiado en onend.');
                         }
                         
                         // Liberar el flag INMEDIATAMENTE al principio
                         isReadingInProgress = false;
-                        console.log('[LECTOR] ResponsiveVoice isReadingInProgress = false en onend.');
                         
                         if (window.doubleReadingMode && repeatCount < 1) {
                             repeatCount++;
-                            console.log('[LECTOR] ResponsiveVoice Modo doble lectura, repitiendo párrafo. Repetición:', repeatCount);
                             await speakAndMaybeRepeat(startWordBoundary);
                             return;
                         }
@@ -745,10 +650,8 @@ function initLector() {
                             lastReadWordIndex = 0; // Reset al avanzar de párrafo
                             if (index + 1 >= paragraphs.length) {
                                 // Terminó la página
-                                console.log('[LECTOR] ResponsiveVoice Fin de página. Llamando a onPageReadByTTS.');
                                 onPageReadByTTS(currentPage);
                                 if (window.currentPage < totalPages - 1) {
-                                    console.log('[LECTOR] ResponsiveVoice: Avanzando a la siguiente página. Página actual:', window.currentPage, '->', window.currentPage + 1);
                                     window.currentPage++;
                                     window.currentIndex = 0;
                                     currentPage = window.currentPage;
@@ -759,7 +662,6 @@ function initLector() {
                                     // El readAndTranslate(0) será llamado por updatePageDisplay a través de _resumeIndexPending
                                     return; // Detener la ejecución actual
                                 } else {
-                                    console.log('[LECTOR] ResponsiveVoice Lectura completamente finalizada.');
                                     autoReading = false;
                                     // CORRECCIÓN: Limpiar estados al finalizar lectura
                                     window.cleanupReadingStates();
@@ -775,25 +677,21 @@ function initLector() {
                                 }
                             } else {
                                 readAndTranslate(index + 1).catch(err => {
-                                    console.error('[LECTOR] Error en ResponsiveVoice siguiente párrafo:', err);
                                 });
                             }
                         }
                     },
                     onerror: (error) => {
                         if (localId !== activeSpeakSessionId) {
-                            console.warn('[LECTOR] ResponsiveVoice onerror ignorado: sesión cambió. Actual:', activeSpeakSessionId, 'Esperado:', localId);
                             return;
                         }
                         // Silenciar errores esperables por pausas/cambios
                         if (error && (error.error === 'interrupted' || error.name === 'interrupted' || error.error === 'canceled' || error.name === 'canceled')) {
-                            console.log('[LECTOR] ResponsiveVoice Error: Interrumpido/Cancelado. No avanzando de párrafo.');
                             isReadingInProgress = false;
                             return; // No avanzar de párrafo si fue cancelado/pausado
                         }
                         
                         // Para otros errores: fallback controlado al TTS nativo
-                        console.error('[LECTOR] ResponsiveVoice onerror:', error, '. Intentando fallback a SpeechSynthesis nativo.');
                         isReadingInProgress = false;
                         try {
                             if (window.speechSynthesis && window.SpeechSynthesisUtterance) {
@@ -806,7 +704,6 @@ function initLector() {
                                     if (localId !== activeSpeakSessionId) { return; }
                                     if (autoReading) { 
                                         readAndTranslate(index + 1).catch(err => {
-                                            console.error('[LECTOR] Error en fallback SpeechSynthesis:', err);
                                         });
                                     }
                                 };
@@ -814,34 +711,26 @@ function initLector() {
                                 return;
                             }
                         } catch (e) {
-                            console.error('[LECTOR] Error en fallback a SpeechSynthesis:', e);
                         }
                         if (autoReading) { 
                             readAndTranslate(index + 1).catch(err => {
-                                console.error('[LECTOR] Error en ResponsiveVoice onerror:', err);
                             });
                         }
                     }
                 });
                 if (!success) {
-                    console.error('[LECTOR] Error al iniciar ResponsiveVoice. Avanzando al siguiente párrafo.');
                     if (autoReading) { 
                         readAndTranslate(index + 1).catch(err => {
-                            console.error('[LECTOR] Error en ResponsiveVoice fallback:', err);
                         });
                     }
                 }
             } else {
-                console.log('[LECTOR] Usando SpeechSynthesis nativo.');
-                console.log('[LECTOR] SpeechSynthesis disponible:', !!window.speechSynthesis);
                 if (window.speechSynthesis) {
-                    console.log('[LECTOR] Voces disponibles:', window.speechSynthesis.getVoices().map(v => v.name));
                 }
                 
                 try {
                     // Verificar que SpeechSynthesis esté disponible
                     if (!window.speechSynthesis || !window.speechSynthesis.speak) {
-                        console.error('[READING][error] SpeechSynthesis no disponible');
                         if (autoReading) {
                             advanceToNextParagraphSafely(index, currentPage, paragraphs, totalPages);
                         }
@@ -864,13 +753,11 @@ function initLector() {
                     fallbackUtterance.onend = async () => {
                         if (localId !== activeSpeakSessionId) { return; }
                         readingLog('onend', { index, page: currentPage, session: activeSpeakSessionId });
-                        console.log('[LECTOR] SpeechSynthesis onend llamado. Sesión:', localId);
                         
                         // CORRECCIÓN: Solo aplicar protección contra duplicados si NO estamos en modo lectura doble
                         if (!window.doubleReadingMode) {
                             // CORRECCIÓN: Evitar múltiples llamadas al evento onend solo en lectura normal
                             if (onEndHandled) {
-                                console.warn('[LECTOR] onEndHandled ya es true, ignorando onend duplicado.');
                                 return;
                             }
                             onEndHandled = true;
@@ -879,17 +766,13 @@ function initLector() {
                         // CORRECCIÓN: Limpiar timeout de seguridad
                         if (typeof safetyTimeout !== 'undefined') {
                             clearTimeout(safetyTimeout);
-                            console.log('[LECTOR] safetyTimeout limpiado en onend.');
                         }
-                        
                         
                         // Liberar el flag INMEDIATAMENTE al principio
                         isReadingInProgress = false;
-                        console.log('[LECTOR] isReadingInProgress = false en onend.');
                         
                         if (window.doubleReadingMode && repeatCount < 1) {
                             repeatCount++;
-                            console.log('[LECTOR] Modo doble lectura, repitiendo párrafo. Repetición:', repeatCount);
                             await speakAndMaybeRepeat(startWordBoundary);
                         } else {
                             if (window.doubleReadingMode) {
@@ -898,10 +781,8 @@ function initLector() {
                             if (autoReading) {
                                 lastReadWordIndex = 0;
                                 if (index + 1 >= paragraphs.length) {
-                                    console.log('[LECTOR] Fin de página. Llamando a onPageReadByTTS.');
                                     onPageReadByTTS(currentPage);
                                     if (window.currentPage < totalPages - 1) {
-                                        console.log('[LECTOR] SpeechSynthesis: Avanzando a la siguiente página. Página actual:', window.currentPage, '->', window.currentPage + 1);
                                         window.currentPage++;
                                         window.currentIndex = 0;
                                         currentPage = window.currentPage;
@@ -912,7 +793,6 @@ function initLector() {
                                         // El readAndTranslate(0) será llamado por updatePageDisplay a través de _resumeIndexPending
                                         return; // Detener la ejecución actual
                                     } else {
-                                        console.log('[LECTOR] Lectura completamente finalizada.');
                                         autoReading = false;
                                         // CORRECCIÓN: Limpiar estados al finalizar lectura
                                         window.cleanupReadingStates();
@@ -956,7 +836,6 @@ function initLector() {
                                         }, 2000);
                                     }
                                 } else {
-                                    console.log('[LECTOR] Avanzando al siguiente párrafo:', index + 1);
                                     readAndTranslate(index + 1);
                                 }
                             }
@@ -968,43 +847,34 @@ function initLector() {
                         if (localId !== activeSpeakSessionId) { return; }
                         const errType = (error && (error.error || error.name)) || 'unknown';
                         readingLog('onerror', { index, page: currentPage, session: activeSpeakSessionId, err: errType });
-                        console.error('[READING][error] tts_onerror', { index, page: currentPage, err: errType });
                         // Limpiar timeout de seguridad si existe
                         if (typeof safetyTimeout !== 'undefined') {
                             clearTimeout(safetyTimeout);
-                            console.log('[LECTOR] safetyTimeout limpiado en onerror.');
                         }
                         // Liberar el flag en caso de error
                         isReadingInProgress = false;
-                        console.log('[LECTOR] isReadingInProgress = false en onerror.');
                         // Si el error fue por interrupción/cancelación
                         const interrupted = error && (error.error === 'interrupted' || error.name === 'interrupted' || error.error === 'canceled' || error.name === 'canceled');
                         if (interrupted) {
-                            console.log('[LECTOR] Error de TTS: Interrumpido/Cancelado. No avanzando de párrafo.');
                             // Si hay razones de pausa activas, no avanzar; la reanudación se encargará
                             const hasPauseReasons = window.ReadingPauseReasons && window.ReadingPauseReasons.size > 0;
                             if (hasPauseReasons) {
-                                console.log('[LECTOR] Razones de pausa activas, no avanzando de párrafo.');
                                 return;
                             }
                             // Si no hay razones activas y estamos en auto lectura, avanzar al siguiente párrafo
                             if (autoReading) {
-                                console.log('[LECTOR] Auto lectura activa, avanzando al siguiente párrafo después de interrupción.');
                                 setTimeout(() => { readAndTranslate(index + 1); }, 100);
                             }
                             return;
                         }
                         // Para otros errores, avanzar de forma segura
                         if (autoReading) {
-                            console.log('[LECTOR] Error de TTS no interrumpido, avanzando de forma segura.');
                             advanceToNextParagraphSafely(index, currentPage, paragraphs, totalPages);
                         }
                     };
 
                     window.speechSynthesis.speak(fallbackUtterance);
-                    console.log('[LECTOR] SpeechSynthesis.speak() llamado para index:', index);
                 } catch (e) {
-                    console.error('[LECTOR] Error al llamar a SpeechSynthesis.speak():', e);
                     // Liberar el flag en caso de error
                     isReadingInProgress = false;
                     // Si falla, continuar con el siguiente párrafo de forma segura
@@ -1018,13 +888,10 @@ function initLector() {
         // Llamar a la función de lectura (unificada)
         try {
             await speakAndMaybeRepeat(startWord);
-            console.log('[LECTOR] speakAndMaybeRepeat completado para index:', index);
         } catch (error) {
-            console.error('[LECTOR] Error en speakAndMaybeRepeat:', error);
             // Liberar el flag en caso de error
             isReadingInProgress = false;
         }
-        console.log('[LECTOR] readAndTranslate finalizado para index:', index);
     }
 
     // Función para encontrar la traducción correspondiente a un párrafo específico
@@ -1048,7 +915,6 @@ function initLector() {
             // Terminó la página
             onPageReadByTTS(currentPage);
             if (window.currentPage < totalPages - 1) {
-                console.log('[LECTOR] advanceToNextParagraphSafely: Avanzando a la siguiente página. Página actual:', window.currentPage, '->', window.currentPage + 1);
                 window.currentPage++;
                 window.currentIndex = 0;
                 currentPage = window.currentPage;
@@ -1124,14 +990,8 @@ function initLector() {
                     })
                     .then(res => res.json())
                     .then(saveData => {
-                        if (saveData.success) {
-                            
-                        } else {
-                            
-                        }
                     })
                     .catch(error => {
-                        
                     });
                 }, 1000); // Delay más largo para no interferir con la lectura
             } else {
@@ -1202,15 +1062,8 @@ function initLector() {
                 });
                 
                 const saveData = await saveResponse.json();
-                
-                if (saveData.success) {
-                    
-                } else {
-                    
-                }
             }
         } catch (error) {
-            
         }
     };
 
@@ -1418,8 +1271,6 @@ function initLector() {
     });
     }
     
-
-    
     // Función para encontrar la frase que contiene la palabra
     function findSentenceContainingWord(element, word) {
         // Buscar el párrafo que contiene la palabra
@@ -1451,8 +1302,6 @@ function initLector() {
         
         return `The ${word} is important.`; // Fallback
     }
-
-    // (Revertido) Sin comportamiento de hover; se mantiene el clic
 
     // Tooltip simple
     function showSimpleTooltip(element, word, translation) {
@@ -1577,8 +1426,6 @@ function initLector() {
     window.clearWordHighlight = clearWordHighlight;
     window.highlightWord = highlightWord;
     
-
-
     // Funciones auxiliares para resaltado y scroll
     function clearCurrentHighlight() {
         document.querySelectorAll('p').forEach(p => {
@@ -1599,8 +1446,6 @@ function initLector() {
             paragraph.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
     }
-
-
 
     // Inicializa vista
     updatePageDisplay();
@@ -1644,8 +1489,6 @@ function initLector() {
 
     // CORRECCIÓN: Función para inicializar estados de lectura
     window.initializeReadingStates = function() {
-        console.log('[LECTOR] initializeReadingStates llamado.');
-        
         // Asegurar que los estados estén en valores por defecto seguros
         window.isCurrentlyReading = false;
         window.isCurrentlyPaused = false;
@@ -1657,7 +1500,6 @@ function initLector() {
         if (readingUpdateInterval) {
             clearInterval(readingUpdateInterval);
             readingUpdateInterval = null;
-            console.log('[LECTOR] readingUpdateInterval limpiado.');
         }
         
         // Resetear tiempo de lectura
@@ -1667,22 +1509,17 @@ function initLector() {
         // Actualizar el botón flotante
         if (typeof window.updateFloatingButton === 'function') {
             window.updateFloatingButton();
-            console.log('[LECTOR] updateFloatingButton llamado desde initializeReadingStates.');
         }
-        console.log('[LECTOR] Estados de lectura inicializados.');
     };
     
     // CORRECCIÓN: Función para limpiar estados al finalizar lectura
     window.cleanupReadingStates = function() {
-        console.log('[LECTOR] cleanupReadingStates llamado.');
-        
         // Guardar tiempo de lectura si hay una sesión activa
         if (readingStartTime) {
             const currentTime = Date.now();
             const sessionTime = Math.floor((currentTime - readingStartTime) / 1000);
             totalReadingTime += sessionTime;
             saveReadingTime(totalReadingTime);
-            console.log('[LECTOR] Tiempo de lectura guardado:', totalReadingTime, 'segundos.');
         }
         
         // Limpiar todos los estados
@@ -1696,7 +1533,6 @@ function initLector() {
         if (readingUpdateInterval) {
             clearInterval(readingUpdateInterval);
             readingUpdateInterval = null;
-            console.log('[LECTOR] readingUpdateInterval limpiado en cleanup.');
         }
         
         // Resetear tiempo
@@ -1706,56 +1542,44 @@ function initLector() {
         // Mostrar header
         if (typeof window.showHeader === 'function') {
             window.showHeader();
-            console.log('[LECTOR] showHeader llamado en cleanup.');
         }
         
         // Actualizar botón flotante
         if (typeof window.updateFloatingButton === 'function') {
             window.updateFloatingButton();
-            console.log('[LECTOR] updateFloatingButton llamado en cleanup.');
         }
-        console.log('[LECTOR] Estados de lectura limpiados.');
     };
     
     // Centralizar el control del header en las funciones de lectura
     window.startReading = function() {
-        console.log('[LECTOR] startReading llamado.');
-        console.log('[LECTOR] Estado inicial: isCurrentlyReading =', window.isCurrentlyReading, ', isCurrentlyPaused =', window.isCurrentlyPaused);
-        
         // Invalidar sesión anterior y cancelar cualquier lectura activa
         activeSpeakSessionId = ++speakSessionId;
         cancelAllTTS();
-        console.log('[LECTOR] TTS cancelado, nueva sesión ID:', activeSpeakSessionId);
         
         // Asegurar que no quede ningún flag colgado de lecturas anteriores
         isReadingInProgress = false;
         onEndHandled = false;
         currentReadingIndex = -1;
-        console.log('[LECTOR] Flags de lectura reseteados.');
         
         window.isCurrentlyReading = true;
         window.isCurrentlyPaused = false;
         isCurrentlyReading = true;
         if (typeof window.updateFloatingButton === 'function') {
             window.updateFloatingButton();
-            console.log('[LECTOR] updateFloatingButton llamado desde startReading.');
         }
         
         // Iniciar tiempo de lectura solo si no estaba leyendo antes
         if (!readingStartTime) {
             readingStartTime = Date.now();
-            console.log('[LECTOR] readingStartTime iniciado.');
         }
         
         // Iniciar actualización en tiempo real cada 30 segundos
         if (!readingUpdateInterval) {
             readingUpdateInterval = setInterval(updateReadingTimeRealTime, 30000);
-            console.log('[LECTOR] readingUpdateInterval iniciado.');
         }
         
         if (typeof window.hideHeader === 'function') {
             window.hideHeader();
-            console.log('[LECTOR] hideHeader llamado.');
         }
         
         // Si hay página guardada válida, posicionarse en esa página antes de pintar
@@ -1765,7 +1589,6 @@ function initLector() {
                 const targetPage = Math.max(0, Math.min(window.lastReadPageIndex, pagesCount - 1));
                 window.currentPage = targetPage;
                 currentPage = targetPage;
-                console.log('[LECTOR] Posicionando en página guardada:', currentPage);
             }
         }
 
@@ -1773,16 +1596,13 @@ function initLector() {
         if (typeof window.lastReadParagraphIndex !== 'number' || window.lastReadParagraphIndex < 0) {
             window.currentIndex = 0;
             currentIndex = 0;
-            console.log('[LECTOR] currentIndex reseteado a 0.');
         } else {
             window.currentIndex = window.lastReadParagraphIndex;
             currentIndex = window.lastReadParagraphIndex;
-            console.log('[LECTOR] currentIndex establecido a lastReadParagraphIndex:', currentIndex);
         }
         
         // Cargar caché de traducciones antes de empezar a leer
         window.loadContentTranslationsCache();
-        console.log('[LECTOR] loadContentTranslationsCache llamado.');
         
         // Activar autoReading y configurar _resumeIndexPending antes de updatePageDisplay
         window.autoReading = true;
@@ -1793,13 +1613,9 @@ function initLector() {
         if (typeof window.updateFloatingButton === 'function') {
             window.updateFloatingButton();
         }
-        console.log('[LECTOR] startReading finalizado. Estado: isCurrentlyReading =', window.isCurrentlyReading, ', isCurrentlyPaused =', window.isCurrentlyPaused);
     };
 
     window.pauseSpeech = function() {
-        console.log('[LECTOR] pauseSpeech llamado.');
-        console.log('[LECTOR] Estado inicial: isCurrentlyReading =', window.isCurrentlyReading, ', isCurrentlyPaused =', window.isCurrentlyPaused);
-        
         // CORRECCIÓN: Mantener el estado de lectura como true pero marcarlo como pausado
         window.isCurrentlyPaused = true;
         window.isCurrentlyReading = true; // Mantener como true para permitir reanudar
@@ -1815,18 +1631,15 @@ function initLector() {
             const sessionTime = Math.floor((currentTime - readingStartTime) / 1000);
             totalReadingTime += sessionTime;
             readingStartTime = null; // Resetear para la próxima sesión
-            console.log('[LECTOR] Tiempo acumulado en pausa:', totalReadingTime, 'segundos.');
         }
         
         if (typeof window.showHeader === 'function') {
             window.showHeader();
-            console.log('[LECTOR] showHeader llamado en pauseSpeech.');
         }
         
         // Invalidar sesión y cancelar cualquier TTS en curso
         activeSpeakSessionId = ++speakSessionId;
         cancelAllTTS();
-        console.log('[LECTOR] TTS cancelado en pausa, nueva sesión ID:', activeSpeakSessionId);
         
         // CORRECCIÓN: Limpiar flags de lectura para evitar estados inconsistentes
         isReadingInProgress = false;
@@ -1834,25 +1647,18 @@ function initLector() {
         
         if (typeof window.updateFloatingButton === 'function') {
             window.updateFloatingButton();
-            console.log('[LECTOR] updateFloatingButton llamado en pauseSpeech.');
         }
-        console.log('[LECTOR] pauseSpeech finalizado. Estado: isCurrentlyReading =', window.isCurrentlyReading, ', isCurrentlyPaused =', window.isCurrentlyPaused);
     };
 
     window.resumeSpeech = function() {
-        console.log('[LECTOR] resumeSpeech llamado.');
-        console.log('[LECTOR] Estado inicial: isCurrentlyReading =', window.isCurrentlyReading, ', isCurrentlyPaused =', window.isCurrentlyPaused);
-        
         // CORRECCIÓN: Verificar que realmente estemos pausados antes de reanudar
         if (!window.isCurrentlyPaused) {
-            console.warn('[LECTOR] resumeSpeech llamado pero no estaba pausado. Llamando a startReading().');
             window.startReading();
             return;
         }
         
         // CORRECCIÓN: Cancelar cualquier lectura activa antes de reanudar
         if (window.speechSynthesis && window.speechSynthesis.speaking) {
-            console.log('[LECTOR] speechSynthesis.speaking activo, cancelando antes de reanudar.');
             window.speechSynthesis.cancel();
         }
         
@@ -1860,15 +1666,12 @@ function initLector() {
         if (typeof window.detenerLecturaResponsiveVoice === 'function') {
             try {
                 window.detenerLecturaResponsiveVoice();
-                console.log('[LECTOR] detenerLecturaResponsiveVoice() llamado.');
             } catch(e) {
-                console.error('[LECTOR] Error al detener ResponsiveVoice en resumeSpeech:', e);
             }
         }
         
         // CORRECCIÓN: Verificar si ya hay una lectura en progreso
         if (isReadingInProgress) {
-            console.warn('[LECTOR] resumeSpeech llamado pero isReadingInProgress es true. Ignorando.');
             return;
         }
         
@@ -1882,7 +1685,6 @@ function initLector() {
         
         // Reiniciar el tiempo de lectura
         readingStartTime = Date.now();
-        console.log('[LECTOR] readingStartTime reiniciado en resumeSpeech.');
         
         // CORRECCIÓN: Usar la posición más reciente disponible
         let resumeIndex = currentIndex;
@@ -1891,13 +1693,9 @@ function initLector() {
         // Priorizar currentReadingIndex si está disponible (posición más precisa)
         if (currentReadingIndex >= 0) {
             resumeIndex = currentReadingIndex;
-            console.log('[LECTOR] Reanudando desde currentReadingIndex:', resumeIndex);
         } else if (typeof window.lastReadParagraphIndex === 'number' && window.lastReadParagraphIndex >= 0) {
             resumeIndex = window.lastReadParagraphIndex;
             resumeWord = (typeof window.lastReadWordIndex === 'number') ? window.lastReadWordIndex : 0;
-            console.log('[LECTOR] Reanudando desde lastReadParagraphIndex:', resumeIndex, 'y lastReadWordIndex:', resumeWord);
-        } else {
-            console.log('[LECTOR] No hay índice de reanudación específico, usando currentIndex por defecto:', resumeIndex);
         }
         
         // Asegurar que autoReading esté activo
@@ -1905,7 +1703,6 @@ function initLector() {
         
         if (typeof window.hideHeader === 'function') {
             window.hideHeader();
-            console.log('[LECTOR] hideHeader llamado en resumeSpeech.');
         }
         
         // Llamar a readAndTranslate con la posición correcta
@@ -1913,9 +1710,7 @@ function initLector() {
         
         if (typeof window.updateFloatingButton === 'function') {
             window.updateFloatingButton();
-            console.log('[LECTOR] updateFloatingButton llamado en resumeSpeech.');
         }
-        console.log('[LECTOR] resumeSpeech finalizado. Estado: isCurrentlyReading =', window.isCurrentlyReading, ', isCurrentlyPaused =', window.isCurrentlyPaused);
     };
 
 	    // Control reutilizable de pausa/reanudación para integrarse con tooltips, sidebars, etc.
@@ -1929,7 +1724,6 @@ function initLector() {
         // Registrar razón de pausa
         try { window.ReadingPauseReasons.add(by); } catch(e) {}
         readingLog('pause', { by, reasons: Array.from(window.ReadingPauseReasons || []) });
-        console.warn('[READING] paused', { by });
 
         // Cancelar watchdog de seguridad si existe
         try { if (window.ReadingControl && window.ReadingControl.safetyTimeout) { clearTimeout(window.ReadingControl.safetyTimeout); window.ReadingControl.safetyTimeout = null; } } catch(e) {}
@@ -1977,7 +1771,6 @@ function initLector() {
         if (!force && window.ReadingPauseReasons && window.ReadingPauseReasons.size > 0) {
             const reasons = Array.from(window.ReadingPauseReasons || []);
             readingLog('resume_blocked', { reason, reasons });
-            console.error('[READING][error] resume_blocked', { reason, reasons });
             return;
         }
 
@@ -2019,7 +1812,6 @@ function initLector() {
             isCurrentlyReading = true;
             isReadingInProgress = false;
             readingLog('resume_engine_resume', {});
-            console.info('[READING] engine resume');
             if (typeof window.hideHeader === 'function') window.hideHeader();
             if (typeof window.updateFloatingButton === 'function') window.updateFloatingButton();
             if (window.ReadingControl) { window.ReadingControl.pausedBy = null; window.ReadingControl.wasAutoReading = false; if (window.ReadingControl.retryTimer) { clearTimeout(window.ReadingControl.retryTimer); window.ReadingControl.retryTimer = null; } }
@@ -2056,7 +1848,6 @@ function initLector() {
         
         // Continuar desde el índice y palabra correctos si están disponibles
         readingLog('resume_restart', { resumeIndex, resumeWord });
-        console.info('[READING] resume restart', { resumeIndex, resumeWord });
         readAndTranslate(resumeIndex, resumeWord);
         
         // Reset
@@ -2068,15 +1859,11 @@ function initLector() {
     };
 
     window.stopReading = function() {
-        console.log('[LECTOR] stopReading llamado.');
-        console.log('[LECTOR] Estado inicial: isCurrentlyReading =', window.isCurrentlyReading, ', isCurrentlyPaused =', window.isCurrentlyPaused);
-        
         window.autoReading = false;
         autoReading = false;
         // Invalidar la sesión actual y cancelar TTS
         activeSpeakSessionId = ++speakSessionId;
         cancelAllTTS();
-        console.log('[LECTOR] TTS cancelado en stopReading, nueva sesión ID:', activeSpeakSessionId);
 
         // Asegurar flags de control para permitir reinicio inmediato
         isReadingInProgress = false;
@@ -2100,7 +1887,6 @@ function initLector() {
             // Guardar el tiempo total acumulado
             if (totalReadingTime > 0) {
                 saveReadingTime(totalReadingTime);
-                console.log('[LECTOR] Tiempo total de lectura guardado en stopReading:', totalReadingTime, 'segundos.');
             }
             
             // Resetear variables
@@ -2112,18 +1898,14 @@ function initLector() {
         if (readingUpdateInterval) {
             clearInterval(readingUpdateInterval);
             readingUpdateInterval = null;
-            console.log('[LECTOR] readingUpdateInterval limpiado en stopReading.');
         }
         
         if (typeof window.showHeader === 'function') {
             window.showHeader();
-            console.log('[LECTOR] showHeader llamado en stopReading.');
         }
         if (typeof window.updateFloatingButton === 'function') {
             window.updateFloatingButton();
-            console.log('[LECTOR] updateFloatingButton llamado en stopReading.');
         }
-        console.log('[LECTOR] stopReading finalizado. Estado: isCurrentlyReading =', window.isCurrentlyReading, ', isCurrentlyPaused =', window.isCurrentlyPaused);
     };
     
     // Función para iniciar lectura desde un índice específico
@@ -2144,11 +1926,7 @@ function initLector() {
         readAndTranslate(currentIndex);
     };
     
-    
-
-    
-    
-    // Funciones simples para fullscreen  
+    // Funciones simples para pantalla completa  
     window.enableFullscreenPagination = function() {
         // En fullscreen, usar CSS para mostrar solo 6 párrafos por página
         const style = document.createElement('style');
@@ -2219,10 +1997,6 @@ function initLector() {
                         if (cachedItem) {
                             translation = cachedItem.translation;
                         }
-                    } else {
-                        // Formato antiguo - texto completo
-                        // Para formato antiguo, no podemos hacer match por párrafo
-                        // así que usamos la API
                     }
                 }
                 
@@ -2251,7 +2025,6 @@ function initLector() {
                                         body: formData
                                     });
                                 } catch (saveError) {
-                                    // Si falla guardar, continuar
                                 }
                             }
                         }
@@ -2461,7 +2234,6 @@ function initLector() {
     window.loadSavedContentTranslations = async function() {
         // Ya no cargamos todas las traducciones al inicio
         // Las traducciones aparecerán una por una durante la lectura
-
     };
 
     // Cargar traducciones guardadas al cargar la página
@@ -2489,16 +2261,11 @@ function initLector() {
                             window.contentTranslationsCache[item.content] = item.translation;
                         }
                     });
-
                 }
             }
         } catch (error) {
-            
         }
     };
-    
-    // Función para traducir solo un párrafo (sin guardar)
-
 }
 
 // Asegurar inicialización cuando el DOM esté listo, solo si el usuario está logueado
@@ -2509,8 +2276,6 @@ function conditionalInitLector() {
         if (typeof window.initializeReadingStates === 'function') {
             window.initializeReadingStates();
         }
-    } else {
-        console.log("[LECTOR] Lector no inicializado: usuario no logueado.");
     }
 }
 
