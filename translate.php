@@ -6,6 +6,11 @@
 // 2. Si falla, usa Google Translate API
 // 3. Si ambos fallan, devuelve error
 
+require_once __DIR__ . '/db/connection.php';
+require_once __DIR__ . '/dePago/subscription_functions.php';
+
+session_start();
+
 // Configuración DeepL
 $deepl_api_key = '89bb7c47-40dc-4628-9efb-8882bb6f5fba:fx';
 
@@ -23,6 +28,18 @@ $text = trim($text);
 if ($text === '') {
     echo json_encode(['error' => 'Texto vacío']);
     exit();
+}
+
+// Verificar límite de suscripción si el usuario está logueado
+if (isset($_SESSION['user_id'])) {
+    $limit_check = checkTranslationLimit($_SESSION['user_id']);
+    if (!$limit_check['can_translate']) {
+        echo json_encode([
+            'error' => 'Has alcanzado tu límite mensual de traducciones.',
+            'limit_reached' => true
+        ]);
+        exit();
+    }
 }
 
 // Función simplificada para detectar idioma
@@ -110,6 +127,11 @@ if ($translation === false) {
 if ($translation === false) {
     echo json_encode(['error' => 'No se pudo traducir el texto']);
     exit();
+}
+
+// Registrar el uso si la traducción fue exitosa y el usuario está logueado
+if (isset($_SESSION['user_id'])) {
+    incrementTranslationUsage($_SESSION['user_id'], $text);
 }
 
 echo json_encode([

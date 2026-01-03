@@ -2,6 +2,7 @@
 session_start();
 require_once 'db/connection.php';
 require_once 'includes/content_functions.php';
+require_once 'dePago/subscription_functions.php';
 
 header('Content-Type: application/json; charset=utf-8');
 
@@ -17,6 +18,16 @@ if (!isset($_GET['text_id'])) {
 
 $user_id = $_SESSION['user_id'];
 $text_id = intval($_GET['text_id']);
+
+// Verificar límite de suscripción antes de permitir el acceso a la traducción
+$limit_check = checkTranslationLimit($user_id);
+if (!$limit_check['can_translate']) {
+    echo json_encode([
+        'error' => 'Has alcanzado tu límite mensual de traducciones.',
+        'limit_reached' => true
+    ]);
+    exit();
+}
 
 // Verificar que el texto pertenece al usuario o es público
 try {
@@ -41,6 +52,9 @@ try {
 $translation = getContentTranslation($text_id);
 
 if ($translation) {
+    // Registrar el uso (conteo de palabras del contenido original)
+    incrementTranslationUsage($user_id, $text_data['content']);
+
     // Verificar si es el nuevo formato JSON o el antiguo
     if (is_array($translation)) {
         // Nuevo formato JSON - array de traducciones

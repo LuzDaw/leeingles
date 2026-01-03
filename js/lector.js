@@ -1143,7 +1143,7 @@ function initLector() {
                 return;
             }
             // Traducir y mostrar
-            fetch('translate.php', {
+            fetch('../translate.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                 body: 'word=' + encodeURIComponent(word)
