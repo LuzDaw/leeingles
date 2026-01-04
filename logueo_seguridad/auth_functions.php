@@ -81,6 +81,12 @@ function authenticateUser($email, $password, $remember_me = false) {
                     'user_id' => $user_id
                 ];
             }
+
+            // Actualizar última conexión
+            $stmt_update = $conn->prepare("UPDATE users SET ultima_conexion = NOW() WHERE id = ?");
+            $stmt_update->bind_param("i", $user_id);
+            $stmt_update->execute();
+            $stmt_update->close();
             
             session_regenerate_id(true);
             

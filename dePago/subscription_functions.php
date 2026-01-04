@@ -15,7 +15,7 @@ if (!function_exists('getSubscriptionData')) {
             require_once __DIR__ . '/../db/connection.php';
         }
         
-        $stmt = $conn->prepare("SELECT fecha_registro, tipo_usuario FROM users WHERE id = ?");
+        $stmt = $conn->prepare("SELECT fecha_registro, tipo_usuario, ultima_conexion FROM users WHERE id = ?");
         $stmt->bind_param("i", $user_id);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -79,7 +79,8 @@ if (!function_exists('getUserSubscriptionStatus')) {
             'fin_mes_gratuito' => (new DateTime($data['fecha_registro']))->add(new DateInterval('P30D'))->format('Y-m-d H:i:s'),
             'proximo_reinicio_semanal' => $proximo_domingo->format('Y-m-d H:i:s'),
             'semana_iso' => (int)date('W'),
-            'anio_iso' => (int)date('o')
+            'anio_iso' => (int)date('o'),
+            'ultima_conexion' => $data['ultima_conexion']
         ];
     }
 }
@@ -153,6 +154,40 @@ if (!function_exists('incrementTranslationUsage')) {
     }
 }
 
+if (!function_exists('getInactiveLimitedUsers')) {
+    /**
+     * Obtiene la lista de usuarios con estado 'limitado' que llevan más de 14 días sin conectarse.
+     */
+    function getInactiveLimitedUsers($days = 14) {
+        global $conn;
+        if (!$conn) {
+            require_once __DIR__ . '/../db/connection.php';
+        }
+
+        // Buscamos usuarios 'limitado' cuya última conexión sea anterior a X días
+        // O que nunca se hayan conectado (ultima_conexion IS NULL) pero lleven registrados más de X días
+        $stmt = $conn->prepare("
+            SELECT id, username, email, ultima_conexion, fecha_registro 
+            FROM users 
+            WHERE tipo_usuario = 'limitado' 
+            AND (
+                ultima_conexion < DATE_SUB(NOW(), INTERVAL ? DAY)
+                OR (ultima_conexion IS NULL AND fecha_registro < DATE_SUB(NOW(), INTERVAL ? DAY))
+            )
+        ");
+        
+        $stmt->bind_param("ii", $days, $days);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        $users = [];
+        while ($row = $result->fetch_assoc()) {
+            $users[] = $row;
+        }
+        return $users;
+    }
+}
+
 if (!function_exists('checkTranslationLimit')) {
     /**
      * Verifica si el usuario puede realizar más traducciones.
@@ -215,6 +250,20 @@ if (!function_exists('debugAddUsage')) {
         
         $stmt = $conn->prepare("UPDATE uso_traducciones SET contador = contador + ? WHERE user_id = ? AND semana = ? AND anio = ?");
         $stmt->bind_param("iiii", $words, $user_id, $semana, $anio);
+        return $stmt->execute();
+    }
+}
+
+if (!function_exists('debugUpdateLastConnection')) {
+    /**
+     * FUNCIÓN DE PRUEBA: Permite cambiar la fecha de última conexión de un usuario.
+     */
+    function debugUpdateLastConnection($user_id, $new_date) {
+        global $conn;
+        if (!$conn) require_once __DIR__ . '/../db/connection.php';
+        
+        $stmt = $conn->prepare("UPDATE users SET ultima_conexion = ? WHERE id = ?");
+        $stmt->bind_param("si", $new_date, $user_id);
         return $stmt->execute();
     }
 }
