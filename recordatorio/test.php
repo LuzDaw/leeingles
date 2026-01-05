@@ -1,6 +1,6 @@
 <?php
 /**
- * recordatorio/testRecorratorio.php
+ * recordatorio/test.php
  * Centro de pruebas para el sistema de notificaciones y recordatorios.
  */
 
@@ -34,7 +34,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'simulate_inactivity' && $us
     $days = (int)$_POST['days_ago'];
     $new_date = date('Y-m-d H:i:s', strtotime("-$days days"));
     debugUpdateLastConnection($user_id, $new_date);
-    header("Location: testRecorratorio.php?inactivity_updated=1");
+    header("Location: test.php?inactivity_updated=1");
     exit;
 }
 
@@ -44,7 +44,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'change_type' && $user_id) {
     $stmt = $conn->prepare("UPDATE users SET tipo_usuario = ? WHERE id = ?");
     $stmt->bind_param("si", $new_type, $user_id);
     $stmt->execute();
-    header("Location: testRecorratorio.php?type_updated=1");
+    header("Location: test.php?type_updated=1");
     exit;
 }
 
@@ -56,7 +56,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'test_email' && $user_id) {
     
     $email_res = enviarEmailPlantillaBase($test_email, $test_username, $asunto, $titulo, $mensaje);
     $status_msg = $email_res['success'] ? "success" : "error";
-    header("Location: testRecorratorio.php?email_sent=$status_msg");
+    header("Location: test.php?email_sent=$status_msg");
     exit;
 }
 
@@ -64,7 +64,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'test_email' && $user_id) {
 if (isset($_POST['action']) && $_POST['action'] === 'test_inactivity_email' && $user_id) {
     $email_res = enviarRecordatorioInactividad($test_email, $test_username);
     $status_msg = $email_res['success'] ? "success" : "error";
-    header("Location: testRecorratorio.php?email_sent=$status_msg");
+    header("Location: test.php?email_sent=$status_msg");
     exit;
 }
 
@@ -80,7 +80,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'run_cron' && $user_id) {
     
     // Guardamos el resultado en la sesión para mostrarlo tras el redirect
     $_SESSION['cron_output'] = $output;
-    header("Location: testRecorratorio.php?cron_executed=1");
+    header("Location: test.php?cron_executed=1");
     exit;
 }
 
