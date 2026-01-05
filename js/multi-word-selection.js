@@ -427,7 +427,7 @@ class MultiWordSelector {
         this.showTooltip(text, 'Traduciendo...', true);
         
         // Hacer petición de traducción
-        fetch('translate.php', {
+        fetch('traduciones/translate.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             body: 'text=' + encodeURIComponent(text)
@@ -583,4 +583,4 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Exportar para uso global
-window.MultiWordSelector = MultiWordSelector; 
+window.MultiWordSelector = MultiWordSelector;

@@ -31,7 +31,7 @@ document.addEventListener('click', function(e) {
         tooltip.style.left = (rect.left) + 'px';
         
         // Hacer traducción
-        fetch('translate.php', {
+        fetch('traduciones/translate.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             body: 'word=' + encodeURIComponent(word)

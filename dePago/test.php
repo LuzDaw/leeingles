@@ -11,15 +11,26 @@ session_start();
 
 // Para pruebas, si no hay sesión, intentamos pillar el primer usuario de la BD
 $user_id = $_SESSION['user_id'] ?? null;
+$test_username = 'Desconocido';
 
 if (!$user_id) {
     $res = $conn->query("SELECT id, username FROM users LIMIT 1");
-    if ($row = $res->fetch_assoc()) {
+    if ($res && $row = $res->fetch_assoc()) {
         $user_id = $row['id'];
         $test_username = $row['username'];
     }
 } else {
     $test_username = $_SESSION['username'] ?? 'Usuario';
+    // Verificar que el usuario existe en la BD y obtener su nombre real si es posible
+    $stmt_check = $conn->prepare("SELECT username FROM users WHERE id = ?");
+    if ($stmt_check) {
+        $stmt_check->bind_param("i", $user_id);
+        $stmt_check->execute();
+        $res_check = $stmt_check->get_result();
+        if ($row_check = $res_check->fetch_assoc()) {
+            $test_username = $row_check['username'];
+        }
+    }
 }
 
 // Procesar cambio de fecha para pruebas (Simulador de tiempo)
@@ -140,8 +151,12 @@ if (isset($_POST['action']) && $_POST['action'] === 'simulate_usage' && $user_id
         </div>
 
         <div class="debug">
-            <strong>Raw Data:</strong><br>
+            <strong>Raw Data (Status):</strong><br>
             <pre><?php print_r($status); ?></pre>
+            <strong>Raw Data (Limit Info):</strong><br>
+            <pre><?php print_r($limit_info); ?></pre>
+            <strong>Database Error (if any):</strong><br>
+            <pre><?php echo $conn->error; ?></pre>
         </div>
 
     <?php else: ?>

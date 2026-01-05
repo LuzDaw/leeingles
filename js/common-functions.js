@@ -404,7 +404,7 @@ window.TranslationUtils = {
      */
     translate: async function(word, from = 'en', to = 'es') {
         try {
-            const response = await HTTPUtils.post('translate.php', {
+            const response = await HTTPUtils.post('traduciones/translate.php', {
                 text: word,
                 from: from,
                 to: to

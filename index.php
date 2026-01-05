@@ -1329,7 +1329,7 @@ function render_text_clickable($text)
 
             // Obtener traducción
             try {
-              const response = await fetch('translate.php', {
+              const response = await fetch('traduciones/translate.php', {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/x-www-form-urlencoded'
@@ -1507,7 +1507,7 @@ function render_text_clickable($text)
         formData.append('translation', translation);
         formData.append('context', sentence);
 
-        const response = await fetch('save_translated_word.php', {
+        const response = await fetch('traduciones/save_translated_word.php', {
           method: 'POST',
           body: formData
         });
@@ -2090,7 +2090,7 @@ function render_text_clickable($text)
       };
 
       // Traducir la frase completa de forma asíncrona
-      fetch('translate.php', {
+      fetch('traduciones/translate.php', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
@@ -2124,7 +2124,7 @@ function render_text_clickable($text)
     }
 
     function translatePracticeSentence(originalSentence, wordTranslation) {
-      fetch('translate.php', {
+      fetch('traduciones/translate.php', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
@@ -2938,7 +2938,7 @@ function render_text_clickable($text)
         const context = span.getAttribute('data-context');
         const translationDiv = span.nextElementSibling;
         if (context && translationDiv && translationDiv.classList.contains('context-translation')) {
-          fetch('translate.php', {
+          fetch('traduciones/translate.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             body: 'text=' + encodeURIComponent(context) + '&target_lang=es'

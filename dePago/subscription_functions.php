@@ -112,8 +112,11 @@ if (!function_exists('getWeeklyUsage')) {
         
         $semana = (int)date('W');
         $anio = (int)date('o'); // 'o' es el año ISO-8601, mejor para semanas
+        $mes = (int)date('n');
         
         $stmt = $conn->prepare("SELECT contador FROM uso_traducciones WHERE user_id = ? AND semana = ? AND anio = ?");
+        if (!$stmt) return 0;
+
         $stmt->bind_param("iii", $user_id, $semana, $anio);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -122,8 +125,11 @@ if (!function_exists('getWeeklyUsage')) {
             return (int)$row['contador'];
         } else {
             // Crear registro inicial para la semana
-            $stmt_init = $conn->prepare("INSERT INTO uso_traducciones (user_id, semana, anio, contador) VALUES (?, ?, ?, 0)");
-            $stmt_init->bind_param("iii", $user_id, $semana, $anio);
+            // Incluimos 'mes' porque en la estructura original es NOT NULL y sin valor por defecto
+            $stmt_init = $conn->prepare("INSERT INTO uso_traducciones (user_id, semana, mes, anio, contador) VALUES (?, ?, ?, ?, 0)");
+            if (!$stmt_init) return 0;
+
+            $stmt_init->bind_param("iiii", $user_id, $semana, $mes, $anio);
             $stmt_init->execute();
             return 0;
         }
@@ -149,6 +155,8 @@ if (!function_exists('incrementTranslationUsage')) {
         getWeeklyUsage($user_id);
         
         $stmt = $conn->prepare("UPDATE uso_traducciones SET contador = contador + ? WHERE user_id = ? AND semana = ? AND anio = ?");
+        if (!$stmt) return false;
+
         $stmt->bind_param("iiii", $word_count, $user_id, $semana, $anio);
         return $stmt->execute();
     }
@@ -231,6 +239,7 @@ if (!function_exists('debugUpdateRegistrationDate')) {
         if (!$conn) require_once __DIR__ . '/../db/connection.php';
         
         $stmt = $conn->prepare("UPDATE users SET fecha_registro = ? WHERE id = ?");
+        if (!$stmt) return false;
         $stmt->bind_param("si", $new_date, $user_id);
         return $stmt->execute();
     }
@@ -249,6 +258,7 @@ if (!function_exists('debugAddUsage')) {
         getWeeklyUsage($user_id);
         
         $stmt = $conn->prepare("UPDATE uso_traducciones SET contador = contador + ? WHERE user_id = ? AND semana = ? AND anio = ?");
+        if (!$stmt) return false;
         $stmt->bind_param("iiii", $words, $user_id, $semana, $anio);
         return $stmt->execute();
     }
@@ -263,6 +273,7 @@ if (!function_exists('debugUpdateLastConnection')) {
         if (!$conn) require_once __DIR__ . '/../db/connection.php';
         
         $stmt = $conn->prepare("UPDATE users SET ultima_conexion = ? WHERE id = ?");
+        if (!$stmt) return false;
         $stmt->bind_param("si", $new_date, $user_id);
         return $stmt->execute();
     }

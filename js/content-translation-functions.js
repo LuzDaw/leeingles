@@ -10,7 +10,7 @@ window.saveContentTranslation = async function(textId, content, translation) {
         formData.append('content', content);
         formData.append('translation', translation);
         
-        const response = await fetch('save_content_translation.php', {
+        const response = await fetch('traduciones/save_content_translation.php', {
             method: 'POST',
             body: formData
         });
@@ -29,7 +29,7 @@ window.saveContentTranslation = async function(textId, content, translation) {
 // Obtener traducción de contenido desde la base de datos
 window.getContentTranslation = async function(textId) {
     try {
-        const response = await fetch(`get_content_translation.php?text_id=${textId}`);
+        const response = await fetch(`traduciones/get_content_translation.php?text_id=${textId}`);
         const data = await response.json();
         
         if (data.success && data.translation) {
@@ -82,7 +82,7 @@ window.translateContentWithCache = async function(englishElement, spanishElement
     
     // Si no hay traducción en BD, traducir y guardar
     try {
-        const response = await fetch('translate.php', {
+        const response = await fetch('traduciones/translate.php', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'

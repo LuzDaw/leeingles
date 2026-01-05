@@ -6,8 +6,8 @@
 // 2. Si falla, usa Google Translate API
 // 3. Si ambos fallan, devuelve error
 
-require_once __DIR__ . '/db/connection.php';
-require_once __DIR__ . '/dePago/subscription_functions.php';
+require_once __DIR__ . '/../db/connection.php';
+require_once __DIR__ . '/../dePago/subscription_functions.php';
 
 session_start();
 

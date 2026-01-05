@@ -14,7 +14,7 @@ EventUtils.onDOMReady(() => {
   // Guardar palabra
   EventUtils.addOptionalListener("save-btn", "click", async () => {
     try {
-      const response = await HTTPUtils.post("save_word.php", {
+      const response = await HTTPUtils.post("traduciones/save_word.php", {
         word: selectedWord,
         translation: translatedWord
       });
@@ -36,4 +36,3 @@ EventUtils.onDOMReady(() => {
 // Elementos con id="selected-word" y id="translated-word".
 
 // Un botón con id="save-btn".
-

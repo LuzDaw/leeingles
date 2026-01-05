@@ -301,7 +301,7 @@ window.loadPracticeQuestion = function() {
                 event.stopPropagation();
                 const word = target.textContent.trim();
                 if (!word || word === '___') return;
-                fetch('translate.php', {
+                fetch('traduciones/translate.php', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                     body: 'word=' + encodeURIComponent(word)
@@ -720,7 +720,7 @@ window.handlePracticeWordClickInline = function(event, el) {
     event.stopPropagation();
     var word = el.textContent.trim();
     if (!word || word === '___') return;
-    fetch('translate.php', {
+    fetch('traduciones/translate.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: 'word=' + encodeURIComponent(word)
@@ -739,7 +739,7 @@ window.handlePracticeWordClickInline = function(event, el) {
 }
 
 function translatePracticeSentence(originalSentence, wordTranslation) {
-    fetch('translate.php', {
+    fetch('traduciones/translate.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: 'word=' + encodeURIComponent(originalSentence)
@@ -1536,7 +1536,7 @@ function loadSentenceQuestion() {
     
     let spanishSentenceContent = sentence.es;
     if (sentence.needsTranslation && sentence.original_en) {
-        fetch('translate.php', {
+        fetch('traduciones/translate.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             body: 'word=' + encodeURIComponent(sentence.original_en)
@@ -1827,7 +1827,7 @@ function handlePracticeWordClick(event) {
     const word = this.textContent.trim();
     if (!word || word === '___') return;
 
-    fetch('translate.php', {
+    fetch('traduciones/translate.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: 'word=' + encodeURIComponent(word)
@@ -2124,7 +2124,7 @@ function renderPracticeSentence(sentence, highlightWord) {
                 event.stopPropagation();
                 const word = this.textContent.trim();
                 if (!word || word === '___') return;
-                fetch('translate.php', {
+                fetch('traduciones/translate.php', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                     body: 'word=' + encodeURIComponent(word)

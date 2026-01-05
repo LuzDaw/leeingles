@@ -955,7 +955,7 @@ function initLector() {
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 segundos timeout
         
-        fetch('translate.php', {
+        fetch('traduciones/translate.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             body: 'word=' + encodeURIComponent(text),
@@ -984,7 +984,7 @@ function initLector() {
                     formData.append('content', text);
                     formData.append('translation', translationData.translation);
                     
-                    fetch('save_content_translation.php', {
+                    fetch('traduciones/save_content_translation.php', {
                         method: 'POST',
                         body: formData
                     })
@@ -1010,7 +1010,7 @@ function initLector() {
     
     // Función para traducir solo un párrafo (sin guardar)
     function translateParagraphOnly(text, box) {
-        fetch('translate.php', {
+        fetch('traduciones/translate.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             body: 'word=' + encodeURIComponent(text)
@@ -1041,7 +1041,7 @@ function initLector() {
         
         try {
             // Traducir el contenido completo
-            const response = await fetch('translate.php', {
+            const response = await fetch('traduciones/translate.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                 body: 'word=' + encodeURIComponent(fullContent)
@@ -1056,7 +1056,7 @@ function initLector() {
                 formData.append('content', fullContent);
                 formData.append('translation', data.translation);
                 
-                const saveResponse = await fetch('save_content_translation.php', {
+                const saveResponse = await fetch('traduciones/save_content_translation.php', {
                     method: 'POST',
                     body: formData
                 });
@@ -1143,7 +1143,7 @@ function initLector() {
                 return;
             }
             // Traducir y mostrar
-            fetch('../translate.php', {
+            fetch('traduciones/translate.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                 body: 'word=' + encodeURIComponent(word)
@@ -1252,7 +1252,7 @@ function initLector() {
     }
     
     // Traducir y guardar la palabra (sin mostrar tooltip)
-    fetch('translate.php', {
+    fetch('traduciones/translate.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: 'word=' + encodeURIComponent(word)
@@ -1966,7 +1966,7 @@ function initLector() {
         let cachedTranslations = null;
         if (textId) {
             try {
-                const response = await fetch(`get_content_translation.php?text_id=${textId}`);
+                const response = await fetch(`traduciones/get_content_translation.php?text_id=${textId}`);
                 const data = await response.json();
                 if (data.success && data.translation) {
                     cachedTranslations = data.translation;
@@ -2003,7 +2003,7 @@ function initLector() {
                 // 2. Si no hay en caché, usar API
                 if (!translation) {
                     try {
-                        const res = await fetch('translate.php', {
+                        const res = await fetch('traduciones/translate.php', {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                             body: 'word=' + encodeURIComponent(text)
@@ -2020,7 +2020,7 @@ function initLector() {
                                     formData.append('content', text);
                                     formData.append('translation', translation);
                                     
-                                    await fetch('save_content_translation.php', {
+                                    await fetch('traduciones/save_content_translation.php', {
                                         method: 'POST',
                                         body: formData
                                     });
@@ -2249,7 +2249,7 @@ function initLector() {
         if (!textId) return;
         
         try {
-            const response = await fetch(`get_content_translation.php?text_id=${textId}`);
+            const response = await fetch(`traduciones/get_content_translation.php?text_id=${textId}`);
             const data = await response.json();
             
             if (data.success && data.translation) {

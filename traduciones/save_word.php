@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once 'db/connection.php';
+require_once '../db/connection.php';
 
 if (!isset($_SESSION['user_id'])) {
     echo "Debes iniciar sesión.";
