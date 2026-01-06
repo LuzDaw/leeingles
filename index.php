@@ -869,6 +869,9 @@ function render_text_clickable($text)
               <button onclick="loadTabContent('upload')" class="tab-btn" data-tab="upload">
                 ⬆ Subir
               </button>
+              <button onclick="loadTabContent('account')" class="tab-btn" data-tab="account">
+                👤 Cuenta
+              </button>
               <?php if (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] == 1): ?>
                 <button onclick="window.location.href='admin_categories.php'" class="tab-btn" data-tab="admin-categories" style="background: #dc2626; color: white;">
                   ⚙️ Admin
@@ -1123,7 +1126,7 @@ function render_text_clickable($text)
       } else if (tab === 'texts') {
         tab = 'my-texts';
         loadTabContent(tab);
-      } else if (tab && ['progress','my-texts','saved-words','practice','upload'].includes(tab)) {
+      } else if (tab && ['progress','my-texts','saved-words','practice','upload','account'].includes(tab)) {
         loadTabContent(tab);
       } else {
         // Solo cargar pestañas si no estamos viendo un texto específico
@@ -2575,7 +2578,8 @@ function render_text_clickable($text)
         'my-texts': 'ajax_my_texts_content.php',
         'saved-words': 'ajax_saved_words_content.php',
         'practice': 'ajax_practice_content.php',
-        'upload': 'ajax_upload_content.php'
+        'upload': 'ajax_upload_content.php',
+        'account': 'logueo_seguridad/cuenta/ajax_account_content.php'
       };
       
       const ajaxFile = tabFiles[tab];

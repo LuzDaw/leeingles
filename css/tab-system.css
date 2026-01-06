@@ -758,3 +758,146 @@
 
 .msg-success { color: #1D3557; font-weight: bold; padding: 10px; border-radius: 5px; background: #A8DADC; margin-bottom: 15px; }
 .msg-error { color: #1D3557; font-weight: bold; padding: 10px; border-radius: 5px; background: #F0F4F8; margin-bottom: 15px; }
+
+/* Estilos adicionales para la pestaña de Cuenta */
+.account-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #f1f5f9;
+}
+
+.account-badge {
+    padding: 6px 16px;
+    border-radius: 50px;
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.badge-active { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
+.badge-trial { background: #fef9c3; color: #854d0e; border: 1px solid #fef08a; }
+.badge-inactive { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+
+.account-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+    margin-bottom: 32px;
+}
+
+.info-box {
+    background: #fafbfc;
+    border: 1px solid #f1f5f9;
+    padding: 20px;
+    border-radius: 12px;
+}
+
+.info-box h4 {
+    color: #1e293b;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 16px;
+}
+
+.info-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    font-size: 14px;
+}
+
+.info-label { color: #64748b; }
+.info-value { color: #1e293b; font-weight: 600; }
+
+.translations-counter {
+    text-align: center;
+    padding: 15px;
+    background: white;
+    border-radius: 10px;
+    border: 2px dashed #e2e8f0;
+    margin-bottom: 15px;
+}
+
+.counter-number {
+    display: block;
+    font-size: 32px;
+    font-weight: 700;
+    color: #ff8a00;
+}
+
+.subscription-plans {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-top: 16px;
+}
+
+.plan-card {
+    background: white;
+    border: 2px solid #f1f5f9;
+    padding: 24px;
+    border-radius: 16px;
+    text-align: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    position: relative;
+}
+
+.plan-card:hover {
+    border-color: #ff8a00;
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(255, 138, 0, 0.1);
+}
+
+.plan-card.recommended {
+    border-color: #ff8a00;
+    background: #fffaf5;
+}
+
+.recommended-tag {
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #ff8a00;
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.plan-price {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 12px 0;
+}
+
+.plan-duration {
+    color: #64748b;
+    font-size: 14px;
+}
+
+.activity-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 16px;
+}
+
+.activity-card {
+    background: white;
+    padding: 16px;
+    border-radius: 12px;
+    border: 1px solid #f1f5f9;
+    text-align: center;
+}
+
+.activity-icon { font-size: 20px; margin-bottom: 8px; }
+.activity-number { display: block; font-size: 18px; font-weight: 700; color: #1e293b; }
+.activity-label { font-size: 12px; color: #64748b; }
