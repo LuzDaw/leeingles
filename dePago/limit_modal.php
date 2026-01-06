@@ -2,6 +2,9 @@
 <div id="limit-modal" class="modal-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 1000000; align-items: center; justify-content: center;">
     <div class="modal-content" style="background: white; padding: 18px; border-radius: 12px; max-width: 320px; width: 85%; text-align: center; box-shadow: 0 8px 20px rgba(0,0,0,0.2); position: relative; animation: modalFadeIn 0.3s ease-out;">
         
+        <!-- Botón cerrar (X) -->
+        <button id="close-limit-modal-x" style="position: absolute; top: 10px; right: 10px; background: none; border: none; font-size: 20px; cursor: pointer; color: #999;">&times;</button>
+
         <!-- Icono de aviso -->
         <div style="font-size: 32px; margin-bottom: 10px;">⏳</div>
         

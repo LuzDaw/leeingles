@@ -113,7 +113,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'simulate_usage' && $user_id
         </div>
 
         <div style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px; border-left: 5px solid #1976d2;">
-            <h3 style="margin-top:0;">Consumo Semanal (Límite 300)</h3>
+            <h3 style="margin-top:0;">Consumo Semanal (Límite 300 + 50 margen)</h3>
             <div class="data-row">
                 <span class="label">Semana Actual:</span>
                 <span class="value"><?php echo $status['semana_iso']; ?> (Año <?php echo $status['anio_iso']; ?>)</span>
@@ -123,31 +123,38 @@ if (isset($_POST['action']) && $_POST['action'] === 'simulate_usage' && $user_id
                 <span class="value" style="font-weight:bold; color:#d32f2f;"><?php echo $status['proximo_reinicio_semanal']; ?></span>
             </div>
             <div class="data-row">
-                <span class="label">Palabras Traducidas:</span>
-                <span class="value" style="font-size: 1.2em; font-weight: bold;">
-                    <?php echo getWeeklyUsage($user_id); ?>
+                <span class="label">Palabras Traducidas (Real BD):</span>
+                <span class="value" style="font-size: 1.2em; font-weight: bold; color: #1976d2;">
+                    <?php 
+                        $real_usage = getWeeklyUsage($user_id);
+                        echo $real_usage; 
+                    ?>
                 </span>
             </div>
             <div class="data-row">
-                <span class="label">Límite Semanal:</span>
-                <span class="value">
-                    <?php echo ($limit_info['reason'] === 'unlimited') ? 'ILIMITADO' : '300 palabras'; ?>
-                </span>
+                <span class="label">Límite Base:</span>
+                <span class="value">300 palabras</span>
             </div>
-            <?php if (isset($limit_info['remaining'])): ?>
             <div class="data-row">
-                <span class="label">Palabras Restantes:</span>
-                <span class="value" style="color: <?php echo ($limit_info['remaining'] < 50) ? 'red' : 'green'; ?>;">
-                    <?php echo $limit_info['remaining']; ?>
-                </span>
+                <span class="label">Margen de Cortesía:</span>
+                <span class="value">+50 palabras (Total 350)</span>
             </div>
-            <?php endif; ?>
             
-            <?php if (!$limit_info['can_translate']): ?>
+            <div style="margin-top: 15px; padding: 10px; background: #e3f2fd; border-radius: 5px; font-size: 0.9em;">
+                <strong>Estado de Verificación:</strong><br>
+                <?php 
+                    $check_normal = checkTranslationLimit($user_id, false);
+                    $check_reading = checkTranslationLimit($user_id, true);
+                ?>
+                • Inicio (Normal): <?php echo $check_normal['can_translate'] ? '✅ PERMITIDO' : '❌ BLOQUEADO'; ?><br>
+                • Durante Lectura: <?php echo $check_reading['can_translate'] ? '✅ PERMITIDO' : '❌ BLOQUEADO'; ?>
+            </div>
+
+            <?php if (!$check_normal['can_translate'] || !$check_reading['can_translate']): ?>
                 <div style="background: #ffebee; color: #c62828; padding: 10px; border-radius: 4px; margin-top: 10px; font-weight: bold; text-align: center;">
-                    ⚠️ LÍMITE ALCANZADO: Las traducciones se bloquearán hasta el domingo.
+                    ⚠️ LÍMITE ALCANZADO
                 </div>
-                <button onclick="LimitModal.show('<?php echo $limit_info['next_reset']; ?>', true)" style="margin-top: 10px; width: 100%; padding: 10px; cursor: pointer; background: #d32f2f; color: white; border: none; border-radius: 4px; font-weight: bold;">
+                <button onclick="LimitModal.show('<?php echo $status['proximo_reinicio_semanal']; ?>', true)" style="margin-top: 10px; width: 100%; padding: 10px; cursor: pointer; background: #d32f2f; color: white; border: none; border-radius: 4px; font-weight: bold;">
                     🚀 PROBAR MODAL DE LÍMITE
                 </button>
             <?php endif; ?>

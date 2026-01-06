@@ -1575,7 +1575,25 @@ function initLector() {
     };
     
     // Centralizar el control del header en las funciones de lectura
-    window.startReading = function() {
+    window.startReading = async function() {
+        // VERIFICACIÓN PROACTIVA DE LÍMITE
+        // Solo verificamos si NO ha sido aceptado ya en esta sesión/texto
+        if (!window._limitAceptado) {
+            try {
+                const response = await fetch('dePago/ajax_check_limit.php?active_reading=0');
+                const data = await response.json();
+                
+                if (data && !data.can_translate) {
+                    if (window.LimitModal) {
+                        window.LimitModal.show(data.next_reset, true); // Forzar modal en acción explícita
+                    }
+                    return; // Detener inicio de lectura hasta que acepte
+                }
+            } catch (e) {
+                console.error("Error verificando límite:", e);
+            }
+        }
+
         // Invalidar sesión anterior y cancelar cualquier lectura activa
         activeSpeakSessionId = ++speakSessionId;
         cancelAllTTS();

@@ -7,21 +7,30 @@ const LimitModal = {
     modalId: 'limit-modal',
     resetDateId: 'limit-reset-date',
     closeBtnId: 'close-limit-modal',
+    closeXId: 'close-limit-modal-x',
 
     /**
      * Inicializa los eventos del modal
      */
     init: function() {
         const closeBtn = document.getElementById(this.closeBtnId);
-        if (closeBtn) {
-            closeBtn.onclick = () => this.hide();
-        }
+        const closeX = document.getElementById(this.closeXId);
+
+        const handleAccept = () => {
+            this.hide();
+            // Al aceptar o cerrar, marcamos como aceptado para permitir lectura
+            window._limitAceptado = true;
+            if (window.startReading) window.startReading();
+        };
+
+        if (closeBtn) closeBtn.onclick = handleAccept;
+        if (closeX) closeX.onclick = handleAccept;
 
         // Cerrar al hacer clic fuera del contenido
         const modal = document.getElementById(this.modalId);
         if (modal) {
             modal.onclick = (e) => {
-                if (e.target === modal) this.hide();
+                if (e.target === modal) handleAccept();
             };
         }
     },
@@ -29,11 +38,12 @@ const LimitModal = {
     /**
      * Muestra el modal con la fecha de reinicio
      * @param {string} nextReset - Fecha formateada del próximo reinicio
-     * @param {boolean} force - Si es true, ignora el control de sesión (para pruebas)
+     * @param {boolean} force - Si es true, ignora el control de sesión
      */
     show: function(nextReset, force = false) {
-        // Control de sesión: solo mostrar una vez por sesión a menos que se fuerce
+        // Control de sesión: solo mostrar una vez por sesión a menos que se fuerce (Play o margen agotado)
         if (!force && sessionStorage.getItem('limit_modal_shown')) {
+            console.log("LimitModal: Ya mostrado en esta sesión, omitiendo.");
             return;
         }
 
@@ -80,7 +90,9 @@ const LimitModal = {
      */
     checkResponse: function(data) {
         if (data && data.limit_reached) {
-            this.show(data.next_reset);
+            // Si el uso es >= 350 (margen de cortesía agotado), forzar el modal siempre
+            const force = data.usage >= (data.grace_limit || 350);
+            this.show(data.next_reset, force);
             return true;
         }
         return false;
