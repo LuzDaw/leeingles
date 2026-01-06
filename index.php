@@ -2484,9 +2484,13 @@ function render_text_clickable($text)
     <script src="js/upload-form.js"></script>
     <script src="js/header-functions.js"></script>
     <script src="js/calendar-functions.js"></script>
-  <script src="js/multi-word-selection.js"></script>
+    <script src="js/multi-word-selection.js"></script>
   <script src="js/title-translation-functions.js"></script>
   <script src="logueo_seguridad/password_visibility.js"></script>
+  
+  <!-- Sistema de Límite de Traducciones -->
+  <?php include 'dePago/limit_modal.php'; ?>
+  <script src="dePago/limit_modal.js"></script>
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {

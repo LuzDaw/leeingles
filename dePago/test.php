@@ -147,6 +147,9 @@ if (isset($_POST['action']) && $_POST['action'] === 'simulate_usage' && $user_id
                 <div style="background: #ffebee; color: #c62828; padding: 10px; border-radius: 4px; margin-top: 10px; font-weight: bold; text-align: center;">
                     ⚠️ LÍMITE ALCANZADO: Las traducciones se bloquearán hasta el domingo.
                 </div>
+                <button onclick="LimitModal.show('<?php echo $limit_info['next_reset']; ?>')" style="margin-top: 10px; width: 100%; padding: 10px; cursor: pointer; background: #d32f2f; color: white; border: none; border-radius: 4px; font-weight: bold;">
+                    🚀 PROBAR MODAL DE LÍMITE
+                </button>
             <?php endif; ?>
         </div>
 
@@ -238,5 +241,8 @@ if (isset($_POST['action']) && $_POST['action'] === 'simulate_usage' && $user_id
 </div>
 <?php endif; ?>
 
+    <!-- Sistema de Límite de Traducciones para Pruebas -->
+    <?php include 'limit_modal.php'; ?>
+    <script src="limit_modal.js"></script>
 </body>
 </html>

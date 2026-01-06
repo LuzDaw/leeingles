@@ -206,7 +206,11 @@ if (!function_exists('checkTranslationLimit')) {
         
         // Premium y Mes Gratuito no tienen límite
         if ($status['estado_logico'] === 'premium' || $status['estado_logico'] === 'gratis') {
-            return ['can_translate' => true, 'reason' => 'unlimited'];
+            return [
+                'can_translate' => true, 
+                'reason' => 'unlimited',
+                'status' => $status['estado_logico']
+            ];
         }
         
         $usage = getWeeklyUsage($user_id);
@@ -217,7 +221,9 @@ if (!function_exists('checkTranslationLimit')) {
                 'can_translate' => false, 
                 'usage' => $usage, 
                 'limit' => $limit,
-                'reason' => 'limit_reached'
+                'reason' => 'limit_reached',
+                'next_reset' => $status['proximo_reinicio_semanal'],
+                'status' => $status['estado_logico']
             ];
         }
         
@@ -225,7 +231,9 @@ if (!function_exists('checkTranslationLimit')) {
             'can_translate' => true, 
             'usage' => $usage, 
             'limit' => $limit,
-            'remaining' => $limit - $usage
+            'remaining' => $limit - $usage,
+            'next_reset' => $status['proximo_reinicio_semanal'],
+            'status' => $status['estado_logico']
         ];
     }
 }

@@ -966,6 +966,12 @@ function initLector() {
             return res.json();
         })
         .then(translationData => {
+            // Verificar límite de traducciones
+            if (window.LimitModal && window.LimitModal.checkResponse(translationData)) {
+                box.innerText = '';
+                return;
+            }
+
             if (translationData.translation) {
                 // Mostrar la traducción inmediatamente
                 box.innerText = translationData.translation;
@@ -1017,6 +1023,12 @@ function initLector() {
         })
         .then(res => res.json())
         .then(data => {
+            // Verificar límite de traducciones
+            if (window.LimitModal && window.LimitModal.checkResponse(data)) {
+                box.innerText = '';
+                return;
+            }
+
             if (data.translation) {
                 box.innerText = data.translation;
             } else {
@@ -1150,6 +1162,11 @@ function initLector() {
             })
             .then(res => res.json())
             .then(data => {
+                // Verificar límite de traducciones
+                if (window.LimitModal && window.LimitModal.checkResponse(data)) {
+                    return;
+                }
+
                 const tr = data && data.translation ? data.translation : 'Sin traducción';
                 el.dataset.translation = tr;
                 showHoverTooltip(el, word, tr);
@@ -1259,6 +1276,11 @@ function initLector() {
     })
     .then(res => res.json())
     .then(data => {
+        // Verificar límite de traducciones
+        if (window.LimitModal && window.LimitModal.checkResponse(data)) {
+            return;
+        }
+
         const tr = data && data.translation ? data.translation : null;
         if (tr && typeof saveTranslatedWord === 'function') {
             // Encontrar la frase donde está la palabra
@@ -1968,6 +1990,16 @@ function initLector() {
             try {
                 const response = await fetch(`traduciones/get_content_translation.php?text_id=${textId}`);
                 const data = await response.json();
+
+                // Verificar límite de traducciones
+                if (window.LimitModal && window.LimitModal.checkResponse(data)) {
+                    if (btn) {
+                        btn.disabled = false;
+                        btn.textContent = '📖 Mostrar todas las traducciones';
+                    }
+                    return;
+                }
+
                 if (data.success && data.translation) {
                     cachedTranslations = data.translation;
                 }
@@ -2009,6 +2041,16 @@ function initLector() {
                             body: 'word=' + encodeURIComponent(text)
                         });
                         const data = await res.json();
+
+                        // Verificar límite de traducciones
+                        if (window.LimitModal && window.LimitModal.checkResponse(data)) {
+                            if (btn) {
+                                btn.disabled = false;
+                                btn.textContent = '📖 Mostrar todas las traducciones';
+                            }
+                            return;
+                        }
+
                         if (data.translation) {
                             translation = data.translation;
                             

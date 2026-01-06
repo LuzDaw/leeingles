@@ -23,8 +23,9 @@ $text_id = intval($_GET['text_id']);
 $limit_check = checkTranslationLimit($user_id);
 if (!$limit_check['can_translate']) {
     echo json_encode([
-        'error' => 'Has alcanzado tu límite mensual de traducciones.',
-        'limit_reached' => true
+        'error' => 'Has alcanzado tu límite semanal de traducciones.',
+        'limit_reached' => true,
+        'next_reset' => $limit_check['next_reset'] ?? null
     ]);
     exit();
 }

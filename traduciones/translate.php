@@ -35,8 +35,9 @@ if (isset($_SESSION['user_id'])) {
     $limit_check = checkTranslationLimit($_SESSION['user_id']);
     if (!$limit_check['can_translate']) {
         echo json_encode([
-            'error' => 'Has alcanzado tu límite mensual de traducciones.',
-            'limit_reached' => true
+            'error' => 'Has alcanzado tu límite semanal de traducciones.',
+            'limit_reached' => true,
+            'next_reset' => $limit_check['next_reset'] ?? null
         ]);
         exit();
     }

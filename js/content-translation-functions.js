@@ -72,6 +72,12 @@ window.translateContentWithCache = async function(englishElement, spanishElement
     // Primero intentar obtener desde la base de datos
     const cachedTranslation = await getContentTranslation(textId);
     
+    // Verificar límite en la respuesta de getContentTranslation
+    if (window.LimitModal && window.LimitModal.checkResponse(cachedTranslation)) {
+        spanishElement.textContent = '';
+        return;
+    }
+
     if (cachedTranslation.translation) {
         // Usar traducción de la base de datos
         spanishElement.textContent = cachedTranslation.translation;
@@ -91,6 +97,12 @@ window.translateContentWithCache = async function(englishElement, spanishElement
         });
 
         const data = await response.json();
+
+        // Verificar límite en la respuesta de translate.php
+        if (window.LimitModal && window.LimitModal.checkResponse(data)) {
+            spanishElement.textContent = '';
+            return;
+        }
 
         if (data.translation) {
             // Mostrar traducción
@@ -142,6 +154,11 @@ window.initContentTranslations = async function() {
             // Verificar si ya hay traducción en BD
             const cachedTranslation = await getContentTranslation(textId);
             
+            // Verificar límite (aunque en init suele ser seguro, mejor prevenir)
+            if (window.LimitModal && window.LimitModal.checkResponse(cachedTranslation)) {
+                continue;
+            }
+
             if (cachedTranslation.translation) {
                 spanishElement.textContent = cachedTranslation.translation;
                 spanishElement.style.color = '#eaa827';
