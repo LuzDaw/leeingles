@@ -29,12 +29,21 @@ const LimitModal = {
     /**
      * Muestra el modal con la fecha de reinicio
      * @param {string} nextReset - Fecha formateada del próximo reinicio
+     * @param {boolean} force - Si es true, ignora el control de sesión (para pruebas)
      */
-    show: function(nextReset) {
+    show: function(nextReset, force = false) {
+        // Control de sesión: solo mostrar una vez por sesión a menos que se fuerce
+        if (!force && sessionStorage.getItem('limit_modal_shown')) {
+            return;
+        }
+
         const modal = document.getElementById(this.modalId);
         const resetDateEl = document.getElementById(this.resetDateId);
 
         if (modal) {
+            // Marcar como mostrado en esta sesión
+            sessionStorage.setItem('limit_modal_shown', 'true');
+
             if (resetDateEl && nextReset) {
                 // Formatear fecha si viene en formato Y-m-d H:i:s
                 try {

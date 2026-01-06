@@ -771,7 +771,11 @@ function translatePracticeSentence(originalSentence, wordTranslation) {
             }
         } else {
             if (translationElement) {
-                translationElement.innerHTML = `<span style=\"color: #dc2626;\">No se pudo traducir la frase. Palabra: <span class=\"highlighted-word\">${wordTranslation}</span></span>`;
+               // translationElement.innerHTML = `<span style=\"color: #b3641bff;\">Límite semanal alcanzado. Palabra: <span class=\"highlighted-word\">${wordTranslation}</span></span>`;
+                translationElement.innerHTML = `<span style=\"color: #1b6fb3ff;\">Límite de traducciones alcanzado.
+<span>Traducciones ilimitadas desde 4.99€</span>
+Ver planes</span></span>`;
+
                 translationElement.classList.remove('hidden');
             }
         }

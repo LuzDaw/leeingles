@@ -200,8 +200,9 @@ if (!function_exists('checkTranslationLimit')) {
     /**
      * Verifica si el usuario puede realizar más traducciones.
      * Límite: 300 palabras semanales para usuarios 'limitado' fuera del mes gratuito.
+     * Se permite un margen de cortesía de 50 palabras (total 350) si la lectura ya está en curso.
      */
-    function checkTranslationLimit($user_id) {
+    function checkTranslationLimit($user_id, $is_active_reading = false) {
         $status = getUserSubscriptionStatus($user_id);
         
         // Premium y Mes Gratuito no tienen límite
@@ -214,13 +215,17 @@ if (!function_exists('checkTranslationLimit')) {
         }
         
         $usage = getWeeklyUsage($user_id);
-        $limit = 300;
+        $base_limit = 300;
+        $grace_limit = 350; // Margen de 50 palabras
         
-        if ($usage >= $limit) {
+        $current_limit = $is_active_reading ? $grace_limit : $base_limit;
+        
+        if ($usage >= $current_limit) {
             return [
                 'can_translate' => false, 
                 'usage' => $usage, 
-                'limit' => $limit,
+                'limit' => $base_limit,
+                'grace_limit' => $grace_limit,
                 'reason' => 'limit_reached',
                 'next_reset' => $status['proximo_reinicio_semanal'],
                 'status' => $status['estado_logico']
@@ -230,8 +235,8 @@ if (!function_exists('checkTranslationLimit')) {
         return [
             'can_translate' => true, 
             'usage' => $usage, 
-            'limit' => $limit,
-            'remaining' => $limit - $usage,
+            'limit' => $base_limit,
+            'remaining' => $base_limit - $usage,
             'next_reset' => $status['proximo_reinicio_semanal'],
             'status' => $status['estado_logico']
         ];

@@ -955,10 +955,11 @@ function initLector() {
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 segundos timeout
         
+        const isActiveReading = window.autoReading ? '1' : '0';
         fetch('traduciones/translate.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: 'word=' + encodeURIComponent(text),
+            body: 'word=' + encodeURIComponent(text) + '&active_reading=' + isActiveReading,
             signal: controller.signal
         })
         .then(res => {
@@ -1016,10 +1017,11 @@ function initLector() {
     
     // Función para traducir solo un párrafo (sin guardar)
     function translateParagraphOnly(text, box) {
+        const isActiveReading = window.autoReading ? '1' : '0';
         fetch('traduciones/translate.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: 'word=' + encodeURIComponent(text)
+            body: 'word=' + encodeURIComponent(text) + '&active_reading=' + isActiveReading
         })
         .then(res => res.json())
         .then(data => {
@@ -1988,7 +1990,8 @@ function initLector() {
         let cachedTranslations = null;
         if (textId) {
             try {
-                const response = await fetch(`traduciones/get_content_translation.php?text_id=${textId}`);
+                const isActiveReading = window.autoReading ? '1' : '0';
+                const response = await fetch(`traduciones/get_content_translation.php?text_id=${textId}&active_reading=${isActiveReading}`);
                 const data = await response.json();
 
                 // Verificar límite de traducciones
@@ -2035,10 +2038,11 @@ function initLector() {
                 // 2. Si no hay en caché, usar API
                 if (!translation) {
                     try {
+                        const isActiveReading = window.autoReading ? '1' : '0';
                         const res = await fetch('traduciones/translate.php', {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                            body: 'word=' + encodeURIComponent(text)
+                            body: 'word=' + encodeURIComponent(text) + '&active_reading=' + isActiveReading
                         });
                         const data = await res.json();
 
@@ -2291,7 +2295,8 @@ function initLector() {
         if (!textId) return;
         
         try {
-            const response = await fetch(`traduciones/get_content_translation.php?text_id=${textId}`);
+            const isActiveReading = window.autoReading ? '1' : '0';
+            const response = await fetch(`traduciones/get_content_translation.php?text_id=${textId}&active_reading=${isActiveReading}`);
             const data = await response.json();
             
             if (data.success && data.translation) {

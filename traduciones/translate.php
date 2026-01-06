@@ -32,7 +32,9 @@ if ($text === '') {
 
 // Verificar límite de suscripción si el usuario está logueado
 if (isset($_SESSION['user_id'])) {
-    $limit_check = checkTranslationLimit($_SESSION['user_id']);
+    $is_active_reading = isset($_POST['active_reading']) && $_POST['active_reading'] === '1';
+    $limit_check = checkTranslationLimit($_SESSION['user_id'], $is_active_reading);
+    
     if (!$limit_check['can_translate']) {
         echo json_encode([
             'error' => 'Has alcanzado tu límite semanal de traducciones.',

@@ -20,7 +20,9 @@ $user_id = $_SESSION['user_id'];
 $text_id = intval($_GET['text_id']);
 
 // Verificar límite de suscripción antes de permitir el acceso a la traducción
-$limit_check = checkTranslationLimit($user_id);
+$is_active_reading = isset($_GET['active_reading']) && $_GET['active_reading'] === '1';
+$limit_check = checkTranslationLimit($user_id, $is_active_reading);
+
 if (!$limit_check['can_translate']) {
     echo json_encode([
         'error' => 'Has alcanzado tu límite semanal de traducciones.',

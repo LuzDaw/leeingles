@@ -29,7 +29,8 @@ window.saveContentTranslation = async function(textId, content, translation) {
 // Obtener traducción de contenido desde la base de datos
 window.getContentTranslation = async function(textId) {
     try {
-        const response = await fetch(`traduciones/get_content_translation.php?text_id=${textId}`);
+        const isActiveReading = window.autoReading ? '1' : '0';
+        const response = await fetch(`traduciones/get_content_translation.php?text_id=${textId}&active_reading=${isActiveReading}`);
         const data = await response.json();
         
         if (data.success && data.translation) {
@@ -88,12 +89,13 @@ window.translateContentWithCache = async function(englishElement, spanishElement
     
     // Si no hay traducción en BD, traducir y guardar
     try {
+        const isActiveReading = window.autoReading ? '1' : '0';
         const response = await fetch('traduciones/translate.php', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
             },
-            body: 'word=' + encodeURIComponent(englishContent)
+            body: 'word=' + encodeURIComponent(englishContent) + '&active_reading=' + isActiveReading
         });
 
         const data = await response.json();
