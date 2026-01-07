@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once 'db/connection.php';
+require_once '../db/connection.php';
 
 if (!isset($_SESSION['user_id'])) {
     echo json_encode(['error' => 'No autorizado']);
@@ -36,7 +36,8 @@ setTimeout(() => {
 
 function loadBasicPractice() {
     // Cargar palabras guardadas del usuario para práctica
-    fetch('ajax_practice_data.php')
+    // Nota: La ruta ahora debe incluir 'practicas/' si se llama desde la raíz
+    fetch('practicas/ajax_practice_data.php')
         .then(response => response.json())
         .then(data => {
             if (!data.success) {

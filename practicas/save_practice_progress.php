@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once 'db/connection.php';
+require_once '../db/connection.php';
 
 header('Content-Type: application/json; charset=utf-8');
 
@@ -45,4 +45,4 @@ try {
 }
 
 $conn->close();
-?> 
+?>

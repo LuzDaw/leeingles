@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once '../../db/connection.php';
+require_once '../../includes/content_functions.php';
 
 if (!isset($_SESSION['user_id'])) {
     echo '<div style="text-align: center; padding: 40px; color: #ef4444;">Debes iniciar sesión para ver tu cuenta.</div>';
@@ -16,18 +17,21 @@ $stmt->execute();
 $result = $stmt->get_result();
 $user_data = $result->fetch_assoc();
 $stmt->close();
-$conn->close();
 
-// Datos de ejemplo (Placeholders)
+// Obtener datos reales
+$uploaded_texts = getTotalUserTexts($user_id);
+
+// Datos de ejemplo (Placeholders - Aún pendientes de implementar lógica real)
 $account_status = 'En prueba'; // Activa / Inactiva / En prueba
 $free_month_start = '01/01/2026';
 $free_month_end = '01/02/2026';
 $available_translations = 150;
 $next_activation_date = '01/02/2026';
 $active_plan = 'Ninguno';
-$uploaded_texts = 12;
 $reading_time = '5h 20m';
 $practice_time = '3h 45m';
+
+$conn->close();
 ?>
 
 <div class="tab-content-wrapper">

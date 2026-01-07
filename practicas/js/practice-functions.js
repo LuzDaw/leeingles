@@ -1187,7 +1187,7 @@ function showPracticeResults() {
     window.practiceEndTime = Date.now();
     window.practiceDuration = Math.floor((window.practiceEndTime - window.practiceStartTime) / 1000);
     if (window.practiceDuration && window.practiceDuration > 0) {
-        fetch('save_practice_time.php', {
+        fetch('practicas/save_practice_time.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             body: 'duration=' + window.practiceDuration +
@@ -1325,7 +1325,7 @@ window.sentenceIncorrectAnswers = 0;
 async function loadSentencePractice() {
     try {
         const basePath = (window.location.pathname || '').replace(/[^\/]+$/, '');
-        const url = basePath + 'ajax_user_texts.php?t=' + Date.now();
+        const url = 'ajax_user_texts.php?t=' + Date.now();
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 10000);
         const form = new URLSearchParams();
@@ -1958,7 +1958,7 @@ function savePracticeProgress(mode, totalWords, correct, incorrect) {
         formData.append('text_id', textId);
     }
     
-    fetch('save_practice_progress.php', {
+    fetch('practicas/save_practice_progress.php', {
         method: 'POST',
         body: formData
     })

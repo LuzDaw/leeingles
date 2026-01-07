@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once 'db/connection.php';
+require_once '../db/connection.php';
 
 header('Content-Type: application/json');
 
@@ -30,4 +30,4 @@ $conn->close();
 
 // Manejar otras peticiones de práctica si las hay
 echo json_encode(['success' => false, 'error' => 'Acción no reconocida']);
-?> 
+?>

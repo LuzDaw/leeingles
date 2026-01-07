@@ -46,7 +46,7 @@ foreach ($words as $word) {
   <link rel="stylesheet" href="css/text-styles.css">
   <link rel="stylesheet" href="css/floating-menu.css">
   <link rel="stylesheet" href="css/reading-styles.css">
-  <link rel="stylesheet" href="css/practice-styles.css">
+  <link rel="stylesheet" href="practicas/css/practice-styles.css">
   <link rel="stylesheet" href="css/modal-styles.css">
   <!-- CSS Optimizado para Móvil -->
   <link rel="stylesheet" href="css/mobile-ready.css">

@@ -286,7 +286,7 @@ function render_text_clickable($text)
   <link rel="stylesheet" href="css/text-styles.css">
   <link rel="stylesheet" href="css/floating-menu.css">
   <link rel="stylesheet" href="css/reading-styles.css">
-  <link rel="stylesheet" href="css/practice-styles.css">
+  <link rel="stylesheet" href="practicas/css/practice-styles.css">
   <link rel="stylesheet" href="css/modal-styles.css">
   <link rel="stylesheet" href="css/tab-system.css">
       <link rel="stylesheet" href="css/mobile-ready.css">
@@ -2480,7 +2480,7 @@ function render_text_clickable($text)
     </script>
     <!-- Motor de lectura simplificado -->
     <script src="js/reading-engine.js?v=1"></script>
-    <script src="js/practice-functions.js"></script>
+    <script src="practicas/js/practice-functions.js"></script>
     <script src="js/text-management.js"></script>
     <script src="js/modal-functions.js"></script>
     <script src="js/floating-menu.js"></script>
@@ -2577,7 +2577,7 @@ function render_text_clickable($text)
         'progress': 'ajax_progress_content.php',
         'my-texts': 'ajax_my_texts_content.php',
         'saved-words': 'ajax_saved_words_content.php',
-        'practice': 'ajax_practice_content.php',
+        'practice': 'practicas/ajax_practice_content.php',
         'upload': 'ajax_upload_content.php',
         'account': 'logueo_seguridad/cuenta/ajax_account_content.php'
       };

@@ -203,4 +203,22 @@ function getContentTranslationStats($user_id = null) {
         return ['total_texts' => 0, 'translated_contents' => 0, 'translation_percentage' => 0];
     }
 }
+
+/**
+ * Obtiene el número total de textos de un usuario
+ */
+function getTotalUserTexts($user_id) {
+    global $conn;
+    try {
+        $stmt = $conn->prepare("SELECT COUNT(*) as total FROM texts WHERE user_id = ?");
+        $stmt->bind_param("i", $user_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
+        $stmt->close();
+        return intval($row['total']);
+    } catch (Exception $e) {
+        return 0;
+    }
+}
 ?>

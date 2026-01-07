@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once 'db/connection.php';
+require_once 'includes/content_functions.php';
 
 if (!isset($_SESSION['user_id'])) {
     echo '<div style="text-align: center; padding: 40px; color: #ef4444;">Debes iniciar sesión para ver tu progreso.</div>';
@@ -29,12 +30,7 @@ while ($row = $result->fetch_assoc()) {
 $stmt->close();
 
 // Obtener textos subidos
-$stmt = $conn->prepare("SELECT COUNT(*) as total_texts FROM texts WHERE user_id = ?");
-$stmt->bind_param("i", $user_id);
-$stmt->execute();
-$result = $stmt->get_result();
-$total_texts = $result->fetch_assoc()['total_texts'];
-$stmt->close();
+$total_texts = getTotalUserTexts($user_id);
 
 // Obtener progreso de práctica por modo
 $practice_stats = [];
@@ -221,7 +217,7 @@ if (isset($_SESSION['user_id']) && (isset($_GET['text_id']) || isset($_POST['tex
     // Cargar estadísticas de práctica
     async function loadPracticeStats() {
         try {
-            const response = await fetch('get_practice_stats.php');
+            const response = await fetch('practicas/get_practice_stats.php');
             const data = await response.json();
             
             if (data.success) {
