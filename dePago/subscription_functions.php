@@ -223,6 +223,7 @@ if (!function_exists('checkTranslationLimit')) {
         if ($usage >= $current_limit) {
             return [
                 'can_translate' => false, 
+                'limit_reached' => true,
                 'usage' => $usage, 
                 'limit' => $base_limit,
                 'grace_limit' => $grace_limit,

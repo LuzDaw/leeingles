@@ -90,6 +90,9 @@ const LimitModal = {
      */
     checkResponse: function(data) {
         if (data && data.limit_reached) {
+            // Marcar globalmente que se ha alcanzado el límite
+            window.translationLimitReached = true;
+            
             // Si el uso es >= 350 (margen de cortesía agotado), forzar el modal siempre
             const force = data.usage >= (data.grace_limit || 350);
             this.show(data.next_reset, force);

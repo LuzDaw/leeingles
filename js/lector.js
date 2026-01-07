@@ -204,17 +204,10 @@ function initLector() {
                 if (window.currentPage > 0) {
                     window.currentPage--;
                     window.currentIndex = 0; // Reiniciar lectura al primer párrafo de la nueva página
+                    window._resumeIndexPending = 0; // Asegurar que updatePageDisplay sepa por dónde empezar
                     currentPage = window.currentPage;
                     currentIndex = window.currentIndex;
                     updatePageDisplay();
-                    
-                    // Si estaba leyendo, continuar en la nueva página
-                    if (window.autoReading) {
-                        setTimeout(() => {
-                            readAndTranslate(0).catch(err => {
-                            });
-                        }, 300);
-                    }
                 }
             });
             prevBtn.setAttribute('data-listener', 'true');
@@ -225,17 +218,10 @@ function initLector() {
                 if (window.currentPage < totalPages - 1) {
                     window.currentPage++;
                     window.currentIndex = 0; // Reiniciar lectura al primer párrafo de la nueva página
+                    window._resumeIndexPending = 0; // Asegurar que updatePageDisplay sepa por dónde empezar
                     currentPage = window.currentPage;
                     currentIndex = window.currentIndex;
                     updatePageDisplay();
-                    
-                    // Si estaba leyendo, continuar en la nueva página
-                    if (window.autoReading) {
-                        setTimeout(() => {
-                            readAndTranslate(0).catch(err => {
-                            });
-                        }, 300);
-                    }
                 }
             });
             nextBtn.setAttribute('data-listener', 'true');
@@ -267,18 +253,44 @@ function initLector() {
         // --- NUEVO: Si la lectura automática está activa, sincronizar con la nueva página ---
         if (window.autoReading || autoReading) {
             if (window.speechSynthesis) window.speechSynthesis.cancel();
-            // Si hay un índice de reanudación pendiente, usarlo una única vez
-            let nextIdx = 0;
-            if (typeof window._resumeIndexPending === 'number' && window._resumeIndexPending >= 0) {
-                nextIdx = window._resumeIndexPending;
-                window._resumeIndexPending = null; // consumir
+            
+            // Función interna para continuar la lectura después de la verificación
+            const continueAutoReading = () => {
+                // Si hay un índice de reanudación pendiente, usarlo una única vez
+                let nextIdx = 0;
+                if (typeof window._resumeIndexPending === 'number' && window._resumeIndexPending >= 0) {
+                    nextIdx = window._resumeIndexPending;
+                    window._resumeIndexPending = null; // consumir
+                }
+                window.currentIndex = nextIdx;
+                currentIndex = window.currentIndex;
+                setTimeout(() => {
+                    readAndTranslate(nextIdx).catch(err => {
+                    });
+                }, 300);
+            };
+
+            // VERIFICAR LÍMITE AL CAMBIAR DE PÁGINA (Solo si no ha sido aceptado ya)
+            if (!window._limitAceptado) {
+                fetch('dePago/ajax_check_limit.php?active_reading=1')
+                .then(res => res.json())
+                .then(data => {
+                    // Actualizar estado global del límite
+                    if (data && typeof data.can_translate !== 'undefined') {
+                        window.translationLimitReached = !data.can_translate;
+                    }
+
+                    if (window.LimitModal && window.LimitModal.checkResponse(data)) {
+                        // El modal se muestra solo, pero debemos detener la lectura
+                        if (window.pauseReading) window.pauseReading('limit-reached');
+                        return;
+                    }
+                    continueAutoReading();
+                })
+                .catch(() => continueAutoReading());
+            } else {
+                continueAutoReading();
             }
-            window.currentIndex = nextIdx;
-            currentIndex = nextIdx;
-            setTimeout(() => {
-                readAndTranslate(nextIdx).catch(err => {
-                });
-            }, 300);
         }
 
         updateReadingProgressBar();
@@ -941,12 +953,40 @@ function initLector() {
         }
     }
 
+    // Función para incrementar el uso en el servidor sin traducir
+    window.incrementUsageOnly = async function(text) {
+        if (!text || window.translationLimitReached) return;
+        
+        try {
+            const response = await fetch('traduciones/ajax_increment_usage.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: 'text=' + encodeURIComponent(text)
+            });
+            const data = await response.json();
+            
+            // Si al incrementar el uso llegamos al límite, actualizar estado global
+            if (data && data.limit_reached) {
+                window.translationLimitReached = true;
+                if (window.LimitModal) window.LimitModal.checkResponse(data);
+            }
+        } catch (e) {}
+    };
+
     // Función para traducir y guardar un párrafo individual
     function translateAndSaveParagraph(text, box, textId) {
+        // Bloquear si se ha alcanzado el límite
+        if (window.translationLimitReached) {
+            box.innerText = '';
+            return;
+        }
+
         // Verificar si ya tenemos la traducción en caché
         if (window.contentTranslationsCache && window.contentTranslationsCache[text]) {
             // Usar traducción del caché instantáneamente
             box.innerText = window.contentTranslationsCache[text];
+            // Incrementar uso real aunque venga de caché
+            incrementUsageOnly(text);
             return;
         }
         
@@ -1017,6 +1057,12 @@ function initLector() {
     
     // Función para traducir solo un párrafo (sin guardar)
     function translateParagraphOnly(text, box) {
+        // Bloquear si se ha alcanzado el límite
+        if (window.translationLimitReached) {
+            box.innerText = '';
+            return;
+        }
+
         const isActiveReading = window.autoReading ? '1' : '0';
         fetch('traduciones/translate.php', {
             method: 'POST',
@@ -1994,6 +2040,12 @@ function initLector() {
     
     // Mostrar todas las traducciones del texto con caché
     window.showAllTranslations = async function() {
+        // Bloquear si se ha alcanzado el límite
+        if (window.translationLimitReached) {
+            if (window.LimitModal) window.LimitModal.show(null, true);
+            return;
+        }
+
         const btn = document.getElementById('show-all-translations-btn');
         if (btn) {
             btn.disabled = true;
@@ -2049,6 +2101,8 @@ function initLector() {
                         );
                         if (cachedItem) {
                             translation = cachedItem.translation;
+                            // Incrementar uso real aunque venga de caché
+                            incrementUsageOnly(text);
                         }
                     }
                 }

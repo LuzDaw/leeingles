@@ -55,8 +55,9 @@ try {
 $translation = getContentTranslation($text_id);
 
 if ($translation) {
-    // Registrar el uso (conteo de palabras del contenido original)
-    incrementTranslationUsage($user_id, $text_data['content']);
+    // ELIMINADO: Ya no cobramos el texto completo al cargarlo del caché.
+    // El cobro se hará párrafo a párrafo conforme se muestren en el lector.
+    // incrementTranslationUsage($user_id, $text_data['content']);
 
     // Verificar si es el nuevo formato JSON o el antiguo
     if (is_array($translation)) {

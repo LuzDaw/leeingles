@@ -55,6 +55,12 @@ window.getContentTranslation = async function(textId) {
 
 // Función mejorada para traducir contenido con caché en base de datos
 window.translateContentWithCache = async function(englishElement, spanishElement, textId) {
+    // Bloquear si se ha alcanzado el límite
+    if (window.translationLimitReached) {
+        spanishElement.textContent = '';
+        return;
+    }
+
     const englishContent = englishElement.textContent.trim();
     
     if (!englishContent) {
@@ -84,6 +90,11 @@ window.translateContentWithCache = async function(englishElement, spanishElement
         spanishElement.textContent = cachedTranslation.translation;
         spanishElement.style.color = '#eaa827';
         spanishElement.style.fontWeight = '500';
+        
+        // Incrementar uso real aunque venga de caché
+        if (window.incrementUsageOnly) {
+            window.incrementUsageOnly(englishContent);
+        }
         return;
     }
     
@@ -146,6 +157,11 @@ window.toggleContentTranslation = async function(textId, englishElement, spanish
 
 // Función para inicializar traducciones de contenido en una página
 window.initContentTranslations = async function() {
+    // Bloquear si se ha alcanzado el límite
+    if (window.translationLimitReached) {
+        return;
+    }
+
     const contentElements = document.querySelectorAll('[data-content-translation]');
     
     for (const element of contentElements) {
@@ -166,6 +182,11 @@ window.initContentTranslations = async function() {
                 spanishElement.style.color = '#eaa827';
                 spanishElement.style.fontWeight = '500';
                 spanishElement.dataset.translated = 'true';
+                
+                // Incrementar uso real aunque venga de caché
+                if (window.incrementUsageOnly) {
+                    window.incrementUsageOnly(element.textContent.trim());
+                }
             }
         }
     }
