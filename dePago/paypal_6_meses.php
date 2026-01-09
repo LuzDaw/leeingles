@@ -21,7 +21,20 @@
                     });
                 },
                 onApprove: function(data, actions) {
-                    alert('Suscripción de 6 meses completada: ' + data.subscriptionID);
+                    fetch('dePago/ajax_confirm_payment.php', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                        body: 'orderID=' + data.subscriptionID + '&status=ACTIVE&plan=Ahorro'
+                    })
+                    .then(r => r.json())
+                    .then(res => {
+                        if (res.success) {
+                            alert('¡Plan Ahorro activado con éxito!');
+                            window.location.reload();
+                        } else {
+                            alert('Error: ' + res.message);
+                        }
+                    });
                 }
             }).render('#' + containerId);
         } else {

@@ -12,7 +12,7 @@
         
         <p style="color: #666; line-height: 1.4; margin-bottom: 15px; font-size: 14px;">
             Has traducido más de <strong style="color: #d32f2f;">300 palabras</strong> esta semana. 
-            Tu mes de prueba ha finalizado y has alcanzado el límite gratuito.
+            Tu periodo **EnPrueba** ha finalizado y has alcanzado el límite gratuito.
         </p>
         
         <div style="background: #f8f9fa; padding: 10px; border-radius: 8px; margin-bottom: 15px; border-left: 3px solid #1976d2;">
@@ -32,7 +32,7 @@
             </button>
             
             <a href="index.php?tab=premium" style="color: #1976d2; text-decoration: none; font-size: 12px; font-weight: 500; margin-top: 2px;">
-                Saber más sobre Premium
+                Saber más sobre nuestros Planes
             </a>
         </div>
     </div>

@@ -33,6 +33,9 @@ if (!function_exists('getUserSubscriptionStatus')) {
      * Retorna un array con el tipo de usuario, días transcurridos y el mes relativo de uso.
      */
     function getUserSubscriptionStatus($user_id) {
+        global $conn;
+        if (!$conn) require_once __DIR__ . '/../db/connection.php';
+
         $data = getSubscriptionData($user_id);
         if (!$data) return null;
 
@@ -53,10 +56,26 @@ if (!function_exists('getUserSubscriptionStatus')) {
         $es_periodo_gratuito = ($dias_transcurridos < 30);
         
         $estado_actual = 'limitado';
-        if ($data['tipo_usuario'] === 'premium') {
-            $estado_actual = 'premium';
+        if (in_array($data['tipo_usuario'], ['Inicio', 'Ahorro', 'Pro'])) {
+            // Verificar si la suscripción sigue vigente en la tabla user_subscriptions
+            $stmt = $conn->prepare("SELECT fecha_fin FROM user_subscriptions WHERE user_id = ? AND status = 'active' ORDER BY fecha_fin DESC LIMIT 1");
+            $stmt->bind_param("i", $user_id);
+            $stmt->execute();
+            $res = $stmt->get_result();
+            if ($sub = $res->fetch_assoc()) {
+                $fecha_fin = new DateTime($sub['fecha_fin']);
+                if ($fecha_fin > $hoy) {
+                    $estado_actual = $data['tipo_usuario'];
+                } else {
+                    // Ha expirado, actualizamos el tipo_usuario a limitado
+                    $conn->query("UPDATE users SET tipo_usuario = 'limitado' WHERE id = $user_id");
+                    $estado_actual = 'limitado';
+                }
+            } else {
+                $estado_actual = 'limitado';
+            }
         } elseif ($es_periodo_gratuito) {
-            $estado_actual = 'gratis';
+            $estado_actual = 'EnPrueba';
         }
 
         // Calcular el inicio y fin del periodo mensual actual (para el mes gratuito)
@@ -77,6 +96,7 @@ if (!function_exists('getUserSubscriptionStatus')) {
             'mes_de_uso' => (int)$mes_de_uso,
             'es_periodo_gratuito' => $es_periodo_gratuito,
             'fin_mes_gratuito' => (new DateTime($data['fecha_registro']))->add(new DateInterval('P30D'))->format('Y-m-d H:i:s'),
+            'es_premium' => in_array($estado_actual, ['Inicio', 'Ahorro', 'Pro']),
             'proximo_reinicio_semanal' => $proximo_domingo->format('Y-m-d H:i:s'),
             'semana_iso' => (int)date('W'),
             'anio_iso' => (int)date('o'),
@@ -93,7 +113,7 @@ if (!function_exists('initUserSubscription')) {
     function initUserSubscription($user_id) {
         global $conn;
         
-        // Por ahora, la base de datos ya pone los valores por defecto (fecha_registro y tipo_usuario='gratis').
+        // Por ahora, la base de datos ya pone los valores por defecto (fecha_registro y tipo_usuario='EnPrueba').
         // Esta función queda preparada por si en el futuro queremos insertar un registro inicial 
         // en 'uso_traducciones' o enviar un email de bienvenida específico.
         
@@ -177,7 +197,7 @@ if (!function_exists('getInactiveLimitedUsers')) {
         $stmt = $conn->prepare("
             SELECT id, username, email, ultima_conexion, fecha_registro 
             FROM users 
-            WHERE tipo_usuario = 'limitado' 
+            WHERE (tipo_usuario = 'limitado' OR tipo_usuario = 'EnPrueba')
             AND (
                 ultima_conexion < DATE_SUB(NOW(), INTERVAL ? DAY)
                 OR (ultima_conexion IS NULL AND fecha_registro < DATE_SUB(NOW(), INTERVAL ? DAY))
@@ -205,8 +225,8 @@ if (!function_exists('checkTranslationLimit')) {
     function checkTranslationLimit($user_id, $is_active_reading = false) {
         $status = getUserSubscriptionStatus($user_id);
         
-        // Premium y Mes Gratuito no tienen límite
-        if ($status['estado_logico'] === 'premium' || $status['estado_logico'] === 'gratis') {
+        // Planes de pago y Mes de Prueba no tienen límite
+        if ($status['es_premium'] || $status['estado_logico'] === 'EnPrueba') {
             return [
                 'can_translate' => true, 
                 'reason' => 'unlimited',

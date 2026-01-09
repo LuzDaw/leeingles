@@ -1,6 +1,6 @@
 <?php
 /**
- * Archivo de prueba para el sistema de suscripción y control de tiempo (SEMANAL)
+ * Archivo de prueba para el sistema de suscripción y control de tiempo (NUEVOS PLANES)
  * Ubicación: dePago/test.php
  */
 
@@ -50,13 +50,46 @@ if (isset($_POST['action']) && $_POST['action'] === 'simulate_usage' && $user_id
     exit;
 }
 
+// Procesar simulación de pago (NUEVO - Corregido para evitar bucle 504)
+if (isset($_POST['action']) && $_POST['action'] === 'simulate_payment' && $user_id) {
+    $plan = $_POST['plan'];
+    $plan_durations = ['Inicio' => 1, 'Ahorro' => 6, 'Pro' => 12];
+    $meses = $plan_durations[$plan] ?? 0;
+    
+    if ($meses > 0) {
+        $fecha_fin = date('Y-m-d H:i:s', strtotime("+$meses months"));
+        $orderID = 'FAKE_PAYMENT_' . time();
+        
+        // 1. Registrar la suscripción
+        $stmt_sub = $conn->prepare("INSERT INTO user_subscriptions (user_id, plan_name, fecha_fin, paypal_subscription_id, status) VALUES (?, ?, ?, ?, 'active')");
+        $stmt_sub->bind_param("isss", $user_id, $plan, $fecha_fin, $orderID);
+        $stmt_sub->execute();
+        
+        // 2. Actualizar el tipo de usuario
+        $stmt = $conn->prepare("UPDATE users SET tipo_usuario = ? WHERE id = ?");
+        $stmt->bind_param("si", $plan, $user_id);
+        $stmt->execute();
+    }
+    
+    header("Location: test.php?payment_simulated=1");
+    exit;
+}
+
+// Procesar simulación de expiración (NUEVO)
+if (isset($_POST['action']) && $_POST['action'] === 'simulate_expiration' && $user_id) {
+    // Ponemos la fecha de fin de la suscripción activa en el pasado
+    $conn->query("UPDATE user_subscriptions SET fecha_fin = DATE_SUB(NOW(), INTERVAL 1 DAY) WHERE user_id = $user_id AND status = 'active'");
+    header("Location: test.php?expired_simulated=1");
+    exit;
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Test de Suscripción Semanal - LeeIngles</title>
+    <title>Test de Suscripción - LeeIngles</title>
     <style>
         body { font-family: sans-serif; line-height: 1.6; padding: 20px; background: #f4f4f9; }
         .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); max-width: 600px; margin: auto; margin-bottom: 20px; }
@@ -65,17 +98,20 @@ if (isset($_POST['action']) && $_POST['action'] === 'simulate_usage' && $user_id
         .label { font-weight: bold; color: #555; }
         .value { color: #000; }
         .status-badge { padding: 4px 12px; border-radius: 20px; font-size: 0.9em; font-weight: bold; }
-        .gratis { background: #e3f2fd; color: #1976d2; }
+        .EnPrueba { background: #e3f2fd; color: #1976d2; }
         .limitado { background: #fff3e0; color: #f57c00; }
-        .premium { background: #e8f5e9; color: #388e3c; }
+        .Inicio { background: #e8f5e9; color: #2e7d32; }
+        .Ahorro { background: #f3e5f5; color: #7b1fa2; }
+        .Pro { background: #fffde7; color: #fbc02d; border: 1px solid #fbc02d; }
         .debug { margin-top: 20px; font-size: 0.8em; color: #888; background: #eee; padding: 10px; border-radius: 4px; overflow-x: auto; }
         .btn-test { width:100%; padding:10px; cursor:pointer; font-weight:bold; border-radius: 4px; border: 1px solid; margin-bottom: 5px; }
+        .btn-plan { color: white; border: none; }
     </style>
 </head>
 <body>
 
 <div class="card">
-    <h1>Control de Suscripción (Semanal)</h1>
+    <h1>Control de Suscripción (Nuevos Planes)</h1>
     
     <?php if ($user_id): 
         $status = getUserSubscriptionStatus($user_id);
@@ -91,6 +127,11 @@ if (isset($_POST['action']) && $_POST['action'] === 'simulate_usage' && $user_id
         </div>
 
         <div class="data-row">
+            <span class="label">Tipo en BD:</span>
+            <span class="value"><?php echo $status['tipo_base']; ?></span>
+        </div>
+
+        <div class="data-row">
             <span class="label">Fecha de Registro:</span>
             <span class="value"><?php echo $status['fecha_registro']; ?></span>
         </div>
@@ -101,72 +142,59 @@ if (isset($_POST['action']) && $_POST['action'] === 'simulate_usage' && $user_id
         </div>
 
         <div class="data-row">
-            <span class="label">Mes de Uso (Relativo):</span>
-            <span class="value">Mes <?php echo $status['mes_de_uso']; ?> 
-                <?php echo ($status['mes_de_uso'] == 0) ? '(Periodo Gratuito)' : '(Periodo de Pago)'; ?>
+            <span class="label">Periodo de Prueba:</span>
+            <span class="value">
+                <?php echo ($status['es_periodo_gratuito']) ? '✅ ACTIVO' : '❌ FINALIZADO'; ?>
             </span>
         </div>
 
         <div class="data-row">
-            <span class="label">Fin Mes Gratuito:</span>
+            <span class="label">Fin Mes de Prueba:</span>
             <span class="value"><?php echo $status['fin_mes_gratuito']; ?></span>
         </div>
 
+        <?php
+        // Obtener datos de la suscripción activa si existe
+        $stmt_sub = $conn->prepare("SELECT * FROM user_subscriptions WHERE user_id = ? AND status = 'active' ORDER BY fecha_fin DESC LIMIT 1");
+        $stmt_sub->bind_param("i", $user_id);
+        $stmt_sub->execute();
+        $res_sub = $stmt_sub->get_result();
+        if ($sub = $res_sub->fetch_assoc()):
+        ?>
+        <div style="margin-top: 15px; padding: 10px; background: #f1f8e9; border-radius: 8px; border: 1px solid #c5e1a5;">
+            <h3 style="margin-top:0; font-size: 1em;">Suscripción Activa</h3>
+            <div class="data-row">
+                <span class="label">Plan:</span>
+                <span class="value"><?php echo $sub['plan_name']; ?></span>
+            </div>
+            <div class="data-row">
+                <span class="label">Vence el:</span>
+                <span class="value" style="font-weight:bold;"><?php echo $sub['fecha_fin']; ?></span>
+            </div>
+        </div>
+        <?php endif; ?>
+
         <div style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px; border-left: 5px solid #1976d2;">
-            <h3 style="margin-top:0;">Consumo Semanal (Límite 300 + 50 margen)</h3>
+            <h3 style="margin-top:0;">Consumo Semanal (Límite 300)</h3>
             <div class="data-row">
-                <span class="label">Semana Actual:</span>
-                <span class="value"><?php echo $status['semana_iso']; ?> (Año <?php echo $status['anio_iso']; ?>)</span>
-            </div>
-            <div class="data-row">
-                <span class="label">Próximo Reinicio (Domingo):</span>
-                <span class="value" style="font-weight:bold; color:#d32f2f;"><?php echo $status['proximo_reinicio_semanal']; ?></span>
-            </div>
-            <div class="data-row">
-                <span class="label">Palabras Traducidas (Real BD):</span>
+                <span class="label">Palabras Traducidas:</span>
                 <span class="value" style="font-size: 1.2em; font-weight: bold; color: #1976d2;">
-                    <?php 
-                        $real_usage = getWeeklyUsage($user_id);
-                        echo $real_usage; 
-                    ?>
+                    <?php echo getWeeklyUsage($user_id); ?>
                 </span>
             </div>
             <div class="data-row">
-                <span class="label">Límite Base:</span>
-                <span class="value">300 palabras</span>
-            </div>
-            <div class="data-row">
-                <span class="label">Margen de Cortesía:</span>
-                <span class="value">+50 palabras (Total 350)</span>
+                <span class="label">Próximo Reinicio:</span>
+                <span class="value"><?php echo $status['proximo_reinicio_semanal']; ?></span>
             </div>
             
-            <div style="margin-top: 15px; padding: 10px; background: #e3f2fd; border-radius: 5px; font-size: 0.9em;">
-                <strong>Estado de Verificación:</strong><br>
-                <?php 
-                    $check_normal = checkTranslationLimit($user_id, false);
-                    $check_reading = checkTranslationLimit($user_id, true);
-                ?>
-                • Inicio (Normal): <?php echo $check_normal['can_translate'] ? '✅ PERMITIDO' : '❌ BLOQUEADO'; ?><br>
-                • Durante Lectura: <?php echo $check_reading['can_translate'] ? '✅ PERMITIDO' : '❌ BLOQUEADO'; ?>
+            <div style="margin-top: 10px; font-size: 0.9em;">
+                <strong>Estado:</strong> <?php echo $limit_info['can_translate'] ? '✅ PERMITIDO' : '❌ BLOQUEADO'; ?>
             </div>
-
-            <?php if (!$check_normal['can_translate'] || !$check_reading['can_translate']): ?>
-                <div style="background: #ffebee; color: #c62828; padding: 10px; border-radius: 4px; margin-top: 10px; font-weight: bold; text-align: center;">
-                    ⚠️ LÍMITE ALCANZADO
-                </div>
-                <button onclick="LimitModal.show('<?php echo $status['proximo_reinicio_semanal']; ?>', true)" style="margin-top: 10px; width: 100%; padding: 10px; cursor: pointer; background: #d32f2f; color: white; border: none; border-radius: 4px; font-weight: bold;">
-                    🚀 PROBAR MODAL DE LÍMITE
-                </button>
-            <?php endif; ?>
         </div>
 
         <div class="debug">
             <strong>Raw Data (Status):</strong><br>
             <pre><?php print_r($status); ?></pre>
-            <strong>Raw Data (Limit Info):</strong><br>
-            <pre><?php print_r($limit_info); ?></pre>
-            <strong>Database Error (if any):</strong><br>
-            <pre><?php echo $conn->error; ?></pre>
         </div>
 
     <?php else: ?>
@@ -176,79 +204,57 @@ if (isset($_POST['action']) && $_POST['action'] === 'simulate_usage' && $user_id
 
 <?php if ($user_id): ?>
 <div class="card">
-    <h2>Panel de Pruebas (Simulador de Tiempo)</h2>
-    <p>Usa estos botones para cambiar tu fecha de registro:</p>
-    
+    <h2>Simulador de Pagos (Activar Planes)</h2>
+    <p>Simula un pago exitoso de PayPal para activar un plan:</p>
+    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
+        <form method="POST">
+            <input type="hidden" name="action" value="simulate_payment">
+            <input type="hidden" name="plan" value="Inicio">
+            <button type="submit" class="btn-test btn-plan" style="background:#2e7d32;">Plan Inicio (1 mes)</button>
+        </form>
+        <form method="POST">
+            <input type="hidden" name="action" value="simulate_payment">
+            <input type="hidden" name="plan" value="Ahorro">
+            <button type="submit" class="btn-test btn-plan" style="background:#7b1fa2;">Plan Ahorro (6 meses)</button>
+        </form>
+        <form method="POST">
+            <input type="hidden" name="action" value="simulate_payment">
+            <input type="hidden" name="plan" value="Pro">
+            <button type="submit" class="btn-test btn-plan" style="background:#fbc02d; color: black;">Plan Pro (12 meses)</button>
+        </form>
+    </div>
+    <form method="POST" style="margin-top: 10px;">
+        <input type="hidden" name="action" value="simulate_expiration">
+        <button type="submit" class="btn-test" style="background:#d32f2f; color:white; border:none;">Simular EXPIRACIÓN de Plan</button>
+    </form>
+</div>
+
+<div class="card">
+    <h2>Simulador de Tiempo (Registro)</h2>
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
         <form method="POST">
             <input type="hidden" name="action" value="update_date">
             <input type="hidden" name="days_ago" value="0">
-            <button type="submit" class="btn-test" style="background:#e3f2fd; border-color:#1976d2; color:#1976d2;">
-                Simular Registro HOY (Mes Gratis)
-            </button>
+            <button type="submit" class="btn-test" style="background:#e3f2fd; color:#1976d2;">Registro HOY (EnPrueba)</button>
         </form>
-
         <form method="POST">
             <input type="hidden" name="action" value="update_date">
             <input type="hidden" name="days_ago" value="35">
-            <button type="submit" class="btn-test" style="background:#fff3e0; border-color:#f57c00; color:#f57c00;">
-                Simular Hace 35 Días (Fuera de Mes Gratis)
-            </button>
-        </form>
-    </div>
-
-    <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #eee;">
-        <form method="POST">
-            <input type="hidden" name="action" value="update_date">
-            <label>O introduce días exactos atrás:</label><br>
-            <input type="number" name="days_ago" placeholder="Ej: 45" required style="padding:8px; width:100px;">
-            <button type="submit" style="padding:8px 20px; cursor:pointer;">Cambiar Fecha</button>
+            <button type="submit" class="btn-test" style="background:#fff3e0; color:#f57c00;">Hace 35 Días (Limitado)</button>
         </form>
     </div>
 </div>
 
 <div class="card">
-    <h2>Simulador de Consumo Semanal</h2>
-    <p>Simula traducciones para ver cómo sube el contador (Límite 300):</p>
-    
-    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
-        <form method="POST">
-            <input type="hidden" name="action" value="simulate_usage">
-            <input type="hidden" name="words" value="1">
-            <button type="submit" class="btn-test" style="background:#fff; border-color:#ccc; color:#333;">
-                +1 Palabra
-            </button>
-        </form>
-
-        <form method="POST">
-            <input type="hidden" name="action" value="simulate_usage">
-            <input type="hidden" name="words" value="50">
-            <button type="submit" class="btn-test" style="background:#fff; border-color:#ccc; color:#333;">
-                +50 Palabras
-            </button>
-        </form>
-
-        <form method="POST">
-            <input type="hidden" name="action" value="simulate_usage">
-            <input type="hidden" name="words" value="100">
-            <button type="submit" class="btn-test" style="background:#fff; border-color:#ccc; color:#333;">
-                +100 Palabras
-            </button>
-        </form>
-    </div>
-    
-    <div style="margin-top: 15px;">
-        <form method="POST">
-            <input type="hidden" name="action" value="simulate_usage">
-            <label>Añadir cantidad exacta:</label><br>
-            <input type="number" name="words" placeholder="Ej: 250" required style="padding:8px; width:100px;">
-            <button type="submit" style="padding:8px 20px; cursor:pointer;">Añadir Uso</button>
-        </form>
-    </div>
+    <h2>Simulador de Consumo</h2>
+    <form method="POST">
+        <input type="hidden" name="action" value="simulate_usage">
+        <input type="number" name="words" value="100" style="padding:8px; width:80px;">
+        <button type="submit" style="padding:8px 20px; cursor:pointer;">Añadir Palabras</button>
+    </form>
 </div>
 <?php endif; ?>
 
-    <!-- Sistema de Límite de Traducciones para Pruebas -->
     <?php include 'limit_modal.php'; ?>
     <script src="limit_modal.js"></script>
 </body>

@@ -19,25 +19,47 @@ $orderID = $_POST['orderID'] ?? '';
 $status = $_POST['status'] ?? '';
 $plan = $_POST['plan'] ?? 'desconocido';
 
+// Mapeo de planes a duraciones (meses)
+$plan_durations = [
+    'Inicio' => 1,
+    'Ahorro' => 6,
+    'Pro' => 12
+];
+
 // Aceptamos COMPLETED (para pagos únicos) o ACTIVE (para suscripciones)
 if ($status === 'COMPLETED' || $status === 'ACTIVE') {
     
-    // Actualizar el tipo de usuario a premium
-    $stmt = $conn->prepare("UPDATE users SET tipo_usuario = 'premium' WHERE id = ?");
-    $stmt->bind_param("i", $user_id);
+    $meses = $plan_durations[$plan] ?? 0;
     
-    if ($stmt->execute()) {
-        // Aquí podrías añadir lógica para guardar la fecha de expiración según el plan
-        // Por ahora, simplemente activamos el estado premium
-        echo json_encode([
-            'success' => true, 
-            'message' => 'Usuario actualizado a PREMIUM (Plan: ' . $plan . ')',
-            'orderID' => $orderID
-        ]);
+    if ($meses > 0) {
+        // Calcular fecha de fin
+        $fecha_fin = date('Y-m-d H:i:s', strtotime("+$meses months"));
+        
+        // 1. Registrar la suscripción
+        $stmt_sub = $conn->prepare("INSERT INTO user_subscriptions (user_id, plan_name, fecha_fin, paypal_subscription_id, status) VALUES (?, ?, ?, ?, 'active')");
+        $stmt_sub->bind_param("isss", $user_id, $plan, $fecha_fin, $orderID);
+        $stmt_sub->execute();
+        
+        // 2. Actualizar el tipo de usuario en la tabla users
+        $stmt = $conn->prepare("UPDATE users SET tipo_usuario = ? WHERE id = ?");
+        $stmt->bind_param("si", $plan, $user_id);
+        
+        if ($stmt->execute()) {
+            echo json_encode([
+                'success' => true, 
+                'message' => "Plan $plan activado hasta $fecha_fin",
+                'orderID' => $orderID
+            ]);
+        } else {
+            echo json_encode([
+                'success' => false, 
+                'message' => 'Error al actualizar el usuario: ' . $conn->error
+            ]);
+        }
     } else {
         echo json_encode([
             'success' => false, 
-            'message' => 'Error al actualizar la base de datos: ' . $conn->error
+            'message' => 'Plan no reconocido o duración no válida: ' . $plan
         ]);
     }
 } else {

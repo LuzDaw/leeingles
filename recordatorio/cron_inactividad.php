@@ -45,9 +45,9 @@ $sql = "
     WHERE 1=1
 ";
 
-// Filtramos por usuarios que no son premium (gratis y limitado)
+// Filtramos por usuarios que no son premium (EnPrueba y limitado)
 if (!$modo_prueba) {
-    $sql .= " AND tipo_usuario IN ('gratis', 'limitado')";
+    $sql .= " AND tipo_usuario IN ('EnPrueba', 'limitado')";
 }
 
 $sql .= " AND (
@@ -80,9 +80,9 @@ if ($result->num_rows === 0) {
 }
 
 while ($user = $result->fetch_assoc()) {
-    // En modo prueba, si el usuario es premium, lo ignoramos (el recordatorio es para gratis/limitado)
-    if ($modo_prueba && $user['tipo_usuario'] === 'premium') {
-        echo "Usuario detectado: {$user['username']} - IGNORADO (Tipo: premium, no recibe este recordatorio)\n";
+    // En modo prueba, si el usuario tiene un plan activo, lo ignoramos (el recordatorio es para EnPrueba/limitado)
+    if ($modo_prueba && in_array($user['tipo_usuario'], ['Inicio', 'Ahorro', 'Pro'])) {
+        echo "Usuario detectado: {$user['username']} - IGNORADO (Tipo: {$user['tipo_usuario']}, no recibe este recordatorio)\n";
         continue;
     }
 

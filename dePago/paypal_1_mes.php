@@ -22,7 +22,20 @@
                     });
                 },
                 onApprove: function(data, actions) {
-                    alert('Suscripción de 1 mes completada: ' + data.subscriptionID);
+                    fetch('dePago/ajax_confirm_payment.php', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                        body: 'orderID=' + data.subscriptionID + '&status=ACTIVE&plan=Inicio'
+                    })
+                    .then(r => r.json())
+                    .then(res => {
+                        if (res.success) {
+                            alert('¡Plan Inicio activado con éxito!');
+                            window.location.reload();
+                        } else {
+                            alert('Error: ' + res.message);
+                        }
+                    });
                 }
             }).render('#' + containerId);
         } else {
