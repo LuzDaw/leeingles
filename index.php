@@ -2495,6 +2495,10 @@ function render_text_clickable($text)
   <?php include 'dePago/limit_modal.php'; ?>
   <script src="dePago/limit_modal.js"></script>
 
+  <!-- SDK de PayPal (Cargado globalmente para compatibilidad con pestañas AJAX) -->
+  <script src="https://www.paypal.com/sdk/js?client-id=ATfzdeOVWZvM17U3geOdl_yV513zZfX7oCm_wa0wqog2acHfSIz846MkdZnpu7oCdWFzqdMn0NEN0xSM&vault=true&intent=subscription" data-sdk-integration-source="button-factory"></script>
+
+
   <script>
     document.addEventListener('DOMContentLoaded', function() {
         setupPasswordVisibilityToggle('login-password', 'togglePasswordLoginModal');

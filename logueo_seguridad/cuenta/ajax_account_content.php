@@ -103,22 +103,29 @@ $conn->close();
         
         <div class="subscription-plans">
             <div class="plan-card">
-                <div class="plan-duration">1 Mes</div>
+                <div class="plan-duration">🟢 Plan Inicio - 1 mes</div>
+                 <div class="plan-info">Accede a todas las funciones durante   1 mes.</div>
+                <div class="plan-prom">Ideal para probar la aplicación sin compromiso.</div>
                 <div class="plan-price">4,99 €</div>
-                <button class="nav-btn" style="width: 100%; justify-content: center; background: #f1f5f9; border: 1px solid #e2e8f0;">Elegir</button>
+                <?php include '../../dePago/paypal_1_mes.php'; ?>
             </div>
             
             <div class="plan-card recommended">
                 <div class="recommended-tag">RECOMENDADO</div>
-                <div class="plan-duration">6 Meses</div>
+                <div class="plan-duration">🔵 Plan Ahorro -  6 meses</div>
+                <div class="plan-info">Todas las funciones activas durante  6 meses.</div>
+                <div class="plan-prom">Más tiempo, mejor precio y sin renovaciones mensuales</div>
                 <div class="plan-price">19,99 €</div>
-                <button class="nav-btn primary" style="width: 100%; justify-content: center;">Elegir</button>
+                
+                <?php include '../../dePago/paypal_6_meses.php'; ?>
             </div>
             
             <div class="plan-card">
-                <div class="plan-duration">1 Año</div>
-                <div class="plan-price">34,99 €</div>
-                <button class="nav-btn" style="width: 100%; justify-content: center; background: #f1f5f9; border: 1px solid #e2e8f0;">Elegir</button>
+                <div class="plan-duration">🟣 Plan Pro – 12 meses</div>
+                <div class="plan-info">Accede a todas las funciones durante 12 meses.</div>
+                <div class="plan-prom">La mejor opción en precio y tranquilidad.</div>
+                <div class="plan-price">31,99 €</div>
+                <?php include '../../dePago/paypal_1_ano.php'; ?>
             </div>
         </div>
     </div>

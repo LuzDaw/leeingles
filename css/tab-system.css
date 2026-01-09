@@ -839,7 +839,7 @@
 
 .plan-card {
     background: white;
-    border: 2px solid #f1f5f9;
+    border: 2px solid #afbcc9;
     padding: 24px;
     border-radius: 16px;
     text-align: center;
@@ -880,9 +880,24 @@
 }
 
 .plan-duration {
-    color: #64748b;
-    font-size: 14px;
+       color: #081323b8;
+    font-size: 16px;
+    padding: 12px;
+    font-weight: bold;
+
 }
+ 
+.plan-info {
+    color: #1b1d1f;
+    font-size: 12px;
+
+}
+
+.plan-prom {
+    color: #1b1d1f;
+    font-size: 12px;
+
+} 
 
 .activity-stats {
     display: grid;
