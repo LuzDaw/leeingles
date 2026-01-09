@@ -2,6 +2,7 @@
 session_start();
 require_once '../../db/connection.php';
 require_once '../../includes/content_functions.php';
+require_once '../../dePago/subscription_functions.php';
 
 if (!isset($_SESSION['user_id'])) {
     echo '<div style="text-align: center; padding: 40px; color: #ef4444;">Debes iniciar sesión para ver tu cuenta.</div>';
@@ -18,18 +19,39 @@ $result = $stmt->get_result();
 $user_data = $result->fetch_assoc();
 $stmt->close();
 
-// Obtener datos reales
+// Obtener datos reales de suscripción
+$status = getUserSubscriptionStatus($user_id);
+$limit_info = checkTranslationLimit($user_id);
+
+// Obtener datos reales de actividad
 $uploaded_texts = getTotalUserTexts($user_id);
 
-// Datos de ejemplo (Placeholders - Aún pendientes de implementar lógica real)
-$account_status = 'En prueba'; // Activa / Inactiva / En prueba
-$free_month_start = '01/01/2026';
-$free_month_end = '01/02/2026';
-$available_translations = 150;
-$next_activation_date = '01/02/2026';
+// Mapeo de estados para visualización
+$status_labels = [
+    'EnPrueba' => 'En prueba',
+    'limitado' => 'Limitada',
+    'Inicio'   => 'Activa (Inicio)',
+    'Ahorro'   => 'Activa (Ahorro)',
+    'Pro'      => 'Activa (Pro)'
+];
+
+$account_status = $status_labels[$status['estado_logico']] ?? 'Desconocido';
+$free_month_start = date('d/m/Y', strtotime($status['fecha_registro']));
+$free_month_end = date('d/m/Y', strtotime($status['fin_mes_gratuito']));
+
+// Traducciones semanales
+$usage = getWeeklyUsage($user_id);
+$available_translations = max(0, 300 - $usage);
+$next_activation_date = date('d/m/Y', strtotime($status['proximo_reinicio_semanal']));
+
+// Plan activo
 $active_plan = 'Ninguno';
-$reading_time = '5h 20m';
-$practice_time = '3h 45m';
+if (in_array($status['estado_logico'], ['Inicio', 'Ahorro', 'Pro'])) {
+    $active_plan = $status['estado_logico'];
+}
+
+$reading_time = '0h 0m'; // Pendiente de implementar lógica real de tiempo
+$practice_time = '0h 0m'; // Pendiente de implementar lógica real de tiempo
 
 $conn->close();
 ?>
@@ -41,7 +63,7 @@ $conn->close();
             <h2 style="margin: 0; font-size: 24px; color: #1e293b;">Hola, <?= htmlspecialchars($user_data['username']) ?></h2>
             <p style="margin: 4px 0 0 0; color: #64748b;"><?= htmlspecialchars($user_data['email']) ?></p>
         </div>
-        <div class="account-badge badge-trial">
+        <div class="account-badge <?= ($status['es_premium'] || $status['estado_logico'] === 'EnPrueba') ? 'badge-trial' : 'badge-limited' ?>" style="<?= ($status['es_premium']) ? 'background: #e8f5e9; color: #2e7d32;' : '' ?>">
             <?= $account_status ?>
         </div>
     </div>
@@ -51,13 +73,15 @@ $conn->close();
         <div class="info-box">
             <h4>📅 Información de la cuenta</h4>
             <div class="info-item">
-                <span class="info-label">Estado:</span>
-                <span class="info-value"><?= htmlspecialchars($user_data['username']) ?></span>
+                <span class="info-label">Tipo de usuario:</span>
+                <span class="info-value"><?= $account_status ?></span>
             </div>
             <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid #e2e8f0;">
                 <div class="info-item">
-                    <span class="info-label">Mes gratuito:</span>
-                    <span class="info-value" style="color: #059669;">Activo</span>
+                    <span class="info-label">Periodo de prueba:</span>
+                    <span class="info-value" style="color: <?= $status['es_periodo_gratuito'] ? '#059669' : '#ef4444' ?>;">
+                        <?= $status['es_periodo_gratuito'] ? 'Activo' : 'Finalizado' ?>
+                    </span>
                 </div>
                 <div class="info-item">
                     <span class="info-label">Inicio:</span>
