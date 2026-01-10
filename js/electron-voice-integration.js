@@ -197,8 +197,6 @@
     function conditionalInitialize() {
         if (window.userLoggedIn) {
             initializeResponsiveVoice();
-        } else {
-            console.log("[LECTOR] ResponsiveVoice no inicializado: usuario no logueado.");
         }
     }
 

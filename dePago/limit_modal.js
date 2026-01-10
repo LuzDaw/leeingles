@@ -43,7 +43,6 @@ const LimitModal = {
     show: function(nextReset, force = false) {
         // Control de sesión: solo mostrar una vez por sesión a menos que se fuerce (Play o margen agotado)
         if (!force && sessionStorage.getItem('limit_modal_shown')) {
-            console.log("LimitModal: Ya mostrado en esta sesión, omitiendo.");
             return;
         }
 

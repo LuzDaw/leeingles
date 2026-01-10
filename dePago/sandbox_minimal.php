@@ -18,13 +18,6 @@
 <body>
 
 <div class="test-box">
-    <?php if (isset($_GET['success'])): ?>
-        <div class="success-banner">
-            ✅ ¡Pago completado con éxito!<br>
-            <span style="font-size: 0.8rem; font-weight: normal;">ID Transacción: <?php echo htmlspecialchars($_GET['id']); ?></span>
-        </div>
-    <?php endif; ?>
-
     <h2>Prueba de Conexión Sandbox</h2>
     
     <div class="info-box">
@@ -90,18 +83,18 @@
                 return actions.order.capture().then(function(details) {
                     log("✅ Transacción completada: " + details.id);
                     
-                    // Notificar al servidor y redirigir
+                    // Notificar al servidor y redirigir a la cuenta del usuario con el modal de éxito
                     fetch('ajax_confirm_payment.php', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                         body: 'orderID=' + details.id + '&status=COMPLETED&plan=test_pago_unico'
                     })
                     .then(() => {
-                        // Redirigir a la misma página con un parámetro de éxito
-                        window.location.href = 'sandbox_minimal.php?success=1&id=' + details.id;
+                        // Redirigir a la pestaña de cuenta en la web principal
+                        window.location.href = '../index.php?tab=account&payment_success=1';
                     })
                     .catch(() => {
-                        window.location.href = 'sandbox_minimal.php?success=1&id=' + details.id;
+                        window.location.href = '../index.php?tab=account&payment_success=1';
                     });
                 });
             },

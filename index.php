@@ -1112,6 +1112,7 @@ function render_text_clickable($text)
       const urlParams = new URLSearchParams(window.location.search);
       let tab = urlParams.get('tab');
       const resetToken = urlParams.get('token'); // Detectar token de restablecimiento
+      const paymentSuccess = urlParams.get('payment_success'); // Detectar éxito de pago
 
       if (resetToken) {
         // Si hay un token de restablecimiento, mostrar el modal de restablecimiento de contraseña
@@ -1127,7 +1128,12 @@ function render_text_clickable($text)
         tab = 'my-texts';
         loadTabContent(tab);
       } else if (tab && ['progress','my-texts','saved-words','practice','upload','account'].includes(tab)) {
-        loadTabContent(tab);
+        // Si es la pestaña de cuenta y venimos de un pago exitoso, pasar el parámetro
+        if (tab === 'account' && paymentSuccess) {
+          loadTabContent(tab, true);
+        } else {
+          loadTabContent(tab);
+        }
       } else {
         // Solo cargar pestañas si no estamos viendo un texto específico
         const isViewingText = window.location.search.includes('text_id=') || window.location.search.includes('public_text_id=');
@@ -2473,8 +2479,6 @@ function render_text_clickable($text)
           } catch (e) {
             console.error("Error al ejecutar initLector:", e);
           }
-        } else if (!window.userLoggedIn) {
-          console.log("Lector no inicializado: usuario no logueado.");
         }
       });
     </script>
@@ -2552,7 +2556,7 @@ function render_text_clickable($text)
     };
 
     // Sistema de pestañas dinámicas
-    window.loadTabContent = function(tab) {
+    window.loadTabContent = function(tab, isPaymentSuccess = false) {
       const tabContent = document.getElementById('tab-content');
       const tabButtons = document.querySelectorAll('.tab-btn');
       
@@ -2586,10 +2590,15 @@ function render_text_clickable($text)
         'account': 'logueo_seguridad/cuenta/ajax_account_content.php'
       };
       
-      const ajaxFile = tabFiles[tab];
+      let ajaxFile = tabFiles[tab];
       if (!ajaxFile) {
         tabContent.innerHTML = '<div style="text-align: center; padding: 40px; color: #dc2626;"><p>Error: Pestaña no encontrada</p></div>';
         return;
+      }
+
+      // Si es éxito de pago, añadir parámetro al archivo AJAX
+      if (tab === 'account' && isPaymentSuccess) {
+        ajaxFile += '?payment_success=1';
       }
       
       // Cargar contenido vía AJAX (sin caché para asegurar datos frescos)
@@ -2924,8 +2933,8 @@ function render_text_clickable($text)
     
     // Llamar a initializeTabEvents cuando se carga una pestaña
     const originalLoadTabContent = window.loadTabContent;
-    window.loadTabContent = function(tab) {
-      originalLoadTabContent(tab);
+    window.loadTabContent = function(tab, isPaymentSuccess = false) {
+      originalLoadTabContent(tab, isPaymentSuccess);
       
       // Esperar a que se cargue el contenido y luego inicializar eventos
       setTimeout(() => {

@@ -52,8 +52,8 @@ $stmt->close();
 
 // Mapeo de estados para visualización
 $status_labels = [
-    'EnPrueba' => 'Periodo de Prueba - 30 días ',
-    'limitado' => 'Plan Gratuito - 300 Traduciones/Semanal',
+    'EnPrueba' => 'Plan Premium (Prueba 30 días)',
+    'limitado' => 'Plan de Prueba (300 Traduciones/Semanal)',
     'Inicio'   => 'Plan Inicio - 30 días',
     'Ahorro'   => 'Plan Ahorro - 6 meses',
     'Pro'      => 'Plan Pro 12 meses'
@@ -127,7 +127,7 @@ if ($has_premium) {
 // 2. Fila de Plan Limitado
 $plan_table_rows[] = [
     'activo' => ($has_premium || $is_trial_active) ? '❌' : '✅',
-    'caracteristica' => 'Plan Gratuito (300 traducciones/semana)',
+    'caracteristica' => 'Plan de Prueba (300 traducciones/semana)',
     'inicio' => $free_month_start,
     'fin' => $next_reset_date,
     'clase' => ($has_premium || $is_trial_active) ? 'row-faint' : ''
@@ -137,7 +137,7 @@ $plan_table_rows[] = [
 if ($is_trial_active) {
     $plan_table_rows[] = [
         'activo' => '✅',
-        'caracteristica' => 'Periodo de Prueba (Funciones completas)',
+        'caracteristica' => 'Plan Premium (Prueba 30 días)',
         'inicio' => $free_month_start,
         'fin' => $free_month_end,
         'clase' => ''
@@ -281,6 +281,12 @@ $conn->close();
 </style>
 
 <div class="tab-content-wrapper account-dashboard">
+    <?php 
+    // Si venimos de un pago exitoso, incluir el modal
+    if (isset($_GET['payment_success'])) {
+        include '../../dePago/payment_success_modal.php';
+    }
+    ?>
     <!-- 1️⃣ Encabezado – Identidad del usuario -->
     <div class="dashboard-section" style="margin-bottom: 32px;">
         <h1 style="margin: 0; font-size: 32px; font-weight: 800; color: #0f172a;">Hola, <?= htmlspecialchars($user_data['username']) ?></h1>
