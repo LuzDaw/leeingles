@@ -3,8 +3,8 @@
  * Archivo de prueba para pagos con PayPal Sandbox
  * Ubicación: dePago/paypal_sandbox_test.php
  */
-require_once __DIR__ . '/../db/connection.php';
-require_once __DIR__ . '/subscription_functions.php';
+require_once __DIR__ . '/../../db/connection.php';
+require_once __DIR__ . '/../subscription_functions.php';
 
 session_start();
 
@@ -79,7 +79,7 @@ $clientId = "ATfzdeOVWZvM17U3geOdl_yV513zZfX7oCm_wa0wqog2acHfSIz846MkdZnpu7oCdWF
         onApprove: function(data, actions) {
             return actions.order.capture().then(function(details) {
                 // Enviamos la confirmación al servidor
-                fetch('ajax_confirm_payment.php', {
+                fetch('../ajax_confirm_payment.php', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                     body: 'orderID=' + data.orderID + '&status=' + details.status
@@ -88,7 +88,7 @@ $clientId = "ATfzdeOVWZvM17U3geOdl_yV513zZfX7oCm_wa0wqog2acHfSIz846MkdZnpu7oCdWF
                 .then(res => {
                     if (res.success) {
                         alert('¡Pago completado con éxito! Ahora eres PREMIUM.');
-                        window.location.href = '../index.php';
+                        window.location.href = '../../index.php';
                     } else {
                         alert('Error al actualizar: ' + res.message);
                     }

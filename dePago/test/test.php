@@ -4,8 +4,8 @@
  * Ubicación: dePago/test.php
  */
 
-require_once __DIR__ . '/../db/connection.php';
-require_once __DIR__ . '/subscription_functions.php';
+require_once __DIR__ . '/../../db/connection.php';
+require_once __DIR__ . '/../subscription_functions.php';
 
 session_start();
 
@@ -255,7 +255,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'simulate_expiration' && $us
 </div>
 <?php endif; ?>
 
-    <?php include 'limit_modal.php'; ?>
-    <script src="limit_modal.js"></script>
+    <?php include '../limit_modal.php'; ?>
+    <script src="../limit_modal.js"></script>
 </body>
 </html>

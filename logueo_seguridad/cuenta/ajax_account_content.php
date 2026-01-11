@@ -146,7 +146,20 @@ if ($is_trial_active) {
 
 // Traducciones semanales (para info secundaria)
 $usage = getWeeklyUsage($user_id);
-$available_translations = max(0, 300 - $usage);
+$base_limit = 300;
+$usage_percent = min(100, round(($usage / $base_limit) * 100));
+$available_translations = max(0, $base_limit - $usage);
+
+// Obtener historial de suscripciones/pagos
+$payment_history = [];
+$stmt = $conn->prepare("SELECT plan_name, payment_method, status, created_at, fecha_fin FROM user_subscriptions WHERE user_id = ? ORDER BY created_at DESC LIMIT 5");
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$res = $stmt->get_result();
+while ($row = $res->fetch_assoc()) {
+    $payment_history[] = $row;
+}
+$stmt->close();
 
 $conn->close();
 ?>
@@ -238,6 +251,23 @@ $conn->close();
     }
 
     /* Estilos para la nueva tabla de usuario */
+    .progress-container {
+        width: 100%;
+        height: 8px;
+        background: #e2e8f0;
+        border-radius: 4px;
+        margin-top: 8px;
+        overflow: hidden;
+    }
+    .progress-bar {
+        height: 100%;
+        background: #3b82f6;
+        border-radius: 4px;
+        transition: width 0.3s ease;
+    }
+    .progress-bar.warning { background: #f59e0b; }
+    .progress-bar.danger { background: #ef4444; }
+
     .user-info-table {
         width: 100%;
         border-collapse: separate;
@@ -342,8 +372,24 @@ $conn->close();
 
     <!-- 4️⃣ Actividad del usuario -->
     <div class="dashboard-section">
-        <h3 class="section-title">Tu actividad</h3>
+        <h3 class="section-title">Tu actividad y límites</h3>
         <div class="horizontal-row">
+            <div class="stat-card">
+                <span class="stat-label">Traducciones Semanales</span>
+                <?php if ($status['es_premium'] || $status['estado_logico'] === 'EnPrueba'): ?>
+                    <div class="activity-number">Ilimitado</div>
+                    <div class="progress-container">
+                        <div class="progress-bar" style="width: 100%; background: #10b981;"></div>
+                    </div>
+                    <span class="stat-subvalue">Plan Premium Activo 💎</span>
+                <?php else: ?>
+                    <div class="activity-number"><?= $usage ?> <span style="font-size: 14px; color: #64748b; font-weight: 400;">/ <?= $base_limit ?></span></div>
+                    <div class="progress-container">
+                        <div class="progress-bar <?= $usage_percent > 90 ? 'danger' : ($usage_percent > 70 ? 'warning' : '') ?>" style="width: <?= $usage_percent ?>%"></div>
+                    </div>
+                    <span class="stat-subvalue">Reinicia el <?= $next_reset_date ?></span>
+                <?php endif; ?>
+            </div>
             <div class="stat-card">
                 <span class="stat-label">Tiempo de lectura</span>
                 <div class="activity-number"><?= $reading_time ?></div>
@@ -361,6 +407,41 @@ $conn->close();
             </div>
         </div>
     </div>
+
+    <!-- 4.5️⃣ Historial de Pagos -->
+    <?php if (!empty($payment_history)): ?>
+    <div class="dashboard-section">
+        <h3 class="section-title">Historial de suscripciones</h3>
+        <table class="user-info-table">
+            <thead>
+                <tr>
+                    <th>Plan</th>
+                    <th>Método</th>
+                    <th>Fecha</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($payment_history as $pay): 
+                    $pay_status_class = 'limitado';
+                    if ($pay['status'] === 'active') $pay_status_class = 'premium';
+                    if ($pay['status'] === 'pending') $pay_status_class = 'prueba';
+                ?>
+                <tr>
+                    <td style="font-weight: 600;"><?= htmlspecialchars($pay['plan_name']) ?></td>
+                    <td><?= strtoupper(htmlspecialchars($pay['payment_method'])) ?></td>
+                    <td><?= date('d/m/Y', strtotime($pay['created_at'])) ?></td>
+                    <td>
+                        <span class="badge-status <?= $pay_status_class ?>">
+                            <?= $pay['status'] === 'active' ? 'Activo' : ($pay['status'] === 'pending' ? 'Pendiente' : $pay['status']) ?>
+                        </span>
+                    </td>
+                </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+    <?php endif; ?>
 
     <!-- 5️⃣ Plan de suscripción (PayPal) - Mantenido como estaba -->
     <div id="subscription-plans-section" class="info-box" style="margin-top: 64px; border: 1px solid #e2e8f0; background: #f8fafc;">

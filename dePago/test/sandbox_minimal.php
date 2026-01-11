@@ -93,17 +93,17 @@
                     log("✅ Pago procesado. ID: " + details.id + " | Estado Real: " + realStatus);
                     
                     // Notificar al servidor con el estado de la CAPTURA
-                    fetch('ajax_confirm_payment.php', {
+                    fetch('../ajax_confirm_payment.php', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                         body: 'orderID=' + details.id + '&status=' + realStatus + '&plan=Inicio'
                     })
                     .then(() => {
                         // Redirigir al gestor de pagos para ver el estado actualizado
-                        window.location.href = 'webhook_handler.php?payment_success=1';
+                        window.location.href = '../webhook_handler.php?payment_success=1';
                     })
                     .catch(() => {
-                        window.location.href = 'webhook_handler.php?payment_success=1';
+                        window.location.href = '../webhook_handler.php?payment_success=1';
                     });
                 });
             },

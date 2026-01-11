@@ -4,8 +4,9 @@
  * Ubicación: dePago/webhook_handler.php
  */
 
-require_once __DIR__ . '/../db/connection.php';
-require_once __DIR__ . '/subscription_functions.php';
+require_once __DIR__ . '/../../db/connection.php';
+require_once __DIR__ . '/../subscription_functions.php';
+require_once __DIR__ . '/../payment_functions.php';
 
 session_start();
 
@@ -76,27 +77,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['manual_action'])) {
 
     if ($action === 'confirm_transfer') {
         $sub_id = (int)$_POST['sub_id'];
-        $stmt = $conn->prepare("SELECT plan_name, user_id FROM user_subscriptions WHERE id = ? AND status = 'pending'");
+        $stmt = $conn->prepare("SELECT plan_name, user_id, paypal_subscription_id FROM user_subscriptions WHERE id = ? AND status = 'pending'");
         $stmt->bind_param("i", $sub_id);
         $stmt->execute();
         $res = $stmt->get_result();
         
         if ($row = $res->fetch_assoc()) {
-            $plan = $row['plan_name'];
-            $target_user_id = $row['user_id'];
-            $plan_durations = ['Inicio' => 1, 'Ahorro' => 6, 'Pro' => 12];
-            $meses = $plan_durations[$plan] ?? 1;
-            $fecha_fin = date('Y-m-d H:i:s', strtotime("+$meses months"));
-            
-            $stmt_upd = $conn->prepare("UPDATE user_subscriptions SET status = 'active', fecha_fin = ?, fecha_inicio = NOW() WHERE id = ?");
-            $stmt_upd->bind_param("si", $fecha_fin, $sub_id);
-            $stmt_upd->execute();
-            
-            $stmt_user = $conn->prepare("UPDATE users SET tipo_usuario = ? WHERE id = ?");
-            $stmt_user->bind_param("si", $plan, $target_user_id);
-            $stmt_user->execute();
-            
-            echo json_encode(['success' => true, 'message' => 'Pago confirmado. Usuario ahora es PREMIUM.']);
+            $result = activateUserPlan($row['user_id'], $row['plan_name'], $row['paypal_subscription_id'], 'transferencia');
+            echo json_encode($result);
         } else {
             echo json_encode(['success' => false, 'message' => 'Suscripción no encontrada o ya activa']);
         }
@@ -118,9 +106,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['manual_action'])) {
         ];
 
         // Llamamos a la función real que procesa los webhooks
-        handleSaleCompleted($mock_resource, $conn);
+        $result = handlePaypalWebhookResource($mock_resource, true);
         
-        echo json_encode(['success' => true, 'message' => 'Simulación de Webhook completada. El plan debería estar activo.']);
+        echo json_encode($result);
         exit;
     }
 }
@@ -135,31 +123,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $event) {
     
     // REGLA DE ORO: Solo el estado COMPLETED de la CAPTURA activa el plan.
     $is_payment_confirmed = false;
-    $paypal_id = '';
 
     // 1. Intentamos extraer el estado de la captura real
     if (isset($resource['purchase_units'][0]['payments']['captures'][0])) {
         $capture = $resource['purchase_units'][0]['payments']['captures'][0];
-        $paypal_id = $capture['id'];
         if (strtoupper($capture['status']) === 'COMPLETED') {
             $is_payment_confirmed = true;
         }
     } elseif ($event_type === 'PAYMENT.CAPTURE.COMPLETED' || $event_type === 'PAYMENT.SALE.COMPLETED') {
-        $paypal_id = $resource['id'] ?? '';
         if (strtoupper($resource['status'] ?? $resource['state'] ?? '') === 'COMPLETED') {
             $is_payment_confirmed = true;
         }
     }
 
-    // 2. Si no hay confirmación de dinero recibido, lo tratamos como pendiente
-    if (!$is_payment_confirmed) {
-        // Si no tenemos ID de captura, usamos el de la orden/pago para el registro
-        if (empty($paypal_id)) $paypal_id = $resource['id'] ?? '';
-        handleSalePending($resource, $conn);
-    } else {
-        // 3. ¡DINERO RECIBIDO! Activación automática
-        handleSaleCompleted($resource, $conn);
-    }
+    // 2. Procesar usando las funciones centrales
+    handlePaypalWebhookResource($resource, $is_payment_confirmed);
     
     http_response_code(200);
     exit;
@@ -397,40 +375,3 @@ function simulateWebhook(paypalId) {
 </script>
 </body>
 </html>
-<?php
-function handleSaleCompleted($resource, $conn) {
-    $paypal_id = $resource['id'] ?? $resource['parent_payment'] ?? $resource['billing_agreement_id'] ?? '';
-    
-    if (empty($paypal_id) && isset($resource['purchase_units'][0]['payments']['captures'][0]['id'])) {
-        $paypal_id = $resource['purchase_units'][0]['payments']['captures'][0]['id'];
-    }
-    
-    if (empty($paypal_id)) return;
-
-    $stmt = $conn->prepare("SELECT id, user_id, plan_name FROM user_subscriptions WHERE paypal_subscription_id = ? AND status = 'pending' LIMIT 1");
-    $stmt->bind_param("s", $paypal_id);
-    $stmt->execute();
-    $res = $stmt->get_result();
-    
-    if ($row = $res->fetch_assoc()) {
-        $sub_id = $row['id'];
-        $user_id = $row['user_id'];
-        $plan = $row['plan_name'];
-        
-        $plan_durations = ['Inicio' => 1, 'Ahorro' => 6, 'Pro' => 12];
-        $meses = $plan_durations[$plan] ?? 1;
-        $fecha_fin = date('Y-m-d H:i:s', strtotime("+$meses months"));
-        
-        $conn->query("UPDATE user_subscriptions SET status = 'active', fecha_inicio = NOW(), fecha_fin = '$fecha_fin' WHERE id = $sub_id");
-        $conn->query("UPDATE users SET tipo_usuario = '$plan' WHERE id = $user_id");
-    }
-}
-
-function handleSalePending($resource, $conn) {
-    $paypal_id = $resource['id'] ?? $resource['parent_payment'] ?? '';
-    if (empty($paypal_id)) return;
-
-    // Si ya existe, no hacemos nada, solo nos aseguramos de que esté en pending
-    $conn->query("UPDATE user_subscriptions SET status = 'pending' WHERE paypal_subscription_id = '$paypal_id' AND status != 'active'");
-}
-?>
