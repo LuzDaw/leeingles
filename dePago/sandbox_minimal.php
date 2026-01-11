@@ -21,12 +21,12 @@
     <h2>Prueba de Conexión Sandbox</h2>
     
     <div class="info-box">
-        <strong>Entorno:</strong> Sandbox (Pruebas)<br>
+        <strong>Entorno:</strong> Sandbox (Pruebas Reales)<br>
         <strong>Vendedor:</strong> piknte-facilitator@gmail.com<br>
         <strong>Tipo:</strong> Pago Único (1.00 EUR)
     </div>
 
-    <p>Este botón no necesita IDs de plan. Sirve para confirmar que tu Client ID y tu cuenta de vendedor funcionan correctamente.</p>
+    <p>Este botón utiliza la API real de PayPal Sandbox. El sistema detectará automáticamente si el pago es instantáneo o si queda pendiente de confirmación.</p>
 
     <div id="paypal-button-container">Cargando botón...</div>
     <div id="status-log" class="status">Esperando al SDK de PayPal...</div>
@@ -81,20 +81,20 @@
             onApprove: function(data, actions) {
                 log("Pago aprobado. Capturando transacción...");
                 return actions.order.capture().then(function(details) {
-                    log("✅ Transacción completada: " + details.id);
+                    log("✅ Transacción capturada: " + details.id + " (Estado: " + details.status + ")");
                     
-                    // Notificar al servidor y redirigir a la cuenta del usuario con el modal de éxito
+                    // Notificar al servidor con el estado REAL devuelto por PayPal
                     fetch('ajax_confirm_payment.php', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                        body: 'orderID=' + details.id + '&status=COMPLETED&plan=test_pago_unico'
+                        body: 'orderID=' + details.id + '&status=' + details.status + '&plan=Inicio'
                     })
                     .then(() => {
-                        // Redirigir a la pestaña de cuenta en la web principal
-                        window.location.href = '../index.php?tab=account&payment_success=1';
+                        // Redirigir al gestor de pagos para ver el estado actualizado
+                        window.location.href = 'webhook_handler.php?payment_success=1';
                     })
                     .catch(() => {
-                        window.location.href = '../index.php?tab=account&payment_success=1';
+                        window.location.href = 'webhook_handler.php?payment_success=1';
                     });
                 });
             },

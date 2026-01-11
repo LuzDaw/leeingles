@@ -1,8 +1,8 @@
 <?php
-$host = "localhost";
-$user = "root";        // Cambia si tienes otro usuario
-$password = "";        // Cambia si tienes contraseña
-$database = "traductor_app";
+$host = "localhost:3306";
+$user = "leeingles";        // Cambia si tienes otro usuario
+$password = "Holamundo25__";        // Cambia si tienes contraseña
+$database = "leeingles";
 $conn = new mysqli($host, $user, $password, $database);
 
 if ($conn->connect_error) {
