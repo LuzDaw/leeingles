@@ -81,13 +81,22 @@
             onApprove: function(data, actions) {
                 log("Pago aprobado. Capturando transacción...");
                 return actions.order.capture().then(function(details) {
-                    log("✅ Transacción capturada: " + details.id + " (Estado: " + details.status + ")");
+                    // Extraemos el estado real del PAGO (Captura), no de la orden general
+                    let realStatus = details.status;
+                    if (details.purchase_units && 
+                        details.purchase_units[0].payments && 
+                        details.purchase_units[0].payments.captures && 
+                        details.purchase_units[0].payments.captures[0]) {
+                        realStatus = details.purchase_units[0].payments.captures[0].status;
+                    }
+
+                    log("✅ Pago procesado. ID: " + details.id + " | Estado Real: " + realStatus);
                     
-                    // Notificar al servidor con el estado REAL devuelto por PayPal
+                    // Notificar al servidor con el estado de la CAPTURA
                     fetch('ajax_confirm_payment.php', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                        body: 'orderID=' + details.id + '&status=' + details.status + '&plan=Inicio'
+                        body: 'orderID=' + details.id + '&status=' + realStatus + '&plan=Inicio'
                     })
                     .then(() => {
                         // Redirigir al gestor de pagos para ver el estado actualizado

@@ -34,18 +34,6 @@ if (!$user_id) {
     }
 }
 
-// Obtener estado real del usuario
-$status = getUserSubscriptionStatus($user_id);
-
-// Verificar si hay algún pago pendiente
-$has_pending = false;
-if ($user_id) {
-    $check_pending = $conn->query("SELECT plan_name FROM user_subscriptions WHERE user_id = $user_id AND status = 'pending' LIMIT 1");
-    if ($check_pending && $check_pending->num_rows > 0) {
-        $has_pending = $check_pending->fetch_assoc();
-    }
-}
-
 // --- PROCESAMIENTO DE ACCIONES MANUALES (POST) ---
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['manual_action'])) {
     header('Content-Type: application/json');
@@ -57,24 +45,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['manual_action'])) {
 
     $action = $_POST['manual_action'];
 
+    // Acción para resetear usuario (Facilita pruebas)
+    if ($action === 'reset_user') {
+        $conn->query("UPDATE users SET tipo_usuario = 'limitado' WHERE id = $user_id");
+        $conn->query("DELETE FROM user_subscriptions WHERE user_id = $user_id");
+        echo json_encode(['success' => true, 'message' => 'Usuario reseteado a LIMITADO y suscripciones eliminadas']);
+        exit;
+    }
+
     if ($action === 'create_pending_transfer') {
         $plan = $_POST['plan'] ?? 'Inicio';
         $ref = 'TRANSF_' . time();
         
-        // Intentamos insertar con payment_method, si falla (porque no existe la columna), insertamos sin ella
+        // Forzamos el método 'transferencia' y estado 'pending'
         $stmt = $conn->prepare("INSERT INTO user_subscriptions (user_id, plan_name, fecha_fin, paypal_subscription_id, payment_method, status) VALUES (?, ?, NOW(), ?, 'transferencia', 'pending')");
         
-        if ($stmt) {
-            $stmt->bind_param("iss", $user_id, $plan, $ref);
-            $success = $stmt->execute();
-        } else {
+        if (!$stmt) {
             $stmt = $conn->prepare("INSERT INTO user_subscriptions (user_id, plan_name, fecha_fin, paypal_subscription_id, status) VALUES (?, ?, NOW(), ?, 'pending')");
-            $stmt->bind_param("iss", $user_id, $plan, $ref);
-            $success = $stmt->execute();
         }
         
-        if ($success) {
-            echo json_encode(['success' => true, 'message' => 'Transferencia registrada esperando confirmación']);
+        $stmt->bind_param("iss", $user_id, $plan, $ref);
+        
+        if ($stmt->execute()) {
+            echo json_encode(['success' => true, 'message' => 'Transferencia registrada como PENDIENTE']);
         } else {
             echo json_encode(['success' => false, 'message' => $conn->error]);
         }
@@ -118,12 +111,49 @@ $event = json_decode($raw_data, true);
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && $event) {
     $event_type = $event['event_type'] ?? 'DESCONOCIDO';
     $resource = $event['resource'] ?? [];
+    
+    // REGLA DE ORO: Solo el estado COMPLETED de la CAPTURA activa el plan.
+    $is_payment_confirmed = false;
+    $paypal_id = '';
 
-    if ($event_type === 'PAYMENT.SALE.COMPLETED') {
+    // 1. Intentamos extraer el estado de la captura real
+    if (isset($resource['purchase_units'][0]['payments']['captures'][0])) {
+        $capture = $resource['purchase_units'][0]['payments']['captures'][0];
+        $paypal_id = $capture['id'];
+        if (strtoupper($capture['status']) === 'COMPLETED') {
+            $is_payment_confirmed = true;
+        }
+    } elseif ($event_type === 'PAYMENT.CAPTURE.COMPLETED' || $event_type === 'PAYMENT.SALE.COMPLETED') {
+        $paypal_id = $resource['id'] ?? '';
+        if (strtoupper($resource['status'] ?? $resource['state'] ?? '') === 'COMPLETED') {
+            $is_payment_confirmed = true;
+        }
+    }
+
+    // 2. Si no hay confirmación de dinero recibido, lo tratamos como pendiente
+    if (!$is_payment_confirmed) {
+        // Si no tenemos ID de captura, usamos el de la orden/pago para el registro
+        if (empty($paypal_id)) $paypal_id = $resource['id'] ?? '';
+        handleSalePending($resource, $conn);
+    } else {
+        // 3. ¡DINERO RECIBIDO! Activación automática
         handleSaleCompleted($resource, $conn);
     }
+    
     http_response_code(200);
     exit;
+}
+
+// Obtener estado real del usuario para la vista
+$status = getUserSubscriptionStatus($user_id);
+
+// Verificar si hay algún pago pendiente
+$has_pending = false;
+if ($user_id) {
+    $check_pending = $conn->query("SELECT plan_name, payment_method FROM user_subscriptions WHERE user_id = $user_id AND status = 'pending' LIMIT 1");
+    if ($check_pending && $check_pending->num_rows > 0) {
+        $has_pending = $check_pending->fetch_assoc();
+    }
 }
 
 // --- INTERFAZ DE PRUEBAS (GET) ---
@@ -150,9 +180,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $event) {
         .badge { padding: 4px 8px; border-radius: 4px; font-size: 0.85rem; font-weight: bold; }
         .badge-pending { color: #f57c00; background: #fff3e0; }
         .badge-active { color: #2e7d32; background: #e8f5e9; }
+        .badge-expired { color: #d32f2f; background: #ffebee; }
         .btn { padding: 8px 16px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; transition: 0.2s; }
         .btn-primary { background: #1a73e8; color: white; }
         .btn-success { background: #34a853; color: white; }
+        .btn-danger { background: #d93025; color: white; }
         .plan-selector { padding: 8px; border-radius: 6px; border: 1px solid #ccc; margin-right: 10px; }
         .premium-status { color: #1a73e8; font-weight: bold; }
         .trial-status { color: #34a853; font-weight: bold; }
@@ -163,18 +195,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $event) {
 
 <div class="container">
     <div class="card">
-        <h1>Estado Real del Usuario</h1>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h1>Estado Real del Usuario</h1>
+            <button onclick="resetUser()" class="btn btn-danger" style="font-size: 0.8rem;">Resetear a LIMITADO</button>
+        </div>
         <div class="user-info">
             Usuario: <strong><?php echo htmlspecialchars($test_username); ?></strong> (ID: <?php echo $user_id; ?>)
             
             <div class="status-grid">
                 <div class="status-item">
                     <span class="status-label">Estado Lógico</span>
-                    <span class="status-value <?php echo $status['estado_logico']; ?>">
+                    <span class="status-value <?php echo $status['es_premium'] ? 'premium-status' : ($status['estado_logico'] === 'EnPrueba' ? 'trial-status' : 'limited-status'); ?>">
                         <?php echo strtoupper($status['estado_logico']); ?>
                     </span>
                     <?php if ($has_pending): ?>
-                        <br><span style="font-size: 0.7rem; color: #f57c00; font-weight: bold;">(PAGO EN PAUSA: <?php echo strtoupper($has_pending['plan_name']); ?>)</span>
+                        <br><span style="font-size: 0.8rem; color: #e65100; font-weight: bold; background: #fff3e0; padding: 2px 5px; border-radius: 3px; border: 1px solid #ffe0b2; display: inline-block; margin-top: 5px;">
+                            ⏳ ESPERANDO PAGO: <?php echo strtoupper($has_pending['plan_name']); ?>
+                        </span>
                     <?php endif; ?>
                 </div>
                 <div class="status-item">
@@ -182,7 +219,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $event) {
                     <span class="status-value">
                         <?php 
                         $check_db = $conn->query("SELECT tipo_usuario FROM users WHERE id = $user_id");
-                        $row_db = $check_db ? $check_db->fetch_assoc() : null;
+                        $row_db = $check_db->fetch_assoc();
                         echo $row_db['tipo_usuario'] ?? 'N/A';
                         ?>
                     </span>
@@ -270,7 +307,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $event) {
                 <?php endwhile; 
                     }
                     
-                    // Si el usuario está en periodo de prueba o no tiene registros, mostramos la fila de cortesía
                     if ($status['estado_logico'] === 'EnPrueba' || !$has_records):
                 ?>
                 <tr>
@@ -281,15 +317,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $event) {
                     <td>-</td>
                 </tr>
                 <?php endif; 
-                } else { ?>
-                <tr><td colspan="5">No se ha detectado ningún usuario.</td></tr>
-                <?php } ?>
+                } ?>
             </tbody>
         </table>
     </div>
 </div>
 
 <script>
+function resetUser() {
+    if (!confirm('¿Seguro que quieres resetear este usuario a LIMITADO y borrar sus suscripciones?')) return;
+    const formData = new FormData();
+    formData.append('manual_action', 'reset_user');
+    fetch('webhook_handler.php', { method: 'POST', body: formData })
+    .then(r => r.json()).then(res => { alert(res.message); location.reload(); });
+}
+
 function createTransfer() {
     const plan = document.getElementById('planSelect').value;
     const formData = new FormData();
@@ -321,17 +363,14 @@ function confirmTransfer(subId) {
 </html>
 <?php
 function handleSaleCompleted($resource, $conn) {
-    // El ID puede venir en diferentes campos según el tipo de recurso de PayPal
     $paypal_id = $resource['id'] ?? $resource['parent_payment'] ?? $resource['billing_agreement_id'] ?? '';
     
-    // Si no está en la raíz, buscamos en purchase_units (Estructura de Checkout V2)
     if (empty($paypal_id) && isset($resource['purchase_units'][0]['payments']['captures'][0]['id'])) {
         $paypal_id = $resource['purchase_units'][0]['payments']['captures'][0]['id'];
     }
     
     if (empty($paypal_id)) return;
 
-    // 1. Buscar la suscripción que estaba en pausa (pending) con este ID
     $stmt = $conn->prepare("SELECT id, user_id, plan_name FROM user_subscriptions WHERE paypal_subscription_id = ? AND status = 'pending' LIMIT 1");
     $stmt->bind_param("s", $paypal_id);
     $stmt->execute();
@@ -349,5 +388,13 @@ function handleSaleCompleted($resource, $conn) {
         $conn->query("UPDATE user_subscriptions SET status = 'active', fecha_inicio = NOW(), fecha_fin = '$fecha_fin' WHERE id = $sub_id");
         $conn->query("UPDATE users SET tipo_usuario = '$plan' WHERE id = $user_id");
     }
+}
+
+function handleSalePending($resource, $conn) {
+    $paypal_id = $resource['id'] ?? $resource['parent_payment'] ?? '';
+    if (empty($paypal_id)) return;
+
+    // Si ya existe, no hacemos nada, solo nos aseguramos de que esté en pending
+    $conn->query("UPDATE user_subscriptions SET status = 'pending' WHERE paypal_subscription_id = '$paypal_id' AND status != 'active'");
 }
 ?>

@@ -16,7 +16,7 @@ if (!isset($_SESSION['user_id'])) {
 
 $user_id = $_SESSION['user_id'];
 $orderID = $_POST['orderID'] ?? '';
-$status = $_POST['status'] ?? '';
+$status = strtoupper($_POST['status'] ?? '');
 $plan = $_POST['plan'] ?? 'desconocido';
 
 // Mapeo de planes a duraciones (meses)
@@ -26,37 +26,35 @@ $plan_durations = [
     'Pro' => 12
 ];
 
-// Aceptamos COMPLETED/ACTIVE (activación inmediata) o PENDING (espera)
-if ($status === 'COMPLETED' || $status === 'ACTIVE') {
+// REGLA DE ORO: Solo el estado COMPLETED activa el plan inmediatamente.
+if ($status === 'COMPLETED') {
     $meses = $plan_durations[$plan] ?? 0;
     if ($meses > 0) {
         $fecha_fin = date('Y-m-d H:i:s', strtotime("+$meses months"));
         
-        // 1. Registrar la suscripción como activa (con fallback por si no existe la columna payment_method)
+        // 1. Registrar la suscripción como activa
         $stmt_sub = $conn->prepare("INSERT INTO user_subscriptions (user_id, plan_name, fecha_fin, paypal_subscription_id, status, payment_method) VALUES (?, ?, ?, ?, 'active', 'paypal')");
-        if ($stmt_sub) {
-            $stmt_sub->bind_param("isss", $user_id, $plan, $fecha_fin, $orderID);
-            $stmt_sub->execute();
-        } else {
+        if (!$stmt_sub) {
             $stmt_sub = $conn->prepare("INSERT INTO user_subscriptions (user_id, plan_name, fecha_fin, paypal_subscription_id, status) VALUES (?, ?, ?, ?, 'active')");
-            $stmt_sub->bind_param("isss", $user_id, $plan, $fecha_fin, $orderID);
-            $stmt_sub->execute();
         }
+        $stmt_sub->bind_param("isss", $user_id, $plan, $fecha_fin, $orderID);
+        $stmt_sub->execute();
         
         // 2. Actualizar el tipo de usuario en la tabla users
         $stmt = $conn->prepare("UPDATE users SET tipo_usuario = ? WHERE id = ?");
         $stmt->bind_param("si", $plan, $user_id);
         
         if ($stmt->execute()) {
-            echo json_encode(['success' => true, 'message' => "Plan $plan activado hasta $fecha_fin", 'orderID' => $orderID]);
+            echo json_encode(['success' => true, 'message' => "Plan $plan activado con éxito", 'orderID' => $orderID]);
         } else {
-            echo json_encode(['success' => false, 'message' => 'Error al actualizar el usuario: ' . $conn->error]);
+            echo json_encode(['success' => false, 'message' => 'Error al activar rango: ' . $conn->error]);
         }
     } else {
-        echo json_encode(['success' => false, 'message' => 'Plan no reconocido: ' . $plan]);
+        echo json_encode(['success' => false, 'message' => 'Plan no válido: ' . $plan]);
     }
-} elseif ($status === 'PENDING' || $status === 'pending') {
-    // PAGO EN PAUSA: Registramos pero NO activamos el tipo de usuario
+} else {
+    // CUALQUIER OTRO ESTADO (PENDING, APPROVED, etc.) -> ESPERANDO PAGO
+    // Registramos la intención pero NO activamos el tipo de usuario
     $stmt_sub = $conn->prepare("INSERT INTO user_subscriptions (user_id, plan_name, fecha_fin, paypal_subscription_id, status, payment_method) VALUES (?, ?, NOW(), ?, 'pending', 'paypal')");
     
     if (!$stmt_sub) {
@@ -68,13 +66,11 @@ if ($status === 'COMPLETED' || $status === 'ACTIVE') {
     if ($stmt_sub->execute()) {
         echo json_encode([
             'success' => true, 
-            'message' => "Pago recibido pero pendiente de confirmación (eCheck/Transferencia). El plan se activará cuando se complete el proceso.",
+            'message' => "Pago en proceso (Estado: $status). El plan se activará automáticamente cuando se confirme la recepción del dinero.",
             'orderID' => $orderID,
             'status' => 'pending'
         ]);
     } else {
-        echo json_encode(['success' => false, 'message' => 'Error al registrar pago pendiente: ' . $conn->error]);
+        echo json_encode(['success' => false, 'message' => 'Error al registrar pago en espera: ' . $conn->error]);
     }
-} else {
-    echo json_encode(['success' => false, 'message' => 'Estado de pago no válido: ' . $status]);
 }
