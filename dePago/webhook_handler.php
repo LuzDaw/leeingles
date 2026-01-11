@@ -231,17 +231,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $event) {
                     
                     if ($res && $res->num_rows > 0) {
                         $has_records = true;
+                        $hoy = new DateTime();
                         while ($row = $res->fetch_assoc()):
+                            $fecha_fin = new DateTime($row['fecha_fin']);
+                            $is_expired = ($fecha_fin < $hoy && $row['status'] === 'active');
                             $is_pending = ($row['status'] === 'pending');
                             $method = $row['payment_method'] ?? 'paypal';
+                            
+                            // Determinar etiqueta de estado real
+                            $estado_label = strtoupper($row['status']);
+                            $badge_class = $row['status'];
+                            
+                            if ($is_pending) {
+                                $estado_label = 'ESPERANDO PAGO';
+                                $badge_class = 'pending';
+                            } elseif ($is_expired) {
+                                $estado_label = 'EXPIRADO';
+                                $badge_class = 'expired';
+                            }
                 ?>
                 <tr>
                     <td><strong><?php echo $row['plan_name']; ?></strong></td>
                     <td><?php echo strtoupper($method); ?></td>
                     <td><?php echo $row['created_at']; ?></td>
                     <td>
-                        <span class="badge badge-<?php echo $row['status']; ?>">
-                            <?php echo ($is_pending && $method === 'transferencia') ? 'esperando confirmacion de prueba' : strtoupper($row['status']); ?>
+                        <span class="badge badge-<?php echo $badge_class; ?>">
+                            <?php echo $estado_label; ?>
                         </span>
                     </td>
                     <td>
