@@ -102,6 +102,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['manual_action'])) {
         }
         exit;
     }
+
+    // NUEVA ACCIÓN: Simular Webhook de PayPal (Dinero recibido)
+    if ($action === 'simulate_paypal_webhook') {
+        $paypal_id = $_POST['paypal_id'] ?? '';
+        if (empty($paypal_id)) {
+            echo json_encode(['success' => false, 'message' => 'ID de PayPal no proporcionado']);
+            exit;
+        }
+
+        // Simulamos el objeto de recurso que enviaría PayPal
+        $mock_resource = [
+            'id' => $paypal_id,
+            'status' => 'COMPLETED'
+        ];
+
+        // Llamamos a la función real que procesa los webhooks
+        handleSaleCompleted($mock_resource, $conn);
+        
+        echo json_encode(['success' => true, 'message' => 'Simulación de Webhook completada. El plan debería estar activo.']);
+        exit;
+    }
 }
 
 // --- MANEJO DE WEBHOOKS REALES (POST JSON) ---
@@ -299,6 +320,8 @@ if ($user_id) {
                     <td>
                         <?php if ($is_pending && $method === 'transferencia'): ?>
                             <button onclick="confirmTransfer(<?php echo $row['id']; ?>)" class="btn btn-success">Confirmar Pago</button>
+                        <?php elseif ($is_pending && $method === 'paypal'): ?>
+                            <button onclick="simulateWebhook('<?php echo $row['paypal_subscription_id']; ?>')" class="btn btn-primary" style="font-size: 0.7rem;">Simular Pago Recibido (Webhook)</button>
                         <?php else: ?>
                             -
                         <?php endif; ?>
@@ -350,6 +373,19 @@ function confirmTransfer(subId) {
     const formData = new FormData();
     formData.append('manual_action', 'confirm_transfer');
     formData.append('sub_id', subId);
+
+    fetch('webhook_handler.php', { method: 'POST', body: formData })
+    .then(r => r.json())
+    .then(res => {
+        if (res.success) { alert(res.message); location.reload(); }
+        else alert('Error: ' + res.message);
+    });
+}
+
+function simulateWebhook(paypalId) {
+    const formData = new FormData();
+    formData.append('manual_action', 'simulate_paypal_webhook');
+    formData.append('paypal_id', paypalId);
 
     fetch('webhook_handler.php', { method: 'POST', body: formData })
     .then(r => r.json())
