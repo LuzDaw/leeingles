@@ -306,9 +306,17 @@ function confirmTransfer(subId) {
 </html>
 <?php
 function handleSaleCompleted($resource, $conn) {
+    // El ID puede venir en diferentes campos según el tipo de recurso de PayPal
     $paypal_id = $resource['id'] ?? $resource['parent_payment'] ?? $resource['billing_agreement_id'] ?? '';
+    
+    // Si no está en la raíz, buscamos en purchase_units (Estructura de Checkout V2)
+    if (empty($paypal_id) && isset($resource['purchase_units'][0]['payments']['captures'][0]['id'])) {
+        $paypal_id = $resource['purchase_units'][0]['payments']['captures'][0]['id'];
+    }
+    
     if (empty($paypal_id)) return;
 
+    // 1. Buscar la suscripción que estaba en pausa (pending) con este ID
     $stmt = $conn->prepare("SELECT id, user_id, plan_name FROM user_subscriptions WHERE paypal_subscription_id = ? AND status = 'pending' LIMIT 1");
     $stmt->bind_param("s", $paypal_id);
     $stmt->execute();
