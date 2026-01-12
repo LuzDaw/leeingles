@@ -22,8 +22,60 @@ window.practiceAlwaysShowTranslation = false;
 
 // === CONTADOR DE TIEMPO DE PRÁCTICA ===
 window.practiceStartTime = null;
-window.practiceEndTime = null;
-window.practiceDuration = null;
+window.practiceLastSaveTime = null;
+window.practiceUpdateInterval = null;
+
+// Función para guardar tiempo de práctica de forma incremental
+window.savePracticeTime = function(seconds, isFinal = false) {
+    if (seconds <= 0) return;
+    
+    const mode = window.practiceCurrentMode || 'selection';
+    const body = 'duration=' + seconds + '&mode=' + encodeURIComponent(mode);
+    
+    const options = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: body,
+        keepalive: true // Asegura que la petición se complete incluso si se cierra la pestaña
+    };
+
+    fetch('practicas/save_practice_time.php', options)
+    .catch(err => console.error("Error guardando tiempo de práctica:", err));
+};
+
+// Iniciar el temporizador de práctica
+window.startPracticeTimer = function() {
+    window.stopPracticeTimer(); // Limpiar si ya había uno
+    window.practiceStartTime = Date.now();
+    window.practiceLastSaveTime = Date.now();
+    
+    window.practiceUpdateInterval = setInterval(() => {
+        const now = Date.now();
+        const delta = Math.floor((now - window.practiceLastSaveTime) / 1000);
+        
+        if (delta >= 30) { // Guardar cada 30 segundos
+            window.savePracticeTime(delta);
+            window.practiceLastSaveTime = now;
+        }
+    }, 10000); // Revisar cada 10 segundos
+};
+
+// Detener y guardar el tiempo restante
+window.stopPracticeTimer = function() {
+    if (window.practiceUpdateInterval) {
+        clearInterval(window.practiceUpdateInterval);
+        window.practiceUpdateInterval = null;
+    }
+    
+    if (window.practiceLastSaveTime) {
+        const now = Date.now();
+        const delta = Math.floor((now - window.practiceLastSaveTime) / 1000);
+        if (delta > 0) {
+            window.savePracticeTime(delta, true);
+        }
+        window.practiceLastSaveTime = null;
+    }
+};
 
 // Flag global para saber si estamos en pantalla de resultados
 window.practiceResultsActive = false;
@@ -96,9 +148,7 @@ function initializePractice(words) {
     
     updatePracticeStats();
     loadPracticeQuestion();
-    window.practiceStartTime = Date.now();
-    window.practiceEndTime = null;
-    window.practiceDuration = null;
+    window.startPracticeTimer();
 }
 
 // Establecer modo de práctica
@@ -1184,16 +1234,7 @@ function showPracticeResults() {
         window.practiceCorrectAnswers,
         window.practiceIncorrectAnswers
     );
-    window.practiceEndTime = Date.now();
-    window.practiceDuration = Math.floor((window.practiceEndTime - window.practiceStartTime) / 1000);
-    if (window.practiceDuration && window.practiceDuration > 0) {
-        fetch('practicas/save_practice_time.php', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: 'duration=' + window.practiceDuration +
-                  '&mode=' + encodeURIComponent(window.practiceCurrentMode)
-        });
-    }
+    window.stopPracticeTimer();
     if (typeof playSuccessSound === 'function') {
         playSuccessSound();
     }
@@ -1466,6 +1507,7 @@ window.startSentencePractice = async function() {
                 document.getElementById('practice-total-questions').textContent = data.words.length;
                 updatePracticeStats();
                 loadPracticeQuestion();
+                window.startPracticeTimer();
             } else {
                 document.getElementById('practice-exercise-card').innerHTML = `
                     <div style="text-align: center; padding: 40px;">
@@ -1504,6 +1546,7 @@ window.startSentencePractice = async function() {
             window.sentenceErrors = 0;
             window.sentenceCorrectAnswers = 0;
             window.sentenceIncorrectAnswers = 0;
+            window.startPracticeTimer();
             loadSentenceQuestion();
         } else {
             document.getElementById('practice-exercise-card').innerHTML = `
@@ -1811,6 +1854,7 @@ function showSentenceResults() {
         window.sentenceCorrectAnswers,
         window.sentenceIncorrectAnswers
     );
+    window.stopPracticeTimer();
     const html = `
         <div style="text-align: center; padding: 40px;">
             <h3 style="color: #ff8a0087;">¡Práctica completada!</h3>
@@ -2306,3 +2350,10 @@ if (!window._delegacionFraseReferencia) {
   });
   window._delegacionFraseReferencia = true;
 }
+
+// Asegurar que el tiempo se guarde al cerrar la pestaña o navegar
+window.addEventListener('beforeunload', () => {
+    if (typeof window.stopPracticeTimer === 'function') {
+        window.stopPracticeTimer();
+    }
+});

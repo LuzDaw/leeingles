@@ -32,6 +32,36 @@ $stmt->close();
 // Obtener textos subidos
 $total_texts = getTotalUserTexts($user_id);
 
+// Tiempo de lectura real
+$total_reading_seconds = 0;
+$stmt_read = $conn->prepare("SELECT SUM(duration_seconds) as total_seconds FROM reading_time WHERE user_id = ?");
+if ($stmt_read) {
+    $stmt_read->bind_param("i", $user_id);
+    $stmt_read->execute();
+    $res_read = $stmt_read->get_result();
+    $row_read = $res_read->fetch_assoc();
+    $total_reading_seconds = $row_read['total_seconds'] ?? 0;
+    $stmt_read->close();
+}
+$reading_h = floor($total_reading_seconds / 3600);
+$reading_m = floor(($total_reading_seconds % 3600) / 60);
+$reading_time = "{$reading_h}h {$reading_m}m";
+
+// Tiempo de práctica real
+$total_practice_seconds = 0;
+$stmt_prac = $conn->prepare("SELECT SUM(duration_seconds) as total_seconds FROM practice_time WHERE user_id = ?");
+if ($stmt_prac) {
+    $stmt_prac->bind_param("i", $user_id);
+    $stmt_prac->execute();
+    $res_prac = $stmt_prac->get_result();
+    $row_prac = $res_prac->fetch_assoc();
+    $total_practice_seconds = $row_prac['total_seconds'] ?? 0;
+    $stmt_prac->close();
+}
+$practice_h = floor($total_practice_seconds / 3600);
+$practice_m = floor(($total_practice_seconds % 3600) / 60);
+$practice_time = "{$practice_h}h {$practice_m}m";
+
 // Obtener progreso de práctica por modo
 $practice_stats = [];
 $practice_modes = ['selection', 'writing', 'sentences'];
@@ -76,7 +106,7 @@ if (isset($_SESSION['user_id']) && (isset($_GET['text_id']) || isset($_POST['tex
         $stmt->execute();
         $stmt->bind_result($percent, $pages_read, $read_count);
         if ($stmt->fetch()) {
-            $pages_read_arr = json_decode($pages_read, true) ?: [];
+            $pages_read_arr = json_decode((string)$pages_read, true) ?: [];
             error_log('[PROGRESS][GET-RESULT] user_id=' . $user_id . ' text_id=' . $text_id . ' percent=' . intval($percent) . ' read_count=' . intval($read_count));
             header('Content-Type: application/json');
             echo json_encode(['percent' => intval($percent), 'pages_read' => $pages_read_arr, 'read_count' => intval($read_count)]);
@@ -161,6 +191,18 @@ if (isset($_SESSION['user_id']) && (isset($_GET['text_id']) || isset($_POST['tex
             <div class="stat-icon">⭐</div>
             <div class="stat-number"><?= count($practice_stats) > 0 && array_sum(array_filter(array_column($practice_stats, 'success_rate'))) > 0 ? round(array_sum(array_filter(array_column($practice_stats, 'success_rate'))) / count(array_filter(array_column($practice_stats, 'success_rate')))) : 0 ?>%</div>
             <div class="stat-label">Precisión Promedio</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">📖</div>
+            <div class="stat-number"><?= $reading_time ?></div>
+            <div class="stat-label">Tiempo de Lectura</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">🎯</div>
+            <div class="stat-number"><?= $practice_time ?></div>
+            <div class="stat-label">Tiempo de Práctica</div>
         </div>
     </div>
 

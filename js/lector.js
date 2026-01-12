@@ -48,8 +48,8 @@ function initLector() {
     }
     // Variables para el tiempo de lectura
     let readingStartTime = null;
+    let readingLastSaveTime = null;
     let readingUpdateInterval = null; // Para actualizar en tiempo real
-    let totalReadingTime = 0; // Tiempo total acumulado
     let isCurrentlyReading = false; // Estado de lectura
 
     // Helper para cancelar cualquier proveedor de TTS activo
@@ -93,14 +93,14 @@ function initLector() {
 
     // Función para actualizar tiempo en tiempo real
     function updateReadingTimeRealTime() {
-        if (readingStartTime && isCurrentlyReading) {
+        if (readingLastSaveTime && isCurrentlyReading) {
             const currentTime = Date.now();
-            const sessionTime = Math.floor((currentTime - readingStartTime) / 1000);
-            const totalTime = totalReadingTime + sessionTime;
+            const delta = Math.floor((currentTime - readingLastSaveTime) / 1000);
             
             // Solo actualizar si han pasado al menos 30 segundos desde la última actualización
-            if (sessionTime >= 30) {
-                saveReadingTime(totalTime);
+            if (delta >= 30) {
+                saveReadingTime(delta);
+                readingLastSaveTime = currentTime;
             }
         }
     }
@@ -1574,7 +1574,7 @@ function initLector() {
         
         // Resetear tiempo de lectura
         readingStartTime = null;
-        totalReadingTime = 0;
+        readingLastSaveTime = null;
         
         // Actualizar el botón flotante
         if (typeof window.updateFloatingButton === 'function') {
@@ -1585,11 +1585,12 @@ function initLector() {
     // CORRECCIÓN: Función para limpiar estados al finalizar lectura
     window.cleanupReadingStates = function() {
         // Guardar tiempo de lectura si hay una sesión activa
-        if (readingStartTime) {
+        if (readingLastSaveTime) {
             const currentTime = Date.now();
-            const sessionTime = Math.floor((currentTime - readingStartTime) / 1000);
-            totalReadingTime += sessionTime;
-            saveReadingTime(totalReadingTime);
+            const delta = Math.floor((currentTime - readingLastSaveTime) / 1000);
+            if (delta > 0) {
+                saveReadingTime(delta);
+            }
         }
         
         // Limpiar todos los estados
@@ -1607,7 +1608,7 @@ function initLector() {
         
         // Resetear tiempo
         readingStartTime = null;
-        totalReadingTime = 0;
+        readingLastSaveTime = null;
         
         // Mostrar header
         if (typeof window.showHeader === 'function') {
@@ -1659,6 +1660,7 @@ function initLector() {
         // Iniciar tiempo de lectura solo si no estaba leyendo antes
         if (!readingStartTime) {
             readingStartTime = Date.now();
+            readingLastSaveTime = Date.now();
         }
         
         // Iniciar actualización en tiempo real cada 30 segundos
@@ -1714,11 +1716,14 @@ function initLector() {
         // No resetear currentReadingIndex para mantener la posición
         
         // Acumular tiempo hasta ahora (antes de marcar como no-leyendo)
-        if (readingStartTime) {
+        if (readingLastSaveTime) {
             const currentTime = Date.now();
-            const sessionTime = Math.floor((currentTime - readingStartTime) / 1000);
-            totalReadingTime += sessionTime;
-            readingStartTime = null; // Resetear para la próxima sesión
+            const delta = Math.floor((currentTime - readingLastSaveTime) / 1000);
+            if (delta > 0) {
+                saveReadingTime(delta);
+            }
+            readingStartTime = null; 
+            readingLastSaveTime = null; // Resetear para la próxima sesión
         }
         
         if (typeof window.showHeader === 'function') {
@@ -1773,6 +1778,7 @@ function initLector() {
         
         // Reiniciar el tiempo de lectura
         readingStartTime = Date.now();
+        readingLastSaveTime = Date.now();
         
         // CORRECCIÓN: Usar la posición más reciente disponible
         let resumeIndex = currentIndex;
@@ -1841,6 +1847,11 @@ function initLector() {
     };
 
     window.resumeReading = function(arg = false) {
+        // Reiniciar el tiempo de lectura si no estaba activo
+        if (!readingLastSaveTime) {
+            readingStartTime = Date.now();
+            readingLastSaveTime = Date.now();
+        }
         // Nuevo API: arg puede ser boolean (force) o { reason, force }
         let force = false;
         let reason = null;
@@ -1967,19 +1978,18 @@ function initLector() {
         }
         
         // Acumular tiempo final y guardar
-        if (readingStartTime) {
+        if (readingLastSaveTime) {
             const currentTime = Date.now();
-            const sessionTime = Math.floor((currentTime - readingStartTime) / 1000);
-            totalReadingTime += sessionTime;
+            const delta = Math.floor((currentTime - readingLastSaveTime) / 1000);
             
-            // Guardar el tiempo total acumulado
-            if (totalReadingTime > 0) {
-                saveReadingTime(totalReadingTime);
+            // Guardar el tiempo delta
+            if (delta > 0) {
+                saveReadingTime(delta);
             }
             
             // Resetear variables
             readingStartTime = null;
-            totalReadingTime = 0;
+            readingLastSaveTime = null;
         }
         
         // Limpiar intervalo
