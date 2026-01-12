@@ -2602,14 +2602,19 @@ function render_text_clickable($text)
       }
       
       // Cargar contenido vía AJAX (sin caché para asegurar datos frescos)
+      console.log('Cargando pestaña:', tab, 'desde:', ajaxFile);
       fetch(ajaxFile, {
         cache: 'no-store',
         headers: {
           'Cache-Control': 'no-cache'
         }
       })
-        .then(response => response.text())
+        .then(response => {
+          console.log('Respuesta recibida para:', tab, 'Status:', response.status);
+          return response.text();
+        })
         .then(data => {
+          console.log('Datos recibidos para:', tab, 'Longitud:', data.length);
           tabContent.innerHTML = data;
           
           // Ejecutar scripts que puedan estar en el contenido cargado
@@ -2703,11 +2708,11 @@ function render_text_clickable($text)
   </script>
 
   <!-- Footer simple -->
-  <footer>
-    <p>
-      © 2024 LeerEntender - Aprende inglés leyendo | 📧 info@idoneoweb.es
-    </p>
-  </footer>
+ <footer>
+  <p>
+    © <span id="year"></span> LeerEntender - Aprende inglés leyendo | 📧 info@idoneoweb.es
+  </p>
+</footer>
 
   <!-- Scripts globales para las pestañas -->
   <script>

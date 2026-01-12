@@ -134,25 +134,45 @@ if (!function_exists('getWeeklyUsage')) {
         $anio = (int)date('o'); // 'o' es el año ISO-8601, mejor para semanas
         $mes = (int)date('n');
         
+        // Intentar obtener por semana (nuevo sistema)
         $stmt = $conn->prepare("SELECT contador FROM uso_traducciones WHERE user_id = ? AND semana = ? AND anio = ?");
-        if (!$stmt) return 0;
-
-        $stmt->bind_param("iii", $user_id, $semana, $anio);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        
-        if ($row = $result->fetch_assoc()) {
-            return (int)$row['contador'];
-        } else {
-            // Crear registro inicial para la semana
-            // Incluimos 'mes' porque en la estructura original es NOT NULL y sin valor por defecto
-            $stmt_init = $conn->prepare("INSERT INTO uso_traducciones (user_id, semana, mes, anio, contador) VALUES (?, ?, ?, ?, 0)");
-            if (!$stmt_init) return 0;
-
-            $stmt_init->bind_param("iiii", $user_id, $semana, $mes, $anio);
-            $stmt_init->execute();
-            return 0;
+        if ($stmt) {
+            $stmt->bind_param("iii", $user_id, $semana, $anio);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            if ($row = $result->fetch_assoc()) {
+                return (int)$row['contador'];
+            }
         }
+
+        // Si no existe por semana, intentar por mes (sistema antiguo o fallback)
+        $stmt_old = $conn->prepare("SELECT contador FROM uso_traducciones WHERE user_id = ? AND mes = ? AND anio = ? AND semana IS NULL");
+        if ($stmt_old) {
+            $stmt_old->bind_param("iii", $user_id, $mes, $anio);
+            $stmt_old->execute();
+            $result_old = $stmt_old->get_result();
+            if ($row_old = $result_old->fetch_assoc()) {
+                return (int)$row_old['contador'];
+            }
+        }
+
+        // Si no existe nada, crear registro semanal
+        // Usamos una lógica que capture el error de duplicidad para evitar el Fatal Error
+        try {
+            $stmt_init = $conn->prepare("INSERT INTO uso_traducciones (user_id, semana, mes, anio, contador) VALUES (?, ?, ?, ?, 0)");
+            if ($stmt_init) {
+                $stmt_init->bind_param("iiii", $user_id, $semana, $mes, $anio);
+                $stmt_init->execute();
+                $stmt_init->close();
+            }
+        } catch (Exception $e) {
+            // Si falla por duplicidad (índice antiguo), simplemente no hacemos nada, 
+            // ya que el registro mensual ya existe y se usará como fallback.
+        } catch (Error $e) {
+            // Capturar errores de motor de PHP
+        }
+        
+        return 0;
     }
 }
 

@@ -100,10 +100,10 @@
                     })
                     .then(() => {
                         // Redirigir al gestor de pagos para ver el estado actualizado
-                        window.location.href = '../webhook_handler.php?payment_success=1';
+                        window.location.href = 'webhook_handler.php?payment_success=1';
                     })
                     .catch(() => {
-                        window.location.href = '../webhook_handler.php?payment_success=1';
+                        window.location.href = 'webhook_handler.php?payment_success=1';
                     });
                 });
             },

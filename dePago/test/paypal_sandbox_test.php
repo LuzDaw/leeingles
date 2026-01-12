@@ -88,7 +88,7 @@ $clientId = "ATfzdeOVWZvM17U3geOdl_yV513zZfX7oCm_wa0wqog2acHfSIz846MkdZnpu7oCdWF
                 .then(res => {
                     if (res.success) {
                         alert('¡Pago completado con éxito! Ahora eres PREMIUM.');
-                        window.location.href = '../../index.php';
+                        window.location.href = 'webhook_handler.php?payment_success=1';
                     } else {
                         alert('Error al actualizar: ' + res.message);
                     }

@@ -1,8 +1,14 @@
 <?php
-session_start();
-require_once '../../db/connection.php';
-require_once '../../includes/content_functions.php';
-require_once '../../dePago/subscription_functions.php';
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+try {
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+require_once __DIR__ . '/../../db/connection.php';
+require_once __DIR__ . '/../../includes/content_functions.php';
+require_once __DIR__ . '/../../dePago/subscription_functions.php';
 
 if (!isset($_SESSION['user_id'])) {
     echo '<div style="text-align: center; padding: 40px; color: #ef4444;">Debes iniciar sesión para ver tu cuenta.</div>';
@@ -12,43 +18,58 @@ if (!isset($_SESSION['user_id'])) {
 $user_id = $_SESSION['user_id'];
 
 // Obtener datos del usuario (Placeholder para funciones futuras)
-$stmt = $conn->prepare("SELECT username, email FROM users WHERE id = ?");
-$stmt->bind_param("i", $user_id);
-$stmt->execute();
-$result = $stmt->get_result();
-$user_data = $result->fetch_assoc();
-$stmt->close();
+$user_data = ['username' => 'Usuario', 'email' => ''];
+$stmt_user = $conn->prepare("SELECT username, email FROM users WHERE id = ?");
+if ($stmt_user) {
+    $stmt_user->bind_param("i", $user_id);
+    $stmt_user->execute();
+    $result_user = $stmt_user->get_result();
+    if ($row_user = $result_user->fetch_assoc()) {
+        $user_data = $row_user;
+    }
+    $stmt_user->close();
+}
 
 // Obtener datos reales de suscripción
 $status = getUserSubscriptionStatus($user_id);
+if (!$status) {
+    echo '<div style="text-align: center; padding: 40px; color: #ef4444;">Error al obtener datos de suscripción.</div>';
+    exit;
+}
 $limit_info = checkTranslationLimit($user_id);
 
 // Obtener datos reales de actividad
 $uploaded_texts = getTotalUserTexts($user_id);
 
 // Tiempo de lectura real
-$stmt = $conn->prepare("SELECT SUM(duration_seconds) as total_seconds FROM reading_time WHERE user_id = ?");
-$stmt->bind_param("i", $user_id);
-$stmt->execute();
-$res = $stmt->get_result();
-$row = $res->fetch_assoc();
-$total_reading_seconds = $row['total_seconds'] ?? 0;
+$total_reading_seconds = 0;
+$stmt_read = $conn->prepare("SELECT SUM(duration_seconds) as total_seconds FROM reading_time WHERE user_id = ?");
+if ($stmt_read) {
+    $stmt_read->bind_param("i", $user_id);
+    $stmt_read->execute();
+    $res_read = $stmt_read->get_result();
+    $row_read = $res_read->fetch_assoc();
+    $total_reading_seconds = $row_read['total_seconds'] ?? 0;
+    $stmt_read->close();
+}
 $reading_h = floor($total_reading_seconds / 3600);
 $reading_m = floor(($total_reading_seconds % 3600) / 60);
 $reading_time = "{$reading_h}h {$reading_m}m";
-$stmt->close();
 
 // Tiempo de práctica real
-$stmt = $conn->prepare("SELECT SUM(duration_seconds) as total_seconds FROM practice_time WHERE user_id = ?");
-$stmt->bind_param("i", $user_id);
-$stmt->execute();
-$res = $stmt->get_result();
-$row = $res->fetch_assoc();
-$total_practice_seconds = $row['total_seconds'] ?? 0;
+$total_practice_seconds = 0;
+$stmt_prac = $conn->prepare("SELECT SUM(duration_seconds) as total_seconds FROM practice_time WHERE user_id = ?");
+if ($stmt_prac) {
+    $stmt_prac->bind_param("i", $user_id);
+    $stmt_prac->execute();
+    $res_prac = $stmt_prac->get_result();
+    $row_prac = $res_prac->fetch_assoc();
+    $total_practice_seconds = $row_prac['total_seconds'] ?? 0;
+    $stmt_prac->close();
+}
 $practice_h = floor($total_practice_seconds / 3600);
 $practice_m = floor(($total_practice_seconds % 3600) / 60);
 $practice_time = "{$practice_h}h {$practice_m}m";
-$stmt->close();
 
 // Mapeo de estados para visualización
 $status_labels = [
@@ -75,20 +96,22 @@ if ($status['estado_logico'] === 'EnPrueba') {
     $days = $diff->invert ? 0 : $diff->days;
     $days_remaining_text = " · $days días restantes";
 } elseif ($status['es_premium']) {
-    $stmt = $conn->prepare("SELECT fecha_inicio, fecha_fin FROM user_subscriptions WHERE user_id = ? AND status = 'active' ORDER BY fecha_fin DESC LIMIT 1");
-    $stmt->bind_param("i", $user_id);
-    $stmt->execute();
-    $res = $stmt->get_result();
-    if ($sub = $res->fetch_assoc()) {
-        $plan_start_date = date('d/m/Y', strtotime($sub['fecha_inicio']));
-        $plan_end_date = date('d/m/Y', strtotime($sub['fecha_fin']));
-        $now = new DateTime();
-        $end = new DateTime($sub['fecha_fin']);
-        $diff = $now->diff($end);
-        $days = $diff->invert ? 0 : $diff->days;
-        $days_remaining_text = " · $days días restantes";
+    $stmt_sub_active = $conn->prepare("SELECT fecha_inicio, fecha_fin FROM user_subscriptions WHERE user_id = ? AND status = 'active' ORDER BY fecha_fin DESC LIMIT 1");
+    if ($stmt_sub_active) {
+        $stmt_sub_active->bind_param("i", $user_id);
+        $stmt_sub_active->execute();
+        $res_sub_active = $stmt_sub_active->get_result();
+        if ($sub = $res_sub_active->fetch_assoc()) {
+            $plan_start_date = date('d/m/Y', strtotime($sub['fecha_inicio']));
+            $plan_end_date = date('d/m/Y', strtotime($sub['fecha_fin']));
+            $now = new DateTime();
+            $end = new DateTime($sub['fecha_fin']);
+            $diff = $now->diff($end);
+            $days = $diff->invert ? 0 : $diff->days;
+            $days_remaining_text = " · $days días restantes";
+        }
+        $stmt_sub_active->close();
     }
-    $stmt->close();
 }
 
 // Mapeo de estado simplificado para la tabla
@@ -152,7 +175,15 @@ $available_translations = max(0, $base_limit - $usage);
 
 // Obtener historial de suscripciones/pagos
 $payment_history = [];
-$stmt = $conn->prepare("SELECT plan_name, payment_method, status, created_at, fecha_fin FROM user_subscriptions WHERE user_id = ? ORDER BY created_at DESC LIMIT 5");
+// Primero verificamos si la columna payment_method existe para evitar errores
+$check_col = $conn->query("SHOW COLUMNS FROM user_subscriptions LIKE 'payment_method'");
+$has_payment_method = ($check_col && $check_col->num_rows > 0);
+
+$sql_history = $has_payment_method 
+    ? "SELECT plan_name, payment_method, status, created_at, fecha_fin FROM user_subscriptions WHERE user_id = ? ORDER BY created_at DESC LIMIT 5"
+    : "SELECT plan_name, 'paypal' as payment_method, status, created_at, fecha_fin FROM user_subscriptions WHERE user_id = ? ORDER BY created_at DESC LIMIT 5";
+
+$stmt = $conn->prepare($sql_history);
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
 $res = $stmt->get_result();
@@ -484,3 +515,16 @@ $conn->close();
         <button class="nav-btn" style="color: #64748b; font-size: 13px;">Eliminar Cuenta</button>
     </div>
 </div>
+<?php
+} catch (Exception $e) {
+    echo '<div style="padding: 20px; color: red; background: #fee2e2; border: 1px solid #ef4444; border-radius: 8px; margin: 20px;">';
+    echo '<strong>Error fatal:</strong> ' . htmlspecialchars($e->getMessage());
+    echo '<br><small>' . htmlspecialchars($e->getFile()) . ' on line ' . $e->getLine() . '</small>';
+    echo '</div>';
+} catch (Error $e) {
+    echo '<div style="padding: 20px; color: red; background: #fee2e2; border: 1px solid #ef4444; border-radius: 8px; margin: 20px;">';
+    echo '<strong>Error de PHP:</strong> ' . htmlspecialchars($e->getMessage());
+    echo '<br><small>' . htmlspecialchars($e->getFile()) . ' on line ' . $e->getLine() . '</small>';
+    echo '</div>';
+}
+?>
