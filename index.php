@@ -373,48 +373,50 @@ function render_text_clickable($text)
                   <small style="color: #666;">Si no llenas el título, se generará automáticamente con las primeras 3 palabras del texto</small>
                 </div>
 
-                <div style="margin-bottom: 15px;">
-                  <label style="display: block; margin-bottom: 5px; font-weight: bold;">Contenido:</label>
-                  <textarea name="content" id="content-input" rows="10" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;"></textarea>
-                </div>
+        <div style="margin-bottom: 15px;">
+          <label style="display: block; margin-bottom: 5px; font-weight: bold;">Contenido:</label>
+          <textarea name="content" id="content-input" rows="10" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;"></textarea>
+        </div>
 
-                <div style="margin-bottom: 15px;">
-                  <label style="display: flex; align-items: center; gap: 8px;">
-                    <input type="checkbox" name="is_public" id="is_public">
-                    <span style="font-weight: bold;">Texto público</span>
-                  </label>
-                </div>
+        <?php if (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] == 1): ?>
+        <div style="margin-bottom: 15px;">
+          <label style="display: flex; align-items: center; gap: 8px;">
+            <input type="checkbox" name="is_public" id="is_public">
+            <span style="font-weight: bold;">Texto público</span>
+          </label>
+        </div>
 
-                <div id="category_section" style="display: none; margin-bottom: 15px;">
-                  <label style="display: block; margin-bottom: 5px; font-weight: bold;">Categoría:</label>
-                  <select name="category_id" id="category_select" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
-                    <option value="0">-- Selecciona categoría --</option>
-                    <?php foreach ($categories as $cat): ?>
-                      <?php
-                      // Separar el nombre en inglés y español
-                      $parts = explode(' - ', $cat['name']);
-                      $english = $parts[0] ?? '';
-                      $spanish = $parts[1] ?? '';
-                      
-                      // Si no hay traducción, usar el nombre completo como inglés
-                      if (empty($spanish)) {
-                          $english = $cat['name'];
-                          $spanish = '';
-                      }
-                      
-                      // Formatear la opción
-                      if (!empty($spanish)) {
-                          $display_name = $english . ' - ' . $spanish;
-                      } else {
-                          $display_name = $english;
-                      }
-                      ?>
-                      <option value="<?= $cat['id'] ?>"><?= htmlspecialchars($display_name) ?></option>
-                    <?php endforeach; ?>
-                  </select>
-                </div>
+        <div id="category_section" style="display: none; margin-bottom: 15px;">
+          <label style="display: block; margin-bottom: 5px; font-weight: bold;">Categoría:</label>
+          <select name="category_id" id="category_select" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+            <option value="0">-- Selecciona categoría --</option>
+            <?php foreach ($categories as $cat): ?>
+              <?php
+              // Separar el nombre en inglés y español
+              $parts = explode(' - ', $cat['name']);
+              $english = $parts[0] ?? '';
+              $spanish = $parts[1] ?? '';
+              
+              // Si no hay traducción, usar el nombre completo como inglés
+              if (empty($spanish)) {
+                  $english = $cat['name'];
+                  $spanish = '';
+              }
+              
+              // Formatear la opción
+              if (!empty($spanish)) {
+                  $display_name = $english . ' - ' . $spanish;
+              } else {
+                  $display_name = $english;
+              }
+              ?>
+              <option value="<?= $cat['id'] ?>"><?= htmlspecialchars($display_name) ?></option>
+            <?php endforeach; ?>
+          </select>
+        </div>
+        <?php endif; ?>
 
-                <button type="submit" class="nav-btn primary" style="padding: 10px 20px;">Subir texto</button>
+        <button type="submit" class="nav-btn primary" style="padding: 10px 20px;">Subir texto</button>
               </form>
             </div>
           </div>
@@ -1051,6 +1053,7 @@ function render_text_clickable($text)
           <textarea name="content" id="content-input" rows="10" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;"></textarea>
         </div>
 
+        <?php if (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] == 1): ?>
         <div style="margin-bottom: 15px;">
           <label style="display: flex; align-items: center; gap: 8px;">
             <input type="checkbox" name="is_public" id="is_public">
@@ -1086,6 +1089,7 @@ function render_text_clickable($text)
             <?php endforeach; ?>
           </select>
         </div>
+        <?php endif; ?>
 
         <button type="submit" class="nav-btn primary" style="padding: 10px 20px;">Subir texto</button>
       </form>

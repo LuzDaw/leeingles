@@ -55,9 +55,9 @@
 }
 
 /* Aplicar a elementos específicos existentes */
-div[style*="#28a745"],
-span[style*="#28a745"],
-button[style*="#28a745"] {
+div[style*="#457B9D"],
+span[style*="#457B9D"],
+button[style*="#457B9D"] {
     color: var(--success-dark) !important;
 }
 

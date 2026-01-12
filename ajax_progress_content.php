@@ -1,4 +1,8 @@
 <?php
+/**
+ * Contenido de la pestaña de progreso
+ * Muestra estadísticas generales, tiempo de actividad y calendario
+ */
 session_start();
 require_once 'db/connection.php';
 require_once 'includes/content_functions.php';
@@ -10,7 +14,7 @@ if (!isset($_SESSION['user_id'])) {
 
 $user_id = $_SESSION['user_id'];
 
-// Obtener estadísticas de palabras guardadas
+// 1. Estadísticas de palabras guardadas
 $stmt = $conn->prepare("SELECT COUNT(*) as total_words FROM saved_words WHERE user_id = ?");
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
@@ -18,21 +22,10 @@ $result = $stmt->get_result();
 $total_words = $result->fetch_assoc()['total_words'];
 $stmt->close();
 
-// Obtener palabras guardadas por día (últimos 7 días)
-$stmt = $conn->prepare("SELECT DATE(created_at) as date, COUNT(*) as count FROM saved_words WHERE user_id = ? AND created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY) GROUP BY DATE(created_at) ORDER BY date DESC");
-$stmt->bind_param("i", $user_id);
-$stmt->execute();
-$result = $stmt->get_result();
-$daily_words = [];
-while ($row = $result->fetch_assoc()) {
-    $daily_words[$row['date']] = $row['count'];
-}
-$stmt->close();
-
-// Obtener textos subidos
+// 2. Textos subidos
 $total_texts = getTotalUserTexts($user_id);
 
-// Tiempo de lectura real
+// 3. Tiempo de lectura acumulado
 $total_reading_seconds = 0;
 $stmt_read = $conn->prepare("SELECT SUM(duration_seconds) as total_seconds FROM reading_time WHERE user_id = ?");
 if ($stmt_read) {
@@ -47,7 +40,7 @@ $reading_h = floor($total_reading_seconds / 3600);
 $reading_m = floor(($total_reading_seconds % 3600) / 60);
 $reading_time = "{$reading_h}h {$reading_m}m";
 
-// Tiempo de práctica real
+// 4. Tiempo de práctica acumulado
 $total_practice_seconds = 0;
 $stmt_prac = $conn->prepare("SELECT SUM(duration_seconds) as total_seconds FROM practice_time WHERE user_id = ?");
 if ($stmt_prac) {
@@ -62,24 +55,7 @@ $practice_h = floor($total_practice_seconds / 3600);
 $practice_m = floor(($total_practice_seconds % 3600) / 60);
 $practice_time = "{$practice_h}h {$practice_m}m";
 
-// Obtener progreso de práctica por modo
-$practice_stats = [];
-$practice_modes = ['selection', 'writing', 'sentences'];
-foreach ($practice_modes as $mode) {
-    $stmt = $conn->prepare("SELECT 
-        COUNT(*) as total_attempts,
-        AVG(accuracy) as success_rate,
-        SUM(total_words) as unique_words
-        FROM practice_progress 
-        WHERE user_id = ? AND mode = ?");
-    $stmt->bind_param("is", $user_id, $mode);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $practice_stats[$mode] = $result->fetch_assoc();
-    $stmt->close();
-}
-
-// Obtener número de textos leídos al 100%
+// 5. Textos completados (100%)
 $read_texts_count = 0;
 $stmt = $conn->prepare("SELECT COUNT(*) as read_count FROM reading_progress WHERE user_id = ? AND percent >= 100");
 $stmt->bind_param("i", $user_id);
@@ -88,58 +64,39 @@ $result = $stmt->get_result();
 $read_texts_count = $result->fetch_assoc()['read_count'];
 $stmt->close();
 
-// === PROGRESO DE LECTURA AJAX ===
-if (isset($_SESSION['user_id']) && (isset($_GET['text_id']) || isset($_POST['text_id']))) {
-    $user_id = $_SESSION['user_id'];
+// Manejo de peticiones AJAX para progreso de lectura (Legacy support)
+if (isset($_GET['text_id']) || isset($_POST['text_id'])) {
     $text_id = isset($_GET['text_id']) ? intval($_GET['text_id']) : intval($_POST['text_id']);
-    // --- GET: Recuperar progreso ---
+    
     if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-        error_log('[PROGRESS][GET] user_id=' . $user_id . ' text_id=' . $text_id);
-        $q = $conn->query("SHOW TABLES LIKE 'reading_progress'");
-        if ($q->num_rows === 0) {
-            header('Content-Type: application/json');
-            echo json_encode(['error' => 'No existe la tabla reading_progress']);
-            exit;
-        }
         $stmt = $conn->prepare("SELECT percent, pages_read, read_count FROM reading_progress WHERE user_id = ? AND text_id = ?");
         $stmt->bind_param('ii', $user_id, $text_id);
         $stmt->execute();
         $stmt->bind_result($percent, $pages_read, $read_count);
         if ($stmt->fetch()) {
             $pages_read_arr = json_decode((string)$pages_read, true) ?: [];
-            error_log('[PROGRESS][GET-RESULT] user_id=' . $user_id . ' text_id=' . $text_id . ' percent=' . intval($percent) . ' read_count=' . intval($read_count));
             header('Content-Type: application/json');
             echo json_encode(['percent' => intval($percent), 'pages_read' => $pages_read_arr, 'read_count' => intval($read_count)]);
         } else {
-            error_log('[PROGRESS][GET-EMPTY] user_id=' . $user_id . ' text_id=' . $text_id);
             header('Content-Type: application/json');
             echo json_encode(['percent' => 0, 'pages_read' => [], 'read_count' => 0]);
         }
         $stmt->close();
         exit;
     }
-    // --- POST: Guardar progreso ---
+    
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['percent']) && isset($_POST['pages_read'])) {
-        error_log('[PROGRESS][POST] user_id=' . $user_id . ' text_id=' . $text_id . ' percent=' . $_POST['percent']);
-        $q = $conn->query("SHOW TABLES LIKE 'reading_progress'");
-        if ($q->num_rows === 0) {
-            header('Content-Type: application/json');
-            echo json_encode(['error' => 'No existe la tabla reading_progress']);
-            exit;
-        }
         $percent = intval($_POST['percent']);
         $pages_read = $_POST['pages_read'];
-        // Solo actualizar si el nuevo porcentaje es mayor
+        
         $stmt = $conn->prepare("SELECT percent, read_count FROM reading_progress WHERE user_id = ? AND text_id = ?");
         $stmt->bind_param('ii', $user_id, $text_id);
         $stmt->execute();
         $stmt->bind_result($old_percent, $old_read_count);
+        
         if ($stmt->fetch()) {
             $stmt->close();
-            $new_read_count = $old_read_count;
-            if ($percent >= 100 && $old_percent < 100) {
-                $new_read_count = $old_read_count + 1;
-            }
+            $new_read_count = ($percent >= 100 && $old_percent < 100) ? $old_read_count + 1 : $old_read_count;
             $stmt2 = $conn->prepare("UPDATE reading_progress SET percent = ?, pages_read = ?, updated_at = NOW(), read_count = ? WHERE user_id = ? AND text_id = ?");
             $stmt2->bind_param('isiii', $percent, $pages_read, $new_read_count, $user_id, $text_id);
             $stmt2->execute();
@@ -162,6 +119,7 @@ if (isset($_SESSION['user_id']) && (isset($_GET['text_id']) || isset($_POST['tex
 <link rel="stylesheet" href="css/progress-styles.css">
 
 <div class="tab-content-wrapper">
+    <!-- Grid de Estadísticas Principales -->
     <div class="stats-grid">
         <div class="stat-card clickable-stat" onclick="switchToTab('texts')" title="Ver mis textos">
             <div class="stat-icon">📄</div>
@@ -180,8 +138,6 @@ if (isset($_SESSION['user_id']) && (isset($_GET['text_id']) || isset($_POST['tex
             <div class="stat-number"><?= $total_words ?></div>
             <div class="stat-label">Palabras Guardadas</div>
         </div>
-        
-      
 
         <div class="stat-card">
             <div class="stat-icon">📖</div>
@@ -196,57 +152,53 @@ if (isset($_SESSION['user_id']) && (isset($_GET['text_id']) || isset($_POST['tex
         </div>
     </div>
 
-    <?php if (!empty($daily_words)): ?>
-   <div class="progress-section">
-  <h3>📈 Actividad Reciente (Últimos 7 días) - Práctica y Lectura</h3>
-  
-  <!-- Layout horizontal para calendario y actividad reciente -->
-  <div class="progress-layout">
-    <!-- Calendario -->
-    <div class="calendar-section">
-      <div class="calendar-container">
-        <div class="calendar-header">
-          <div class="month-navigator">
-            <button class="calendar-nav-btn" onclick="previousMonth()">‹</button>
-            <h2 class="current-month">Julio 2025</h2>
-            <button class="calendar-nav-btn" onclick="nextMonth()">›</button>
-          </div>
-          <button class="calendar-nav-btn" onclick="updateCalendarNow()" style="background: #28a745; color: white; border-color: #28a745;">🔄</button>
-        </div>
+    <!-- Sección de Actividad Reciente -->
+    <div class="progress-section">
+        <h3>📈 Actividad Reciente - Práctica y Lectura</h3>
         
-        <div class="calendar-grid">
-          <!-- Días de la semana -->
-          <div class="day-header">Dom</div>
-          <div class="day-header">Lun</div>
-          <div class="day-header">Mar</div>
-          <div class="day-header">Mié</div>
-          <div class="day-header">Jue</div>
-          <div class="day-header">Vie</div>
-          <div class="day-header">Sáb</div>
-          
-          <!-- Los días se cargarán dinámicamente -->
-        </div>
-      </div>
-    </div>
+        <div class="progress-layout">
+            <!-- Calendario de Actividad -->
+            <div class="calendar-section">
+                <div class="calendar-container">
+                    <div class="calendar-header">
+                        <div class="month-navigator">
+                            <button class="calendar-nav-btn" onclick="previousMonth()" title="Mes anterior">‹</button>
+                            <h2 class="current-month">Cargando...</h2>
+                            <button class="calendar-nav-btn" onclick="nextMonth()" title="Mes siguiente">›</button>
+                        </div>
+                        <button class="calendar-nav-btn" onclick="updateCalendarNow()" title="Actualizar">🔄</button>
+                    </div>
+                    
+                    <div class="calendar-grid">
+                        <div class="day-header">Dom</div>
+                        <div class="day-header">Lun</div>
+                        <div class="day-header">Mar</div>
+                        <div class="day-header">Mié</div>
+                        <div class="day-header">Jue</div>
+                        <div class="day-header">Vie</div>
+                        <div class="day-header">Sáb</div>
+                        <!-- Los días se cargan vía JS -->
+                    </div>
+                </div>
+            </div>
 
-    <!-- Progreso de Práctica -->
-    <div class="activity-section">
-        <h3>🎯 Progreso de Práctica por Modo</h3>
-        <div class="practice-modes" id="practice-modes-container">
-            <div style="text-align: center; padding: 20px; color: #6b7280;">
-                <div class="loading-spinner"></div>
-                <p>Cargando estadísticas...</p>
+            <!-- Estadísticas de Práctica por Modo -->
+            <div class="activity-section">
+                <h3>🎯 Progreso de Práctica por Modo</h3>
+                <div class="practice-modes" id="practice-modes-container">
+                    <div style="text-align: center; padding: 20px; color: #6b7280;">
+                        <div class="loading-spinner"></div>
+                        <p>Cargando estadísticas...</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-  </div>
-</div>
-    <?php endif; ?>
-
-
 
     <script>
-    // Cargar estadísticas de práctica
+    /**
+     * Carga las estadísticas detalladas de práctica
+     */
     async function loadPracticeStats() {
         try {
             const response = await fetch('practicas/get_practice_stats.php');
@@ -303,38 +255,24 @@ if (isset($_SESSION['user_id']) && (isset($_GET['text_id']) || isset($_POST['tex
                     `;
                 }
                 
-                if (container) {
-                    container.innerHTML = html;
-                }
-            } else {
-                // Error cargando estadísticas
+                if (container) container.innerHTML = html;
             }
         } catch (error) {
             const container = document.getElementById('practice-modes-container');
             if (container) {
-                container.innerHTML = `
-                    <div style="text-align: center; padding: 40px; color: #dc2626;">
-                        <p>Error cargando estadísticas de práctica.</p>
-                    </div>
-                `;
+                container.innerHTML = '<div style="text-align: center; padding: 40px; color: #dc2626;"><p>Error cargando estadísticas.</p></div>';
             }
         }
     }
     
-    // Cargar estadísticas cuando se carga la página
+    // Inicialización
     loadPracticeStats();
     
-    // Inicializar calendario
     if (typeof initializeCalendar === 'function') {
         initializeCalendar();
     } else {
-        // Esperar a que se cargue el script del calendario
         setTimeout(() => {
-            if (typeof initializeCalendar === 'function') {
-                initializeCalendar();
-            } else {
-                // No se pudo inicializar el calendario
-            }
+            if (typeof initializeCalendar === 'function') initializeCalendar();
         }, 1000);
     }
     </script>

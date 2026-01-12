@@ -32,47 +32,32 @@ $start_date = date('Y-m-d', $first_day);
 $end_date = date('Y-m-d', $last_day);
 
 try {
-    // Consulta para obtener tiempo de lectura por día
-    $query_reading = "
-        SELECT 
-            DATE(created_at) as activity_date,
-            SUM(duration_seconds) as total_seconds
-        FROM reading_time 
-        WHERE user_id = ? 
-        AND DATE(created_at) BETWEEN ? AND ?
-        GROUP BY DATE(created_at)
+    // Consulta consolidada para obtener tiempo de lectura y práctica por día
+    $query = "
+        SELECT activity_date, SUM(reading_seconds) as reading_seconds, SUM(practice_seconds) as practice_seconds
+        FROM (
+            SELECT DATE(created_at) as activity_date, duration_seconds as reading_seconds, 0 as practice_seconds
+            FROM reading_time 
+            WHERE user_id = ? AND DATE(created_at) BETWEEN ? AND ?
+            UNION ALL
+            SELECT DATE(created_at) as activity_date, 0 as reading_seconds, duration_seconds as practice_seconds
+            FROM practice_time 
+            WHERE user_id = ? AND DATE(created_at) BETWEEN ? AND ?
+        ) as combined_activity
+        GROUP BY activity_date
     ";
     
-    $stmt = $conn->prepare($query_reading);
-    $stmt->bind_param("iss", $user_id, $start_date, $end_date);
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("ississ", $user_id, $start_date, $end_date, $user_id, $start_date, $end_date);
     $stmt->execute();
     $result = $stmt->get_result();
     
-    $reading_data = [];
+    $activity_by_date = [];
     while ($row = $result->fetch_assoc()) {
-        $reading_data[$row['activity_date']] = intval($row['total_seconds']);
-    }
-    $stmt->close();
-
-    // Consulta para obtener tiempo de práctica por día
-    $query_practice = "
-        SELECT 
-            DATE(created_at) as activity_date,
-            SUM(duration_seconds) as total_seconds
-        FROM practice_time 
-        WHERE user_id = ? 
-        AND DATE(created_at) BETWEEN ? AND ?
-        GROUP BY DATE(created_at)
-    ";
-    
-    $stmt = $conn->prepare($query_practice);
-    $stmt->bind_param("iss", $user_id, $start_date, $end_date);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    
-    $practice_data = [];
-    while ($row = $result->fetch_assoc()) {
-        $practice_data[$row['activity_date']] = intval($row['total_seconds']);
+        $activity_by_date[$row['activity_date']] = [
+            'reading' => intval($row['reading_seconds']),
+            'practice' => intval($row['practice_seconds'])
+        ];
     }
     $stmt->close();
     
@@ -84,12 +69,9 @@ try {
         $date_key = date('Y-m-d', $current_date);
         $day_number = date('j', $current_date);
         
-        $reading_seconds = isset($reading_data[$date_key]) ? $reading_data[$date_key] : 0;
-        $practice_seconds = isset($practice_data[$date_key]) ? $practice_data[$date_key] : 0;
+        $reading_seconds = $activity_by_date[$date_key]['reading'] ?? 0;
+        $practice_seconds = $activity_by_date[$date_key]['practice'] ?? 0;
         $total_seconds_day = $reading_seconds + $practice_seconds;
-        
-        // Convertir segundos a formato legible
-        $formatted_time = formatReadingTime($total_seconds_day);
         
         $calendar_data[] = [
             'date' => $date_key,
@@ -97,7 +79,7 @@ try {
             'seconds' => $total_seconds_day,
             'reading_seconds' => $reading_seconds,
             'practice_seconds' => $practice_seconds,
-            'formatted_time' => $formatted_time,
+            'formatted_time' => formatReadingTime($total_seconds_day),
             'formatted_reading' => formatReadingTime($reading_seconds),
             'formatted_practice' => formatReadingTime($practice_seconds),
             'has_activity' => $total_seconds_day > 0
@@ -136,7 +118,9 @@ try {
     echo json_encode(['error' => 'Error al obtener datos del calendario: ' . $e->getMessage()]);
 }
 
-// Función para formatear tiempo de lectura
+/**
+ * Formatea segundos en una cadena legible (ej: 1h 20m o 45 min)
+ */
 function formatReadingTime($seconds) {
     if ($seconds == 0) {
         return '0 min';

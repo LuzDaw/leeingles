@@ -53,7 +53,7 @@ window.startPracticeTimer = function() {
         const now = Date.now();
         const delta = Math.floor((now - window.practiceLastSaveTime) / 1000);
         
-        if (delta >= 30) { // Guardar cada 30 segundos
+        if (delta >= 10) { // Guardar cada 10 segundos
             window.savePracticeTime(delta);
             window.practiceLastSaveTime = now;
         }

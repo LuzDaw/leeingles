@@ -125,13 +125,12 @@ error_log("[DEBUG] Own texts query returned " . $result->num_rows . " rows for u
                     <button type="button" onclick="selectAllTexts()">✓ Marcar todos</button>
                     <button type="button" onclick="unselectAllTexts()">✗ Desmarcar todos</button>
                     <button type="button" onclick="performBulkAction('delete')" style="color: #dc2626;">🗑️ Eliminar seleccionados</button>
-                    <button type="button" onclick="performBulkAction('make_public')" style="color: #eaa827;">🌍 Hacer públicos</button>
                     <button type="button" onclick="performBulkAction('print')">🖨️ Imprimir seleccionados</button>
                 </div>
             </div>
         </div>
         <!-- SIEMPRE mostrar el dropdown de textos públicos -->
-        <div class="dropdown" id="publicTextsDropdown" style="position: relative; margin-top: 16px;">
+        <div class="dropdown" id="publicTextsDropdown" style="position: relative; margin-top: 16px;background:#ff8a00 ;box-shadow: 0 2px 4px rgba(0,0,0,0.1);border-radius: 8px;">
             <button class="nav-btn" id="publicTextsBtn" onclick="togglePublicTextsDropdown(event)">
                 Textos públicos ▼
             </button>

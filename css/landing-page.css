@@ -419,7 +419,7 @@
 
 .pricing-features li::before {
     content: "✓";
-    color: #28a745;
+    color: #457B9D;
     font-weight: bold;
 }
 

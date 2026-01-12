@@ -12,7 +12,7 @@ echo "<title>Verificación de Cambios</title>";
 echo "<style>";
 echo "body { font-family: Arial, sans-serif; max-width: 900px; margin: 50px auto; padding: 20px; }";
 echo ".check { margin: 15px 0; padding: 15px; border-radius: 4px; }";
-echo ".ok { background-color: #d4edda; color: #155724; border-left: 4px solid #28a745; }";
+echo ".ok { background-color: #d4edda; color: #155724; border-left: 4px solid #457B9D; }";
 echo ".error { background-color: #f8d7da; color: #721c24; border-left: 4px solid #dc3545; }";
 echo ".warning { background-color: #fff3cd; color: #856404; border-left: 4px solid #ffc107; }";
 echo "h1 { color: #333; border-bottom: 2px solid #007bff; padding-bottom: 10px; }";
@@ -220,7 +220,7 @@ echo "<table>";
 echo "<tr><th>Componente</th><th>Verificación</th><th>Estado</th></tr>";
 
 foreach ($checks as $check) {
-    $statusColor = $check[3] === 'OK' ? '#28a745' : ($check[3] === 'ERROR' ? '#dc3545' : '#ffc107');
+    $statusColor = $check[3] === 'OK' ? '#457B9D' : ($check[3] === 'ERROR' ? '#dc3545' : '#ffc107');
     echo "<tr>";
     echo "<td>" . htmlspecialchars($check[0]) . "</td>";
     echo "<td>" . htmlspecialchars($check[1]) . " - " . htmlspecialchars($check[2]) . "</td>";

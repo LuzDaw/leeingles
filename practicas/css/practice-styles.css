@@ -30,6 +30,10 @@
     COLOR: #000000;
 }
 
+#publicTextsBtn {
+  color: #ffffff;
+}
+
 /* Botón de ayuda de traducción */
 .translation-help-container {
     text-align: right;
@@ -572,10 +576,11 @@
     border: none;
     cursor: pointer;
     font-size: 14px;
+    
 }
 
 .nav-btn:hover {
-    background: #4b5563;
+    background: #346ab6;
     transform: translateY(-1px);
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }

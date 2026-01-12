@@ -144,6 +144,7 @@ $conn->close();
         <label for="content-input" class="upload-label">Contenido:</label>
         <textarea name="content" id="content-input" class="upload-textarea" rows="4"></textarea>
       </div>
+      <?php if (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] == 1): ?>
       <div class="upload-form-group">
         <label class="upload-label" style="display: flex; align-items: center; gap: 8px;">
           <input type="checkbox" name="is_public" id="is_public">
@@ -215,6 +216,7 @@ $conn->close();
             <input type="hidden" name="category_id" id="category_id_input" value="0">
         </div>
       </div>
+      <?php endif; ?>
       <button type="submit" class="nav-btn primary">Subir texto</button>
     </form>
   </div>
