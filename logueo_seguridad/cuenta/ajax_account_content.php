@@ -81,6 +81,20 @@ $status_labels = [
 ];
 
 $account_status = $status_labels[$status['estado_logico']] ?? 'Desconocido';
+
+// Verificar si hay algún pago pendiente para mostrarlo en el estado
+$pending_sub = null;
+$stmt_pending = $conn->prepare("SELECT plan_name, payment_method, created_at FROM user_subscriptions WHERE user_id = ? AND status = 'pending' ORDER BY created_at DESC LIMIT 1");
+if ($stmt_pending) {
+    $stmt_pending->bind_param("i", $user_id);
+    $stmt_pending->execute();
+    $res_pending = $stmt_pending->get_result();
+    if ($row_pending = $res_pending->fetch_assoc()) {
+        $pending_sub = $row_pending;
+    }
+    $stmt_pending->close();
+}
+
 $free_month_start = date('d/m/Y', strtotime($status['fecha_registro']));
 $free_month_end = date('d/m/Y', strtotime($status['fin_mes_gratuito']));
 
@@ -116,7 +130,10 @@ if ($status['estado_logico'] === 'EnPrueba') {
 
 // Mapeo de estado simplificado para la tabla
 $simple_status = 'limitado';
-if ($status['estado_logico'] === 'EnPrueba') {
+if ($pending_sub) {
+    $simple_status = 'pendiente';
+    $account_status = "Pendiente: " . ($status_labels[$pending_sub['plan_name']] ?? $pending_sub['plan_name']);
+} elseif ($status['estado_logico'] === 'EnPrueba') {
     $simple_status = 'prueba';
 } elseif ($status['es_premium']) {
     $simple_status = 'premium';
@@ -127,6 +144,17 @@ $has_premium = $status['es_premium'];
 $is_trial_active = $status['es_periodo_gratuito'];
 $next_reset_date = date('d/m/Y', strtotime($status['proximo_reinicio_semanal']));
 $plan_table_rows = [];
+
+// 0. Fila de Plan Pendiente (Si existe)
+if ($pending_sub) {
+    $plan_table_rows[] = [
+        'activo' => '⏳',
+        'caracteristica' => '<span style="color: #d97706;">Pago en proceso: ' . ($status_labels[$pending_sub['plan_name']] ?? $pending_sub['plan_name']) . ' (' . strtoupper($pending_sub['payment_method']) . ')</span>',
+        'inicio' => date('d/m/Y', strtotime($pending_sub['created_at'])),
+        'fin' => 'Esperando confirmación',
+        'clase' => 'row-pending'
+    ];
+}
 
 // 1. Fila de Plan Premium
 if ($has_premium) {
@@ -331,7 +359,11 @@ $conn->close();
     .badge-status.prueba { background: #fef9c3; color: #854d0e; border: 1px solid #fef08a; }
     .badge-status.premium { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
     .badge-status.limitado { background: #f1f5f9; color: #475569; border: 1px solid #e2e8f0; }
+    .badge-status.pendiente { background: #fff7ed; color: #c2410c; border: 1px solid #fdba74; }
 
+    .row-pending {
+        background: #fffcf9;
+    }
     .row-faint {
         opacity: 0.5;
         background: #fcfcfc;
@@ -456,7 +488,7 @@ $conn->close();
                 <?php foreach ($payment_history as $pay): 
                     $pay_status_class = 'limitado';
                     if ($pay['status'] === 'active') $pay_status_class = 'premium';
-                    if ($pay['status'] === 'pending') $pay_status_class = 'prueba';
+                    if ($pay['status'] === 'pending') $pay_status_class = 'pendiente';
                 ?>
                 <tr>
                     <td style="font-weight: 600;"><?= htmlspecialchars($pay['plan_name']) ?></td>
