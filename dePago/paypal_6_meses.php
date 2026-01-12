@@ -21,19 +21,29 @@
                     });
                 },
                 onApprove: function(data, actions) {
-                    fetch('dePago/ajax_confirm_payment.php', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                        body: 'orderID=' + data.subscriptionID + '&status=ACTIVE&plan=Ahorro'
-                    })
-                    .then(r => r.json())
-                    .then(res => {
-                        if (res.success) {
-                            alert('¡Plan Ahorro activado con éxito!');
-                            window.location.reload();
-                        } else {
-                            alert('Error: ' + res.message);
-                        }
+                    // Obtener el estado real de la suscripción desde PayPal
+                    return actions.subscription.get().then(function(details) {
+                        var realStatus = details.status; // ACTIVE, PENDING, etc.
+                        
+                        fetch('dePago/ajax_confirm_payment.php', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                            body: 'orderID=' + data.subscriptionID + '&status=' + realStatus + '&plan=Ahorro'
+                        })
+                        .then(r => r.json())
+                        .then(res => {
+                            if (res.success) {
+                                if (realStatus === 'ACTIVE') {
+                                    alert('¡Plan Ahorro activado con éxito!');
+                                    window.location.href = 'index.php?payment_success=1';
+                                } else {
+                                    // Caso de pago pendiente (eCheck / Cargo en cuenta)
+                                    window.location.href = 'index.php?payment_pending=1';
+                                }
+                            } else {
+                                alert('Error: ' + res.message);
+                            }
+                        });
                     });
                 }
             }).render('#' + containerId);

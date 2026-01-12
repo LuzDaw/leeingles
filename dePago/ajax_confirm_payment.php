@@ -20,8 +20,8 @@ $orderID = $_POST['orderID'] ?? '';
 $status = strtoupper($_POST['status'] ?? '');
 $plan = $_POST['plan'] ?? 'desconocido';
 
-// REGLA DE ORO: Solo el estado COMPLETED activa el plan inmediatamente.
-if ($status === 'COMPLETED') {
+// REGLA DE ORO: Solo el estado COMPLETED (Pagos únicos) o ACTIVE (Suscripciones) activa el plan inmediatamente.
+if ($status === 'COMPLETED' || $status === 'ACTIVE') {
     $result = activateUserPlan($user_id, $plan, $orderID, 'paypal');
     if ($result['success']) {
         $result['orderID'] = $orderID;

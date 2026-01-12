@@ -379,6 +379,10 @@ $conn->close();
     if (isset($_GET['payment_success'])) {
         include '../../dePago/payment_success_modal.php';
     }
+    // Si venimos de un pago pendiente (eCheck / Cargo en cuenta)
+    if (isset($_GET['payment_pending']) || $pending_sub) {
+        include '../../dePago/payment_pending_modal.php';
+    }
     ?>
     <!-- 1️⃣ Encabezado – Identidad del usuario -->
     <div class="dashboard-section" style="margin-bottom: 32px;">
