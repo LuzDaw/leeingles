@@ -33,26 +33,48 @@ $end_date = date('Y-m-d', $last_day);
 
 try {
     // Consulta para obtener tiempo de lectura por día
-    $query = "
+    $query_reading = "
         SELECT 
-            DATE(created_at) as reading_date,
+            DATE(created_at) as activity_date,
             SUM(duration_seconds) as total_seconds
         FROM reading_time 
         WHERE user_id = ? 
         AND DATE(created_at) BETWEEN ? AND ?
         GROUP BY DATE(created_at)
-        ORDER BY reading_date
     ";
     
-    $stmt = $conn->prepare($query);
+    $stmt = $conn->prepare($query_reading);
     $stmt->bind_param("iss", $user_id, $start_date, $end_date);
     $stmt->execute();
     $result = $stmt->get_result();
     
     $reading_data = [];
     while ($row = $result->fetch_assoc()) {
-        $reading_data[$row['reading_date']] = intval($row['total_seconds']);
+        $reading_data[$row['activity_date']] = intval($row['total_seconds']);
     }
+    $stmt->close();
+
+    // Consulta para obtener tiempo de práctica por día
+    $query_practice = "
+        SELECT 
+            DATE(created_at) as activity_date,
+            SUM(duration_seconds) as total_seconds
+        FROM practice_time 
+        WHERE user_id = ? 
+        AND DATE(created_at) BETWEEN ? AND ?
+        GROUP BY DATE(created_at)
+    ";
+    
+    $stmt = $conn->prepare($query_practice);
+    $stmt->bind_param("iss", $user_id, $start_date, $end_date);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    
+    $practice_data = [];
+    while ($row = $result->fetch_assoc()) {
+        $practice_data[$row['activity_date']] = intval($row['total_seconds']);
+    }
+    $stmt->close();
     
     // Generar datos para todos los días del mes
     $calendar_data = [];
@@ -62,17 +84,23 @@ try {
         $date_key = date('Y-m-d', $current_date);
         $day_number = date('j', $current_date);
         
-        $seconds = isset($reading_data[$date_key]) ? $reading_data[$date_key] : 0;
+        $reading_seconds = isset($reading_data[$date_key]) ? $reading_data[$date_key] : 0;
+        $practice_seconds = isset($practice_data[$date_key]) ? $practice_data[$date_key] : 0;
+        $total_seconds_day = $reading_seconds + $practice_seconds;
         
         // Convertir segundos a formato legible
-        $formatted_time = formatReadingTime($seconds);
+        $formatted_time = formatReadingTime($total_seconds_day);
         
         $calendar_data[] = [
             'date' => $date_key,
             'day' => $day_number,
-            'seconds' => $seconds,
+            'seconds' => $total_seconds_day,
+            'reading_seconds' => $reading_seconds,
+            'practice_seconds' => $practice_seconds,
             'formatted_time' => $formatted_time,
-            'has_activity' => $seconds > 0
+            'formatted_reading' => formatReadingTime($reading_seconds),
+            'formatted_practice' => formatReadingTime($practice_seconds),
+            'has_activity' => $total_seconds_day > 0
         ];
         
         $current_date = strtotime('+1 day', $current_date);
@@ -123,4 +151,4 @@ function formatReadingTime($seconds) {
         return $minutes . ' min';
     }
 }
-?> 
+?>

@@ -104,12 +104,19 @@ function updateCalendarDays(calendarData) {
         const hasActivity = dayData.has_activity;
         const timeClass = dayData.seconds === 0 ? 'zero' : '';
         
-        // Debug logs removidos
+        // Preparar tooltip con desglose
+        let tooltipText = 'Sin actividad';
+        if (hasActivity) {
+            tooltipText = `Total: ${dayData.formatted_time}`;
+            if (dayData.reading_seconds > 0 || dayData.practice_seconds > 0) {
+                tooltipText += ` (Lectura: ${dayData.formatted_reading}, Práctica: ${dayData.formatted_practice})`;
+            }
+        }
         
         newHTML += `
             <div class="calendar-day ${isToday ? 'today' : ''} ${hasActivity ? 'has-activity' : ''}" 
                  data-date="${dayData.date}" 
-                 data-tooltip="${hasActivity ? 'Tiempo de lectura: ' + dayData.formatted_time : 'Sin actividad'}">
+                 data-tooltip="${tooltipText}">
                 <div class="day-number">${day}</div>
                 <div class="reading-time ${timeClass}">${dayData.formatted_time}</div>
             </div>
@@ -178,4 +185,4 @@ window.previousMonth = previousMonth;
 window.nextMonth = nextMonth;
 window.initializeCalendar = initializeCalendar;
 
-// Logs removidos - sistema de logs eliminado 
+// Logs removidos - sistema de logs eliminado
