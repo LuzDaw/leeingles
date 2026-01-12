@@ -181,17 +181,7 @@ if (isset($_SESSION['user_id']) && (isset($_GET['text_id']) || isset($_POST['tex
             <div class="stat-label">Palabras Guardadas</div>
         </div>
         
-        <div class="stat-card">
-            <div class="stat-icon">🎯</div>
-            <div class="stat-number"><?= array_sum(array_filter(array_column($practice_stats, 'total_attempts'))) ?></div>
-            <div class="stat-label">Sesiones de Práctica</div>
-        </div>
-        
-        <div class="stat-card">
-            <div class="stat-icon">⭐</div>
-            <div class="stat-number"><?= count($practice_stats) > 0 && array_sum(array_filter(array_column($practice_stats, 'success_rate'))) > 0 ? round(array_sum(array_filter(array_column($practice_stats, 'success_rate'))) / count(array_filter(array_column($practice_stats, 'success_rate')))) : 0 ?>%</div>
-            <div class="stat-label">Precisión Promedio</div>
-        </div>
+      
 
         <div class="stat-card">
             <div class="stat-icon">📖</div>
