@@ -336,7 +336,104 @@ $stmt->close();
     .row-faint td {
         color: #94a3b8 !important;
     }
+    /* Asegurar que los contenedores de PayPal tengan altura para ser visibles */
+    .paypal-button-container {
+        min-height: 150px;
+        margin-top: 15px;
+        width: 100%;
+        border: 1px dashed #e2e8f0;
+        border-radius: 8px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: #ffffff;
+        overflow: hidden;
+    }
 </style>
+
+<script>
+    // Cargador único del SDK para pagos únicos (Capture) con namespace dedicado
+    (function() {
+        if (!window.paypalUnicoLoaded) {
+            window.paypalUnicoLoaded = true;
+            console.log('Cargando SDK PayPal Unico...');
+            var script = document.createElement('script');
+            // Usamos el Client ID verificado y forzamos el namespace paypalUnico
+            script.src = "https://www.paypal.com/sdk/js?client-id=AaQy-0aO2EsQkF7YAotIavQcHXwRF96D6ygaBfIDNLzojTuRAhp0dGON4oh9mmpbX_HIcd7zichV_K6F&currency=EUR";
+            script.setAttribute('data-namespace', 'paypalUnico');
+            script.async = true;
+            document.head.appendChild(script);
+        }
+    })();
+
+    // Función global de inicialización replicando sandbox_minimal.php
+    window.initUnicoButton = function(containerId, amount, description, planName) {
+        var container = document.getElementById(containerId);
+        if (!container) return;
+
+        // Verificamos el namespace paypalUnico
+        if (typeof window.paypalUnico === 'undefined') {
+            if (!container.innerHTML.includes('Cargando')) {
+                container.innerHTML = '<div style="text-align:center; color:#64748b; padding:20px; font-size:13px;">Cargando pasarela de pago...</div>';
+            }
+            setTimeout(() => window.initUnicoButton(containerId, amount, description, planName), 1000);
+            return;
+        }
+        
+        // Si ya tiene contenido de PayPal, no re-renderizamos
+        if (container.querySelector('iframe') || container.querySelector('.paypal-buttons')) {
+            return;
+        }
+
+        container.innerHTML = '';
+
+        window.paypalUnico.Buttons({
+            style: {
+                shape: 'rect',
+                color: 'gold',
+                layout: 'vertical',
+                label: 'pay'
+            },
+            createOrder: function(data, actions) {
+                return actions.order.create({
+                    purchase_units: [{
+                        amount: {
+                            value: amount,
+                            currency_code: 'EUR'
+                        },
+                        description: description
+                    }]
+                });
+            },
+            onApprove: function(data, actions) {
+                return actions.order.capture().then(function(details) {
+                    // Usamos el estado principal de la orden (COMPLETED)
+                    let realStatus = details.status;
+                    
+                    return fetch('dePago/ajax_confirm_payment.php', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                        body: 'orderID=' + details.id + '&status=' + realStatus + '&plan=' + planName
+                    })
+                    .then(r => r.json())
+                    .then(res => {
+                        if (res.success) {
+                            window.location.href = 'index.php?tab=account&payment_success=1';
+                        } else {
+                            alert('Error: ' + res.message);
+                        }
+                    });
+                });
+            },
+            onError: function(err) {
+                console.error('PayPal Button Error (' + planName + '):', err);
+                container.innerHTML = '<div style="color:red; padding:10px; font-size:12px;">Error al cargar el botón. Reintenta en unos segundos.</div>';
+            }
+        }).render('#' + containerId).catch(err => {
+            console.error('Error al renderizar el botón en ' + containerId + ':', err);
+        });
+    };
+</script>
 
 <div class="tab-content-wrapper account-dashboard">
     <?php 
@@ -380,7 +477,7 @@ $stmt->close();
                 <tr>
                     <th style="width: 80px; text-align: center;">Activo</th>
                     <th>Característica / Plan</th>
-                    <th>Inicio</th>
+                <th>Inicio</th>
                     <th>Renovación</th>
                 </tr>
             </thead>
@@ -472,7 +569,7 @@ $stmt->close();
     <!-- 5️⃣ Pago Único (Desplegable) -->
     <div id="one-time-payment-section" class="info-box" style="margin-top: 64px; border: 1px solid #e2e8f0; background: #f8fafc;">
         <div id="toggle-one-time-payment" style="display: flex; justify-content: space-between; align-items: center; cursor: pointer;">
-            <h4 style="margin: 0;">💰 Pago Único</h4>
+            <h4 style="margin: 0;" class="word-selection word-selection-start">💰 Pago Único</h4>
             <span id="toggle-icon" style="font-size: 20px; color: #64748b;">▼</span>
         </div>
         
@@ -481,8 +578,8 @@ $stmt->close();
                 <div class="plan-duration">🟢 Plan Inicio - 1 mes</div>
                  <div class="plan-info">Accede a todas las funciones durante 1 mes.</div>
                 <div class="plan-prom">Ideal para probar la aplicación sin compromiso.</div>
-                <div class="plan-price">4,99 €</div>
-                <div class="paypal-placeholder">Botón de PayPal (Pago Único)</div>
+                <div class="plan-price">0,01 €</div>
+                <?php include '../../dePago/paypal_unico_1_mes.php'; ?>
             </div>
             
             <div class="plan-card recommended">
@@ -490,16 +587,16 @@ $stmt->close();
                 <div class="plan-duration">🔵 Plan Ahorro - 6 meses</div>
                 <div class="plan-info">Todas las funciones activas durante 6 meses.</div>
                 <div class="plan-prom">Más tiempo, mejor precio y sin renovaciones mensuales</div>
-                <div class="plan-price">19,99 €</div>
-                <div class="paypal-placeholder">Botón de PayPal (Pago Único)</div>
+                <div class="plan-price">0,02 €</div>
+                <?php include '../../dePago/paypal_unico_6_meses.php'; ?>
             </div>
             
             <div class="plan-card">
                 <div class="plan-duration">🟣 Plan Pro – 12 meses</div>
                 <div class="plan-info">Accede a todas las funciones durante 12 meses.</div>
                 <div class="plan-prom">La mejor opción en precio y tranquilidad.</div>
-                <div class="plan-price">31,99 €</div>
-                <div class="paypal-placeholder">Botón de PayPal (Pago Único)</div>
+                <div class="plan-price">0,04 €</div>
+                <?php include '../../dePago/paypal_unico_1_ano.php'; ?>
             </div>
         </div>
     </div>
@@ -540,17 +637,36 @@ $stmt->close();
     </div>
 
     <script>
-        document.getElementById('toggle-one-time-payment').addEventListener('click', function() {
-            const container = document.getElementById('one-time-plans-container');
-            const icon = document.getElementById('toggle-icon');
-            if (container.style.display === 'none') {
-                container.style.display = 'grid';
-                icon.textContent = '▲';
-            } else {
-                container.style.display = 'none';
-                icon.textContent = '▼';
+        // Aseguramos que el evento se asigne correctamente usando addEventListener
+        (function() {
+            const toggleBtn = document.getElementById('toggle-one-time-payment');
+            if (toggleBtn) {
+                toggleBtn.addEventListener('click', function() {
+                    const container = document.getElementById('one-time-plans-container');
+                    const icon = document.getElementById('toggle-icon');
+                    
+                    if (container.style.display === 'none' || container.style.display === '') {
+                        container.style.display = 'grid';
+                        icon.textContent = '▲';
+                        
+                        // Forzamos la inicialización de los botones con importes de prueba
+                        const initButtons = () => {
+                            if (typeof window.initUnicoButton === 'function') {
+                                window.initUnicoButton('paypal-button-container-unico-1-mes', '0.01', 'Plan Inicio - 1 mes', 'Basico');
+                                window.initUnicoButton('paypal-button-container-unico-6-meses', '0.02', 'Plan Ahorro - 6 meses', 'Ahorro');
+                                window.initUnicoButton('paypal-button-container-unico-1-ano', '0.04', 'Plan Pro - 12 meses', 'Pro');
+                            }
+                        };
+                        
+                        // Ejecutamos con un pequeño delay para asegurar visibilidad
+                        setTimeout(initButtons, 300);
+                    } else {
+                        container.style.display = 'none';
+                        icon.textContent = '▼';
+                    }
+                });
             }
-        });
+        })();
     </script>
 
     <div style="margin-top: 40px; display: flex; gap: 16px; justify-content: center;">
