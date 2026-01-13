@@ -504,6 +504,55 @@ $stmt->close();
         </div>
     </div>
 
+    <!-- 6️⃣ Pago Único (Desplegable) -->
+    <div id="one-time-payment-section" class="info-box" style="margin-top: 24px; border: 1px solid #e2e8f0; background: #f8fafc;">
+        <div id="toggle-one-time-payment" style="display: flex; justify-content: space-between; align-items: center; cursor: pointer;">
+            <h4 style="margin: 0;">💰 Pago Único</h4>
+            <span id="toggle-icon" style="font-size: 20px; color: #64748b;">▼</span>
+        </div>
+        
+        <div id="one-time-plans-container" class="subscription-plans" style="display: none; margin-top: 20px;">
+            <div class="plan-card">
+                <div class="plan-duration">🟢 Plan Inicio - 1 mes</div>
+                 <div class="plan-info">Accede a todas las funciones durante 1 mes.</div>
+                <div class="plan-prom">Ideal para probar la aplicación sin compromiso.</div>
+                <div class="plan-price">4,99 €</div>
+                <?php include '../../dePago/paypal_1_mes.php'; ?>
+            </div>
+            
+            <div class="plan-card recommended">
+                <div class="recommended-tag">RECOMENDADO</div>
+                <div class="plan-duration">🔵 Plan Ahorro - 6 meses</div>
+                <div class="plan-info">Todas las funciones activas durante 6 meses.</div>
+                <div class="plan-prom">Más tiempo, mejor precio y sin renovaciones mensuales</div>
+                <div class="plan-price">19,99 €</div>
+                <?php include '../../dePago/paypal_6_meses.php'; ?>
+            </div>
+            
+            <div class="plan-card">
+                <div class="plan-duration">🟣 Plan Pro – 12 meses</div>
+                <div class="plan-info">Accede a todas las funciones durante 12 meses.</div>
+                <div class="plan-prom">La mejor opción en precio y tranquilidad.</div>
+                <div class="plan-price">31,99 €</div>
+                <?php include '../../dePago/paypal_1_ano.php'; ?>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('toggle-one-time-payment').addEventListener('click', function() {
+            const container = document.getElementById('one-time-plans-container');
+            const icon = document.getElementById('toggle-icon');
+            if (container.style.display === 'none') {
+                container.style.display = 'grid';
+                icon.textContent = '▲';
+            } else {
+                container.style.display = 'none';
+                icon.textContent = '▼';
+            }
+        });
+    </script>
+
     <div style="margin-top: 40px; display: flex; gap: 16px; justify-content: center;">
         <button class="nav-btn" style="color: #64748b; font-size: 13px;">Eliminar Cuenta</button>
     </div>
