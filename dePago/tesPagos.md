@@ -34,7 +34,7 @@ El sistema maneja los siguientes estados lógicos (`estado_logico`):
 | Estado | Descripción | Límite de Traducción |
 | :--- | :--- | :--- |
 | **`EnPrueba`** | Usuario en sus primeros 30 días desde el registro. | Ilimitado |
-| **`Inicio`** | Suscripción Premium de 1 mes activa. | Ilimitado |
+| **`Basico`** | Suscripción Premium de 1 mes activa. | Ilimitado |
 | **`Ahorro`** | Suscripción Premium de 6 meses activa. | Ilimitado |
 | **`Pro`** | Suscripción Premium de 12 meses activa. | Ilimitado |
 | **`limitado`** | Periodo de prueba finalizado y sin suscripción activa. | 300 palabras/semana |
@@ -51,7 +51,7 @@ Desde `dePago/test/webhook_handler.php` y `dePago/test/test.php` se pueden ejecu
 ## 5. Estructura de Datos en Base de Datos
 
 - **Tabla `users`**:
-    - `tipo_usuario`: Almacena el plan actual (`limitado`, `Inicio`, `Ahorro`, `Pro`).
+    - `tipo_usuario`: Almacena el plan actual (`limitado`, `Basico`, `Ahorro`, `Pro`).
 - **Tabla `user_subscriptions`**:
     - `status`: `active`, `expired`, etc.
     - `payment_method`: `paypal`.

@@ -12,7 +12,7 @@ if (!function_exists('activateUserPlan')) {
      * Activa un plan para un usuario, actualizando tanto su suscripción como su rango en la tabla users.
      * 
      * @param int $user_id ID del usuario
-     * @param string $plan Nombre del plan (Inicio, Ahorro, Pro)
+     * @param string $plan Nombre del plan (Basico, Ahorro, Pro)
      * @param string $paypal_id ID de la transacción o suscripción de PayPal
      * @param string $method Método de pago (paypal, transferencia, etc.)
      * @return array Resultado de la operación
@@ -22,7 +22,7 @@ if (!function_exists('activateUserPlan')) {
         if (!$conn) require __DIR__ . '/../db/connection.php';
 
         $plan_durations = [
-            'Inicio' => 1,
+            'Basico' => 1,
             'Ahorro' => 6,
             'Pro' => 12
         ];

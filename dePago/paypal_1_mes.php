@@ -28,7 +28,7 @@
                         fetch('dePago/ajax_confirm_payment.php', {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                            body: 'orderID=' + data.subscriptionID + '&status=' + realStatus + '&plan=Inicio'
+                            body: 'orderID=' + data.subscriptionID + '&status=' + realStatus + '&plan=Basico'
                         })
                         .then(r => r.json())
                         .then(res => {

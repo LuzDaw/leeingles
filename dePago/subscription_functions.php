@@ -56,7 +56,7 @@ if (!function_exists('getUserSubscriptionStatus')) {
         $es_periodo_gratuito = ($dias_transcurridos < 30);
         
         $estado_actual = 'limitado';
-        if (in_array($data['tipo_usuario'], ['Inicio', 'Ahorro', 'Pro'])) {
+        if (in_array($data['tipo_usuario'], ['Basico', 'Ahorro', 'Pro'])) {
             // Verificar si la suscripción sigue vigente en la tabla user_subscriptions
             $stmt = $conn->prepare("SELECT fecha_fin FROM user_subscriptions WHERE user_id = ? AND status = 'active' ORDER BY fecha_fin DESC LIMIT 1");
             $stmt->bind_param("i", $user_id);
@@ -96,7 +96,7 @@ if (!function_exists('getUserSubscriptionStatus')) {
             'mes_de_uso' => (int)$mes_de_uso,
             'es_periodo_gratuito' => $es_periodo_gratuito,
             'fin_mes_gratuito' => (new DateTime($data['fecha_registro']))->add(new DateInterval('P30D'))->format('Y-m-d H:i:s'),
-            'es_premium' => in_array($estado_actual, ['Inicio', 'Ahorro', 'Pro']),
+            'es_premium' => in_array($estado_actual, ['Basico', 'Ahorro', 'Pro']),
             'proximo_reinicio_semanal' => $proximo_domingo->format('Y-m-d H:i:s'),
             'semana_iso' => (int)date('W'),
             'anio_iso' => (int)date('o'),

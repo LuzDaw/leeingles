@@ -107,7 +107,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'set_expiration' && $user_id
         .status-badge { padding: 4px 12px; border-radius: 20px; font-size: 0.9em; font-weight: bold; }
         .EnPrueba { background: #e3f2fd; color: #1976d2; }
         .limitado { background: #fff3e0; color: #f57c00; }
-        .Inicio { background: #e8f5e9; color: #2e7d32; }
+        .Basico { background: #e8f5e9; color: #2e7d32; }
         .Ahorro { background: #f3e5f5; color: #7b1fa2; }
         .Pro { background: #fffde7; color: #fbc02d; border: 1px solid #fbc02d; }
         .debug { margin-top: 20px; font-size: 0.8em; color: #888; background: #eee; padding: 10px; border-radius: 4px; overflow-x: auto; }
@@ -216,8 +216,8 @@ if (isset($_POST['action']) && $_POST['action'] === 'set_expiration' && $user_id
     <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
         <form method="POST">
             <input type="hidden" name="action" value="simulate_payment">
-            <input type="hidden" name="plan" value="Inicio">
-            <button type="submit" class="btn-test btn-plan" style="background:#2e7d32;">Plan Inicio (1 mes)</button>
+            <input type="hidden" name="plan" value="Basico">
+            <button type="submit" class="btn-test btn-plan" style="background:#2e7d32;">Plan Basico (1 mes)</button>
         </form>
         <form method="POST">
             <input type="hidden" name="action" value="simulate_payment">
