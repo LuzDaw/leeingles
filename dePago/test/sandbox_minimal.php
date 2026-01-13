@@ -41,7 +41,7 @@
 <div class="section-container">
     <h2>Nuevos Botones Dinámicos</h2>
     <div class="info-box">
-        <strong>Modo:</strong> Pago Único Dinámico (0.01€ / 0.02€)
+        <strong>Modo:</strong> Pago Único Dinámico (Activación Automática)
     </div>
     <div class="plans-grid">
         <div class="plan-card">
@@ -69,7 +69,33 @@
         if (el) el.innerText = msg;
     };
 
-    function initPayPalButton(containerId, amount, description) {
+    /**
+     * Notifica al servidor para activar el plan
+     */
+    function notifyServer(orderID, status, planName) {
+        log(`Notificando al servidor: Plan ${planName}, ID ${orderID}...`);
+        
+        return fetch('../ajax_confirm_payment.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: `orderID=${orderID}&status=${status}&plan=${planName}`
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                log(`✅ ¡Éxito! Plan ${planName} activado hasta ${data.fecha_fin || 'fin de periodo'}.`);
+                // Opcional: Redirigir tras éxito
+                // window.location.href = 'webhook_handler.php?payment_success=1';
+            } else {
+                log(`❌ Error del servidor: ${data.message}`);
+            }
+        })
+        .catch(error => {
+            log(`❌ Error de red: ${error.message}`);
+        });
+    }
+
+    function initPayPalButton(containerId, amount, description, planName) {
         if (typeof paypal === 'undefined') return;
 
         paypal.Buttons({
@@ -84,9 +110,17 @@
             },
             onApprove: function(data, actions) {
                 return actions.order.capture().then(function(details) {
-                    log(`✅ Pago de ${amount}€ completado.`);
-                    window.location.href = 'webhook_handler.php?payment_success=1';
+                    // Usamos el estado principal de la orden (COMPLETED) para evitar el PENDING de la captura en Sandbox
+                    let realStatus = details.status;
+
+                    log(`✅ Pago de ${amount}€ capturado (Estado: ${realStatus}).`);
+                    
+                    // Reutilizamos la lógica de activación del servidor
+                    notifyServer(details.id, realStatus, planName);
                 });
+            },
+            onError: function(err) {
+                log(`❌ Error de PayPal: ${err}`);
             }
         }).render(containerId);
     }
@@ -96,16 +130,16 @@
             setTimeout(initAll, 500);
             return;
         }
-        log("✅ SDK cargado con Client ID correcto.");
+        log("✅ SDK cargado. Botones listos para activar planes.");
 
-        // Botón Original (1.00€)
-        initPayPalButton('#paypal-button-container-original', '1.00', 'Prueba de Conexión LeeIngles');
+        // Botón Original (1.00€) -> Activa plan 'Inicio'
+        initPayPalButton('#paypal-button-container-original', '1.00', 'Prueba de Conexión LeeIngles', 'Inicio');
 
-        // Plan Básico (0.01€)
-        initPayPalButton('#paypal-button-container-basico', '0.01', 'Plan Básico - 1 mes');
+        // Plan Básico (0.01€) -> Activa plan 'Inicio' (1 mes)
+        initPayPalButton('#paypal-button-container-basico', '0.01', 'Plan Básico - 1 mes', 'Inicio');
 
-        // Plan Económico (0.02€)
-        initPayPalButton('#paypal-button-container-economico', '0.02', 'Plan Económico - 6 meses');
+        // Plan Económico (0.02€) -> Activa plan 'Ahorro' (6 meses)
+        initPayPalButton('#paypal-button-container-economico', '0.02', 'Plan Económico - 6 meses', 'Ahorro');
     }
 
     document.addEventListener('DOMContentLoaded', initAll);
