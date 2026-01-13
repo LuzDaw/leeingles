@@ -358,8 +358,8 @@ $stmt->close();
             window.paypalUnicoLoaded = true;
             console.log('Cargando SDK PayPal Unico...');
             var script = document.createElement('script');
-            // Usamos el Client ID verificado y forzamos el namespace paypalUnico
-            script.src = "https://www.paypal.com/sdk/js?client-id=AaQy-0aO2EsQkF7YAotIavQcHXwRF96D6ygaBfIDNLzojTuRAhp0dGON4oh9mmpbX_HIcd7zichV_K6F&currency=EUR";
+            // Unificamos con el Client ID de suscripciones que es el real que funciona
+            script.src = "https://www.paypal.com/sdk/js?client-id=ATfzdeOVWZvM17U3geOdl_yV513zZfX7oCm_wa0wqog2acHfSIz846MkdZnpu7oCdWFzqdMn0NEN0xSM&currency=EUR";
             script.setAttribute('data-namespace', 'paypalUnico');
             script.async = true;
             document.head.appendChild(script);
