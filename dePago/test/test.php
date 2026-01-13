@@ -50,28 +50,21 @@ if (isset($_POST['action']) && $_POST['action'] === 'simulate_usage' && $user_id
     exit;
 }
 
-// Procesar simulación de pago (NUEVO - Corregido para evitar bucle 504)
+// Procesar simulación de pago (NUEVO - Corregido para usar activateUserPlan)
 if (isset($_POST['action']) && $_POST['action'] === 'simulate_payment' && $user_id) {
     $plan = $_POST['plan'];
-    $plan_durations = ['Inicio' => 1, 'Ahorro' => 6, 'Pro' => 12];
-    $meses = $plan_durations[$plan] ?? 0;
+    require_once __DIR__ . '/../payment_functions.php';
     
-    if ($meses > 0) {
-        $fecha_fin = date('Y-m-d H:i:s', strtotime("+$meses months"));
-        $orderID = 'FAKE_PAYMENT_' . time();
-        
-        // 1. Registrar la suscripción
-        $stmt_sub = $conn->prepare("INSERT INTO user_subscriptions (user_id, plan_name, fecha_fin, paypal_subscription_id, status) VALUES (?, ?, ?, ?, 'active')");
-        $stmt_sub->bind_param("isss", $user_id, $plan, $fecha_fin, $orderID);
-        $stmt_sub->execute();
-        
-        // 2. Actualizar el tipo de usuario
-        $stmt = $conn->prepare("UPDATE users SET tipo_usuario = ? WHERE id = ?");
-        $stmt->bind_param("si", $plan, $user_id);
-        $stmt->execute();
+    $orderID = 'FAKE_PAYMENT_' . time();
+    // Usamos 'paypal' como método porque la BD tiene un ENUM restringido
+    $result = activateUserPlan($user_id, $plan, $orderID, 'paypal');
+    
+    if ($result['success']) {
+        header("Location: test.php?payment_simulated=1");
+    } else {
+        echo "Error en simulación: " . $result['message'];
+        exit;
     }
-    
-    header("Location: test.php?payment_simulated=1");
     exit;
 }
 
@@ -80,6 +73,20 @@ if (isset($_POST['action']) && $_POST['action'] === 'simulate_expiration' && $us
     // Ponemos la fecha de fin de la suscripción activa en el pasado
     $conn->query("UPDATE user_subscriptions SET fecha_fin = DATE_SUB(NOW(), INTERVAL 1 DAY) WHERE user_id = $user_id AND status = 'active'");
     header("Location: test.php?expired_simulated=1");
+    exit;
+}
+
+// Procesar simulación de vencimiento específico (NUEVO para renovaciones)
+if (isset($_POST['action']) && $_POST['action'] === 'set_expiration' && $user_id) {
+    $days = (int)$_POST['days_to_expire'];
+    $new_date = date('Y-m-d H:i:s', strtotime("+$days days"));
+    
+    // Actualizar la suscripción activa más reciente
+    $stmt = $conn->prepare("UPDATE user_subscriptions SET fecha_fin = ? WHERE user_id = ? AND status = 'active' ORDER BY fecha_fin DESC LIMIT 1");
+    $stmt->bind_param("si", $new_date, $user_id);
+    $stmt->execute();
+    
+    header("Location: test.php?expiration_set=1");
     exit;
 }
 
@@ -226,6 +233,34 @@ if (isset($_POST['action']) && $_POST['action'] === 'simulate_expiration' && $us
     <form method="POST" style="margin-top: 10px;">
         <input type="hidden" name="action" value="simulate_expiration">
         <button type="submit" class="btn-test" style="background:#d32f2f; color:white; border:none;">Simular EXPIRACIÓN de Plan</button>
+    </form>
+</div>
+
+<div class="card">
+    <h2>Simulador de Vencimiento (Para Renovaciones)</h2>
+    <p>Establece cuándo vence el plan actual para probar la acumulación de tiempo:</p>
+    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
+        <form method="POST">
+            <input type="hidden" name="action" value="set_expiration">
+            <input type="hidden" name="days_to_expire" value="0">
+            <button type="submit" class="btn-test" style="background:#fce4ec; color:#c2185b;">Vence HOY</button>
+        </form>
+        <form method="POST">
+            <input type="hidden" name="action" value="set_expiration">
+            <input type="hidden" name="days_to_expire" value="2">
+            <button type="submit" class="btn-test" style="background:#f3e5f5; color:#7b1fa2;">Vence en 2 días</button>
+        </form>
+        <form method="POST">
+            <input type="hidden" name="action" value="set_expiration">
+            <input type="hidden" name="days_to_expire" value="5">
+            <button type="submit" class="btn-test" style="background:#e8eaf6; color:#3f51b5;">Vence en 5 días</button>
+        </form>
+    </div>
+    <form method="POST" style="margin-top: 10px; display: flex; gap: 10px; align-items: center;">
+        <input type="hidden" name="action" value="set_expiration">
+        <label>Días personalizados:</label>
+        <input type="number" name="days_to_expire" value="10" style="padding:8px; width:60px;">
+        <button type="submit" style="padding:8px 20px; cursor:pointer;">Establecer</button>
     </form>
 </div>
 

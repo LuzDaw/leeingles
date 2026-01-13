@@ -17,7 +17,7 @@ if (!isset($_SESSION['user_id'])) {
 
 $user_id = $_SESSION['user_id'];
 
-// Obtener datos del usuario (Placeholder para funciones futuras)
+// Obtener datos del usuario
 $user_data = ['username' => 'Usuario', 'email' => ''];
 $stmt_user = $conn->prepare("SELECT username, email FROM users WHERE id = ?");
 if ($stmt_user) {
@@ -82,19 +82,6 @@ $status_labels = [
 
 $account_status = $status_labels[$status['estado_logico']] ?? 'Desconocido';
 
-// Verificar si hay algún pago pendiente para mostrarlo en el estado
-$pending_sub = null;
-$stmt_pending = $conn->prepare("SELECT plan_name, payment_method, created_at FROM user_subscriptions WHERE user_id = ? AND status = 'pending' ORDER BY created_at DESC LIMIT 1");
-if ($stmt_pending) {
-    $stmt_pending->bind_param("i", $user_id);
-    $stmt_pending->execute();
-    $res_pending = $stmt_pending->get_result();
-    if ($row_pending = $res_pending->fetch_assoc()) {
-        $pending_sub = $row_pending;
-    }
-    $stmt_pending->close();
-}
-
 $free_month_start = date('d/m/Y', strtotime($status['fecha_registro']));
 $free_month_end = date('d/m/Y', strtotime($status['fin_mes_gratuito']));
 
@@ -130,13 +117,10 @@ if ($status['estado_logico'] === 'EnPrueba') {
 
 // Mapeo de estado simplificado para la tabla
 $simple_status = 'limitado';
-if ($pending_sub) {
-    $simple_status = 'pendiente';
-    $account_status = "Pendiente: " . ($status_labels[$pending_sub['plan_name']] ?? $pending_sub['plan_name']);
+if ($status['es_premium']) {
+    $simple_status = 'premium';
 } elseif ($status['estado_logico'] === 'EnPrueba') {
     $simple_status = 'prueba';
-} elseif ($status['es_premium']) {
-    $simple_status = 'premium';
 }
 
 // Preparar datos para la tabla de planes
@@ -144,17 +128,6 @@ $has_premium = $status['es_premium'];
 $is_trial_active = $status['es_periodo_gratuito'];
 $next_reset_date = date('d/m/Y', strtotime($status['proximo_reinicio_semanal']));
 $plan_table_rows = [];
-
-// 0. Fila de Plan Pendiente (Si existe)
-if ($pending_sub) {
-    $plan_table_rows[] = [
-        'activo' => '⏳',
-        'caracteristica' => '<span style="color: #d97706;">Pago en proceso: ' . ($status_labels[$pending_sub['plan_name']] ?? $pending_sub['plan_name']) . ' (' . strtoupper($pending_sub['payment_method']) . ')</span>',
-        'inicio' => date('d/m/Y', strtotime($pending_sub['created_at'])),
-        'fin' => 'Esperando confirmación',
-        'clase' => 'row-pending'
-    ];
-}
 
 // 1. Fila de Plan Premium
 if ($has_premium) {
@@ -195,7 +168,7 @@ if ($is_trial_active) {
     ];
 }
 
-// Traducciones semanales (para info secundaria)
+// Traducciones semanales
 $usage = getWeeklyUsage($user_id);
 $base_limit = 300;
 $usage_percent = min(100, round(($usage / $base_limit) * 100));
@@ -203,7 +176,6 @@ $available_translations = max(0, $base_limit - $usage);
 
 // Obtener historial de suscripciones/pagos
 $payment_history = [];
-// Primero verificamos si la columna payment_method existe para evitar errores
 $check_col = $conn->query("SHOW COLUMNS FROM user_subscriptions LIKE 'payment_method'");
 $has_payment_method = ($check_col && $check_col->num_rows > 0);
 
@@ -219,8 +191,6 @@ while ($row = $res->fetch_assoc()) {
     $payment_history[] = $row;
 }
 $stmt->close();
-
-$conn->close();
 ?>
 
 <style>
@@ -309,7 +279,6 @@ $conn->close();
         margin-bottom: 4px;
     }
 
-    /* Estilos para la nueva tabla de usuario */
     .progress-container {
         width: 100%;
         height: 8px;
@@ -359,11 +328,7 @@ $conn->close();
     .badge-status.prueba { background: #fef9c3; color: #854d0e; border: 1px solid #fef08a; }
     .badge-status.premium { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
     .badge-status.limitado { background: #f1f5f9; color: #475569; border: 1px solid #e2e8f0; }
-    .badge-status.pendiente { background: #fff7ed; color: #c2410c; border: 1px solid #fdba74; }
 
-    .row-pending {
-        background: #fffcf9;
-    }
     .row-faint {
         opacity: 0.5;
         background: #fcfcfc;
@@ -375,13 +340,8 @@ $conn->close();
 
 <div class="tab-content-wrapper account-dashboard">
     <?php 
-    // Si venimos de un pago exitoso, incluir el modal
     if (isset($_GET['payment_success'])) {
         include '../../dePago/payment_success_modal.php';
-    }
-    // Si venimos de un pago pendiente (eCheck / Cargo en cuenta)
-    if (isset($_GET['payment_pending']) || $pending_sub) {
-        include '../../dePago/payment_pending_modal.php';
     }
     ?>
     <!-- 1️⃣ Encabezado – Identidad del usuario -->
@@ -492,7 +452,6 @@ $conn->close();
                 <?php foreach ($payment_history as $pay): 
                     $pay_status_class = 'limitado';
                     if ($pay['status'] === 'active') $pay_status_class = 'premium';
-                    if ($pay['status'] === 'pending') $pay_status_class = 'pendiente';
                 ?>
                 <tr>
                     <td style="font-weight: 600;"><?= htmlspecialchars($pay['plan_name']) ?></td>
@@ -500,7 +459,7 @@ $conn->close();
                     <td><?= date('d/m/Y', strtotime($pay['created_at'])) ?></td>
                     <td>
                         <span class="badge-status <?= $pay_status_class ?>">
-                            <?= $pay['status'] === 'active' ? 'Activo' : ($pay['status'] === 'pending' ? 'Pendiente' : $pay['status']) ?>
+                            <?= $pay['status'] === 'active' ? 'Activo' : $pay['status'] ?>
                         </span>
                     </td>
                 </tr>
@@ -510,7 +469,7 @@ $conn->close();
     </div>
     <?php endif; ?>
 
-    <!-- 5️⃣ Plan de suscripción (PayPal) - Mantenido como estaba -->
+    <!-- 5️⃣ Plan de suscripción (PayPal) -->
     <div id="subscription-plans-section" class="info-box" style="margin-top: 64px; border: 1px solid #e2e8f0; background: #f8fafc;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
             <h4 style="margin: 0;">💎 Plan de suscripción</h4>
@@ -520,7 +479,7 @@ $conn->close();
         <div class="subscription-plans">
             <div class="plan-card">
                 <div class="plan-duration">🟢 Plan Inicio - 1 mes</div>
-                 <div class="plan-info">Accede a todas las funciones durante   1 mes.</div>
+                 <div class="plan-info">Accede a todas las funciones durante 1 mes.</div>
                 <div class="plan-prom">Ideal para probar la aplicación sin compromiso.</div>
                 <div class="plan-price">4,99 €</div>
                 <?php include '../../dePago/paypal_1_mes.php'; ?>
@@ -528,11 +487,10 @@ $conn->close();
             
             <div class="plan-card recommended">
                 <div class="recommended-tag">RECOMENDADO</div>
-                <div class="plan-duration">🔵 Plan Ahorro -  6 meses</div>
-                <div class="plan-info">Todas las funciones activas durante  6 meses.</div>
+                <div class="plan-duration">🔵 Plan Ahorro - 6 meses</div>
+                <div class="plan-info">Todas las funciones activas durante 6 meses.</div>
                 <div class="plan-prom">Más tiempo, mejor precio y sin renovaciones mensuales</div>
                 <div class="plan-price">19,99 €</div>
-                
                 <?php include '../../dePago/paypal_6_meses.php'; ?>
             </div>
             
@@ -546,21 +504,19 @@ $conn->close();
         </div>
     </div>
 
-    <!-- Botones de acción secundarios -->
     <div style="margin-top: 40px; display: flex; gap: 16px; justify-content: center;">
         <button class="nav-btn" style="color: #64748b; font-size: 13px;">Eliminar Cuenta</button>
     </div>
 </div>
 <?php
+$conn->close();
 } catch (Exception $e) {
     echo '<div style="padding: 20px; color: red; background: #fee2e2; border: 1px solid #ef4444; border-radius: 8px; margin: 20px;">';
     echo '<strong>Error fatal:</strong> ' . htmlspecialchars($e->getMessage());
-    echo '<br><small>' . htmlspecialchars($e->getFile()) . ' on line ' . $e->getLine() . '</small>';
     echo '</div>';
 } catch (Error $e) {
     echo '<div style="padding: 20px; color: red; background: #fee2e2; border: 1px solid #ef4444; border-radius: 8px; margin: 20px;">';
     echo '<strong>Error de PHP:</strong> ' . htmlspecialchars($e->getMessage());
-    echo '<br><small>' . htmlspecialchars($e->getFile()) . ' on line ' . $e->getLine() . '</small>';
     echo '</div>';
 }
 ?>

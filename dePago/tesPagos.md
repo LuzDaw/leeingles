@@ -2,14 +2,14 @@
 
 Este documento detalla el funcionamiento del sistema de pruebas para los pagos y suscripciones en el directorio `dePago`.
 
-## 1. Flujo de Pruebas de PayPal (Sandbox)
+## 1. Flujo de Pruebas de PayPal
 
-El sistema utiliza el entorno Sandbox de PayPal para simular transacciones reales sin dinero real.
+El sistema utiliza el entorno de PayPal para procesar suscripciones automáticas.
 
 ### Archivos Principales de Prueba
-- **`dePago/test/paypal_sandbox_test.php`**: Interfaz visual que carga el SDK de PayPal. Permite realizar un pago de prueba de 10.00€ para verificar la integración del botón y la captura del pedido.
-- **`dePago/test/webhook_handler.php`**: Actúa como el receptor de notificaciones de PayPal (Webhooks) y proporciona una interfaz de administración para forzar estados de prueba.
-- **`dePago/ajax_confirm_payment.php`**: Endpoint que recibe la confirmación inmediata desde el frontend tras un pago exitoso en el SDK.
+- **`dePago/test/paypal_sandbox_test.php`**: Interfaz visual que carga el SDK de PayPal para verificar la integración del botón.
+- **`dePago/test/webhook_handler.php`**: Receptor de notificaciones de PayPal (Webhooks) y herramienta de reseteo de usuario para pruebas.
+- **`dePago/ajax_confirm_payment.php`**: Endpoint que recibe la confirmación inmediata desde el frontend tras un pago exitoso.
 
 ## 2. Funciones de Control de Suscripción
 
@@ -20,12 +20,12 @@ Las funciones principales se encuentran en `dePago/subscription_functions.php`:
     - Calcula días desde el registro.
     - Verifica si existe una suscripción activa en la tabla `user_subscriptions`.
     - Actualiza automáticamente a `limitado` si la suscripción ha expirado.
+- **`activateUserPlan($user_id, $plan, $paypal_id, $method)`**:
+    - Activa un plan y actualiza el rango del usuario.
+    - **Lógica de Acumulación:** Si el usuario ya tiene un plan activo, el nuevo tiempo se suma al final de la suscripción actual, evitando que el usuario pierda días por renovar anticipadamente.
 - **`checkTranslationLimit($user_id)`**:
     - Verifica si un usuario `limitado` ha superado las 300 palabras semanales.
     - Los usuarios `EnPrueba` o Premium no tienen este límite.
-- **`handleSaleCompleted($resource, $conn)`** (en `webhook_handler.php`):
-    - Procesa el objeto de recurso de PayPal.
-    - Activa la suscripción en la BD y actualiza el `tipo_usuario` en la tabla `users`.
 
 ## 3. Variantes de Datos y Estados del Usuario
 
@@ -41,19 +41,18 @@ El sistema maneja los siguientes estados lógicos (`estado_logico`):
 
 ## 4. Acciones Manuales de Prueba
 
-Desde `dePago/test/webhook_handler.php` se pueden ejecutar las siguientes acciones para facilitar el desarrollo:
+Desde `dePago/test/webhook_handler.php` y `dePago/test/test.php` se pueden ejecutar las siguientes acciones:
 
 1.  **Resetear Usuario**: Vuelve al usuario al estado `limitado` y borra su historial de suscripciones.
-2.  **Simular Transferencia**: Crea un registro de suscripción con estado `pending` (esperando pago manual).
-3.  **Confirmar Pago**: Cambia una suscripción `pending` a `active`, calculando la fecha de fin según el plan.
-4.  **Simular Webhook de PayPal**: Permite introducir un ID de PayPal para disparar la lógica de activación automática (`handleSaleCompleted`).
+2.  **Simular Pago PayPal**: Crea un registro de suscripción activo usando la lógica real de activación.
+3.  **Simular Webhook de PayPal**: Dispara la lógica de activación automática simulando una notificación de PayPal.
+4.  **Simular Vencimiento**: Permite establecer fechas de fin específicas para probar la acumulación de tiempo en renovaciones.
 
 ## 5. Estructura de Datos en Base de Datos
 
 - **Tabla `users`**:
     - `tipo_usuario`: Almacena el plan actual (`limitado`, `Inicio`, `Ahorro`, `Pro`).
-    - `fecha_registro`: Base para el cálculo del mes de prueba.
 - **Tabla `user_subscriptions`**:
-    - `status`: `pending` o `active`.
-    - `payment_method`: `paypal` o `transferencia`.
+    - `status`: `active`, `expired`, etc.
+    - `payment_method`: `paypal`.
     - `fecha_fin`: Fecha exacta de expiración del acceso Premium.

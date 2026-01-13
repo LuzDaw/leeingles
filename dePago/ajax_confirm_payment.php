@@ -20,20 +20,19 @@ $orderID = $_POST['orderID'] ?? '';
 $status = strtoupper($_POST['status'] ?? '');
 $plan = $_POST['plan'] ?? 'desconocido';
 
-// REGLA DE ORO: Solo el estado COMPLETED (Pagos únicos) o ACTIVE (Suscripciones) activa el plan inmediatamente.
-if ($status === 'COMPLETED' || $status === 'ACTIVE') {
+error_log("ajax_confirm_payment: Recibido orderID=$orderID, status=$status, plan=$plan para usuario $user_id");
+
+// REGLA DE ORO: Solo el estado COMPLETED (Pagos únicos), ACTIVE (Suscripciones) o APPROVED activa el plan inmediatamente.
+if ($status === 'COMPLETED' || $status === 'ACTIVE' || $status === 'APPROVED') {
     $result = activateUserPlan($user_id, $plan, $orderID, 'paypal');
     if ($result['success']) {
         $result['orderID'] = $orderID;
     }
     echo json_encode($result);
 } else {
-    // CUALQUIER OTRO ESTADO (PENDING, APPROVED, etc.) -> ESPERANDO PAGO
-    $result = registerPendingPayment($user_id, $plan, $orderID, 'paypal');
-    if ($result['success']) {
-        $result['message'] = "Pago en proceso (Estado: $status). El plan se activará automáticamente cuando se confirme la recepción del dinero.";
-        $result['orderID'] = $orderID;
-        $result['status'] = 'pending';
-    }
-    echo json_encode($result);
+    // Si el pago no es exitoso, no hacemos nada más que informar del error
+    echo json_encode([
+        'success' => false, 
+        'message' => "El pago no ha podido ser procesado (Estado: $status). Por favor, inténtalo de nuevo o contacta con soporte."
+    ]);
 }

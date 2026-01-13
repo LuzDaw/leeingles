@@ -54,43 +54,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['manual_action'])) {
         exit;
     }
 
-    if ($action === 'create_pending_transfer') {
-        $plan = $_POST['plan'] ?? 'Inicio';
-        $ref = 'TRANSF_' . time();
-        
-        // Forzamos el método 'transferencia' y estado 'pending'
-        $stmt = $conn->prepare("INSERT INTO user_subscriptions (user_id, plan_name, fecha_fin, paypal_subscription_id, payment_method, status) VALUES (?, ?, NOW(), ?, 'transferencia', 'pending')");
-        
-        if (!$stmt) {
-            $stmt = $conn->prepare("INSERT INTO user_subscriptions (user_id, plan_name, fecha_fin, paypal_subscription_id, status) VALUES (?, ?, NOW(), ?, 'pending')");
-        }
-        
-        $stmt->bind_param("iss", $user_id, $plan, $ref);
-        
-        if ($stmt->execute()) {
-            echo json_encode(['success' => true, 'message' => 'Transferencia registrada como PENDIENTE']);
-        } else {
-            echo json_encode(['success' => false, 'message' => $conn->error]);
-        }
-        exit;
-    }
-
-    if ($action === 'confirm_transfer') {
-        $sub_id = (int)$_POST['sub_id'];
-        $stmt = $conn->prepare("SELECT plan_name, user_id, paypal_subscription_id FROM user_subscriptions WHERE id = ? AND status = 'pending'");
-        $stmt->bind_param("i", $sub_id);
-        $stmt->execute();
-        $res = $stmt->get_result();
-        
-        if ($row = $res->fetch_assoc()) {
-            $result = activateUserPlan($row['user_id'], $row['plan_name'], $row['paypal_subscription_id'], 'transferencia');
-            echo json_encode($result);
-        } else {
-            echo json_encode(['success' => false, 'message' => 'Suscripción no encontrada o ya activa']);
-        }
-        exit;
-    }
-
     // NUEVA ACCIÓN: Simular Webhook de PayPal (Dinero recibido)
     if ($action === 'simulate_paypal_webhook') {
         $paypal_id = $_POST['paypal_id'] ?? '';
@@ -146,15 +109,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $event) {
 // Obtener estado real del usuario para la vista
 $status = getUserSubscriptionStatus($user_id);
 
-// Verificar si hay algún pago pendiente
-$has_pending = false;
-if ($user_id) {
-    $check_pending = $conn->query("SELECT plan_name, payment_method FROM user_subscriptions WHERE user_id = $user_id AND status = 'pending' LIMIT 1");
-    if ($check_pending && $check_pending->num_rows > 0) {
-        $has_pending = $check_pending->fetch_assoc();
-    }
-}
-
 // --- INTERFAZ DE PRUEBAS (GET) ---
 ?>
 <!DOCTYPE html>
@@ -177,14 +131,11 @@ if ($user_id) {
         th, td { padding: 12px; text-align: left; border-bottom: 1px solid #eee; }
         th { background: #f8f9fa; color: #555; }
         .badge { padding: 4px 8px; border-radius: 4px; font-size: 0.85rem; font-weight: bold; }
-        .badge-pending { color: #f57c00; background: #fff3e0; }
         .badge-active { color: #2e7d32; background: #e8f5e9; }
         .badge-expired { color: #d32f2f; background: #ffebee; }
         .btn { padding: 8px 16px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; transition: 0.2s; }
         .btn-primary { background: #1a73e8; color: white; }
-        .btn-success { background: #34a853; color: white; }
         .btn-danger { background: #d93025; color: white; }
-        .plan-selector { padding: 8px; border-radius: 6px; border: 1px solid #ccc; margin-right: 10px; }
         .premium-status { color: #1a73e8; font-weight: bold; }
         .trial-status { color: #34a853; font-weight: bold; }
         .limited-status { color: #f57c00; font-weight: bold; }
@@ -207,11 +158,6 @@ if ($user_id) {
                     <span class="status-value <?php echo $status['es_premium'] ? 'premium-status' : ($status['estado_logico'] === 'EnPrueba' ? 'trial-status' : 'limited-status'); ?>">
                         <?php echo strtoupper($status['estado_logico']); ?>
                     </span>
-                    <?php if ($has_pending): ?>
-                        <br><span style="font-size: 0.8rem; color: #e65100; font-weight: bold; background: #fff3e0; padding: 2px 5px; border-radius: 3px; border: 1px solid #ffe0b2; display: inline-block; margin-top: 5px;">
-                            ⏳ ESPERANDO PAGO: <?php echo strtoupper($has_pending['plan_name']); ?>
-                        </span>
-                    <?php endif; ?>
                 </div>
                 <div class="status-item">
                     <span class="status-label">Tipo en BD (Real)</span>
@@ -236,18 +182,6 @@ if ($user_id) {
     </div>
 
     <div class="card">
-        <h2>Simular Nueva Transferencia</h2>
-        <div style="display: flex; align-items: center; gap: 10px;">
-            <select id="planSelect" class="plan-selector">
-                <option value="Inicio">Plan Inicio (1 mes)</option>
-                <option value="Ahorro">Plan Ahorro (6 meses)</option>
-                <option value="Pro">Plan Pro (12 meses)</option>
-            </select>
-            <button onclick="createTransfer()" class="btn btn-primary">Registrar Transferencia</button>
-        </div>
-    </div>
-
-    <div class="card">
         <h2>Historial de Suscripciones (Real)</h2>
         <table id="transfersTable">
             <thead>
@@ -256,7 +190,6 @@ if ($user_id) {
                     <th>Método</th>
                     <th>Fecha Registro</th>
                     <th>Estado</th>
-                    <th>Acción</th>
                 </tr>
             </thead>
             <tbody>
@@ -271,17 +204,13 @@ if ($user_id) {
                         while ($row = $res->fetch_assoc()):
                             $fecha_fin = new DateTime($row['fecha_fin']);
                             $is_expired = ($fecha_fin < $hoy && $row['status'] === 'active');
-                            $is_pending = ($row['status'] === 'pending');
                             $method = $row['payment_method'] ?? 'paypal';
                             
                             // Determinar etiqueta de estado real
                             $estado_label = strtoupper($row['status']);
                             $badge_class = $row['status'];
                             
-                            if ($is_pending) {
-                                $estado_label = 'ESPERANDO PAGO';
-                                $badge_class = 'pending';
-                            } elseif ($is_expired) {
+                            if ($is_expired) {
                                 $estado_label = 'EXPIRADO';
                                 $badge_class = 'expired';
                             }
@@ -295,15 +224,6 @@ if ($user_id) {
                             <?php echo $estado_label; ?>
                         </span>
                     </td>
-                    <td>
-                        <?php if ($is_pending && $method === 'transferencia'): ?>
-                            <button onclick="confirmTransfer(<?php echo $row['id']; ?>)" class="btn btn-success">Confirmar Pago</button>
-                        <?php elseif ($is_pending && $method === 'paypal'): ?>
-                            <button onclick="simulateWebhook('<?php echo $row['paypal_subscription_id']; ?>')" class="btn btn-primary" style="font-size: 0.7rem;">Simular Pago Recibido (Webhook)</button>
-                        <?php else: ?>
-                            -
-                        <?php endif; ?>
-                    </td>
                 </tr>
                 <?php endwhile; 
                     }
@@ -315,7 +235,6 @@ if ($user_id) {
                     <td>SISTEMA</td>
                     <td><?php echo $status['fecha_registro']; ?></td>
                     <td><span class="badge badge-active">ACTIVO (GRATIS)</span></td>
-                    <td>-</td>
                 </tr>
                 <?php endif; 
                 } ?>
@@ -331,46 +250,6 @@ function resetUser() {
     formData.append('manual_action', 'reset_user');
     fetch('webhook_handler.php', { method: 'POST', body: formData })
     .then(r => r.json()).then(res => { alert(res.message); location.reload(); });
-}
-
-function createTransfer() {
-    const plan = document.getElementById('planSelect').value;
-    const formData = new FormData();
-    formData.append('manual_action', 'create_pending_transfer');
-    formData.append('plan', plan);
-
-    fetch('webhook_handler.php', { method: 'POST', body: formData })
-    .then(r => r.json())
-    .then(res => {
-        if (res.success) location.reload();
-        else alert('Error: ' + res.message);
-    });
-}
-
-function confirmTransfer(subId) {
-    const formData = new FormData();
-    formData.append('manual_action', 'confirm_transfer');
-    formData.append('sub_id', subId);
-
-    fetch('webhook_handler.php', { method: 'POST', body: formData })
-    .then(r => r.json())
-    .then(res => {
-        if (res.success) { alert(res.message); location.reload(); }
-        else alert('Error: ' + res.message);
-    });
-}
-
-function simulateWebhook(paypalId) {
-    const formData = new FormData();
-    formData.append('manual_action', 'simulate_paypal_webhook');
-    formData.append('paypal_id', paypalId);
-
-    fetch('webhook_handler.php', { method: 'POST', body: formData })
-    .then(r => r.json())
-    .then(res => {
-        if (res.success) { alert(res.message); location.reload(); }
-        else alert('Error: ' + res.message);
-    });
 }
 </script>
 </body>
