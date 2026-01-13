@@ -1,6 +1,6 @@
 <?php
 /**
- * Procesa la confirmación de pago de PayPal Sandbox y actualiza al usuario
+ * Procesa la confirmación de pago de PayPal y actualiza al usuario
  * Ubicación: dePago/ajax_confirm_payment.php
  */
 require_once __DIR__ . '/../db/connection.php';

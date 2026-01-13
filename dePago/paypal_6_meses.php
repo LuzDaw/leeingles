@@ -34,11 +34,10 @@
                         .then(res => {
                             if (res.success) {
                                 if (realStatus === 'ACTIVE') {
-                                    alert('¡Plan Ahorro activado con éxito!');
-                                    window.location.href = 'index.php?payment_success=1';
+                                    window.location.href = 'index.php?tab=account&payment_success=1';
                                 } else {
                                     // Caso de pago pendiente (eCheck / Cargo en cuenta)
-                                    window.location.href = 'index.php?payment_pending=1';
+                                    window.location.href = 'index.php?tab=account&payment_pending=1';
                                 }
                             } else {
                                 alert('Error: ' + res.message);
