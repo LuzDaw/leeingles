@@ -469,20 +469,20 @@ $stmt->close();
     </div>
     <?php endif; ?>
 
-    <!-- 5️⃣ Plan de suscripción (PayPal) -->
-    <div id="subscription-plans-section" class="info-box" style="margin-top: 64px; border: 1px solid #e2e8f0; background: #f8fafc;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-            <h4 style="margin: 0;">💎 Plan de suscripción</h4>
-            <span style="font-size: 14px; color: #64748b;">Plan actual: <strong style="color: #ff8a00;"><?= $account_status ?></strong></span>
+    <!-- 5️⃣ Pago Único (Desplegable) -->
+    <div id="one-time-payment-section" class="info-box" style="margin-top: 64px; border: 1px solid #e2e8f0; background: #f8fafc;">
+        <div id="toggle-one-time-payment" style="display: flex; justify-content: space-between; align-items: center; cursor: pointer;">
+            <h4 style="margin: 0;">💰 Pago Único</h4>
+            <span id="toggle-icon" style="font-size: 20px; color: #64748b;">▼</span>
         </div>
         
-        <div class="subscription-plans">
+        <div id="one-time-plans-container" class="subscription-plans" style="display: none; margin-top: 20px;">
             <div class="plan-card">
                 <div class="plan-duration">🟢 Plan Inicio - 1 mes</div>
                  <div class="plan-info">Accede a todas las funciones durante 1 mes.</div>
                 <div class="plan-prom">Ideal para probar la aplicación sin compromiso.</div>
                 <div class="plan-price">4,99 €</div>
-                <?php include '../../dePago/paypal_1_mes.php'; ?>
+                <div class="paypal-placeholder">Botón de PayPal (Pago Único)</div>
             </div>
             
             <div class="plan-card recommended">
@@ -491,7 +491,7 @@ $stmt->close();
                 <div class="plan-info">Todas las funciones activas durante 6 meses.</div>
                 <div class="plan-prom">Más tiempo, mejor precio y sin renovaciones mensuales</div>
                 <div class="plan-price">19,99 €</div>
-                <?php include '../../dePago/paypal_6_meses.php'; ?>
+                <div class="paypal-placeholder">Botón de PayPal (Pago Único)</div>
             </div>
             
             <div class="plan-card">
@@ -499,19 +499,19 @@ $stmt->close();
                 <div class="plan-info">Accede a todas las funciones durante 12 meses.</div>
                 <div class="plan-prom">La mejor opción en precio y tranquilidad.</div>
                 <div class="plan-price">31,99 €</div>
-                <?php include '../../dePago/paypal_1_ano.php'; ?>
+                <div class="paypal-placeholder">Botón de PayPal (Pago Único)</div>
             </div>
         </div>
     </div>
 
-    <!-- 6️⃣ Pago Único (Desplegable) -->
-    <div id="one-time-payment-section" class="info-box" style="margin-top: 24px; border: 1px solid #e2e8f0; background: #f8fafc;">
-        <div id="toggle-one-time-payment" style="display: flex; justify-content: space-between; align-items: center; cursor: pointer;">
-            <h4 style="margin: 0;">💰 Pago Único</h4>
-            <span id="toggle-icon" style="font-size: 20px; color: #64748b;">▼</span>
+    <!-- 6️⃣ Plan de suscripción (PayPal) -->
+    <div id="subscription-plans-section" class="info-box" style="margin-top: 24px; border: 1px solid #e2e8f0; background: #f8fafc;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h4 style="margin: 0;">💎 Plan de suscripción</h4>
+            <span style="font-size: 14px; color: #64748b;">Plan actual: <strong style="color: #ff8a00;"><?= $account_status ?></strong></span>
         </div>
         
-        <div id="one-time-plans-container" class="subscription-plans" style="display: none; margin-top: 20px;">
+        <div class="subscription-plans">
             <div class="plan-card">
                 <div class="plan-duration">🟢 Plan Inicio - 1 mes</div>
                  <div class="plan-info">Accede a todas las funciones durante 1 mes.</div>
