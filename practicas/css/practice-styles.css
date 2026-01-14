@@ -580,9 +580,10 @@
 }
 
 .nav-btn:hover {
-    background: #346ab62e;
+    background: #3b82f6;
     transform: translateY(-1px);
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    color: white;
 }
 
 .nav-btn2 {
