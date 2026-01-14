@@ -185,7 +185,7 @@ if ($result->num_rows > 0) {
             $stmt2->close();
         error_log("[DEBUG] Own Text - ID: " . $row['id'] . ", Title: " . $row['title'] . ", Title Translation (from query): " . $row['title_translation']);
         echo '<li class="text-item">';
-        echo '<input type="checkbox" class="text-checkbox" name="selected_texts[]" value="' . $row['id'] . '" onchange="updateBulkActions()" disabled>';
+        echo '<input type="checkbox" class="text-checkbox" name="selected_texts[]" value="' . $row['id'] . '" onchange="updateBulkActions()">';
         echo '<a href="index.php?text_id=' . $row['id'] . '" class="text-title">';
         echo '<span class="title-english">' . htmlspecialchars($row['title']) . '</span>';
         
