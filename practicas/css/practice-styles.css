@@ -580,9 +580,29 @@
 }
 
 .nav-btn:hover {
-    background: #346ab6;
+    background: #346ab62e;
     transform: translateY(-1px);
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.nav-btn2 {
+ padding: 12px 24px;
+    border: 2px solid #3b82f6;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #144799;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s;
+}
+
+
+.nav-btn2:hover {
+    background: #3b82f6;
+    border-color: rgb(255 255 255 / 34%);
+    transform: translateY(-1px);
+    color: white;
+    text-decoration: none;
 }
 
 /* Animaciones */
@@ -828,9 +848,9 @@
   border-color: #ff8a0087;
 }
 .option-btn.incorrect {
-  background: #ff8a00;
+  background: #ef4444;
   color: white;
-  border-color: #ff8a00;
+  border-color: #ef4444;
 }
 .write-input {
   width: 100%;

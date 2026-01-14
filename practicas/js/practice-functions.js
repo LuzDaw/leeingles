@@ -1246,9 +1246,9 @@ function showPracticeResults() {
             </div>
             <p>¡Excelente trabajo! Has completado todas las palabras correctamente.</p>
             <div style="margin-top: 30px;">
-                <button class="next-btn" id="practice-next-btn" onclick="window.location.href='index.php?tab=practice'" style="margin-right: 15px;">Seguir practicando</button>
-                <a href="index.php?tab=progress" class="nav-btn" style="margin-right: 15px;">Ir a mi progreso</a>
-                <a href="index.php?tab=my-texts" class="nav-btn">Ver mis textos</a>
+                <button class="nav-btn2" id="practice-next-btn" onclick="window.location.href='index.php?tab=practice'" style="margin-right: 15px;">Seguir practicando</button>
+                <a href="index.php?tab=progress" class="nav-btn2" style="margin-right: 15px;">Ir a mi progreso</a>
+                <a href="index.php?tab=my-texts" class="nav-btn2">Ver mis textos</a>
             </div>
         </div>
     `;

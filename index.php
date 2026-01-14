@@ -956,13 +956,6 @@ function render_text_clickable($text)
             <span id="togglePasswordRegisterModal" class="password-toggle-icon"></span>
           </div>
         </div>
-        <div style="margin-bottom:15px;">
-          <label style="display:block; margin-bottom:3px; font-weight:600; color:#555; font-size:14px;">🔒 Confirmar:</label>
-          <div style="position: relative;">
-            <input type="password" name="confirm_password" id="confirm-password" required style="width:90%; padding:8px; border:2px solid #e0e0e0; border-radius:6px; font-size:14px; box-sizing:border-box;">
-            <span id="toggleConfirmPasswordRegisterModal" class="password-toggle-icon"></span>
-          </div>
-        </div>
         <button type="submit" style="width:100%; padding:10px; background:#3B82F6; color:white; border:none; border-radius:6px; font-size:16px; font-weight:600; cursor:pointer;">Crear cuenta</button>
       </form>
       <div id="register-error" style="color:#dc3545; margin-top:10px; padding:8px; background:#ffeaea; border-radius:5px; display:none; font-size:14px;"></div>
@@ -2288,7 +2281,6 @@ function render_text_clickable($text)
     document.addEventListener('DOMContentLoaded', function() {
         setupPasswordVisibilityToggle('login-password', 'togglePasswordLoginModal');
         setupPasswordVisibilityToggle('register-password', 'togglePasswordRegisterModal');
-        setupPasswordVisibilityToggle('confirm-password', 'toggleConfirmPasswordRegisterModal');
     });
 
     // Función para recuperar contraseña

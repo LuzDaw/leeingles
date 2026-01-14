@@ -672,7 +672,7 @@ $stmt->close();
         <button id="btn-show-delete-panel" class="nav-btn" style="color: #64748b; font-size: 13px; border: 1px solid #e2e8f0; padding: 8px 16px; border-radius: 8px; background: transparent; cursor: pointer;">Eliminar Cuenta</button>
         
         <div id="delete-account-panel" style="display: none; width: 100%; max-width: 400px; background: #fff1f2; border: 1px solid #fecdd3; border-radius: 12px; padding: 24px; margin-top: 10px; text-align: center;">
-            <h4 style="color: #5b4848; margin-top: 0; margin-bottom: 12px;">¿Estás seguro de que quieres eliminar tu cuenta?</h4>
+            <h4 style="color: #991b1b; margin-top: 0; margin-bottom: 12px;">¿Estás seguro de que quieres eliminar tu cuenta?</h4>
             <p style="color: #b91c1c; font-size: 14px; margin-bottom: 20px;">Esta acción es irreversible. Se borrarán todos tus textos, palabras guardadas y progreso de estudio.</p>
             
             <div style="margin-bottom: 20px;">

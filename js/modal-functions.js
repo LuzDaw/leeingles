@@ -89,11 +89,6 @@ EventUtils.onDOMReady(() => {
             e.preventDefault();
             const formData = new FormData(this);
             
-            if (!ValidationUtils.passwordsMatch(formData.get('password'), formData.get('confirm_password'))) {
-                MessageUtils.showError('register-error', 'Las contraseñas no coinciden');
-                return;
-            }
-            
             try {
                 // Mostrar modal de carga antes de enviar la petición
                 window.showLoadingRedirectModal('Registrando usuario...', 'Por favor, espera...');
@@ -190,7 +185,6 @@ EventUtils.onDOMReady(() => {
                     DOMUtils.updateValue('register-username', '');
                     DOMUtils.updateValue('register-email', '');
                     DOMUtils.updateValue('register-password', '');
-                    DOMUtils.updateValue('register-confirm-password', '');
                     // Asegurarse de que el botón de envío no esté deshabilitado si se implementó alguna lógica para ello
                     const submitButton = registerForm.querySelector('button[type="submit"]');
                     if (submitButton) {
@@ -208,7 +202,6 @@ EventUtils.onDOMReady(() => {
                 DOMUtils.updateValue('register-username', '');
                 DOMUtils.updateValue('register-email', '');
                 DOMUtils.updateValue('register-password', '');
-                DOMUtils.updateValue('register-confirm-password', '');
                 const submitButton = registerForm.querySelector('button[type="submit"]');
                 if (submitButton) {
                     submitButton.disabled = false;
