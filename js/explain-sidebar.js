@@ -273,28 +273,8 @@ class ExplainSidebar {
 
     
     getTranslation(word) {
-        // Traducciones básicas - aquí podrías integrar con tu sistema de traducción
-        const translations = {
-            'network': 'red',
-            'computer': 'computadora',
-            'system': 'sistema',
-            'management': 'gestión',
-            'planning': 'planificación',
-            'services': 'servicios',
-            'internet': 'internet',
-            'safety': 'seguridad',
-            'availability': 'disponibilidad',
-            'technology': 'tecnología',
-            'information': 'información',
-            'development': 'desarrollo',
-            'learning': 'aprendizaje',
-            'education': 'educación',
-            'business': 'negocio',
-            'thanks': 'gracias',
-            'machine': 'máquina'
-        };
-        
-        return translations[word.toLowerCase()] || 'traducción';
+        // Traducciones básicas eliminadas para favorecer el sistema de BD/API
+        return 'traducción';
     }
     
     showLoading() {

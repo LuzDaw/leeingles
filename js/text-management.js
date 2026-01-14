@@ -161,15 +161,10 @@ window.loadPublicTexts = loadPublicTexts;
 
 // Devuelve el número de palabras de un texto dado
 window.countWordsInText = function(text) {
-    if (!text || typeof text !== 'string') return 0;
-    // Quitar espacios extra y contar palabras separadas por espacios
-    return text.trim().split(/\s+/).filter(Boolean).length;
+    return TextUtils.countWords(text);
 };
 
 // Devuelve el número de letras (caracteres alfabéticos) de un texto dado
 window.countLettersInText = function(text) {
-    if (!text || typeof text !== 'string') return 0;
-    // Contar solo letras (ignorando espacios, números y signos)
-    const matches = text.match(/[a-zA-ZáéíóúüñÁÉÍÓÚÜÑ]/g);
-    return matches ? matches.length : 0;
+    return TextUtils.countLetters(text);
 };

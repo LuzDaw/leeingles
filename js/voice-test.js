@@ -37,14 +37,7 @@ function showEnvironmentInfo() {
     };
 }
 
-// Ejecutar pruebas cuando el DOM esté listo
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => {
-        setTimeout(testVoiceSystem, 1000); // Esperar un poco para que se cargue todo
-    });
-} else {
-    setTimeout(testVoiceSystem, 1000);
-}
+// Ejecución automática de pruebas desactivada para producción
 
 // Exponer función de prueba globalmente
 window.testVoiceSystem = testVoiceSystem;

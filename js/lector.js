@@ -915,7 +915,7 @@ function initLector() {
 
     // Función para contar palabras en un texto
     function countWords(text) {
-        return text.trim().split(/\s+/).length;
+        return TextUtils.countWords(text);
     }
 
     // Función auxiliar para manejar el avance seguro al siguiente párrafo

@@ -96,7 +96,6 @@ $username = $_SESSION['username'] ?? 'No identificado';
 
 <script>
     const log = (msg) => {
-        console.log(msg);
         const el = document.getElementById('status-log');
         if (el) el.innerText = msg;
     };

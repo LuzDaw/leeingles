@@ -129,6 +129,5 @@ function loadAllPublicTexts() {
 
 // Función local para contar palabras en un texto
 function countWordsInText(text) {
-    if (!text || typeof text !== 'string') return 0;
-    return text.trim().split(/\s+/).filter(Boolean).length;
-} 
+    return TextUtils.countWords(text);
+}

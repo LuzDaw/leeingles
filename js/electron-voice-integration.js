@@ -8,24 +8,6 @@
     // Silenciar logs verbosos del script ResponsiveVoice sin afectar el resto
     (function setupRVLogSilencer(){
         try {
-            const __orig = {
-                log: console.log,
-                info: console.info,
-                warn: console.warn
-            };
-            const shouldMute = (args) => {
-                if (!args || !args.length) return false;
-                const s = args[0];
-                if (typeof s !== 'string') return false;
-                // Mensajes típicos del loader de ResponsiveVoice
-                if (s.startsWith('ResponsiveVoice')) return true; // "ResponsiveVoice r1.8.4"
-                if (s.startsWith('RV: ')) return true;           // "RV: Voice support ready"
-                if (s === 'Prerender: false') return true;
-                if (s === 'isHidden: false') return true;
-                return false;
-            };
-            console.log = function(...args){ if (shouldMute(args)) return; return __orig.log.apply(console, args); };
-            console.info = function(...args){ if (shouldMute(args)) return; return __orig.info.apply(console, args); };
             console.warn = function(...args){ if (shouldMute(args)) return; return __orig.warn.apply(console, args); };
             // Permitir restaurar si fuera necesario
             window.__rvConsoleSilencer = __orig;

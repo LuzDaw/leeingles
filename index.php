@@ -2606,7 +2606,6 @@ function render_text_clickable($text)
       }
       
       // Cargar contenido vía AJAX (sin caché para asegurar datos frescos)
-      console.log('Cargando pestaña:', tab, 'desde:', ajaxFile);
       fetch(ajaxFile, {
         cache: 'no-store',
         headers: {
@@ -2614,11 +2613,9 @@ function render_text_clickable($text)
         }
       })
         .then(response => {
-          console.log('Respuesta recibida para:', tab, 'Status:', response.status);
           return response.text();
         })
         .then(data => {
-          console.log('Datos recibidos para:', tab, 'Longitud:', data.length);
           tabContent.innerHTML = data;
           
           // Ejecutar scripts que puedan estar en el contenido cargado

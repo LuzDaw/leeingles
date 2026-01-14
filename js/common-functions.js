@@ -391,6 +391,32 @@ window.NavigationUtils = {
 };
 
 /**
+ * Utilidades para procesamiento de texto
+ */
+window.TextUtils = {
+    /**
+     * Devuelve el número de palabras de un texto dado
+     * @param {string} text - Texto a procesar
+     * @returns {number} Número de palabras
+     */
+    countWords: function(text) {
+        if (!text || typeof text !== 'string') return 0;
+        return text.trim().split(/\s+/).filter(Boolean).length;
+    },
+
+    /**
+     * Devuelve el número de letras (caracteres alfabéticos) de un texto dado
+     * @param {string} text - Texto a procesar
+     * @returns {number} Número de letras
+     */
+    countLetters: function(text) {
+        if (!text || typeof text !== 'string') return 0;
+        const matches = text.match(/[a-zA-ZáéíóúüñÁÉÍÓÚÜÑ]/g);
+        return matches ? matches.length : 0;
+    }
+};
+
+/**
  * Utilidades para traducción
  */
 window.TranslationUtils = {
@@ -490,6 +516,7 @@ if (typeof module !== 'undefined' && module.exports) {
         MessageUtils: window.MessageUtils,
         ValidationUtils: window.ValidationUtils,
         NavigationUtils: window.NavigationUtils,
+        TextUtils: window.TextUtils,
         TranslationUtils: window.TranslationUtils,
         SoundUtils: window.SoundUtils
     };
