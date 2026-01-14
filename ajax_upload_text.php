@@ -64,13 +64,19 @@ try {
     if ($stmt->execute()) {
         $text_id = $conn->insert_id;
         
+        // Enviar respuesta de éxito inmediatamente para evitar que el cliente espere la traducción
+        // Pero como PHP es síncrono por defecto, simplemente nos aseguramos de que si falla la traducción no rompa el JSON
+        
         // Traducir automáticamente el título
         if (!empty($title)) {
             try {
                 // Construir URL dinámica basada en el servidor actual
-                $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
+                $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 'https' : 'http';
                 $host = $_SERVER['HTTP_HOST'];
-                $translate_url = $protocol . '://' . $host . '/traduciones/translate.php';
+                // Asegurar que la ruta sea correcta independientemente de dónde se llame
+                $base_dir = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME']));
+                if ($base_dir === '/') $base_dir = '';
+                $translate_url = $protocol . '://' . $host . $base_dir . '/traduciones/translate.php';
                 
                 // Llamar a la API de traducción
                 $ch = curl_init();
@@ -78,8 +84,8 @@ try {
                 curl_setopt($ch, CURLOPT_POST, true);
                 curl_setopt($ch, CURLOPT_POSTFIELDS, 'word=' . urlencode($title));
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                curl_setopt($ch, CURLOPT_TIMEOUT, 5);
-                curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 3);
+                curl_setopt($ch, CURLOPT_TIMEOUT, 2); // Reducir timeout para no bloquear
+                curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 2);
                 
                 $response = curl_exec($ch);
                 $curl_error = curl_error($ch);
@@ -92,25 +98,16 @@ try {
                         // Guardar la traducción en la base de datos
                         $update_stmt = $conn->prepare("UPDATE texts SET title_translation = ? WHERE id = ?");
                         $update_stmt->bind_param("si", $translation_data['translation'], $text_id);
-                        if ($update_stmt->execute()) {
-                            error_log("[TRANSLATION SUCCESS] Text ID: $text_id, Title: '$title', Translation: '" . $translation_data['translation'] . "'");
-                        } else {
-                            error_log("[TRANSLATION ERROR] Failed to save translation for text ID: $text_id - " . $update_stmt->error);
-                        }
+                        $update_stmt->execute();
                         $update_stmt->close();
-                    } else {
-                        error_log("[TRANSLATION ERROR] No translation in response for text ID: $text_id, Response: " . substr($response, 0, 200));
                     }
-                } else {
-                    error_log("[TRANSLATION ERROR] cURL failed for text ID: $text_id, URL: $translate_url, Error: $curl_error, HTTP Code: $http_code");
                 }
             } catch (Exception $e) {
-                // Si falla la traducción, no es crítico, solo log
-                error_log("[TRANSLATION EXCEPTION] Error traduciendo título para text ID: $text_id - " . $e->getMessage());
+                // Silencioso, no queremos romper la respuesta principal
             }
         }
         
-        echo json_encode(['success' => true, 'message' => 'Texto subido correctamente']);
+        echo json_encode(['success' => true, 'message' => 'Texto subido correctamente', 'text_id' => $text_id]);
     } else {
         throw new Exception("Error ejecutando la consulta: " . $stmt->error);
     }

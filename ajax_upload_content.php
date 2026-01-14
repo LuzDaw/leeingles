@@ -134,7 +134,7 @@ $conn->close();
   <!-- Columna izquierda: Formulario de subida de texto -->
   <div class="upload-form-container">
     <!-- Formulario de subida de texto -->
-    <form action="upload_text.php" method="post" id="upload-text-form">
+    <form action="ajax_upload_text.php" method="post" id="upload-text-form">
       <div class="upload-form-group">
         <label for="title-input" class="upload-label">Título:</label>
         <input type="text" name="title" id="title-input" class="upload-input">
@@ -367,41 +367,54 @@ document.getElementById('upload-text-form').addEventListener('submit', function(
         method: 'POST',
         body: formData
     })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+    .then(async response => {
+        const text = await response.text();
+        try {
+            return JSON.parse(text);
+        } catch (e) {
+            console.error('Server response was not JSON:', text);
+            throw new Error('Respuesta del servidor inválida');
         }
-        return response.json();
     })
     .then(data => {
-        // Verificar si la respuesta indica éxito
         if (data.success) {
-            messagesDiv.innerHTML = '<div style="color: #eaa827; padding: 10px; background: #d1fae5; border-radius: 4px; border: 1px solid #ff8a0087;">✅ ¡Texto subido exitosamente!</div>';
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            document.getElementById('upload-text-form').reset();
-            document.getElementById('category_section').style.display = 'none';
+            messagesDiv.innerHTML = '<div style="color: #1e40af; padding: 15px; background: #d1fae5; border-radius: 8px; border: 1px solid #10b981; font-weight: bold; margin-bottom: 20px;">✅ ¡Texto subido exitosamente! Redirigiendo...</div>';
             
-            // Resetear el select personalizado
+            // Resetear formulario de forma segura
+            const form = document.getElementById('upload-text-form');
+            if (form) form.reset();
+
+            const categorySection = document.getElementById('category_section');
+            if (categorySection) categorySection.style.display = 'none';
+            
+            // Resetear el select personalizado de forma segura
             const selectSelected = document.getElementById('select-selected');
-            const displayText = selectSelected.querySelector('span:first-child');
-            displayText.textContent = '-- Selecciona categoría --';
-            displayText.style.color = '#6b7280';
-            document.getElementById('category_id_input').value = '0';
+            if (selectSelected) {
+                const displayText = selectSelected.querySelector('span:first-child');
+                if (displayText) {
+                    displayText.textContent = '-- Selecciona categoría --';
+                    displayText.style.color = '#6b7280';
+                }
+            }
+
+            const categoryIdInput = document.getElementById('category_id_input');
+            if (categoryIdInput) categoryIdInput.value = '0';
             
-            // Asegurar que el checkbox de texto público esté desmarcado
-            document.getElementById('is_public').checked = false;
-            
-            // Redirigir a la pestaña de textos después de 2.5 segundos (dar tiempo a que se complete la traducción)
+            // Redirigir inmediatamente a la pestaña de textos
             setTimeout(() => {
-                loadTabContent('my-texts');
-            }, 2500);
+                if (typeof loadTabContent === 'function') {
+                    loadTabContent('my-texts');
+                } else {
+                    window.location.href = 'index.php?tab=texts';
+                }
+            }, 1000);
         } else {
-            // Mostrar el error específico
-            messagesDiv.innerHTML = `<div style="color: #ff8a00; padding: 10px; background: #fef2f2; border-radius: 4px; border: 1px solid #f87171;">❌ ${data.message || 'Error al subir el texto'}</div>`;
+            messagesDiv.innerHTML = `<div style="color: #b91c1c; padding: 15px; background: #fef2f2; border-radius: 8px; border: 1px solid #f87171; margin-bottom: 20px;">❌ ${data.message || 'Error al subir el texto'}</div>`;
         }
     })
     .catch(error => {
-        messagesDiv.innerHTML = '<div style="color: #ff8a00; padding: 10px; background: #fef2f2; border-radius: 4px; border: 1px solid #f87171;">❌ Error de conexión. Por favor, intenta de nuevo.</div>';
+        console.error('Upload error:', error);
+        messagesDiv.innerHTML = `<div style="color: #b91c1c; padding: 15px; background: #fef2f2; border-radius: 8px; border: 1px solid #f87171; margin-bottom: 20px;">❌ Error: ${error.message || 'No se pudo conectar con el servidor'}</div>`;
     });
 });
 </script>

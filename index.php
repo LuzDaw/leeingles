@@ -357,70 +357,7 @@ function render_text_clickable($text)
     <div id="text" class="reading-area" data-text-id="<?php if (isset($text_id)) { echo $text_id; } elseif (isset($public_id)) { echo $public_id; } else { echo ''; } ?>">
 
       <?php if (empty($text)): ?>
-        <?php if (isset($_GET['show_upload']) && isset($_SESSION['user_id'])): ?>
-          <!-- Mostrar formulario de subir texto -->
-          <div id="upload-form-container" style="display: block;">
-            <div class="reading-area">
-              <h3>⬆ Subir nuevo texto</h3>
-              <button onclick="window.location.href='index.php'" class="nav-btn" style="margin-bottom: 20px;">← Volver a la lista</button>
-
-              <div id="upload-messages"></div>
-
-              <form action="upload_text.php" method="post">
-                <div style="margin-bottom: 15px;">
-                  <label style="display: block; margin-bottom: 5px; font-weight: bold;">Título:</label>
-                  <input type="text" name="title" id="title-input" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
-                  <small style="color: #666;">Si no llenas el título, se generará automáticamente con las primeras 3 palabras del texto</small>
-                </div>
-
-        <div style="margin-bottom: 15px;">
-          <label style="display: block; margin-bottom: 5px; font-weight: bold;">Contenido:</label>
-          <textarea name="content" id="content-input" rows="10" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;"></textarea>
-        </div>
-
-        <?php if (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] == 1): ?>
-        <div style="margin-bottom: 15px;">
-          <label style="display: flex; align-items: center; gap: 8px;">
-            <input type="checkbox" name="is_public" id="is_public">
-            <span style="font-weight: bold;">Texto público</span>
-          </label>
-        </div>
-
-        <div id="category_section" style="display: none; margin-bottom: 15px;">
-          <label style="display: block; margin-bottom: 5px; font-weight: bold;">Categoría:</label>
-          <select name="category_id" id="category_select" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
-            <option value="0">-- Selecciona categoría --</option>
-            <?php foreach ($categories as $cat): ?>
-              <?php
-              // Separar el nombre en inglés y español
-              $parts = explode(' - ', $cat['name']);
-              $english = $parts[0] ?? '';
-              $spanish = $parts[1] ?? '';
-              
-              // Si no hay traducción, usar el nombre completo como inglés
-              if (empty($spanish)) {
-                  $english = $cat['name'];
-                  $spanish = '';
-              }
-              
-              // Formatear la opción
-              if (!empty($spanish)) {
-                  $display_name = $english . ' - ' . $spanish;
-              } else {
-                  $display_name = $english;
-              }
-              ?>
-              <option value="<?= $cat['id'] ?>"><?= htmlspecialchars($display_name) ?></option>
-            <?php endforeach; ?>
-          </select>
-        </div>
-        <?php endif; ?>
-
-        <button type="submit" class="nav-btn primary" style="padding: 10px 20px;">Subir texto</button>
-              </form>
-            </div>
-          </div>
-        <?php elseif (isset($_GET['practice']) && isset($_SESSION['user_id'])): ?>
+        <?php if (isset($_GET['practice']) && isset($_SESSION['user_id'])): ?>
           <!-- Modo práctica -->
           <div id="practice-container">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
@@ -1033,69 +970,6 @@ function render_text_clickable($text)
     </div>
   </div>
 
-  <!-- Formulario de subir texto (integrado) -->
-  <div id="upload-form-container" style="display:none;">
-    <div class="reading-area">
-      <h3>⬆ Subir nuevo texto</h3>
-      <button id="back-to-list" class="nav-btn" style="margin-bottom: 20px;">← Volver a la lista</button>
-
-      <div id="upload-messages"></div>
-
-      <form action="upload_text.php" method="post">
-        <div style="margin-bottom: 15px;">
-          <label style="display: block; margin-bottom: 5px; font-weight: bold;">Título:</label>
-          <input type="text" name="title" id="title-input" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
-          <small style="color: #666;">Si no llenas el título, se generará automáticamente con las primeras 3 palabras del texto</small>
-        </div>
-
-        <div style="margin-bottom: 15px;">
-          <label style="display: block; margin-bottom: 5px; font-weight: bold;">Contenido:</label>
-          <textarea name="content" id="content-input" rows="10" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;"></textarea>
-        </div>
-
-        <?php if (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] == 1): ?>
-        <div style="margin-bottom: 15px;">
-          <label style="display: flex; align-items: center; gap: 8px;">
-            <input type="checkbox" name="is_public" id="is_public">
-            <span style="font-weight: bold;">Texto público</span>
-          </label>
-        </div>
-
-        <div id="category_section" style="display: none; margin-bottom: 15px;">
-          <label style="display: block; margin-bottom: 5px; font-weight: bold;">Categoría:</label>
-          <select name="category_id" id="category_select" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
-            <option value="0">-- Selecciona categoría --</option>
-            <?php foreach ($categories as $cat): ?>
-              <?php
-              // Separar el nombre en inglés y español
-              $parts = explode(' - ', $cat['name']);
-              $english = $parts[0] ?? '';
-              $spanish = $parts[1] ?? '';
-              
-              // Si no hay traducción, usar el nombre completo como inglés
-              if (empty($spanish)) {
-                  $english = $cat['name'];
-                  $spanish = '';
-              }
-              
-              // Formatear la opción
-              if (!empty($spanish)) {
-                  $display_name = $english . ' - ' . $spanish;
-              } else {
-                  $display_name = $english;
-              }
-              ?>
-              <option value="<?= $cat['id'] ?>"><?= htmlspecialchars($display_name) ?></option>
-            <?php endforeach; ?>
-          </select>
-        </div>
-        <?php endif; ?>
-
-        <button type="submit" class="nav-btn primary" style="padding: 10px 20px;">Subir texto</button>
-      </form>
-    </div>
-  </div>
-
   <script>
     // Inicializar tooltip y botón flotante al cargar la página
     document.addEventListener('DOMContentLoaded', function() {
@@ -1115,6 +989,7 @@ function render_text_clickable($text)
       // Detectar parámetro ?tab en la URL
       const urlParams = new URLSearchParams(window.location.search);
       let tab = urlParams.get('tab');
+      const showUpload = urlParams.get('show_upload'); // Detectar parámetro de subida
       const resetToken = urlParams.get('token'); // Detectar token de restablecimiento
       const paymentSuccess = urlParams.get('payment_success'); // Detectar éxito de pago
 
@@ -1131,6 +1006,8 @@ function render_text_clickable($text)
       } else if (tab === 'texts') {
         tab = 'my-texts';
         loadTabContent(tab);
+      } else if (showUpload === '1') {
+        loadTabContent('upload');
       } else if (tab && ['progress','my-texts','saved-words','practice','upload','account'].includes(tab)) {
         // Si es la pestaña de cuenta y venimos de un pago exitoso, pasar el parámetro
         if (tab === 'account' && paymentSuccess) {
@@ -1541,110 +1418,10 @@ function render_text_clickable($text)
 
     // Funcionalidad del formulario de subir texto
     document.getElementById('upload-text-btn-user')?.addEventListener('click', function() {
-      window.location.href = 'index.php?show_upload=1';
-    });
-
-    document.getElementById('back-to-list')?.addEventListener('click', function() {
-      hideUploadForm();
-    });
-
-    function showUploadForm() {
-      const mainContainer = document.querySelector('.main-container');
-      const uploadForm = document.getElementById('upload-form-container');
-
-      mainContainer.style.display = 'none';
-      uploadForm.style.display = 'block';
-    }
-
-    function hideUploadForm() {
-      const mainContainer = document.querySelector('.main-container');
-      const uploadForm = document.getElementById('upload-form-container');
-
-      uploadForm.style.display = 'none';
-      mainContainer.style.display = 'block';
-
-      // Limpiar formulario
-      document.getElementById('upload-form').reset();
-      document.getElementById('upload-messages').innerHTML = '';
-      document.getElementById('category_section').style.display = 'none';
-      // Asegurar que el select de categorías esté reseteado
-      document.getElementById('category_select').value = '0';
-    }
-
-    // Manejar checkbox de texto público
-    document.getElementById('is_public')?.addEventListener('change', function() {
-      const categorySection = document.getElementById('category_section');
-      const categorySelect = document.getElementById('category_select');
-      
-      if (this.checked) {
-        categorySection.style.display = 'block';
+      if (typeof loadTabContent === 'function') {
+        loadTabContent('upload');
       } else {
-        categorySection.style.display = 'none';
-        // Resetear el valor del select cuando se desmarca texto público
-        categorySelect.value = '0';
-      }
-    });
-
-    // Manejar envío del formulario
-    document.getElementById('upload-form')?.addEventListener('submit', async function(e) {
-      e.preventDefault();
-
-      const formData = new FormData();
-      const title = document.getElementById('title-input').value.trim();
-      const content = document.getElementById('content-input').value.trim();
-      const isPublic = document.getElementById('is_public').checked;
-      const categoryId = isPublic ? document.getElementById('category_select').value : 0;
-
-      // Validación del frontend
-      const messagesDiv = document.getElementById('upload-messages');
-      
-      if (!content) {
-        messagesDiv.innerHTML = '<div style="color: red; margin-bottom: 15px;">Debes incluir contenido para el texto.</div>';
-        return;
-      }
-      
-      if (isPublic && categoryId === '0') {
-        messagesDiv.innerHTML = '<div style="color: red; margin-bottom: 15px;">Debes seleccionar una categoría para el texto público.</div>';
-        return;
-      }
-
-      // Generar título automático si no se proporcionó
-      let finalTitle = title;
-      if (!finalTitle && content) {
-        const words = content.split(/\s+/).slice(0, 3);
-        finalTitle = words.join(' ').replace(/[^\w\s-]/g, '').substring(0, 50);
-        if (!finalTitle) {
-          finalTitle = 'Texto sin título';
-        }
-      }
-
-      formData.append('title', finalTitle);
-      formData.append('content', content);
-      formData.append('category_id', categoryId);
-      if (isPublic) {
-        formData.append('is_public', '1');
-      }
-
-      try {
-        const response = await fetch('ajax_upload_text.php', {
-          method: 'POST',
-          body: formData
-        });
-
-        const data = await response.json();
-        const messagesDiv = document.getElementById('upload-messages');
-
-        if (data.success) {
-          messagesDiv.innerHTML = '<div style="color: green; margin-bottom: 15px;">' + data.message + '. Redirigiendo...</div>';
-          setTimeout(() => {
-            location.reload();
-          }, 2000);
-        } else {
-          messagesDiv.innerHTML = '<div style="color: red; margin-bottom: 15px;">' + data.message + '</div>';
-        }
-      } catch (error) {
-        const messagesDiv = document.getElementById('upload-messages');
-        messagesDiv.innerHTML = '<div style="color: red; margin-bottom: 15px;">Error de conexión. Inténtalo de nuevo.</div>';
+        window.location.href = 'index.php?show_upload=1';
       }
     });
 

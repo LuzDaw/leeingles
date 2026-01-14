@@ -92,7 +92,7 @@ function authenticateUser($email, $password, $remember_me = false) {
             
             $_SESSION['user_id'] = $user_id;
             $_SESSION['username'] = (string)($real_username ?? '');
-            $_SESSION['is_admin'] = $is_admin;
+            $_SESSION['is_admin'] = (int)($is_admin ?? 0);
             
             if ($remember_me) {
                 ini_set('session.gc_maxlifetime', 30 * 24 * 60 * 60);
@@ -101,11 +101,14 @@ function authenticateUser($email, $password, $remember_me = false) {
             
             $stmt->close();
             return ['success' => true, 'user_id' => $user_id, 'username' => $real_username, 'is_admin' => $is_admin];
+        } else {
+            $stmt->close();
+            return ['success' => false, 'error' => 'La contraseña introducida es incorrecta.'];
         }
     }
     
     $stmt->close();
-    return ['success' => false, 'error' => 'Has introducido mal el usuario o contraseña o usuario no existe'];
+    return ['success' => false, 'error' => 'El email introducido no está registrado.'];
 }
 
 // ==================== REGISTRO ====================

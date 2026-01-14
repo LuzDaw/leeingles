@@ -117,7 +117,7 @@ EventUtils.onDOMReady(() => {
                             <p style="color: #ffffff; margin: 0 0 8px 0; font-weight: 500;">✓ ¡Registro exitoso!</p>
                             <p style="color: #ffffff; margin: 0 0 8px 0; font-weight: 500;">Te hemos enviado un email para activar tu cuenta.</p>
                             <p style="color: #e6e6e6; margin: 0 0 12px 0; font-size: 0.9em;">Revisa tu bandeja de entrada. Si no lo ves, revisa spam o promociones.</p>
-                            <a href="mailto:${userEmail}" style="display: inline-block; padding: 8px 15px; background: #5e6c81a2; color: white; border-radius: 5px; text-decoration: none; font-weight: 500; transition: background 0.2s;">✉️ Abrir correo</a>
+                            <a href="mailto:${userEmail}" style="display: inline-block; padding: 8px 15px; background: #ffffffa2; color: white; border-radius: 5px; text-decoration: none; font-weight: 500; transition: background 0.2s;">✉️ Abrir correo</a>
                             <p style="color: #d0d0d0; margin: 10px 0 0 0; font-size: 0.85em;">Email: ${userEmail}</p>
                         </div>
                     `;

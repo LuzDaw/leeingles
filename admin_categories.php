@@ -243,7 +243,7 @@ $result = $conn->query("
         }
         .alert-error {
             background: #fee2e2;
-            color: #991b1b;
+            color: #5b4848;
             border: 1px solid #fecaca;
         }
         .alert-warning {

@@ -113,7 +113,7 @@ if ($user_id) {
         .btn-outline:hover { background: #f8fafc; border-color: #94a3b8; }
         .alert { padding: 15px; border-radius: 8px; margin-bottom: 20px; font-weight: 500; }
         .alert-success { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
-        .alert-error { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+        .alert-error { background: #fee2e2; color: #5b4848; border: 1px solid #fecaca; }
         .form-group { margin-bottom: 15px; }
         label { display: block; margin-bottom: 5px; font-weight: 600; color: #475569; }
         input, textarea { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box; font-family: inherit; }

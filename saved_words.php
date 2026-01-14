@@ -119,7 +119,7 @@ foreach ($words as $word) {
           <?= htmlspecialchars($success_message) ?>
         </div>
       <?php elseif (isset($error_message)): ?>
-        <div class="message" style="background: #fee2e2; color: #991b1b; border: 1px solid #f87171; text-align:center; font-size:16px;">
+        <div class="message" style="background: #fee2e2; color: #5b4848; border: 1px solid #f87171; text-align:center; font-size:16px;">
           <?= htmlspecialchars($error_message) ?>
         </div>
       <?php endif; ?>

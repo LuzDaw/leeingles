@@ -7,6 +7,10 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
+// Redirigir al nuevo sistema de subida en el index
+header("Location: index.php?tab=upload");
+exit();
+
 $errors = [];
 $success = "";
 

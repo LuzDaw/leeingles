@@ -46,7 +46,7 @@ try {
     $stmt->close();
 
     if (!$user) {
-        echo json_encode(['success' => false, 'message' => 'Si el email existe en nuestro sistema, recibirás un enlace de restablecimiento.']);
+        echo json_encode(['success' => false, 'message' => 'El email introducido no está registrado en nuestro sistema.']);
         exit();
     }
 
