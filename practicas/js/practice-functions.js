@@ -479,7 +479,7 @@ window.loadPracticeQuestion = function() {
             eye.onclick = function() {
                 window.practiceAlwaysShowTranslation = !window.practiceAlwaysShowTranslation;
                 if(window.practiceAlwaysShowTranslation) {
-                    eye.style.color = '#0ea900';
+                    eye.style.color = '#e48415e5';
                     if(typeof showPracticeTranslation === 'function') showPracticeTranslation();
                 } else {
                     eye.style.color = '#2563eb';
@@ -492,7 +492,7 @@ window.loadPracticeQuestion = function() {
                 }
             };
             if(window.practiceAlwaysShowTranslation) {
-                eye.style.color = '#0ea900';
+                eye.style.color = '#e48415e5';
             } else {
                 eye.style.color = '#2563eb';
             }
@@ -609,7 +609,7 @@ window.checkWordInput = function(correctWord) {
                 feedbackDiv.style.fontSize = '15px';
                 feedbackDiv.style.boxShadow = '0 2px 8px rgba(0,0,0,0.10)';
                 feedbackDiv.style.color = '#fff';
-                feedbackDiv.style.background = '#22c55e';
+                feedbackDiv.style.background = '#e48415e5';
                 feedbackDiv.style.opacity = '0.87';
                 feedbackDiv.style.pointerEvents = 'none';
                 document.body.appendChild(feedbackDiv);
@@ -655,7 +655,7 @@ function showWordSuccessFeedback(inputElement) {
         top: ${rect.top - 60}px;
         left: ${rect.left + (rect.width / 2)}px;
         transform: translateX(-50%);
-        background: #22c55e;
+        background: #e48415e5;
         color: white;
         padding: 12px 20px;
         border-radius: 8px;
@@ -1149,7 +1149,7 @@ function showQuickFeedback(buttonElement, isCorrect, correctWord) {
     feedbackDiv.style.fontSize = '15px';
     feedbackDiv.style.boxShadow = '0 2px 8px rgba(0,0,0,0.10)';
     feedbackDiv.style.color = '#fff';
-    feedbackDiv.style.background = isCorrect ? '#22c55e' : '#ef4444';
+    feedbackDiv.style.background = isCorrect ? '#e48415e5' : '#ff8a00';
     feedbackDiv.style.opacity = '0.87';
     feedbackDiv.style.pointerEvents = 'none';
 
@@ -1415,7 +1415,7 @@ async function loadSentencePractice() {
     } catch (error) {
         document.getElementById('practice-exercise-card').innerHTML = `
             <div style="text-align: center; padding: 40px;">
-                <h3 style="color: #dc2626;">Error al cargar los textos</h3>
+                <h3 style="color: #ff8a00;">Error al cargar los textos</h3>
                 <p style="color: #9ca3af;">${error.message}</p>
                 <button onclick="loadSentencePractice()" class="option-btn">Reintentar</button>
             </div>
@@ -1521,7 +1521,7 @@ window.startSentencePractice = async function() {
         } catch (error) {
             document.getElementById('practice-exercise-card').innerHTML = `
                 <div style="text-align: center; padding: 40px;">
-                    <h3 style="color: #dc2626;">Error de conexión</h3>
+                    <h3 style="color: #ff8a00;">Error de conexión</h3>
                     <p>No se pudieron cargar las palabras del texto.</p>
                     <button onclick="setPracticeMode('selection')" class="option-btn">Intentar de nuevo</button>
                 </div>
@@ -1551,7 +1551,7 @@ window.startSentencePractice = async function() {
         } else {
             document.getElementById('practice-exercise-card').innerHTML = `
                 <div style="text-align: center; padding: 40px;">
-                    <h3 style="color: #dc2626;">No hay palabras guardadas</h3>
+                    <h3 style="color: #ff8a00;">No hay palabras guardadas</h3>
                     <p>No has guardado palabras del texto.</p>
                     <button onclick="setPracticeMode('sentences')" class="option-btn">Intentar de nuevo</button>
                 </div>
@@ -1560,7 +1560,7 @@ window.startSentencePractice = async function() {
     } catch (error) {
         document.getElementById('practice-exercise-card').innerHTML = `
             <div style="text-align: center; padding: 40px;">
-                <h3 style="color: #dc2626;">Error de conexión</h3>
+                <h3 style="color: #ff8a00;">Error de conexión</h3>
                 <p>No se pudo conectar con el servidor.</p>
                 <button onclick="setPracticeMode('sentences')" class="option-btn">Intentar de nuevo</button>
             </div>
@@ -1644,7 +1644,7 @@ function loadSentenceQuestion() {
             eye.onclick = function() {
                 window.practiceAlwaysShowTranslation = !window.practiceAlwaysShowTranslation;
                 if(window.practiceAlwaysShowTranslation) {
-                    eye.style.color = '#0ea900';
+                    eye.style.color = '#e48415e5';
                     if(typeof showEnglishSentence === 'function') showEnglishSentence();
                 } else {
                     eye.style.color = '#2563eb';
@@ -1662,7 +1662,7 @@ function loadSentenceQuestion() {
                 }
             };
             if(window.practiceAlwaysShowTranslation) {
-                eye.style.color = '#0ea900';
+                eye.style.color = '#e48415e5';
             } else {
                 eye.style.color = '#2563eb';
             }
@@ -1730,7 +1730,7 @@ window.showEnglishSentence = function() {
         eyeContainer.style.cssText = 'margin-top: 10px; text-align: right;';
         eyeContainer.innerHTML = `
             <div style="position:relative; display:inline-flex; align-items:center;">
-                <span id="always-visible-eye-sentences-moved" style="font-size:1.25em; color:#0ea900; cursor:pointer; padding:2px 6px; border-radius:4px; transition:background 0.15s;" onmouseenter="(function(){var t=document.getElementById('always-visible-tooltip-sentences-moved'); if(window.practiceAlwaysShowTranslation){t.textContent='Ocultar';}else{t.textContent='Dejar visible';} t.style.display='block';})()" onmouseleave="document.getElementById('always-visible-tooltip-sentences-moved').style.display='none'">👁️</span>
+                <span id="always-visible-eye-sentences-moved" style="font-size:1.25em; color:#e48415e5; cursor:pointer; padding:2px 6px; border-radius:4px; transition:background 0.15s;" onmouseenter="(function(){var t=document.getElementById('always-visible-tooltip-sentences-moved'); if(window.practiceAlwaysShowTranslation){t.textContent='Ocultar';}else{t.textContent='Dejar visible';} t.style.display='block';})()" onmouseleave="document.getElementById('always-visible-tooltip-sentences-moved').style.display='none'">👁️</span>
                 <span id="always-visible-tooltip-sentences-moved" style="display:none; position:absolute; top:100%; left:50%; transform:translateX(-50%); background:#222; color:#fff; padding:4px 10px; border-radius:6px; font-size:0.92em; white-space:nowrap; box-shadow:0 2px 8px rgba(0,0,0,0.13); z-index:30; opacity:0.93; max-width:180px; word-break:break-word; text-align:center;">Ocultar</span>
             </div>
         `;
@@ -1747,7 +1747,7 @@ window.showEnglishSentence = function() {
                 eye.onclick = function() {
                     window.practiceAlwaysShowTranslation = !window.practiceAlwaysShowTranslation;
                     if(window.practiceAlwaysShowTranslation) {
-                        eye.style.color = '#0ea900';
+                        eye.style.color = '#e48415e5';
                     } else {
                         eye.style.color = '#2563eb';
                         var div = document.getElementById('english-reference');
@@ -1769,7 +1769,7 @@ window.showEnglishSentence = function() {
                     }
                 };
                 if(window.practiceAlwaysShowTranslation) {
-                    eye.style.color = '#0ea900';
+                    eye.style.color = '#e48415e5';
                 } else {
                     eye.style.color = '#2563eb';
                 }
@@ -1822,7 +1822,7 @@ window.checkSentenceAnswer = function() {
     feedbackDiv.style.fontSize = '15px';
     feedbackDiv.style.boxShadow = '0 2px 8px rgba(0,0,0,0.10)';
     feedbackDiv.style.color = '#fff';
-    feedbackDiv.style.background = isCorrect ? '#22c55e' : '#ef4444';
+    feedbackDiv.style.background = isCorrect ? '#e48415e5' : '#ff8a00';
     feedbackDiv.style.opacity = '0.87';
     feedbackDiv.style.pointerEvents = 'none';
     document.body.appendChild(feedbackDiv);
@@ -2061,7 +2061,7 @@ window.initForcedDictationInput = function(correctText) {
                         feedbackDiv.style.fontSize = '15px';
                         feedbackDiv.style.boxShadow = '0 2px 8px rgba(0,0,0,0.10)';
                         feedbackDiv.style.color = '#fff';
-                        feedbackDiv.style.background = '#22c55e';
+                        feedbackDiv.style.background = '#e48415e5';
                         feedbackDiv.style.opacity = '0.87';
                         feedbackDiv.style.pointerEvents = 'none';
                         document.body.appendChild(feedbackDiv);

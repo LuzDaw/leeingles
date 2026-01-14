@@ -397,11 +397,11 @@ document.getElementById('upload-text-form').addEventListener('submit', function(
             }, 2500);
         } else {
             // Mostrar el error específico
-            messagesDiv.innerHTML = `<div style="color: #dc2626; padding: 10px; background: #fef2f2; border-radius: 4px; border: 1px solid #f87171;">❌ ${data.message || 'Error al subir el texto'}</div>`;
+            messagesDiv.innerHTML = `<div style="color: #ff8a00; padding: 10px; background: #fef2f2; border-radius: 4px; border: 1px solid #f87171;">❌ ${data.message || 'Error al subir el texto'}</div>`;
         }
     })
     .catch(error => {
-        messagesDiv.innerHTML = '<div style="color: #dc2626; padding: 10px; background: #fef2f2; border-radius: 4px; border: 1px solid #f87171;">❌ Error de conexión. Por favor, intenta de nuevo.</div>';
+        messagesDiv.innerHTML = '<div style="color: #ff8a00; padding: 10px; background: #fef2f2; border-radius: 4px; border: 1px solid #f87171;">❌ Error de conexión. Por favor, intenta de nuevo.</div>';
     });
 });
 </script>

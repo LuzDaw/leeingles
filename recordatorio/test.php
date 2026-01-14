@@ -188,7 +188,7 @@ if ($user_id) {
             <form method="POST">
                 <input type="hidden" name="action" value="simulate_inactivity">
                 <input type="hidden" name="days_ago" value="15">
-                <button type="submit" class="btn btn-outline" style="color: #dc2626; border-color: #fecaca;">Inactivo (15 días)</button>
+                <button type="submit" class="btn btn-outline" style="color: #ff8a00; border-color: #fecaca;">Inactivo (15 días)</button>
             </form>
         </div>
     </div>

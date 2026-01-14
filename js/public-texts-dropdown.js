@@ -14,11 +14,11 @@ function togglePublicTextsDropdown(e) {
                     let cats = data.map(cat => `<button type='button' onclick='loadPublicTextsByCategory(${cat.id}, "${cat.name.replace(/'/g, "\\'")}")'>${cat.name}</button>`).join('');
                     content.innerHTML = allBtn + cats;
                 } else {
-                    content.innerHTML = '<div style="padding:10px; color:#dc2626;">No hay categorías públicas.</div>';
+                    content.innerHTML = '<div style="padding:10px; color:#ff8a00;">No hay categorías públicas.</div>';
                 }
             })
             .catch(() => {
-                content.innerHTML = '<div style="padding:10px; color:#dc2626;">Error al cargar categorías.</div>';
+                content.innerHTML = '<div style="padding:10px; color:#ff8a00;">Error al cargar categorías.</div>';
             });
     }
 }
@@ -68,11 +68,11 @@ function loadPublicTextsByCategory(catId, catName) {
                 html += '</ul>';
                 form.innerHTML = html;
             } else {
-                form.innerHTML = `<div style='padding:20px; text-align:center; color:#dc2626;'>No hay textos públicos en esta categoría.</div>`;
+                form.innerHTML = `<div style='padding:20px; text-align:center; color:#ff8a00;'>No hay textos públicos en esta categoría.</div>`;
             }
         })
         .catch(() => {
-            form.innerHTML = `<div style='padding:20px; text-align:center; color:#dc2626;'>Error al cargar los textos públicos.</div>`;
+            form.innerHTML = `<div style='padding:20px; text-align:center; color:#ff8a00;'>Error al cargar los textos públicos.</div>`;
         });
 }
 
@@ -119,11 +119,11 @@ function loadAllPublicTexts() {
                 html += '</ul>';
                 form.innerHTML = html;
             } else {
-                form.innerHTML = `<div style='padding:20px; text-align:20px; color:#dc2626;'>No hay textos públicos disponibles.</div>`;
+                form.innerHTML = `<div style='padding:20px; text-align:20px; color:#ff8a00;'>No hay textos públicos disponibles.</div>`;
             }
         })
         .catch(() => {
-            form.innerHTML = `<div style='padding:20px; text-align:center; color:#dc2626;'>Error al cargar los textos públicos.</div>`;
+            form.innerHTML = `<div style='padding:20px; text-align:center; color:#ff8a00;'>Error al cargar los textos públicos.</div>`;
         });
 }
 

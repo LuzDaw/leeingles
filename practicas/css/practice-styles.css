@@ -828,9 +828,9 @@
   border-color: #ff8a0087;
 }
 .option-btn.incorrect {
-  background: #ef4444;
+  background: #ff8a00;
   color: white;
-  border-color: #ef4444;
+  border-color: #ff8a00;
 }
 .write-input {
   width: 100%;

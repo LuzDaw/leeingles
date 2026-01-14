@@ -8,7 +8,7 @@ require_once 'db/connection.php';
 require_once 'includes/content_functions.php';
 
 if (!isset($_SESSION['user_id'])) {
-    echo '<div style="text-align: center; padding: 40px; color: #ef4444;">Debes iniciar sesión para ver tu progreso.</div>';
+    echo '<div style="text-align: center; padding: 40px; color: #ff8a00;">Debes iniciar sesión para ver tu progreso.</div>';
     exit;
 }
 
@@ -260,7 +260,7 @@ if (isset($_GET['text_id']) || isset($_POST['text_id'])) {
         } catch (error) {
             const container = document.getElementById('practice-modes-container');
             if (container) {
-                container.innerHTML = '<div style="text-align: center; padding: 40px; color: #dc2626;"><p>Error cargando estadísticas.</p></div>';
+                container.innerHTML = '<div style="text-align: center; padding: 40px; color: #ff8a00;"><p>Error cargando estadísticas.</p></div>';
             }
         }
     }

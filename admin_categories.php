@@ -181,7 +181,7 @@ $result = $conn->query("
             transform: translateY(-1px);
         }
         .btn-danger {
-            background: #dc2626;
+            background: #ff8a00;
             color: white;
             padding: 8px 16px;
             font-size: 14px;

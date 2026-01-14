@@ -280,11 +280,11 @@
   transform: translateX(2px);
 }
 
-.dropdown-content button[style*='color: #dc2626'] {
-  color: #dc2626 !important;
+.dropdown-content button[style*='color: #ff8a00'] {
+  color: #ff8a00 !important;
 }
 
-.dropdown-content button[style*='color: #dc2626']:hover {
+.dropdown-content button[style*='color: #ff8a00']:hover {
   background: #fef2f2;
   color: #b91c1c !important;
 }

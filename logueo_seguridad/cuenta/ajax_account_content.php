@@ -11,7 +11,7 @@ require_once __DIR__ . '/../../includes/content_functions.php';
 require_once __DIR__ . '/../../dePago/subscription_functions.php';
 
 if (!isset($_SESSION['user_id'])) {
-    echo '<div style="text-align: center; padding: 40px; color: #ef4444;">Debes iniciar sesión para ver tu cuenta.</div>';
+    echo '<div style="text-align: center; padding: 40px; color: #ff8a00;">Debes iniciar sesión para ver tu cuenta.</div>';
     exit;
 }
 
@@ -33,7 +33,7 @@ if ($stmt_user) {
 // Obtener datos reales de suscripción
 $status = getUserSubscriptionStatus($user_id);
 if (!$status) {
-    echo '<div style="text-align: center; padding: 40px; color: #ef4444;">Error al obtener datos de suscripción.</div>';
+    echo '<div style="text-align: center; padding: 40px; color: #ff8a00;">Error al obtener datos de suscripción.</div>';
     exit;
 }
 $limit_info = checkTranslationLimit($user_id);
@@ -294,7 +294,7 @@ $stmt->close();
         transition: width 0.3s ease;
     }
     .progress-bar.warning { background: #f59e0b; }
-    .progress-bar.danger { background: #ef4444; }
+    .progress-bar.danger { background: #ff8a00; }
 
     .user-info-table {
         width: 100%;
@@ -668,18 +668,112 @@ $stmt->close();
         })();
     </script>
 
-    <div style="margin-top: 40px; display: flex; gap: 16px; justify-content: center;">
-        <button class="nav-btn" style="color: #64748b; font-size: 13px;">Eliminar Cuenta</button>
+    <div style="margin-top: 40px; display: flex; flex-direction: column; align-items: center; gap: 16px;">
+        <button id="btn-show-delete-panel" class="nav-btn" style="color: #64748b; font-size: 13px; border: 1px solid #e2e8f0; padding: 8px 16px; border-radius: 8px; background: transparent; cursor: pointer;">Eliminar Cuenta</button>
+        
+        <div id="delete-account-panel" style="display: none; width: 100%; max-width: 400px; background: #fff1f2; border: 1px solid #fecdd3; border-radius: 12px; padding: 24px; margin-top: 10px; text-align: center;">
+            <h4 style="color: #991b1b; margin-top: 0; margin-bottom: 12px;">¿Estás seguro de que quieres eliminar tu cuenta?</h4>
+            <p style="color: #b91c1c; font-size: 14px; margin-bottom: 20px;">Esta acción es irreversible. Se borrarán todos tus textos, palabras guardadas y progreso de estudio.</p>
+            
+            <div style="margin-bottom: 20px;">
+                <label for="delete-confirm-text" style="display: block; font-size: 13px; color: #7f1d1d; margin-bottom: 8px; font-weight: 600;">Escribe <span style="background: #fee2e2; padding: 2px 6px; border-radius: 4px; font-family: monospace;">Eliminate</span> para confirmar:</label>
+                <input type="text" id="delete-confirm-text" autocomplete="off" placeholder="Escribe aquí..." style="width: 100%; padding: 10px; border: 1px solid #fca5a5; border-radius: 6px; text-align: center; font-size: 15px;">
+            </div>
+            
+            <div style="display: flex; gap: 12px; justify-content: center;">
+                <button id="btn-cancel-delete" style="padding: 10px 20px; border-radius: 8px; border: 1px solid #e2e8f0; background: white; color: #64748b; cursor: pointer; font-weight: 600;">Cancelar</button>
+                <button id="btn-confirm-delete" disabled style="padding: 10px 20px; border-radius: 8px; border: none; background: #ff8a00; color: white; cursor: not-allowed; font-weight: 600; opacity: 0.5;">Eliminar Permanentemente</button>
+            </div>
+        </div>
     </div>
 </div>
+
+<script>
+(function() {
+    const showPanelBtn = document.getElementById('btn-show-delete-panel');
+    const deletePanel = document.getElementById('delete-account-panel');
+    const cancelBtn = document.getElementById('btn-cancel-delete');
+    const confirmBtn = document.getElementById('btn-confirm-delete');
+    const confirmInput = document.getElementById('delete-confirm-text');
+    const targetPhrase = "Eliminate";
+
+    if (showPanelBtn) {
+        showPanelBtn.addEventListener('click', function() {
+            deletePanel.style.display = 'block';
+            showPanelBtn.style.display = 'none';
+            confirmInput.focus();
+        });
+    }
+
+    if (cancelBtn) {
+        cancelBtn.addEventListener('click', function() {
+            deletePanel.style.display = 'none';
+            showPanelBtn.style.display = 'block';
+            confirmInput.value = '';
+            confirmBtn.disabled = true;
+            confirmBtn.style.cursor = 'not-allowed';
+            confirmBtn.style.opacity = '0.5';
+        });
+    }
+
+    if (confirmInput) {
+        confirmInput.addEventListener('input', function() {
+            if (this.value.trim() === targetPhrase) {
+                confirmBtn.disabled = false;
+                confirmBtn.style.cursor = 'pointer';
+                confirmBtn.style.opacity = '1';
+            } else {
+                confirmBtn.disabled = true;
+                confirmBtn.style.cursor = 'not-allowed';
+                confirmBtn.style.opacity = '0.5';
+            }
+        });
+    }
+
+    if (confirmBtn) {
+        confirmBtn.addEventListener('click', function() {
+            if (confirmInput.value.trim() !== targetPhrase) return;
+            
+            if (!confirm('¿Estás absolutamente seguro? Esta acción no se puede deshacer.')) return;
+
+            confirmBtn.disabled = true;
+            confirmBtn.textContent = 'Eliminando...';
+
+            fetch('logueo_seguridad/ajax_delete_account.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Tu cuenta ha sido eliminada correctamente. Esperamos verte pronto.');
+                    window.location.href = 'index.php';
+                } else {
+                    alert('Error: ' + (data.error || 'No se pudo eliminar la cuenta.'));
+                    confirmBtn.disabled = false;
+                    confirmBtn.textContent = 'Eliminar Permanentemente';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Ocurrió un error al procesar la solicitud.');
+                confirmBtn.disabled = false;
+                confirmBtn.textContent = 'Eliminar Permanentemente';
+            });
+        });
+    }
+})();
+</script>
 <?php
 $conn->close();
 } catch (Exception $e) {
-    echo '<div style="padding: 20px; color: red; background: #fee2e2; border: 1px solid #ef4444; border-radius: 8px; margin: 20px;">';
+    echo '<div style="padding: 20px; color: red; background: #fee2e2; border: 1px solid #ff8a00; border-radius: 8px; margin: 20px;">';
     echo '<strong>Error fatal:</strong> ' . htmlspecialchars($e->getMessage());
     echo '</div>';
 } catch (Error $e) {
-    echo '<div style="padding: 20px; color: red; background: #fee2e2; border: 1px solid #ef4444; border-radius: 8px; margin: 20px;">';
+    echo '<div style="padding: 20px; color: red; background: #fee2e2; border: 1px solid #ff8a00; border-radius: 8px; margin: 20px;">';
     echo '<strong>Error de PHP:</strong> ' . htmlspecialchars($e->getMessage());
     echo '</div>';
 }

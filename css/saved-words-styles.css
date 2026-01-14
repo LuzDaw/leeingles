@@ -114,7 +114,7 @@
 .dropdown-content button:hover {
   background-color: #F0F4F8;
 }
-.dropdown-content button[style*='color: #dc2626'] {
+.dropdown-content button[style*='color: #ff8a00'] {
   color: #1D3557;
   font-weight: 600;
 } 

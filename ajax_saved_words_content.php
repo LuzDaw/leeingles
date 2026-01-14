@@ -109,7 +109,7 @@ foreach ($words as $word) {
                 <div class="dropdown-content" id="dropdownContent">
                     <button type="button" onclick="selectAllWords()">✓ Marcar todos</button>
                     <button type="button" onclick="unselectAllWords()">✗ Desmarcar todos</button>
-                    <button type="button" onclick="performBulkActionWords('delete')" style="color: #dc2626;">🗑️ Eliminar seleccionadas</button>
+                    <button type="button" onclick="performBulkActionWords('delete')" style="color: #ff8a00;">🗑️ Eliminar seleccionadas</button>
                 </div>
             </div>
         </div>
@@ -233,7 +233,7 @@ foreach ($words as $word) {
 }
 
 .delete-btn {
-    background: #ef4444;
+    background: #ff8a00;
     color: white;
     border: none;
     padding: 6px 12px;
@@ -244,7 +244,7 @@ foreach ($words as $word) {
 }
 
 .delete-btn:hover {
-    background: #dc2626;
+    background: #ff8a00;
     transform: translateY(-1px);
 }
 
@@ -307,11 +307,11 @@ foreach ($words as $word) {
     transform: translateX(2px);
 }
 
-.dropdown-content button[style*='color: #dc2626'] {
-    color: #dc2626 !important;
+.dropdown-content button[style*='color: #ff8a00'] {
+    color: #ff8a00 !important;
 }
 
-.dropdown-content button[style*='color: #dc2626']:hover {
+.dropdown-content button[style*='color: #ff8a00']:hover {
     background: #fef2f2;
     color: #b91c1c !important;
 }

@@ -875,7 +875,7 @@ function render_text_clickable($text)
                 👤 Cuenta
               </button>
               <?php if (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] == 1): ?>
-                <button onclick="window.location.href='admin_categories.php'" class="tab-btn" data-tab="admin-categories" style="background: #dc2626; color: white;">
+                <button onclick="window.location.href='admin_categories.php'" class="tab-btn" data-tab="admin-categories" style="background: #ff8a00; color: white;">
                   ⚙️ Admin
                 </button>
               <?php endif; ?>
@@ -1663,7 +1663,7 @@ function render_text_clickable($text)
             if (practiceContent) {
               practiceContent.innerHTML = `
                 <div style="text-align: center; padding: 40px;">
-                  <h3 style="color: #dc2626;">Error de carga</h3>
+                  <h3 style="color: #ff8a00;">Error de carga</h3>
                   <p>No se pudieron cargar los ejercicios. Recarga la página.</p>
                   <button onclick="window.location.reload()" class="nav-btn">Recargar</button>
                 </div>
@@ -1758,9 +1758,9 @@ function render_text_clickable($text)
             }
             
             .option-btn.correct {
-                background: #dc2626;
+                background: #ff8a00;
                 color: white;
-                border-color: #dc2626;
+                border-color: #ff8a00;
             }
             
             .option-btn.incorrect {
@@ -2596,7 +2596,7 @@ function render_text_clickable($text)
       
       let ajaxFile = tabFiles[tab];
       if (!ajaxFile) {
-        tabContent.innerHTML = '<div style="text-align: center; padding: 40px; color: #dc2626;"><p>Error: Pestaña no encontrada</p></div>';
+        tabContent.innerHTML = '<div style="text-align: center; padding: 40px; color: #ff8a00;"><p>Error: Pestaña no encontrada</p></div>';
         return;
       }
 
@@ -2638,7 +2638,7 @@ function render_text_clickable($text)
           setupTabClickDetection();
         })
         .catch(error => {
-          tabContent.innerHTML = '<div style="text-align: center; padding: 40px; color: #dc2626;"><p>Error cargando contenido. Por favor, intenta de nuevo.</p></div>';
+          tabContent.innerHTML = '<div style="text-align: center; padding: 40px; color: #ff8a00;"><p>Error cargando contenido. Por favor, intenta de nuevo.</p></div>';
         });
     }
     
@@ -2818,13 +2818,13 @@ function render_text_clickable($text)
           } else {
             // Mostrar mensaje de error
             if (messagesContainer) {
-              messagesContainer.innerHTML = `<div style="background: #fef2f2; color: #dc2626; padding: 10px; border-radius: 4px; margin-bottom: 20px;">❌ ${data.message}</div>`;
+              messagesContainer.innerHTML = `<div style="background: #fef2f2; color: #ff8a00; padding: 10px; border-radius: 4px; margin-bottom: 20px;">❌ ${data.message}</div>`;
             }
           }
         })
         .catch(error => {
           if (messagesContainer) {
-            messagesContainer.innerHTML = '<div style="background: #fef2f2; color: #dc2626; padding: 10px; border-radius: 4px; margin-bottom: 20px;">❌ Error de conexión. Por favor, intenta de nuevo.</div>';
+            messagesContainer.innerHTML = '<div style="background: #fef2f2; color: #ff8a00; padding: 10px; border-radius: 4px; margin-bottom: 20px;">❌ Error de conexión. Por favor, intenta de nuevo.</div>';
           }
         });
       }
@@ -2917,7 +2917,7 @@ function render_text_clickable($text)
           .catch(error => {
             const loadingDiv = document.getElementById('loading-message');
             if (loadingDiv) {
-              loadingDiv.style.cssText = 'background: #fef2f2; color: #dc2626; padding: 10px; border-radius: 4px; margin-bottom: 20px; text-align: center;';
+              loadingDiv.style.cssText = 'background: #fef2f2; color: #ff8a00; padding: 10px; border-radius: 4px; margin-bottom: 20px; text-align: center;';
               loadingDiv.textContent = '❌ Error de conexión. Por favor, intenta de nuevo.';
             }
           });

@@ -124,7 +124,7 @@ error_log("[DEBUG] Own texts query returned " . $result->num_rows . " rows for u
                 <div class="dropdown-content" id="dropdownContent">
                     <button type="button" onclick="selectAllTexts()">✓ Marcar todos</button>
                     <button type="button" onclick="unselectAllTexts()">✗ Desmarcar todos</button>
-                    <button type="button" onclick="performBulkAction('delete')" style="color: #dc2626;">🗑️ Eliminar seleccionados</button>
+                    <button type="button" onclick="performBulkAction('delete')" style="color: #ff8a00;">🗑️ Eliminar seleccionados</button>
                     <button type="button" onclick="performBulkAction('print')">🖨️ Imprimir seleccionados</button>
                 </div>
             </div>

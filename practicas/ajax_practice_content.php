@@ -42,7 +42,7 @@ function loadBasicPractice() {
         .then(data => {
             if (!data.success) {
                 document.getElementById('practice-content').innerHTML = `
-                    <div style="text-align: center; padding: 40px; color: #dc2626;">
+                    <div style="text-align: center; padding: 40px; color: #ff8a00;">
                         <p>Error: ${data.message || 'Error cargando datos'}</p>
                     </div>
                 `;
@@ -68,7 +68,7 @@ function loadBasicPractice() {
         })
         .catch(error => {
             document.getElementById('practice-content').innerHTML = `
-                <div style="text-align: center; padding: 40px; color: #dc2626;">
+                <div style="text-align: center; padding: 40px; color: #ff8a00;">
                     <p>Error cargando los ejercicios. Por favor, intenta de nuevo.</p>
                 </div>
             `;
@@ -130,7 +130,7 @@ function startPracticeMode(mode) {
         // Fallback básico
         setTimeout(() => {
             document.getElementById('practice-content').innerHTML = `
-                <div style="text-align: center; padding: 40px; color: #dc2626;">
+                <div style="text-align: center; padding: 40px; color: #ff8a00;">
                     <p>Funcionalidad de práctica en desarrollo. Por favor, usa la página de práctica principal.</p>
                     <button onclick="window.location.href='index.php?practice=1'" class="nav-btn primary" style="margin-top: 20px;">
                         Ir a práctica completa
