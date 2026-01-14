@@ -75,7 +75,7 @@ $practice_time = "{$practice_h}h {$practice_m}m";
 $status_labels = [
     'EnPrueba' => 'Plan Premium (Prueba 30 días)',
     'limitado' => 'Plan de Prueba (300 Traduciones/Semanal)',
-    'Inicio'   => 'Plan Inicio - 30 días',
+    'Inicio'   => 'Plan Basico - 30 días',
     'Ahorro'   => 'Plan Ahorro - 6 meses',
     'Pro'      => 'Plan Pro 12 meses'
 ];
@@ -574,7 +574,7 @@ $stmt->close();
         
         <div id="one-time-plans-container" class="subscription-plans" style="display: none; margin-top: 20px;">
             <div class="plan-card">
-                <div class="plan-duration">🟢 Plan Inicio - 1 mes</div>
+                <div class="plan-duration">🟢 Plan Basico - 1 mes</div>
                  <div class="plan-info">Accede a todas las funciones durante 1 mes.</div>
                 <div class="plan-prom">Ideal para probar la aplicación sin compromiso.</div>
                 <div class="plan-price">0,01 €</div>
@@ -609,7 +609,7 @@ $stmt->close();
         
         <div class="subscription-plans">
             <div class="plan-card">
-                <div class="plan-duration">🟢 Plan Inicio - 1 mes</div>
+                <div class="plan-duration">🟢 Plan Basico - 1 mes</div>
                  <div class="plan-info">Accede a todas las funciones durante 1 mes.</div>
                 <div class="plan-prom">Ideal para probar la aplicación sin compromiso.</div>
                 <div class="plan-price">4,99 €</div>
@@ -651,7 +651,7 @@ $stmt->close();
                         // Forzamos la inicialización de los botones con importes de prueba
                         const initButtons = () => {
                             if (typeof window.initUnicoButton === 'function') {
-                                window.initUnicoButton('paypal-button-container-unico-1-mes', '0.01', 'Plan Inicio - 1 mes', 'Basico');
+                                window.initUnicoButton('paypal-button-container-unico-1-mes', '0.01', 'Plan Basico - 1 mes', 'Basico');
                                 window.initUnicoButton('paypal-button-container-unico-6-meses', '0.02', 'Plan Ahorro - 6 meses', 'Ahorro');
                                 window.initUnicoButton('paypal-button-container-unico-1-ano', '0.04', 'Plan Pro - 12 meses', 'Pro');
                             }
