@@ -132,7 +132,7 @@ $conn->close();
 <!-- Contenedor principal de la pestaña de subir texto -->
 <div class="upload-main-container">
   <!-- Columna izquierda: Formulario de subida de texto -->
-  <div class="upload-form-container">
+  <div class="upload-form-container" id="upload-form-container" style="display: flex !important;">
     <!-- Formulario de subida de texto -->
     <form action="ajax_upload_text.php" method="post" id="upload-text-form">
       <div class="upload-form-group">

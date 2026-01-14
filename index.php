@@ -1553,9 +1553,6 @@ function render_text_clickable($text)
         window.hideHeader();
       }
       
-      // Mostrar loading
-      tabContent.innerHTML = '<div style="text-align: center; padding: 40px; color: #6b7280;"><div style="font-size: 2rem; margin-bottom: 10px;">⏳</div><p>Cargando...</p></div>';
-      
       // Mapear pestañas a archivos AJAX
       const tabFiles = {
         'progress': 'ajax_progress_content.php',
