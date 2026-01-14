@@ -62,21 +62,48 @@ if ($_POST && isset($_POST['action']) && isset($_POST['selected_texts'])) {
             }
             // Borrar textos privados permitidos
             if (!empty($to_delete)) {
-                // Borrar palabras guardadas asociadas a los textos seleccionados
-                $del_words_stmt = $conn->prepare("DELETE FROM saved_words WHERE text_id IN ($placeholders) AND user_id = ?");
                 $params = array_merge($to_delete, [$user_id]);
-                $del_words_stmt->bind_param(str_repeat('i', count($params)), ...$params);
+                $types = str_repeat('i', count($params));
+
+                // 1. Borrar palabras guardadas
+                $del_words_stmt = $conn->prepare("DELETE FROM saved_words WHERE text_id IN ($placeholders) AND user_id = ?");
+                $del_words_stmt->bind_param($types, ...$params);
                 $del_words_stmt->execute();
                 $del_words_stmt->close();
-                // Borrar los textos
+
+                // 2. Borrar progreso de práctica
+                $del_practice_stmt = $conn->prepare("DELETE FROM practice_progress WHERE text_id IN ($placeholders) AND user_id = ?");
+                $del_practice_stmt->bind_param($types, ...$params);
+                $del_practice_stmt->execute();
+                $del_practice_stmt->close();
+
+                // 3. Borrar tiempos de lectura
+                $del_reading_time_stmt = $conn->prepare("DELETE FROM reading_time WHERE text_id IN ($placeholders) AND user_id = ?");
+                $del_reading_time_stmt->bind_param($types, ...$params);
+                $del_reading_time_stmt->execute();
+                $del_reading_time_stmt->close();
+
+                // 4. Borrar progreso de lectura
+                $del_reading_progress_stmt = $conn->prepare("DELETE FROM reading_progress WHERE text_id IN ($placeholders) AND user_id = ?");
+                $del_reading_progress_stmt->bind_param($types, ...$params);
+                $del_reading_progress_stmt->execute();
+                $del_reading_progress_stmt->close();
+
+                // 5. Borrar de textos ocultos
+                $del_hidden_stmt = $conn->prepare("DELETE FROM hidden_texts WHERE text_id IN ($placeholders) AND user_id = ?");
+                $del_hidden_stmt->bind_param($types, ...$params);
+                $del_hidden_stmt->execute();
+                $del_hidden_stmt->close();
+
+                // 6. Borrar los textos
                 $stmt = $conn->prepare("DELETE FROM texts WHERE id IN ($placeholders) AND user_id = ?");
-                $stmt->bind_param(str_repeat('i', count($params)), ...$params);
+                $stmt->bind_param($types, ...$params);
                 if ($stmt->execute()) {
                     error_log("[DELETE] Usuario $user_id borró textos: " . implode(',', $to_delete));
-                    echo json_encode(['success' => true, 'message' => 'Textos y palabras guardadas eliminados correctamente.']);
+                    echo json_encode(['success' => true, 'message' => 'Textos y todos sus datos asociados eliminados correctamente.']);
                 } else {
                     error_log("[ERROR DELETE] Usuario $user_id error al borrar textos: " . implode(',', $to_delete));
-                    echo json_encode(['success' => false, 'message' => 'Error al eliminar los textos y palabras guardadas.']);
+                    echo json_encode(['success' => false, 'message' => 'Error al eliminar los textos y sus datos asociados.']);
                 }
                 $stmt->close();
             } else {
