@@ -328,6 +328,7 @@ $stmt->close();
     .badge-status.prueba { background: #fef9c3; color: #854d0e; border: 1px solid #fef08a; }
     .badge-status.premium { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
     .badge-status.limitado { background: #f1f5f9; color: #475569; border: 1px solid #e2e8f0; }
+    .badge-status.expired { background: #fee2e2; color: #991b1b; border: 1px solid #fecdd3; }
 
     .row-faint {
         opacity: 0.5;
@@ -547,7 +548,19 @@ $stmt->close();
             <tbody>
                 <?php foreach ($payment_history as $pay): 
                     $pay_status_class = 'limitado';
-                    if ($pay['status'] === 'active') $pay_status_class = 'premium';
+                    $display_status = $pay['status'];
+                    
+                    if ($pay['status'] === 'active') {
+                        $now = new DateTime();
+                        $fecha_fin = new DateTime($pay['fecha_fin']);
+                        if ($now > $fecha_fin) {
+                            $display_status = 'Expirado';
+                            $pay_status_class = 'expired';
+                        } else {
+                            $display_status = 'Activo';
+                            $pay_status_class = 'premium';
+                        }
+                    }
                 ?>
                 <tr>
                     <td style="font-weight: 600;"><?= htmlspecialchars($pay['plan_name']) ?></td>
@@ -555,7 +568,7 @@ $stmt->close();
                     <td><?= date('d/m/Y', strtotime($pay['created_at'])) ?></td>
                     <td>
                         <span class="badge-status <?= $pay_status_class ?>">
-                            <?= $pay['status'] === 'active' ? 'Activo' : $pay['status'] ?>
+                            <?= ucfirst($display_status) ?>
                         </span>
                     </td>
                 </tr>

@@ -23,7 +23,7 @@
         </div>
         
         <p style="color: #555; font-size: 13px; margin-bottom: 15px; line-height: 1.4;">
-            Puedes <strong>seguir leyendo</strong> en inglés, pero las traducciones automáticas estarán desactivadas.
+            Puedes <strong>seguir leyendo</strong> en inglés, pero las traducciones estarán desactivadas.
         </p>
         
         <div style="display: flex; flex-direction: column; gap: 8px;">
@@ -31,7 +31,7 @@
                 Entendido, seguiré leyendo
             </button>
             
-            <a href="javascript:void(0);" onclick="loadTabContent('account', false, 'payment-options');" style="background: #f7b603f1; color: white; border: none; padding: 10px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 14px; transition: background 0.2s; text-decoration: none; display: block; text-align: center;">
+            <a href="javascript:void(0);" onclick="loadTabContent('account', false, 'one-time');" style="background: #ff8a00; color: white; border: none; padding: 10px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 14px; transition: background 0.2s; text-decoration: none; display: block; text-align: center;">
                 Ver todos los planes
             </a>
         </div>
