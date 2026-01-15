@@ -12,7 +12,7 @@
         
         <p style="color: #666; line-height: 1.4; margin-bottom: 15px; font-size: 14px;">
             Has traducido más de <strong style="color: #d32f2f;">300 palabras</strong> esta semana. 
-            Tu periodo **EnPrueba** ha finalizado y has alcanzado el límite gratuito.
+            
         </p>
         
         <div style="background: #f8f9fa; padding: 10px; border-radius: 8px; margin-bottom: 15px; border-left: 3px solid #1976d2;">
@@ -31,8 +31,8 @@
                 Entendido, seguiré leyendo
             </button>
             
-            <a href="index.php?tab=premium" style="color: #1976d2; text-decoration: none; font-size: 12px; font-weight: 500; margin-top: 2px;">
-                Saber más sobre nuestros Planes
+            <a href="javascript:void(0);" onclick="loadTabContent('account', false, 'one-time');" style="background: #f7b603f1; color: white; border: none; padding: 10px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 14px; transition: background 0.2s; text-decoration: none; display: block; text-align: center;">
+                Ver todos los planes
             </a>
         </div>
     </div>

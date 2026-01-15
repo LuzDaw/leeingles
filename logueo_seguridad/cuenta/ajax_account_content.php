@@ -73,14 +73,14 @@ $practice_time = "{$practice_h}h {$practice_m}m";
 
 // Mapeo de estados para visualización
 $status_labels = [
-    'EnPrueba' => 'Plan Premium (Prueba 30 días)',
-    'limitado' => 'Plan de Prueba (300 Traduciones/Semanal)',
-    'Inicio'   => 'Plan Basico - 30 días',
-    'Ahorro'   => 'Plan Ahorro - 6 meses',
-    'Pro'      => 'Plan Pro 12 meses'
+    'EnPrueba' => 'Promoción: 30 días gratis',
+    'limitado' => 'Plan Gratuito - 300 traducciones por semana',
+    'Inicio'   => 'Plan Basico - 30 días Sin límintes',
+    'Ahorro'   => 'Plan Ahorro - 6 meses Sin límintes',
+    'Pro'      => 'Plan Pro 12 meses Sin límintes'
 ];
 
-$account_status = $status_labels[$status['estado_logico']] ?? 'Desconocido';
+$account_status = $status_labels[$status['estado_logico']] ?? 'Plan Básico - Ativo 30 Días';
 
 $free_month_start = date('d/m/Y', strtotime($status['fecha_registro']));
 $free_month_end = date('d/m/Y', strtotime($status['fin_mes_gratuito']));
@@ -151,7 +151,7 @@ if ($has_premium) {
 // 2. Fila de Plan Limitado
 $plan_table_rows[] = [
     'activo' => ($has_premium || $is_trial_active) ? '❌' : '✅',
-    'caracteristica' => 'Plan de Prueba (300 traducciones/semana)',
+    'caracteristica' => 'Plan gratuito – 300 traducciones por semana',
     'inicio' => $free_month_start,
     'fin' => $next_reset_date,
     'clase' => ($has_premium || $is_trial_active) ? 'row-faint' : ''
@@ -161,7 +161,7 @@ $plan_table_rows[] = [
 if ($is_trial_active) {
     $plan_table_rows[] = [
         'activo' => '✅',
-        'caracteristica' => 'Plan Premium (Prueba 30 días)',
+        'caracteristica' => 'Promoción: 30 días gratis',
         'inicio' => $free_month_start,
         'fin' => $free_month_end,
         'clase' => ''

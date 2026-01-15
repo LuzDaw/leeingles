@@ -1003,10 +1003,11 @@ function render_text_clickable($text)
         loadTabContent('upload');
       } else if (tab && ['progress','my-texts','saved-words','practice','upload','account'].includes(tab)) {
         // Si es la pestaña de cuenta y venimos de un pago exitoso, pasar el parámetro
+        const scroll = urlParams.get('scroll');
         if (tab === 'account' && paymentSuccess) {
-          loadTabContent(tab, true);
+          loadTabContent(tab, true, scroll);
         } else {
-          loadTabContent(tab);
+          loadTabContent(tab, false, scroll);
         }
       } else {
         // Solo cargar pestañas si no estamos viendo un texto específico
@@ -1532,8 +1533,21 @@ function render_text_clickable($text)
     };
 
     // Sistema de pestañas dinámicas
-    window.loadTabContent = function(tab, isPaymentSuccess = false) {
+    window.loadTabContent = function(tab, isPaymentSuccess = false, scrollTarget = null) {
       const tabContent = document.getElementById('tab-content');
+      
+      // Si no estamos en la vista de dashboard (no hay tab-content), redirigir
+      if (!tabContent) {
+        let url = `index.php?tab=${tab}`;
+        if (isPaymentSuccess) url += '&payment_success=1';
+        if (scrollTarget) url += `&scroll=${scrollTarget}`;
+        window.location.href = url;
+        return;
+      }
+
+      // Guardar el objetivo de scroll globalmente para que el wrapper lo use
+      window._pendingScrollTarget = scrollTarget;
+
       const tabButtons = document.querySelectorAll('.tab-btn');
       
       // Ocultar menú flotante al entrar en cualquier pestaña
@@ -1605,6 +1619,29 @@ function render_text_clickable($text)
           
           // Configurar detección de clics fuera de las pestañas para mostrar header
           setupTabClickDetection();
+
+          // Manejar scroll si se solicita
+          const target = scrollTarget || new URLSearchParams(window.location.search).get('scroll');
+          if (target) {
+            setTimeout(() => {
+              let elementId = target;
+              if (target === 'plans') elementId = 'subscription-plans-section';
+              if (target === 'one-time') elementId = 'one-time-payment-section';
+              
+              const el = document.getElementById(elementId);
+              if (el) {
+                el.scrollIntoView({ behavior: 'smooth' });
+                
+                // Si es pago único, asegurar que esté abierto
+                if (target === 'one-time') {
+                  const container = document.getElementById('one-time-plans-container');
+                  if (container && (container.style.display === 'none' || container.style.display === '')) {
+                    document.getElementById('toggle-one-time-payment')?.click();
+                  }
+                }
+              }
+            }, 800);
+          }
         })
         .catch(error => {
           tabContent.innerHTML = '<div style="text-align: center; padding: 40px; color: #ff8a00;"><p>Error cargando contenido. Por favor, intenta de nuevo.</p></div>';
@@ -1908,8 +1945,12 @@ function render_text_clickable($text)
     
     // Llamar a initializeTabEvents cuando se carga una pestaña
     const originalLoadTabContent = window.loadTabContent;
-    window.loadTabContent = function(tab, isPaymentSuccess = false) {
-      originalLoadTabContent(tab, isPaymentSuccess);
+    window.loadTabContent = function(tab, isPaymentSuccess = false, scrollTarget = null) {
+      // Si no se pasa scrollTarget, mirar si hay uno pendiente global
+      const target = scrollTarget || window._pendingScrollTarget;
+      window._pendingScrollTarget = null; // Limpiar
+
+      originalLoadTabContent(tab, isPaymentSuccess, target);
       
       // Esperar a que se cargue el contenido y luego inicializar eventos
       setTimeout(() => {
