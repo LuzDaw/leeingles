@@ -565,8 +565,11 @@ $stmt->close();
     </div>
     <?php endif; ?>
 
+    <!-- Contenedor Principal de Opciones de Pago -->
+    <div id="payment-options-section" style="margin-top: 64px;">
+        
     <!-- 5️⃣ Pago Único (Desplegable) -->
-    <div id="one-time-payment-section" class="info-box" style="margin-top: 64px; border: 1px solid #e2e8f0; background: #f8fafc;">
+    <div id="one-time-payment-section" class="info-box" style="margin-top: 0; border: 1px solid #e2e8f0; background: #f8fafc;">
         <div id="toggle-one-time-payment" style="display: flex; justify-content: space-between; align-items: center; cursor: pointer;">
             <h4 style="margin: 0;" class="word-selection word-selection-start">💰 Pago Único</h4>
             <span id="toggle-icon" style="font-size: 20px; color: #64748b;">▼</span>
@@ -634,6 +637,7 @@ $stmt->close();
             </div>
         </div>
     </div>
+    </div> <!-- Fin de payment-options-section -->
 
     <script>
         // Aseguramos que el evento se asigne correctamente usando addEventListener

@@ -31,7 +31,7 @@
                 Entendido, seguiré leyendo
             </button>
             
-            <a href="javascript:void(0);" onclick="loadTabContent('account', false, 'one-time');" style="background: #f7b603f1; color: white; border: none; padding: 10px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 14px; transition: background 0.2s; text-decoration: none; display: block; text-align: center;">
+            <a href="javascript:void(0);" onclick="loadTabContent('account', false, 'payment-options');" style="background: #f7b603f1; color: white; border: none; padding: 10px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 14px; transition: background 0.2s; text-decoration: none; display: block; text-align: center;">
                 Ver todos los planes
             </a>
         </div>

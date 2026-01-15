@@ -1627,18 +1627,12 @@ function render_text_clickable($text)
               let elementId = target;
               if (target === 'plans') elementId = 'subscription-plans-section';
               if (target === 'one-time') elementId = 'one-time-payment-section';
+              if (target === 'payment-options') elementId = 'payment-options-section';
               
               const el = document.getElementById(elementId);
               if (el) {
                 el.scrollIntoView({ behavior: 'smooth' });
                 
-                // Si es pago único, asegurar que esté abierto
-                if (target === 'one-time') {
-                  const container = document.getElementById('one-time-plans-container');
-                  if (container && (container.style.display === 'none' || container.style.display === '')) {
-                    document.getElementById('toggle-one-time-payment')?.click();
-                  }
-                }
               }
             }, 800);
           }
