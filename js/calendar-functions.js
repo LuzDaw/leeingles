@@ -10,7 +10,7 @@ let updateInterval;
  */
 function loadCalendarData(month = currentMonth, year = currentYear) {
     const basePath = (window.location.pathname || '').replace(/[^\/]+$/, '');
-    let url = `${basePath}ajax_calendar_data.php?month=${month}&year=${year}&t=${Date.now()}`;
+    let url = `${basePath}ajax/ajax_calendar_data.php?month=${month}&year=${year}&t=${Date.now()}`;
     
     // Soporte para user_id en sesión de pruebas
     if (typeof sessionStorage !== 'undefined' && sessionStorage.getItem('user_id')) {

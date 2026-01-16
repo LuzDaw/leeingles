@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once 'db/connection.php';
+require_once '../db/connection.php';
 
 if (!isset($_SESSION['user_id'])) {
     echo json_encode(['error' => 'No autorizado']);
@@ -134,11 +134,11 @@ $conn->close();
   <!-- Columna izquierda: Formulario de subida de texto -->
   <div class="upload-form-container" id="upload-form-container" style="display: flex !important;">
     <!-- Formulario de subida de texto -->
-    <form action="ajax_upload_text.php" method="post" id="upload-text-form">
+    <form action="ajax/ajax_upload_text.php" method="post" id="upload-text-form">
       <div class="upload-form-group">
         <label for="title-input" class="upload-label">Título:</label>
         <input type="text" name="title" id="title-input" class="upload-input">
-        <small class="upload-hint">Si no llenas el título, se generará automáticamente con las primeras 3 palabras del texto</small>
+        <small class="upload-hint">El título se generará automáticamente </small>
       </div>
       <div class="upload-form-group">
         <label for="content-input" class="upload-label">Contenido:</label>
@@ -363,7 +363,7 @@ document.getElementById('upload-text-form').addEventListener('submit', function(
     // Mostrar mensaje de carga
     messagesDiv.innerHTML = '<div style="color: #0066cc; padding: 10px; background: #e6f3ff; border-radius: 4px;">Subiendo texto...</div>';
     
-    fetch('ajax_upload_text.php', {
+    fetch('ajax/ajax_upload_text.php', {
         method: 'POST',
         body: formData
     })

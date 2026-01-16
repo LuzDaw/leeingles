@@ -3,9 +3,9 @@
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-require_once 'logueo_seguridad/PHPMailer/src/Exception.php';
-require_once 'logueo_seguridad/PHPMailer/src/PHPMailer.php';
-require_once 'logueo_seguridad/PHPMailer/src/SMTP.php';
+require_once '../logueo_seguridad/PHPMailer/src/Exception.php';
+require_once '../logueo_seguridad/PHPMailer/src/PHPMailer.php';
+require_once '../logueo_seguridad/PHPMailer/src/SMTP.php';
 
 function sendEmail($toEmail, $toName, $subject, $body) {
     try {
@@ -42,7 +42,7 @@ function sendEmail($toEmail, $toName, $subject, $body) {
         $mail->AltBody = strip_tags($body);
 
         // Intentar agregar logo si existe
-        $logoPath = __DIR__ . '/img/Originals/Idoneoweb - Imagotipo.png';
+        $logoPath = dirname(__DIR__) . '/img/Originals/Idoneoweb - Imagotipo.png';
         if (file_exists($logoPath)) {
             $mail->AddEmbeddedImage($logoPath, 'logo_idoneoweb', 'Idoneoweb - Imagotipo.png');
         }

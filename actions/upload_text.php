@@ -1,14 +1,14 @@
 <?php
 session_start();
-require_once 'db/connection.php';
+require_once '../db/connection.php';
 
 if (!isset($_SESSION['user_id'])) {
-    header("Location: logueo_seguridad/login.php");
+    header("Location: ../logueo_seguridad/login.php");
     exit();
 }
 
 // Redirigir al nuevo sistema de subida en el index
-header("Location: index.php?tab=upload");
+header("Location: ../index.php?tab=upload");
 exit();
 
 $errors = [];
@@ -59,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             
             $success = "Texto subido correctamente.";
             // Redirigir inmediatamente a mis textos, la traducción se hará en background con JS
-            header("Location: index.php?auto_translate=" . $text_id);
+            header("Location: ../index.php?auto_translate=" . $text_id);
             exit();
         } else {
             $errors[] = "Error al subir el texto.";
@@ -78,7 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body>
     <h2>Subir nuevo texto</h2>
-    <p><a href="index.php">← Volver</a></p>
+    <p><a href="../index.php">← Volver</a></p>
 
     <?php if (!empty($success)): ?>
         <p class="msg-success"><?= htmlspecialchars($success) ?></p>

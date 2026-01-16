@@ -503,7 +503,7 @@ $stmt->close();
                 <?php if ($status['es_premium'] || $status['estado_logico'] === 'EnPrueba'): ?>
                     <div class="activity-number">Ilimitado</div>
                     <div class="progress-container">
-                        <div class="progress-bar" style="width: 100%; background: #10b981;"></div>
+                        <div class="progress-bar" style="width: 100%; background: #29509ee5;"></div>
                     </div>
                     <span class="stat-subvalue">Plan Premium Activo 💎</span>
                 <?php else: ?>

@@ -1,9 +1,9 @@
 <?php
 session_start();
-require_once 'db/connection.php';
+require_once '../db/connection.php';
 
 if (!isset($_SESSION['user_id'])) {
-    header("Location: logueo_seguridad/login.php");
+    header("Location: ../logueo_seguridad/login.php");
     exit();
 }
 
@@ -44,11 +44,11 @@ $conn->close();
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>LeerEntender - Textos para Imprimir</title>
-    <link rel="stylesheet" href="css/print.css">
+    <title>LeeInglés - Textos para Imprimir</title>
+    <link rel="stylesheet" href="../css/print.css">
 </head>
 <body>
-    <h1 style="text-align: center; margin-bottom: 40px; font-size: 24px;">LeerEntender</h1>
+    <h1 style="text-align: center; margin-bottom: 40px; font-size: 24px;">LeeInglés</h1>
 
     <?php foreach ($texts as $text): ?>
         <div class="text-section">

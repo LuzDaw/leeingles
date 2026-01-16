@@ -277,7 +277,7 @@ function render_text_clickable($text)
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="description" content="Aprende inglés leyendo textos con traducciones instantáneas">
-  <title>LeerEntender - Aprende inglés leyendo</title>
+  <title>LeeInglés - Aprende inglés leyendo y entendiéndolo</title>
   <!-- CSS Principal -->
   <link rel="stylesheet" href="css/common-styles.css">
   <link rel="stylesheet" href="css/modern-styles.css">
@@ -316,7 +316,7 @@ function render_text_clickable($text)
 
         </div>
         <div class="brand-text">
-          <h1>LeerEntender</h1>
+          <h1>LeeInglés</h1>
           <div class="slogan">
             Leé en inglés y<br>comprendé en español al instante
           </div>
@@ -648,7 +648,7 @@ function render_text_clickable($text)
           <!-- Sección de proceso -->
           <section class="process-section" id="como-funciona">
             <div class="process-container">
-              <h2 class="process-title">Cómo funciona LeerEntender</h2>
+              <h2 class="process-title">Cómo funciona LeeInglés</h2>
               <p class="process-subtitle">Nuestro método científicamente probado hace que el aprendizaje de idiomas sea eficiente, agradable y efectivo para estudiantes de todos los niveles.</p>
 
               <div class="process-steps">
@@ -675,12 +675,12 @@ function render_text_clickable($text)
           <section class="testimonials-section" id="testimonios">
             <div class="testimonials-container">
               <h2 class="testimonials-title">Amado por estudiantes de idiomas en todo el mundo</h2>
-              <p class="testimonials-subtitle">Únete a miles de estudiantes exitosos que han transformado sus habilidades lingüísticas con LeerEntender.</p>
+              <p class="testimonials-subtitle">Únete a miles de estudiantes exitosos que han transformado sus habilidades lingüísticas con LeeInglés.</p>
 
               <div class="testimonials-grid">
                 <div class="testimonial-card">
                   <div class="testimonial-stars">★★★★★</div>
-                  <p class="testimonial-text">"LeerEntender me ayudó a hablar Inglés en solo 3 meses. La función de lectura interactiva es un cambio absoluto de juego!"</p>
+                  <p class="testimonial-text">"LeeInglés me ayudó a hablar Inglés en solo 3 meses. La función de lectura interactiva es un cambio absoluto de juego!"</p>
                   <div class="testimonial-author">Sarah Chen</div>
                   <div class="testimonial-role">Profesora de Negocios</div>
                 </div>
@@ -756,7 +756,7 @@ function render_text_clickable($text)
           <footer class="footer">
             <div class="footer-container">
               <div class="footer-section">
-                <h3>🌟LeerEntender</h3>
+                <h3>🌟LeeInglés</h3>
                 <p>La forma más efectiva de aprender idiomas a través de lectura inmersiva y personalización con IA.</p>
               </div>
               <div class="footer-section">
@@ -1182,7 +1182,7 @@ function render_text_clickable($text)
       const textTitle = '<?= isset($current_text_title) ? htmlspecialchars($current_text_title) : "Texto" ?>';
 
       let printContent = '<div style="font-family: Arial, sans-serif; line-height: 1.8; max-width: 800px; margin: 0 auto;">';
-      printContent += `<h1 style="text-align: center; margin-bottom: 10px; font-size: 24px;">LeerEntender</h1>`;
+      printContent += `<h1 style="text-align: center; margin-bottom: 10px; font-size: 24px;">LeeInglés</h1>`;
       printContent += `<h2 style="text-align: center; margin-bottom: 40px; font-size: 18px; color: #666;">${textTitle}</h2>`;
 
       // Mostrar mensaje de carga
@@ -1248,7 +1248,7 @@ function render_text_clickable($text)
         <!DOCTYPE html>
         <html>
         <head>
-            <title>LeerEntender - ${textTitle}</title>
+            <title>LeeInglés - ${textTitle}</title>
             <style>
                 body { 
                     font-family: Arial, sans-serif; 
@@ -1569,11 +1569,11 @@ function render_text_clickable($text)
       
       // Mapear pestañas a archivos AJAX
       const tabFiles = {
-        'progress': 'ajax_progress_content.php',
-        'my-texts': 'ajax_my_texts_content.php',
-        'saved-words': 'ajax_saved_words_content.php',
+        'progress': 'ajax/ajax_progress_content.php',
+        'my-texts': 'ajax/ajax_my_texts_content.php',
+        'saved-words': 'ajax/ajax_saved_words_content.php',
         'practice': 'practicas/ajax_practice_content.php',
-        'upload': 'ajax_upload_content.php',
+        'upload': 'ajax/ajax_upload_content.php',
         'account': 'logueo_seguridad/cuenta/ajax_account_content.php'
       };
       
@@ -1709,11 +1709,15 @@ function render_text_clickable($text)
   </script>
 
   <!-- Footer simple -->
- <footer>
+ <footer style="text-align: center; padding: 20px 0;">
   <p>
-    © <span id="year"></span> LeerEntender - Aprende inglés leyendo | 📧 info@idoneoweb.es
+    © <span id="year"></span> LeeInglés - Aprende inglés leyendo y entendiendolo | 📧 info@leeingles.com
   </p>
 </footer>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+</script>
 
   <!-- Scripts globales para las pestañas -->
   <script>
@@ -1772,7 +1776,7 @@ function render_text_clickable($text)
 
       if (action === 'print') {
         const selectedIds = Array.from(checkboxes).map(cb => cb.value);
-        const printUrl = 'print_texts.php?ids=' + selectedIds.join(',');
+        const printUrl = 'actions/print_texts.php?ids=' + selectedIds.join(',');
         window.open(printUrl, '_blank');
         return;
       }
@@ -1799,7 +1803,7 @@ function render_text_clickable($text)
           messagesContainer.innerHTML = '<div style="background: #e6f3ff; color: #0066cc; padding: 10px; border-radius: 4px; margin-bottom: 20px;">Procesando...</div>';
         }
 
-        fetch('ajax_my_texts_content.php', {
+        fetch('ajax/ajax_my_texts_content.php', {
           method: 'POST',
           body: formData
         })
@@ -1905,7 +1909,7 @@ function render_text_clickable($text)
             messagesContainer.insertBefore(loadingDiv, messagesContainer.firstChild);
           }
 
-          fetch('ajax_saved_words_content.php', {
+          fetch('ajax/ajax_saved_words_content.php', {
             method: 'POST',
             body: formData
           })

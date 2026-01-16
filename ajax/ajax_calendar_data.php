@@ -2,7 +2,7 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-require_once 'db/connection.php';
+require_once '../db/connection.php';
 
 // Verificar si el usuario está logueado
 if (!isset($_SESSION['user_id'])) {

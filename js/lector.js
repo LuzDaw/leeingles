@@ -71,7 +71,7 @@ function initLector() {
         }
         
         if (textId && duration > 0) {
-            fetch('save_reading_time.php', {
+            fetch('actions/save_reading_time.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                 body: 'duration=' + duration + '&text_id=' + textId
@@ -2253,7 +2253,7 @@ function initLector() {
         const textId = document.querySelector('.reading-area')?.getAttribute('data-text-id');
         if (!textId) return;
         const basePath = (window.location.pathname || '').replace(/[^\/]+$/, '');
-        const url = basePath + 'ajax_progress_content.php?text_id=' + encodeURIComponent(textId);
+        const url = basePath + 'ajax/ajax_progress_content.php?text_id=' + encodeURIComponent(textId);
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 8000);
         fetch(url, { credentials: 'same-origin', cache: 'no-store', signal: controller.signal })
@@ -2280,7 +2280,7 @@ function initLector() {
         if (!textId) return;
 
         const basePath = (window.location.pathname || '').replace(/[^\/]+$/, '');
-        const url = basePath + 'ajax_progress_content.php';
+        const url = basePath + 'ajax/ajax_progress_content.php';
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 8000);
         const body = 'text_id=' + encodeURIComponent(textId) + '&percent=' + encodeURIComponent(percent) + '&pages_read=' + encodeURIComponent(JSON.stringify(window.readPages || []));

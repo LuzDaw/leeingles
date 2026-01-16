@@ -2,7 +2,7 @@
 /**
  * Script de reparación de índices para el sistema de suscripciones
  */
-require_once 'db/connection.php';
+require_once '../db/connection.php';
 
 echo "<h2>Reparando índices de base de datos...</h2>";
 

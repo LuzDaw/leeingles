@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once 'db/connection.php';
+require_once '../db/connection.php';
 
 // Solo admin puede entrar
 if (!isset($_SESSION['user_id']) || !isset($_SESSION['is_admin']) || $_SESSION['is_admin'] != 1) {
@@ -74,7 +74,7 @@ $result = $conn->query("
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Administrar Categorías - LeerEntender</title>
+    <title>Administrar Categorías - LeeInglés</title>
     <link rel="stylesheet" href="css/common-styles.css">
     <link rel="stylesheet" href="css/modern-styles.css">
     <link rel="stylesheet" href="css/color-theme.css">
@@ -465,7 +465,7 @@ $result = $conn->query("
                     categoryItem.classList.add('loading');
                 }
 
-                fetch('ajax_delete_category.php', {
+                fetch('../ajax/ajax_delete_category.php', {
                     method: 'POST',
                     body: formData
                 })

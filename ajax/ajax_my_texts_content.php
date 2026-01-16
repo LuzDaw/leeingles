@@ -1,7 +1,7 @@
 <?php
 session_start();
-require_once 'db/connection.php';
-require_once 'includes/title_functions.php';
+require_once '../db/connection.php';
+require_once '../includes/title_functions.php';
 
 // Headers para evitar caché y asegurar datos frescos
 header('Cache-Control: no-cache, no-store, must-revalidate');

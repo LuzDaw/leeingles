@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once 'db/connection.php';
+require_once '../db/connection.php';
 
 header('Content-Type: application/json');
 
@@ -74,7 +74,7 @@ try {
                 $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 'https' : 'http';
                 $host = $_SERVER['HTTP_HOST'];
                 // Asegurar que la ruta sea correcta independientemente de dónde se llame
-                $base_dir = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME']));
+                $base_dir = str_replace('\\', '/', dirname(dirname($_SERVER['SCRIPT_NAME'])));
                 if ($base_dir === '/') $base_dir = '';
                 $translate_url = $protocol . '://' . $host . $base_dir . '/traduciones/translate.php';
                 

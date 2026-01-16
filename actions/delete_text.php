@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once 'db/connection.php';
+require_once '../db/connection.php';
 
 // Verificar que el usuario esté logueado
 if (!isset($_SESSION['user_id'])) {
@@ -70,6 +70,6 @@ if (isset($_GET['text_id'])) {
 $conn->close();
 
 // Redirigir de vuelta a la lista de textos
-header("Location: index.php?show_my_texts=1");
+header("Location: ../index.php?show_my_texts=1");
 exit();
 ?>

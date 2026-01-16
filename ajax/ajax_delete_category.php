@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once 'db/connection.php';
+require_once '../db/connection.php';
 
 // Solo admin puede eliminar categorías
 if (!isset($_SESSION['user_id']) || !isset($_SESSION['is_admin']) || $_SESSION['is_admin'] != 1) {
@@ -76,4 +76,4 @@ try {
 }
 
 $conn->close();
-?> 
+?>

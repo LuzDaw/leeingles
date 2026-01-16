@@ -17,7 +17,7 @@ if ($duration <= 0 || $duration > 3600 || $text_id <= 0) {
     exit;
 }
 
-require_once 'db/connection.php';
+require_once '../db/connection.php';
 
 // Verificar que la tabla existe, si no, crearla
 $conn->query("
@@ -43,4 +43,4 @@ if ($ok) {
 } else {
     echo json_encode(['success' => false, 'error' => 'Error al guardar en BD']);
 }
-?> 
+?>
