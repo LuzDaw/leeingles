@@ -4,6 +4,11 @@
 // Variables globales para modal
 let actionAfterLogin = null;
 
+// Función para mostrar modal de login
+window.showLoginModal = function() {
+    DOMUtils.showElement('login-modal');
+}
+
 // Eventos de cierre de modales 
 EventUtils.addOptionalListener('close-login-modal', 'click', () => {
     DOMUtils.hideElement('login-modal');

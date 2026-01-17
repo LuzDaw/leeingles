@@ -221,4 +221,106 @@ function getTotalUserTexts($user_id) {
         return 0;
     }
 }
+
+/**
+ * Renderiza el texto con palabras clickeables y paginación
+ */
+function render_text_clickable($text)
+{
+  $sentences = preg_split('/(?<=[.?!])\s+|\n+/', $text);
+  $pages = [];
+  $currentPage = [];
+  $wordCount = 0;
+
+  foreach ($sentences as $sentence) {
+    $sentence = trim($sentence); // Limpiar espacios
+    if (empty($sentence)) continue; // Saltar oraciones vacías
+
+    $wordsInSentence = str_word_count($sentence);
+    // 50 palabras por página para oraciones más cortas
+    if ($wordCount + $wordsInSentence > 120 && count($currentPage) > 0) {
+      $pages[] = $currentPage;
+      $currentPage = [];
+      $wordCount = 0;
+    }
+    $currentPage[] = $sentence;
+    $wordCount += $wordsInSentence;
+  }
+
+  if (count($currentPage) > 0) {
+    $pages[] = $currentPage;
+  }
+
+  // Obtener el text_id del contexto actual
+  $text_id = '';
+  if (isset($_GET['text_id'])) {
+    $text_id = intval($_GET['text_id']);
+  } elseif (isset($_GET['public_text_id'])) {
+    $text_id = intval($_GET['public_text_id']);
+  }
+
+  $output = '<div id="pages-container" data-total-pages="' . count($pages) . '" data-total-words="' . str_word_count(strip_tags($text)) . '" data-text-id="' . $text_id . '">';
+  
+  foreach ($pages as $index => $page) {
+    $output .= '<div class="page' . ($index === 0 ? ' active' : '') . '">';
+    foreach ($page as $sentence) {
+      $words = preg_split('/(\s+)/', $sentence, -1, PREG_SPLIT_DELIM_CAPTURE);
+      $output .= '<p class="paragraph">';
+      foreach ($words as $word) {
+        if (trim($word) === '') {
+          $output .= $word;
+        } else {
+          $output .= '<span class="clickable-word">' . htmlspecialchars($word) . '</span>';
+        }
+      }
+      $output .= '</p>';
+      $output .= '<p class="translation"></p>';
+    }
+    $output .= '</div>';
+  }
+  
+  // Solo mostrar paginación si hay más de una página
+  if (count($pages) > 1) {
+    $output .= '<div id="pagination-controls">
+            <button id="prev-page" class="pagination-btn" disabled>◀ Anterior</button>
+            <span class="page-info"><span id="page-number">1</span> / <span id="total-pages">' . count($pages) . '</span></span>
+            <button id="next-page" class="pagination-btn">Siguiente ▶</button>
+    </div>';
+  }
+
+  $output .= '</div>';
+
+  // Sin área de traducción fija - usaremos tooltips
+
+  // Pestaña del menú - siempre visible
+  $output .= '<button onclick="window.toggleFloatingMenu(); event.stopPropagation();" id="menu-btn">☰</button>';
+  
+  // Menú desplegable - siempre visible pero oculto por CSS
+  $output .= '<div id="submenu">
+        <div class="submenu-item">
+            <button onclick="showAllTranslations()" id="show-all-translations-btn" class="submenu-button">📖 Mostrar todas las traducciones</button>
+        </div>
+        <div class="submenu-item">
+            <button onclick="toggleTranslations()" id="toggle-translations-btn" class="submenu-button translations">👁️ Ocultar Traducciones</button>
+        </div>
+        <div class="submenu-item">
+            <button onclick="printFullTextWithTranslations()" class="submenu-button print">🖨️ Imprimir</button>
+        </div>
+        <div class="submenu-item">
+            <button onclick="readCurrentParagraphTwice(); event.stopPropagation();" class="submenu-button double-read">🔊 Leer dos veces</button>
+        </div>
+        <div class="speed-control">
+            <label>Velocidad:</label>
+            <input type="range" id="rate" min="0.5" max="0.9" value="0.9" step="0.1" />
+            <span id="rate-value">100%</span>
+        </div>
+    </div>';
+
+  // Nuevo contenedor para el botón de play flotante, fuera de floating-menu
+  $output .= '<div id="floating-play" style="display: block;">
+        <button onclick="window.toggleFloatingPlayPause()" id="floating-btn" title="Iniciar lectura">▶️</button>
+    </div>';
+
+  return $output;
+}
 ?>
