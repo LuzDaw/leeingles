@@ -244,7 +244,7 @@ $text = preg_replace('/(?<=[.?!])\s+/', "\n", $text);
           </div>
         <?php else: ?>
           <a href="#caracteristicas" class="nav-btn">📚 Características</a>
-          <button onclick="requireLoginForUpload()" class="nav-btn primary">⬆ Subir texto</button>
+          <button onclick="showUploadFormWithLogin()" class="nav-btn primary">⬆ Subir texto</button>
           <button id="login-btn" class="nav-btn">Iniciar sesión</button>
         <?php endif; ?>
       </div>
@@ -366,7 +366,7 @@ $text = preg_replace('/(?<=[.?!])\s+/', "\n", $text);
                     <?php endforeach; ?>
                   </ul>
                   <div class="text-center mt-15">
-                    <a href="my_texts.php" class="nav-btn">Ver todos mis textos →</a>
+                    <a href="index.php?tab=my-texts" class="nav-btn">Ver todos mis textos →</a>
                   </div>
                 <?php else: ?>
                   <p class="color-gray text-center p-20">
@@ -392,7 +392,7 @@ $text = preg_replace('/(?<=[.?!])\s+/', "\n", $text);
                     <?php endforeach; ?>
                   </ul>
                   <div class="text-center mt-15">
-                    <a href="saved_words.php" class="nav-btn">Ver todas las palabras →</a>
+                    <a href="index.php?tab=saved-words" class="nav-btn">Ver todas las palabras →</a>
                   </div>
                 <?php else: ?>
                   <p class="color-gray text-center p-20">
@@ -470,7 +470,7 @@ $text = preg_replace('/(?<=[.?!])\s+/', "\n", $text);
 
                   <div class="hero-buttons">
                     <button id="login-btn-hero" class="btn-primary">Comenzar a Aprender Gratis</button>
-                    <a href="demo.php" class="btn-secondary">👁️ Ver Demo</a>
+                    <a href="index.php?public_text_id=1" class="btn-secondary">👁️ Ver Demo</a>
                   </div>
                 </div>
                 
@@ -707,7 +707,7 @@ $text = preg_replace('/(?<=[.?!])\s+/', "\n", $text);
                 👤 Cuenta
               </button>
               <?php if (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] == 1): ?>
-                <button onclick="window.location.href='admin_categories.php'" class="tab-btn admin-tab-btn" data-tab="admin-categories">
+                <button onclick="window.location.href='admin/admin_categories.php'" class="tab-btn admin-tab-btn" data-tab="admin-categories">
                   ⚙️ Admin
                 </button>
               <?php endif; ?>

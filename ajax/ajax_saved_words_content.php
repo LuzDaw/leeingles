@@ -116,11 +116,11 @@ foreach ($words as $word) {
     </div>
 
 <?php if (isset($success_message)): ?>
-    <div class="message" style="background: #d1fae5; color: #065f46; border: 1px solid #ff8a0087; text-align:center; font-size:16px;">
+    <div class="message" style="background: #d1fae5; color: #161818ff; border: 1px solid #ff8a0087; text-align:center; font-size:16px;">
         <?= htmlspecialchars($success_message) ?>
     </div>
 <?php elseif (isset($error_message)): ?>
-    <div class="message" style="background: #fee2e2; color: #991b1b; border: 1px solid #f87171; text-align:center; font-size:16px;">
+    <div class="message" style="background: #fee2e2; color: #2a2323ff; border: 1px solid #ef8b07ff; text-align:center; font-size:16px;">
         <?= htmlspecialchars($error_message) ?>
     </div>
 <?php endif; ?>
