@@ -688,12 +688,12 @@ $stmt->close();
     <div style="margin-top: 40px; display: flex; flex-direction: column; align-items: center; gap: 16px;">
         <button id="btn-show-delete-panel" class="nav-btn" style="color: #64748b; font-size: 13px; border: 1px solid #e2e8f0; padding: 8px 16px; border-radius: 8px; background: transparent; cursor: pointer;">Eliminar Cuenta</button>
         
-        <div id="delete-account-panel" style="display: none; width: 100%; max-width: 400px; background: #fff1f2; border: 1px solid #fecdd3; border-radius: 12px; padding: 24px; margin-top: 10px; text-align: center;">
-            <h4 style="color: #991b1b; margin-top: 0; margin-bottom: 12px;">¿Estás seguro de que quieres eliminar tu cuenta?</h4>
-            <p style="color: #b91c1c; font-size: 14px; margin-bottom: 20px;">Esta acción es irreversible. Se borrarán todos tus textos, palabras guardadas y progreso de estudio.</p>
+        <div id="delete-account-panel" style="display: none; text-align: center;">
+            <h4 style="color: #ffffffff; margin-top: 0; margin-bottom: 12px;">¿Estás seguro de que quieres eliminar tu cuenta?</h4>
+            <p style="color: #1b1919ff; font-size: 14px; margin-bottom: 20px;">Esta acción es irreversible. Se borrarán todos tus textos, palabras guardadas y progreso de estudio.</p>
             
             <div style="margin-bottom: 20px;">
-                <label for="delete-confirm-text" style="display: block; font-size: 13px; color: #7f1d1d; margin-bottom: 8px; font-weight: 600;">Escribe <span style="background: #fee2e2; padding: 2px 6px; border-radius: 4px; font-family: monospace;">Eliminate</span> para confirmar:</label>
+                <label for="delete-confirm-text" style="display: block; font-size: 13px; color: #be6a0bff; margin-bottom: 8px; font-weight: 600;">Escribe <span style="background: #ffffffff; padding: 2px 6px; border-radius: 4px; font-family: monospace;">Eliminate</span> para confirmar:</label>
                 <input type="text" id="delete-confirm-text" autocomplete="off" placeholder="Escribe aquí..." style="width: 100%; padding: 10px; border: 1px solid #fca5a5; border-radius: 6px; text-align: center; font-size: 15px;">
             </div>
             
