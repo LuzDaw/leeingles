@@ -329,29 +329,36 @@ function initLector() {
         if (!progressContainer) {
             progressContainer = document.createElement('div');
             progressContainer.id = 'reading-progress-container';
-            progressContainer.style.cssText = 'display: flex; align-items: center; gap: 15px; margin: 20px auto; width: fit-content;';
+            progressContainer.style.cssText = 'display: flex; align-items: center; gap: 12px; margin: 20px auto; width: fit-content;';
             
-            // Crear barra de progreso más pequeña
+            // Crear barra de progreso
             let bar = document.createElement('div');
             bar.id = 'reading-progress-bar';
-            bar.style.cssText = 'width: 200px; background: #e5e7eb; border-radius: 4px; overflow: hidden;';
+            bar.style.cssText = 'width: 180px; height: 12px; background: #e5e7eb; border-radius: 6px; overflow: hidden;';
+            
             let inner = document.createElement('div');
             inner.id = 'reading-progress-inner';
-            inner.style.cssText = 'height: 100%; width: 0%; background: linear-gradient(90deg, #3B82F6, #60A5FA); transition: width 0.4s; border-radius: 4px;';
+            inner.style.cssText = 'height: 100%; width: 0%; background: linear-gradient(90deg, #3B82F6, #60A5FA); transition: width 0.4s; border-radius: 6px;';
             bar.appendChild(inner);
             
+            // Crear texto de porcentaje
+            let text = document.createElement('span');
+            text.id = 'reading-progress-text';
+            text.style.cssText = 'font-size: 13px; font-weight: 600; color: #64748b; min-width: 35px;';
+            text.textContent = '0%';
+            
             progressContainer.appendChild(bar);
+            progressContainer.appendChild(text);
             pagesContainer.parentNode.insertBefore(progressContainer, pagesContainer);
         }
+        
         let inner = document.getElementById('reading-progress-inner');
+        let textEl = document.getElementById('reading-progress-text');
         if (inner) {
             inner.style.width = percent + '%';
-            inner.textContent = percent > 0 ? percent + '%' : '';
-            inner.style.color = '#fff';
-            inner.style.fontWeight = 'bold';
-            inner.style.textAlign = 'center';
-            inner.style.fontSize = '12px';
-            inner.style.lineHeight = '12px';
+        }
+        if (textEl) {
+            textEl.textContent = percent + '%';
         }
     }
 
