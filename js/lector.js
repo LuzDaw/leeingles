@@ -1697,6 +1697,15 @@ function initLector() {
             window.currentIndex = window.lastReadParagraphIndex;
             currentIndex = window.lastReadParagraphIndex;
         }
+
+        // NUEVO: Si el texto ya estaba al 100% y empezamos desde el principio, reiniciar progreso para permitir nuevo incremento
+        if (window.readingProgressPercent === 100 && window.currentIndex === 0 && window.currentPage === 0) {
+            window.readPages = [];
+            window.readingProgressPercent = 0;
+            if (typeof saveReadingProgress === 'function') {
+                saveReadingProgress(0);
+            }
+        }
         
         // Cargar caché de traducciones antes de empezar a leer
         window.loadContentTranslationsCache();

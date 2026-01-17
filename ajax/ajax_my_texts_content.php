@@ -199,14 +199,16 @@ if ($result->num_rows > 0) {
         $num_words = str_word_count(strip_tags($row['content']));
             $progress = 0;
             $is_read = false;
+            $read_count = 0;
             $pages_read = [];
-            $stmt2 = $conn->prepare("SELECT percent, pages_read FROM reading_progress WHERE user_id = ? AND text_id = ?");
+            $stmt2 = $conn->prepare("SELECT percent, pages_read, read_count FROM reading_progress WHERE user_id = ? AND text_id = ?");
             $stmt2->bind_param('ii', $user_id, $row['id']);
             $stmt2->execute();
-            $stmt2->bind_result($percent, $pages_read_json);
+            $stmt2->bind_result($percent, $pages_read_json, $rc);
             if ($stmt2->fetch()) {
                 $progress = intval($percent);
                 $is_read = ($progress >= 100);
+                $read_count = intval($rc);
                 $pages_read = json_decode($pages_read_json, true) ?: [];
             }
             $stmt2->close();
@@ -224,8 +226,10 @@ if ($result->num_rows > 0) {
         }
         echo '</a>';
         echo '<span class="text-date">' . $num_words . ' palabras</span>';
-        if ($is_read) {
-            echo '<span class="reading-status" style="color: #ff8a0087; font-weight: bold; margin-left: 10px;">Leído</span>';
+        if ($is_read || $read_count > 0) {
+            $read_text = ($read_count > 1) ? "Leído $read_count veces" : "Leído $read_count vez";
+            if ($read_count == 0 && $is_read) $read_text = "Leído";
+            echo '<span class="reading-status" style="color: #ff8a0087; font-weight: bold; margin-left: 10px;">' . $read_text . '</span>';
         } else {
             echo '<span class="reading-progress-bar" style="display: inline-block; width: 80px; height: 10px; background: #e5e7eb; border-radius: 5px; margin-left: 10px; vertical-align: middle; overflow: hidden;">';
             echo '<span style="display: block; height: 100%; width: ' . $progress . '%; background: linear-gradient(90deg, #ff8a0087, #3b82f6); border-radius: 5px; transition: width 0.4s;"></span>';
@@ -280,13 +284,14 @@ if ($public_read_count > 0) {
         }
         echo '</a>';
         echo '<span class="text-date">' . $num_words . ' palabras</span>';
-        echo '<span class="reading-progress-bar"><span style="width: ' . $percent . '%;"></span></span>';
-        echo '<span class="percent-label">' . $percent . '%</span>';
-        if ($read_count > 1) {
-            echo '<span class="reading-count">Leído ' . $read_count . ' veces</span>';
-        }
-        if ($percent >= 100) {
-            echo '<span class="reading-status">Leído</span>';
+        
+        if ($percent >= 100 || $read_count > 0) {
+            $read_text = ($read_count > 1) ? "Leído $read_count veces" : "Leído $read_count vez";
+            if ($read_count == 0 && $percent >= 100) $read_text = "Leído";
+            echo '<span class="reading-status" style="color: #ff8a0087; font-weight: bold; margin-left: 10px;">' . $read_text . '</span>';
+        } else {
+            echo '<span class="reading-progress-bar"><span style="width: ' . $percent . '%;"></span></span>';
+            echo '<span class="percent-label">' . $percent . '%</span>';
         }
         echo '</li>';
     }
