@@ -83,5 +83,7 @@ $csrf_token = generateCSRFToken();
             setupPasswordVisibilityToggle('passwordLogin', 'togglePasswordLogin');
         });
     </script>
+
+    <?php include __DIR__ . '/../includes/footer.php'; ?>
 </body>
 </html>

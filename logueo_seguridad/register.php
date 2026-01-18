@@ -83,5 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             setupPasswordVisibilityToggle('password', 'togglePasswordRegister');
         });
     </script>
+
+    <?php include __DIR__ . '/../includes/footer.php'; ?>
 </body>
 </html>

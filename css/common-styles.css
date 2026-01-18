@@ -661,6 +661,62 @@
 .relative { position: relative; }
 .fixed { position: fixed; }
 
+/* === FOOTER COMÚN === */
+.footer {
+    background: #333;
+    color: white;
+    padding: 60px 20px 30px;
+}
+
+.footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 40px;
+}
+
+.footer-section h3 {
+    margin-bottom: 20px;
+    color: #ff7f50;
+}
+
+.footer-section ul {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-section ul li {
+    margin-bottom: 8px;
+}
+
+.footer-section ul li a {
+    color: #ccc;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer-section ul li a:hover {
+    color: #ff7f50;
+}
+
+.footer-bottom {
+    text-align: center;
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid #555;
+    color: #999;
+}
+
+.footer-main {
+    text-align: center;
+    padding: 20px 0;
+    width: 100%;
+    background: transparent;
+    color: var(--text-muted);
+    font-size: var(--font-sm);
+}
+
 /* Estados de visibilidad */
 .hidden {
     display: none !important;

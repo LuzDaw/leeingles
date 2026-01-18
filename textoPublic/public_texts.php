@@ -68,5 +68,7 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == '1') {
         <?php endwhile; ?>
     </ul>
     <p><a href="../">Volver al inicio</a></p>
+
+    <?php include __DIR__ . '/../includes/footer.php'; ?>
 </body>
 </html>

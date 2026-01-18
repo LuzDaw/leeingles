@@ -45,7 +45,7 @@
 .brand-text h1 {
        margin-bottom: 0.2rem;
     text-shadow: 1px 1px 1px #6b7280;
-    font-family: 'Gruppo', cursive;
+    font-family: 'math', cursive;
     font-size: 2rem;
     font-weight: bold;
     color: var(--accent-color);

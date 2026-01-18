@@ -647,42 +647,6 @@ $text = preg_replace('/(?<=[.?!])\s+/', "\n", $text);
             </div>
           </section> -->
 
-          <!-- Footer -->
-          <footer class="footer">
-            <div class="footer-container">
-              <div class="footer-section">
-                <h3>🌟LeeInglés</h3>
-                <p>La forma más efectiva de aprender idiomas a través de lectura inmersiva y personalización con IA.</p>
-              </div>
-              <div class="footer-section">
-                <h3>Producto</h3>
-                <ul>
-                  <li><a href="#caracteristicas">Características</a></li>
-                  <li><a href="?show_public_texts=1">Idiomas</a></li>
-                  <li><a href="#testimonios">Comunidad</a></li>
-                </ul>
-              </div>
-              <div class="footer-section">
-                <h3>Soporte</h3>
-                <ul>
-                  <li><a href="#como-funciona">Centro de Ayuda</a></li>
-                  <li><a href="#">Comunidad</a></li>
-                  <li><a href="#">Carrera</a></li>
-                </ul>
-              </div>
-              <div class="footer-section">
-                <h3>Empresa</h3>
-                <ul>
-                  <li><a href="#">Acerca de</a></li>
-                  <li><a href="#">Privacidad</a></li>
-                  <li><a href="#">Carrera</a></li>
-                </ul>
-              </div>
-            </div>
-            <div class="footer-bottom">
-              <p>Únete a más de 100,000 estudiantes que ya han descubierto el poder del aprendizaje inmersivo de idiomas.</p>
-            </div>
-          </footer>
         <?php else: ?>
           <!-- Dashboard de usuario logueado -->
           <div class="user-dashboard">
@@ -893,16 +857,7 @@ $text = preg_replace('/(?<=[.?!])\s+/', "\n", $text);
   <!-- SDK de PayPal (Cargado globalmente para compatibilidad con pestañas AJAX) -->
   <script src="https://www.paypal.com/sdk/js?client-id=ATfzdeOVWZvM17U3geOdl_yV513zZfX7oCm_wa0wqog2acHfSIz846MkdZnpu7oCdWFzqdMn0NEN0xSM&vault=true&intent=subscription" data-sdk-integration-source="button-factory"></script>
 
-  <!-- Footer simple -->
-  <footer class="footer-main">
-    <p>
-      © <span id="year"></span> LeeInglés - Aprende inglés leyendo y entendiendolo | 📧 info@leeingles.com
-    </p>
-  </footer>
-
-  <script>
-    document.getElementById('year').textContent = new Date().getFullYear();
-  </script>
+  <?php include 'includes/footer.php'; ?>
 
   <!-- Al final del body, antes de cerrar -->
   <script src="js/public-texts-dropdown.js"></script>
