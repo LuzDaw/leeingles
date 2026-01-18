@@ -835,7 +835,6 @@ $text = preg_replace('/(?<=[.?!])\s+/', "\n", $text);
             </button>
           </div>
           <div id="register-error" class="auth-msg error" aria-live="polite"></div>
-          <div id="register-success" class="register-success-tooltip"></div>
           <button type="submit" class="auth-btn">Crear cuenta</button>
         </form>
       </div>

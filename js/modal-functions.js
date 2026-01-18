@@ -147,32 +147,24 @@ EventUtils.onDOMReady(() => {
                 }
 
                 if (data.success) {
-                    const registerSuccessElement = DOMUtils.getElement('register-success');
                     const userEmail = formData.get('email');
                     
-                    if (registerSuccessElement) {
-                        registerSuccessElement.innerHTML = `
-                            <div class="auth-msg success show" style="display:block; opacity:1;">
+                    // Cambiar a la vista de login y mostrar el mensaje de activación pendiente
+                    switchAuthView('loginView');
+                    
+                    const loginErrorElement = DOMUtils.getElement('login-error');
+                    if (loginErrorElement) {
+                        loginErrorElement.innerHTML = `
+                            <div style="text-align: center;">
                                 <p>✓ ¡Registro exitoso!</p>
-                                <p>Te hemos enviado un email para activar tu cuenta.</p>
-                                <a href="mailto:${userEmail}" style="color: inherit; text-decoration: underline; font-weight: bold;">✉️ Abrir correo</a>
+                                <p>Tu cuenta está pendiente de activación.</p>
+                                <p style="font-size: 0.85em; margin: 5px 0;">Revisa tu email: <strong>${userEmail}</strong></p>
+                                <a href="mailto:${userEmail}" class="auth-btn" style="display: inline-block; margin-top: 10px; text-decoration: none; background: #2563eb; padding: 5px 15px; font-size: 0.8em;">✉️ Abrir correo</a>
                             </div>
                         `;
-                        registerSuccessElement.style.display = 'block';
-                        registerSuccessElement.style.opacity = '1';
-                        registerSuccessElement.style.position = 'static';
-                        registerSuccessElement.style.marginBottom = '1rem';
+                        loginErrorElement.classList.add('show', 'info');
+                        loginErrorElement.classList.remove('error');
                     }
-
-                    // Ocultar el formulario para que solo se vea el mensaje
-                    const form = DOMUtils.getElement('register-form');
-                    if (form) {
-                        form.querySelectorAll('.field, .auth-btn').forEach(el => el.style.display = 'none');
-                    }
-
-                    setTimeout(() => {
-                        location.reload();
-                    }, 5000);
 
                     const errorMsg = DOMUtils.getElement('register-error');
                     if (errorMsg) errorMsg.classList.remove('show');
