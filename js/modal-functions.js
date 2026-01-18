@@ -149,22 +149,47 @@ EventUtils.onDOMReady(() => {
                 if (data.success) {
                     const userEmail = formData.get('email');
                     
-                    // Cambiar a la vista de login y mostrar el mensaje de activación pendiente
-                    switchAuthView('loginView');
+                    // Cerrar el modal de autenticación
+                    const authModal = DOMUtils.getElement('authModal');
+                    if (authModal) authModal.classList.remove('show');
                     
-                    const loginErrorElement = DOMUtils.getElement('login-error');
-                    if (loginErrorElement) {
-                        loginErrorElement.innerHTML = `
-                            <div style="text-align: center;">
-                                <p>✓ ¡Registro exitoso!</p>
-                                <p>Tu cuenta está pendiente de activación.</p>
-                                <p style="font-size: 0.85em; margin: 5px 0;">Revisa tu email: <strong>${userEmail}</strong></p>
-                                <a href="mailto:${userEmail}" class="auth-btn" style="display: inline-block; margin-top: 10px; text-decoration: none; background: #2563eb; padding: 5px 15px; font-size: 0.8em;">✉️ Abrir correo</a>
-                            </div>
-                        `;
-                        loginErrorElement.classList.add('show', 'info');
-                        loginErrorElement.classList.remove('error');
-                    }
+                    // Crear notificación flotante temporal
+                    const toast = document.createElement('div');
+                    toast.style.cssText = `
+                        position: fixed;
+                        top: 20px;
+                        left: 50%;
+                        transform: translateX(-50%);
+                        z-index: 99999;
+                        background: #fff;
+                        padding: 20px;
+                        border-radius: 12px;
+                        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+                        border: 1px solid #bfdbfe;
+                        min-width: 300px;
+                        animation: slideInDown 0.5s ease;
+                    `;
+                    
+                    toast.innerHTML = `
+                        <div style="text-align: center; font-family: sans-serif;">
+                            <p style="color: #059669; font-weight: bold; margin-bottom: 10px;">✓ ¡Registro exitoso!</p>
+                            <p style="color: #1f2937; margin-bottom: 5px;">Tu cuenta está pendiente de activación.</p>
+                            <p style="font-size: 0.85em; color: #4b5563; margin: 5px 0;">Revisa tu email: <strong>${userEmail}</strong></p>
+                            <a href="mailto:${userEmail}" style="display: inline-block; margin-top: 10px; text-decoration: none; background: #2563eb; color: white; padding: 8px 20px; border-radius: 6px; font-size: 0.85em; font-weight: 600;">✉️ Abrir correo</a>
+                            <button onclick="this.parentElement.parentElement.remove()" style="position: absolute; top: 10px; right: 10px; background: none; border: none; font-size: 18px; cursor: pointer; color: #9ca3af;">&times;</button>
+                        </div>
+                    `;
+                    
+                    document.body.appendChild(toast);
+                    
+                    // Auto-eliminar después de 10 segundos
+                    setTimeout(() => {
+                        if (toast.parentNode) {
+                            toast.style.opacity = '0';
+                            toast.style.transition = 'opacity 0.5s ease';
+                            setTimeout(() => toast.remove(), 500);
+                        }
+                    }, 10000);
 
                     const errorMsg = DOMUtils.getElement('register-error');
                     if (errorMsg) errorMsg.classList.remove('show');
