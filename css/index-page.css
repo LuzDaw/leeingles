@@ -187,7 +187,9 @@ label {
 /* Modales (Estilos base en common-styles.css) */
 
 .login-modal-container {
-    width: 350px;
+   width: 350px;
+    padding: 12px;
+    color: #1d3557;
 }
 
 .login-input {
@@ -239,7 +241,7 @@ label {
     display: none;
     margin-top: 20px;
     font-size: 18px;
-    color: green;
+    color: rgb(255, 170, 0);
     font-weight: bold;
     text-align: center;
 }

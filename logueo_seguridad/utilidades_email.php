@@ -14,7 +14,7 @@ function enviarEmailConPHPMailer($destinatarioEmail, $destinatarioNombre, $subje
 function enviarEmailVerificacion($destinatarioEmail, $destinatarioNombre, $token) {
     global $base_url;
     
-    $verificationLink = $base_url . "/logueo_seguridad/verificar_email.php?token=" . $token;
+    $verificationLink = $base_url . "/?token=" . $token;
     
     $subject = "Verifica tu cuenta en Traductor";
     $body = "

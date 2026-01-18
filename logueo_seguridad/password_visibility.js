@@ -11,6 +11,9 @@ function setupPasswordVisibilityToggle(passwordInputId, toggleIconId) {
     const toggleIcon = document.getElementById(toggleIconId);
 
     if (passwordInput && toggleIcon) {
+        // Evitar duplicar el listener si ya se ha configurado
+        if (toggleIcon.dataset.initialized === 'true') return;
+        
         toggleIcon.style.cursor = 'pointer';
         toggleIcon.innerHTML = '&#128065;'; // Icono de ojo cerrado
 
@@ -23,6 +26,8 @@ function setupPasswordVisibilityToggle(passwordInputId, toggleIconId) {
                 toggleIcon.innerHTML = '&#128065;'; // Icono de ojo cerrado
             }
         });
+        
+        toggleIcon.dataset.initialized = 'true';
     }
 }
 

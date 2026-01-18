@@ -3,6 +3,51 @@ session_start();
 require_once 'db/connection.php';
 require_once 'includes/content_functions.php';
 
+// Procesar token de verificación de email si existe
+if (isset($_GET['token']) && !isset($_SESSION['user_id'])) {
+    $token_claro = $_GET['token'];
+    $token_hash = hash('sha256', $token_claro);
+
+    $stmt = $conn->prepare("SELECT id, id_usuario, expira_en FROM verificaciones_email WHERE token_hash = ? AND tipo = 'email_verification'");
+    $stmt->bind_param("s", $token_hash);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $token_encontrado = $result->fetch_assoc();
+    $stmt->close();
+
+    if ($token_encontrado && strtotime($token_encontrado['expira_en']) > time()) {
+        $id_usuario = $token_encontrado['id_usuario'];
+        
+        // Actualizar usuario a activo
+        $stmt_upd = $conn->prepare("UPDATE users SET estado = 'activo', email_verificado_en = NOW() WHERE id = ?");
+        $stmt_upd->bind_param("i", $id_usuario);
+        
+        if ($stmt_upd->execute()) {
+            // Eliminar token
+            $stmt_del = $conn->prepare("DELETE FROM verificaciones_email WHERE id = ?");
+            $stmt_del->bind_param("i", $token_encontrado['id']);
+            $stmt_del->execute();
+            $stmt_del->close();
+
+            // Iniciar sesión automáticamente
+            $stmt_user = $conn->prepare("SELECT username FROM users WHERE id = ?");
+            $stmt_user->bind_param("i", $id_usuario);
+            $stmt_user->execute();
+            $res_user = $stmt_user->get_result()->fetch_assoc();
+            $stmt_user->close();
+
+            if ($res_user) {
+                $_SESSION['user_id'] = $id_usuario;
+                $_SESSION['username'] = $res_user['username'];
+                // Redirigir a la misma página sin el token para limpiar la URL
+                header("Location: ./");
+                exit();
+            }
+        }
+        $stmt_upd->close();
+    }
+}
+
 $is_guest = !isset($_SESSION['user_id']);
 $user_id = $is_guest ? null : $_SESSION['user_id'];
 
@@ -220,7 +265,7 @@ $text = preg_replace('/(?<=[.?!])\s+/', "\n", $text);
         <div class="brand-text">
           <h1>LeeInglés</h1>
           <div class="slogan">
-            Leé en inglés y<br>comprendé en español al instante
+            El Inglés que se queda contigo
           </div>
         </div>
 

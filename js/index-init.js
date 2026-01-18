@@ -23,6 +23,20 @@ document.addEventListener('DOMContentLoaded', function() {
     const showUpload = urlParams.get('show_upload');
     const resetToken = urlParams.get('token');
     const paymentSuccess = urlParams.get('payment_success');
+    const mensaje = urlParams.get('mensaje');
+
+    if (mensaje) {
+        setTimeout(() => {
+            if (typeof window.showLoginModal === 'function') {
+                window.showLoginModal();
+                const loginErrorElement = document.getElementById('login-error');
+                if (loginErrorElement) {
+                    loginErrorElement.innerHTML = mensaje;
+                    loginErrorElement.classList.add('show', 'info');
+                }
+            }
+        }, 500);
+    }
 
     if (resetToken) {
         setTimeout(() => {

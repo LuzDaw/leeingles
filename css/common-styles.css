@@ -756,7 +756,7 @@
 button:focus,
 input:focus,
 .clickable-word:focus {
-    outline: 1px solid #f2790073;
+    /* outline: 1px solid #f2790073; */
     outline-offset: 2px;
     
 }
