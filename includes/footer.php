@@ -1,4 +1,10 @@
-<!-- Footer Completo -->
+<?php
+// Determinar si estamos en modo lectura
+$is_reading_mode = isset($_GET['text_id']) || isset($_GET['public_text_id']);
+?>
+
+<?php if (!$is_reading_mode): ?>
+  <!-- Footer Completo (Oculto en modo lectura) -->
   <footer class="footer">
     <div class="footer-container">
       <div class="footer-section">
@@ -34,17 +40,18 @@
       <p>Únete a más de 100,000 estudiantes que ya han descubierto el poder del aprendizaje inmersivo de idiomas.</p>
     </div>
   </footer>
+<?php endif; ?>
 
-  <!-- Footer simple -->
-  <footer class="footer-main">
-    <p>
-      © <span id="year-footer"></span> LeeInglés - Aprende inglés leyendo y entendiendolo | 📧 info@leeingles.com
-    </p>
-  </footer>
+<!-- Footer simple (Siempre visible) -->
+<footer class="footer-main">
+  <p>
+    © <span id="year-footer"></span> LeeInglés - Aprende inglés leyendo y entendiendolo | 📧 info@leeingles.com
+  </p>
+</footer>
 
-  <script>
-    const yearSpan = document.getElementById('year-footer');
-    if (yearSpan) {
-      yearSpan.textContent = new Date().getFullYear();
-    }
-  </script>
+<script>
+  const yearSpan = document.getElementById('year-footer');
+  if (yearSpan) {
+    yearSpan.textContent = new Date().getFullYear();
+  }
+</script>
