@@ -6,25 +6,54 @@ let actionAfterLogin = null;
 
 // Función para mostrar modal de login
 window.showLoginModal = function() {
-    DOMUtils.showElement('login-modal');
+    const modal = DOMUtils.getElement('authModal');
+    if (modal) {
+        modal.classList.add('show');
+        switchAuthView('loginView');
+    }
+}
+
+// Función para cambiar entre Login y Registro
+window.switchAuthView = function(viewId) {
+    document.querySelectorAll('.auth-view').forEach(v => v.style.display = 'none');
+    document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+    
+    const view = DOMUtils.getElement(viewId);
+    if (view) view.style.display = 'block';
+    
+    const tab = document.querySelector(`[data-view="${viewId}"]`);
+    if (tab) tab.classList.add('active');
+
+    // Limpiar mensajes al cambiar
+    document.querySelectorAll('.auth-msg').forEach(m => {
+        m.classList.remove('show');
+        m.innerHTML = '';
+    });
 }
 
 // Eventos de cierre de modales 
-EventUtils.addOptionalListener('close-login-modal', 'click', () => {
-    DOMUtils.hideElement('login-modal');
-    DOMUtils.hideElement('login-error');
-    DOMUtils.updateText('login-error', '');
+EventUtils.addOptionalListener('authClose', 'click', () => {
+    DOMUtils.getElement('authModal').classList.remove('show');
+});
+
+EventUtils.addOptionalListener('authBackdrop', 'click', () => {
+    DOMUtils.getElement('authModal').classList.remove('show');
 });
 
 // Funciones para modal de registro
 window.showRegisterModal = function() {
-    DOMUtils.hideElement('login-modal');
-    DOMUtils.showElement('register-modal');
+    const modal = DOMUtils.getElement('authModal');
+    if (modal) {
+        modal.classList.add('show');
+        switchAuthView('registerView');
+    }
 }
 
 // Funciones para modal de "Olvidé mi Contraseña"
 window.showForgotPasswordModal = function() {
-    DOMUtils.hideElement('login-modal');
+    const authModal = DOMUtils.getElement('authModal');
+    if (authModal) authModal.classList.remove('show');
+    
     DOMUtils.showElement('forgot-password-modal');
     DOMUtils.hideElement('forgot-password-messages');
     DOMUtils.updateText('forgot-password-messages', '');
@@ -32,7 +61,9 @@ window.showForgotPasswordModal = function() {
 
 // Funciones para modal de restablecer contraseña
 window.showResetPasswordModal = async function(token) {
-    DOMUtils.hideElement('login-modal');
+    const authModal = DOMUtils.getElement('authModal');
+    if (authModal) authModal.classList.remove('show');
+    
     DOMUtils.hideElement('forgot-password-modal');
     DOMUtils.showElement('reset-password-modal');
     DOMUtils.updateHTML('reset-password-modal-content', '<div style="text-align: center; padding: 20px;"><p>Cargando formulario...</p></div>');
@@ -73,9 +104,18 @@ window.showResetPasswordModal = async function(token) {
 }
 
 EventUtils.onDOMReady(() => {
-    EventUtils.addOptionalListener('close-register-modal', 'click', () => {
-        DOMUtils.hideElement('register-modal');
+    // Manejar clics en pestañas
+    document.querySelectorAll('.auth-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            switchAuthView(tab.dataset.view);
+        });
     });
+
+    // Inicializar toggles de contraseña (ojo)
+    if (typeof setupPasswordVisibilityToggle === 'function') {
+        setupPasswordVisibilityToggle('login-password', 'togglePasswordLogin');
+        setupPasswordVisibilityToggle('register-password', 'togglePasswordRegister');
+    }
 
     EventUtils.addOptionalListener('close-forgot-password-modal', 'click', () => {
         DOMUtils.hideElement('forgot-password-modal');
@@ -108,84 +148,40 @@ EventUtils.onDOMReady(() => {
 
                 if (data.success) {
                     const registerSuccessElement = DOMUtils.getElement('register-success');
-                    const registerFormButton = registerForm.querySelector('button[type="submit"]');
-
-                    // Construir el HTML completo del mensaje de éxito
                     const userEmail = formData.get('email');
-                    const successMessageHtml = `
-                        <div style="text-align: center;">
-                            <p style="color: #ffffff; margin: 0 0 8px 0; font-weight: 500;">✓ ¡Registro exitoso!</p>
-                            <p style="color: #ffffff; margin: 0 0 8px 0; font-weight: 500;">Te hemos enviado un email para activar tu cuenta.</p>
-                            <p style="color: #e6e6e6; margin: 0 0 12px 0; font-size: 0.9em;">Revisa tu bandeja de entrada. Si no lo ves, revisa spam o promociones.</p>
-                            <a href="mailto:${userEmail}" style="display: inline-block; padding: 8px 15px; background: #ffffffa2; color: white; border-radius: 5px; text-decoration: none; font-weight: 500; transition: background 0.2s;">✉️ Abrir correo</a>
-                            <p style="color: #d0d0d0; margin: 10px 0 0 0; font-size: 0.85em;">Email: ${userEmail}</p>
-                        </div>
-                    `;
                     
-                    // Limpiar y preparar el elemento
                     if (registerSuccessElement) {
-                        registerSuccessElement.innerHTML = '';
-                        registerSuccessElement.className = 'register-success-tooltip';
-                        registerSuccessElement.innerHTML = successMessageHtml;
-                        
-                        // Asegurar que el elemento sea visible para calcular dimensiones
+                        registerSuccessElement.innerHTML = `
+                            <div class="auth-msg success show" style="display:block; opacity:1;">
+                                <p>✓ ¡Registro exitoso!</p>
+                                <p>Te hemos enviado un email para activar tu cuenta.</p>
+                                <a href="mailto:${userEmail}" style="color: inherit; text-decoration: underline; font-weight: bold;">✉️ Abrir correo</a>
+                            </div>
+                        `;
                         registerSuccessElement.style.display = 'block';
-                        registerSuccessElement.style.visibility = 'hidden'; // Oculto pero ocupando espacio para calcular
-                        registerSuccessElement.style.opacity = '0';
+                        registerSuccessElement.style.opacity = '1';
+                        registerSuccessElement.style.position = 'static';
+                        registerSuccessElement.style.marginBottom = '1rem';
                     }
 
-
-                    if (registerFormButton && registerSuccessElement) {
-                        const rect = registerFormButton.getBoundingClientRect();
-                        // Seleccionar el div principal del modal de registro - buscar por posición relativa dentro del modal
-                        const registerModal = DOMUtils.getElement('register-modal');
-                        const registerModalContent = registerModal ? registerModal.querySelector('div[style*="background"]') : null;
-                        
-                        if (registerModalContent) {
-                            const modalRect = registerModalContent.getBoundingClientRect();
-                            
-                            // Calcular posición relativa al contenedor del modal
-                            const calculatedLeft = (rect.left + rect.width / 2 - modalRect.left);
-                            // Posicionar encima del botón con un margen
-                            const tooltipHeight = registerSuccessElement.offsetHeight || 120; // Altura estimada si aún no está renderizado
-                            const calculatedTop = (rect.top - tooltipHeight - 20 - modalRect.top);
-
-                            registerSuccessElement.style.left = calculatedLeft + 'px';
-                            registerSuccessElement.style.top = calculatedTop + 'px';
-                            registerSuccessElement.style.transform = 'translateX(-50%)';
-                            registerSuccessElement.style.position = 'absolute';
-                        } else {
-                            // Posicionamiento de respaldo: centrado sobre el botón
-                            const calculatedLeft = rect.left + rect.width / 2;
-                            const calculatedTop = rect.top - 150;
-                            registerSuccessElement.style.left = calculatedLeft + 'px';
-                            registerSuccessElement.style.top = calculatedTop + 'px';
-                            registerSuccessElement.style.transform = 'translateX(-50%)';
-                            registerSuccessElement.style.position = 'fixed';
-                        }
+                    // Ocultar el formulario para que solo se vea el mensaje
+                    const form = DOMUtils.getElement('register-form');
+                    if (form) {
+                        form.querySelectorAll('.field, .auth-btn').forEach(el => el.style.display = 'none');
                     }
 
-                    // Hacer visible y mostrar con fade-in
-                    if (registerSuccessElement) {
-                        setTimeout(() => {
-                            registerSuccessElement.style.visibility = 'visible';
-                            registerSuccessElement.style.opacity = '1';
-                        }, 50); // Aumentar ligeramente el delay para asegurar que el DOM está listo
+                    setTimeout(() => {
+                        location.reload();
+                    }, 5000);
 
-                        // Ocultar el tooltip después de 2 segundos y recargar página
-                        setTimeout(() => {
-                            registerSuccessElement.style.opacity = '0';
-                            setTimeout(() => {
-                                // Recargar página para que el usuario esté logueado
-                                location.reload();
-                            }, 300);
-                        }, 2000);
-                    }
-
-                    DOMUtils.hideElement('register-error');
-                    // No recargar la página para que el usuario pueda ver el mensaje y el botón
+                    const errorMsg = DOMUtils.getElement('register-error');
+                    if (errorMsg) errorMsg.classList.remove('show');
                 } else {
-                    MessageUtils.showError('register-error', data.error);
+                    const errorMsg = DOMUtils.getElement('register-error');
+                    if (errorMsg) {
+                        errorMsg.innerHTML = data.error;
+                        errorMsg.classList.add('show');
+                    }
                     // Limpiar todos los campos del formulario y re-habilitar el formulario en caso de error
                     DOMUtils.updateValue('register-username', '');
                     DOMUtils.updateValue('register-email', '');
@@ -302,111 +298,35 @@ EventUtils.addOptionalListener('login-form', 'submit', async (e) => {
             }
         } else {
             const loginErrorElement = DOMUtils.getElement('login-error');
+            if (loginErrorElement) {
+                if (data.pendingVerification && data.email) {
+                    loginErrorElement.innerHTML = `
+                        <div style="text-align: center;">
+                            <p>Tu cuenta está pendiente de activación.</p>
+                            <p style="font-size: 0.85em; margin: 5px 0;">Revisa tu email: <strong>${data.email}</strong></p>
+                            <a href="mailto:${data.email}" class="auth-btn" style="display: inline-block; margin-top: 10px; text-decoration: none; background: #2563eb; padding: 5px 15px; font-size: 0.8em;">✉️ Abrir correo</a>
+                        </div>
+                    `;
+                    loginErrorElement.classList.add('show', 'info');
+                    loginErrorElement.classList.remove('error');
+                } else {
+                    loginErrorElement.innerHTML = data.message || 'Email o contraseña incorrectos';
+                    loginErrorElement.classList.add('show', 'error');
+                    loginErrorElement.classList.remove('info');
+                }
+            }
+            
             const passwordInput = DOMUtils.getElement('login-password');
-            
-            // Verificar si es una cuenta pendiente de verificación
-            if (data.pendingVerification && data.email) {
-                // Crear HTML del tooltip con enlace para abrir correo
-                const tooltipHtml = `
-                    <div style="text-align: center;">
-                        <p style="margin: 0 0 10px 0; color: #ffffff;">Tu cuenta está pendiente de activación.</p>
-                        <p style="margin: 0 0 15px 0; color: #e6e6e6; font-size: 0.95em;">Revisa tu email para el enlace de activación:</p>
-                        <p style="margin: 0 0 15px 0; color: #ffffff; font-weight: bold; word-break: break-all;">${data.email}</p>
-                        <a href="mailto:" style="display: inline-block; padding: 8px 15px; background: #0066ffa2; color: white; border-radius: 5px; text-decoration: none; margin-bottom: 8px;">✉️ Abrir correo</a>
-                        <p style="margin: 10px 0 0 0; color: #d0d0d0; font-size: 0.9em;">Si no ves el email, revisa spam o promociones.</p>
-                    </div>
-                `;
-                if (loginErrorElement) {
-                    loginErrorElement.innerHTML = tooltipHtml;
-                    
-                    // Usar clase especial para este tipo de tooltip
-                    loginErrorElement.classList.add('login-pending-verification-tooltip');
-                    loginErrorElement.classList.remove('login-error-tooltip');
-                }
-            } else {
-                // Tooltip normal de error
-                if (loginErrorElement) {
-                    DOMUtils.updateText('login-error', data.message || 'has introducido mal el Email o contraseña');
-                    loginErrorElement.classList.add('login-error-tooltip');
-                    loginErrorElement.classList.remove('login-pending-verification-tooltip');
-                }
-            }
-            
-            if (loginErrorElement) {
-                loginErrorElement.style.display = 'block'; // Mostrar para calcular posición
-            }
-            
-            // Posicionar el tooltip encima del campo de contraseña
-            if (passwordInput && loginErrorElement) {
-                const rect = passwordInput.getBoundingClientRect();
-                const modalRect = DOMUtils.getElement('login-modal').querySelector('.bg-white').getBoundingClientRect(); // Obtener el contenedor del modal
-                
-                // Calcular posición relativa al contenedor del modal
-                loginErrorElement.style.left = (rect.left + rect.width / 2 - modalRect.left) + 'px';
-                loginErrorElement.style.top = (rect.top - loginErrorElement.offsetHeight - 15 - modalRect.top) + 'px'; // 15px de margen + altura de la flecha
-                loginErrorElement.style.transform = 'translateX(-50%)'; // Centrar horizontalmente
-            }
-            
-            // Mostrar con opacidad
-            if (loginErrorElement) {
-                setTimeout(() => {
-                    loginErrorElement.style.opacity = '1';
-                }, 10); // Pequeño retraso para que la transición CSS funcione
-                
-                // Si es pendiente de verificación, mostrar más tiempo; si es error, 3 segundos
-                const hideTimeout = data.pendingVerification ? 8000 : 3000;
-                
-                setTimeout(() => {
-                    loginErrorElement.style.opacity = '0';
-                    setTimeout(() => {
-                        if (loginErrorElement) {
-                            loginErrorElement.style.display = 'none';
-                            loginErrorElement.classList.remove('login-error-tooltip');
-                            loginErrorElement.classList.remove('login-pending-verification-tooltip');
-                        }
-                    }, 300); // Esperar a que termine la transición de opacidad
-                }, hideTimeout);
-            }
-            
             if (passwordInput) {
-                passwordInput.value = ''; // Limpiar contraseña
-                passwordInput.focus(); // Poner foco en la contraseña
+                passwordInput.value = '';
+                passwordInput.focus();
             }
         }
     } catch (error) {
         const loginErrorElement = DOMUtils.getElement('login-error');
-        const passwordInput = DOMUtils.getElement('login-password');
-
         if (loginErrorElement) {
-            DOMUtils.updateText('login-error', 'Error del servidor');
-            loginErrorElement.classList.add('login-error-tooltip');
-            loginErrorElement.classList.remove('login-pending-verification-tooltip');
-            loginErrorElement.style.display = 'block';
-        }
-
-        if (passwordInput && loginErrorElement) {
-            const rect = passwordInput.getBoundingClientRect();
-            const modalRect = DOMUtils.getElement('login-modal').querySelector('.bg-white').getBoundingClientRect();
-            loginErrorElement.style.left = (rect.left + rect.width / 2 - modalRect.left) + 'px';
-            loginErrorElement.style.top = (rect.top - loginErrorElement.offsetHeight - 15 - modalRect.top) + 'px';
-            loginErrorElement.style.transform = 'translateX(-50%)';
-        }
-
-        if (loginErrorElement) {
-            setTimeout(() => {
-                loginErrorElement.style.opacity = '1';
-            }, 10);
-
-            setTimeout(() => {
-                loginErrorElement.style.opacity = '0';
-                setTimeout(() => {
-                    if (loginErrorElement) {
-                        loginErrorElement.style.display = 'none';
-                        loginErrorElement.classList.remove('login-error-tooltip');
-                        loginErrorElement.classList.remove('login-pending-verification-tooltip');
-                    }
-                }, 300);
-            }, 3000);
+            loginErrorElement.innerHTML = 'Error del servidor';
+            loginErrorElement.classList.add('show', 'error');
         }
     }
 });
@@ -415,7 +335,7 @@ EventUtils.addOptionalListener('login-form', 'submit', async (e) => {
 function requireLogin(action) {
     if (typeof isLoggedIn !== 'undefined' && !isLoggedIn) {
         actionAfterLogin = action;
-        DOMUtils.showElement('login-modal');
+        showLoginModal();
         return false;
     }
     return true;

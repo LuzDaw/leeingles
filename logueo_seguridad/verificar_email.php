@@ -56,7 +56,7 @@ if (isset($_GET['token'])) {
                 session_start(); // Asegurarse de que la sesión esté iniciada
                 $_SESSION['user_id'] = $id_usuario;
                 $_SESSION['username'] = $user['username'];
-                header("Location: ../index.php?mensaje=" . urlencode("Tu cuenta ha sido activada exitosamente. Has iniciado sesión automáticamente."));
+                header("Location: ../?mensaje=" . urlencode("Tu cuenta ha sido activada exitosamente. Has iniciado sesión automáticamente."));
                 exit();
             } else {
                 header("Location: login.php?mensaje=" . urlencode("Tu cuenta ha sido activada, pero no pudimos iniciar sesión automáticamente. Por favor, inicia sesión manualmente."));

@@ -46,8 +46,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Inicializar visibilidad de contraseñas
     if (typeof window.setupPasswordVisibilityToggle === 'function') {
-        window.setupPasswordVisibilityToggle('login-password', 'togglePasswordLoginModal');
-        window.setupPasswordVisibilityToggle('register-password', 'togglePasswordRegisterModal');
+        window.setupPasswordVisibilityToggle('login-password', 'togglePasswordLogin');
+        window.setupPasswordVisibilityToggle('register-password', 'togglePasswordRegister');
     }
 
     // Event listeners para botones de navegación

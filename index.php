@@ -181,20 +181,20 @@ $text = preg_replace('/(?<=[.?!])\s+/', "\n", $text);
   <meta name="description" content="Aprende inglés leyendo textos con traducciones instantáneas">
   <title>LeeInglés - Aprende inglés leyendo y entendiéndolo</title>
   <!-- CSS Principal -->
-  <link rel="stylesheet" href="css/common-styles.css">
-  <link rel="stylesheet" href="css/modern-styles.css">
-  <link rel="stylesheet" href="css/color-theme.css">
-  <link rel="stylesheet" href="css/header-redesign.css">
-  <link rel="stylesheet" href="css/text-styles.css">
-  <link rel="stylesheet" href="css/floating-menu.css">
-  <link rel="stylesheet" href="css/reading-styles.css">
-  <link rel="stylesheet" href="practicas/css/practice-styles.css">
-  <link rel="stylesheet" href="css/modal-styles.css">
-  <link rel="stylesheet" href="css/tab-system.css">
-  <link rel="stylesheet" href="css/mobile-ready.css">
-  <link rel="stylesheet" href="css/landing-page.css">
-  <link rel="stylesheet" href="css/index-page.css">
-  <link rel="stylesheet" href="css/calendar-styles.css">
+  <link rel="stylesheet" href="css/common-styles.css?v=1.1">
+  <link rel="stylesheet" href="css/modern-styles.css?v=1.1">
+  <link rel="stylesheet" href="css/color-theme.css?v=1.1">
+  <link rel="stylesheet" href="css/header-redesign.css?v=1.1">
+  <link rel="stylesheet" href="css/text-styles.css?v=1.1">
+  <link rel="stylesheet" href="css/floating-menu.css?v=1.1">
+  <link rel="stylesheet" href="css/reading-styles.css?v=1.1">
+  <link rel="stylesheet" href="practicas/css/practice-styles.css?v=1.1">
+  <link rel="stylesheet" href="css/modal-styles.css?v=1.1">
+  <link rel="stylesheet" href="css/tab-system.css?v=1.1">
+  <link rel="stylesheet" href="css/mobile-ready.css?v=1.1">
+  <link rel="stylesheet" href="css/landing-page.css?v=1.1">
+  <link rel="stylesheet" href="css/index-page.css?v=1.1">
+  <link rel="stylesheet" href="css/calendar-styles.css?v=1.1">
 
   <!-- Favicon -->
   <link rel="icon" href="img/aprender_ingles.gif" type="image/gif">
@@ -212,7 +212,7 @@ $text = preg_replace('/(?<=[.?!])\s+/', "\n", $text);
     <div class="nav-container">
       <div class="nav-left">
         <div class="brand-container">
-          <a href="index.php" class="logo">
+          <a href="./" class="logo">
             <img src="img/aprendiendoIngles.png" alt="Logo" class="logo-img">
           </a>
 
@@ -228,7 +228,7 @@ $text = preg_replace('/(?<=[.?!])\s+/', "\n", $text);
 
 
       <div class="nav-right" id="nav-menu">
-        <a href="index.php" class="nav-btn">🏠 Inicio</a>
+        <a href="./" class="nav-btn">🏠 Inicio</a>
         <?php if (isset($_SESSION['user_id'])): ?>
           <div class="user-dropdown">
             <button class="user-dropdown-btn">
@@ -264,7 +264,7 @@ $text = preg_replace('/(?<=[.?!])\s+/', "\n", $text);
           <div id="practice-container">
             <div class="practice-header">
               <h3>🎯 Practicar Vocabulario</h3>
-              <a href="index.php" class="nav-btn no-underline">✖️ Salir</a>
+              <a href="./" class="nav-btn no-underline">✖️ Salir</a>
             </div>
             <div id="practice-content">
               <div class="empty-state">
@@ -277,7 +277,7 @@ $text = preg_replace('/(?<=[.?!])\s+/', "\n", $text);
 
           <?php if (isset($_SESSION['user_id'])): ?>
             <div class="public-texts-header">
-              <a href="index.php?practice=1" class="nav-btn primary p-10-20 no-underline">
+              <a href="?practice=1" class="nav-btn primary p-10-20 no-underline">
                 🧠 Reforzar Palabras Leídas
               </a>
             </div>
@@ -288,7 +288,7 @@ $text = preg_replace('/(?<=[.?!])\s+/', "\n", $text);
               <?php foreach ($public_titles as $pt): ?>
                 <li class="text-item">
                   <div class="text-item-container">
-                    <a href="index.php?public_text_id=<?= $pt['id'] ?>" class="text-title">
+                    <a href="?public_text_id=<?= $pt['id'] ?>" class="text-title">
                       <span class="color-gray">📄</span>
                       <span class="title-english"><?= htmlspecialchars($pt['title']) ?></span>
                       <?php if (!empty($pt['title_translation'])): ?>
@@ -366,11 +366,11 @@ $text = preg_replace('/(?<=[.?!])\s+/', "\n", $text);
                     <?php endforeach; ?>
                   </ul>
                   <div class="text-center mt-15">
-                    <a href="index.php?tab=my-texts" class="nav-btn">Ver todos mis textos →</a>
+                    <a href="?tab=my-texts" class="nav-btn">Ver todos mis textos →</a>
                   </div>
                 <?php else: ?>
                   <p class="color-gray text-center p-20">
-                    No has subido textos aún. <a href="index.php?show_upload=1">Subir uno</a>
+                    No has subido textos aún. <a href="?show_upload=1">Subir uno</a>
                   </p>
                 <?php endif; ?>
               </div>
@@ -392,7 +392,7 @@ $text = preg_replace('/(?<=[.?!])\s+/', "\n", $text);
                     <?php endforeach; ?>
                   </ul>
                   <div class="text-center mt-15">
-                    <a href="index.php?tab=saved-words" class="nav-btn">Ver todas las palabras →</a>
+                    <a href="?tab=saved-words" class="nav-btn">Ver todas las palabras →</a>
                   </div>
                 <?php else: ?>
                   <p class="color-gray text-center p-20">
@@ -453,7 +453,7 @@ $text = preg_replace('/(?<=[.?!])\s+/', "\n", $text);
                 </div>
               </div>
               <div class="text-center mt-25">
-                <a href="index.php?practice=1" class="nav-btn primary">🎯 Practicar Ahora</a>
+                <a href="?practice=1" class="nav-btn primary">🎯 Practicar Ahora</a>
               </div>
             </div>
           </div>
@@ -470,7 +470,7 @@ $text = preg_replace('/(?<=[.?!])\s+/', "\n", $text);
 
                   <div class="hero-buttons">
                     <button id="login-btn-hero" class="btn-primary">Comenzar a Aprender Gratis</button>
-                    <a href="index.php?public_text_id=1" class="btn-secondary">👁️ Ver Demo</a>
+                    <a href="?public_text_id=1" class="btn-secondary">👁️ Ver Demo</a>
                   </div>
                 </div>
                 
@@ -658,7 +658,7 @@ $text = preg_replace('/(?<=[.?!])\s+/', "\n", $text);
                 <h3>Producto</h3>
                 <ul>
                   <li><a href="#caracteristicas">Características</a></li>
-                  <li><a href="index.php?show_public_texts=1">Idiomas</a></li>
+                  <li><a href="?show_public_texts=1">Idiomas</a></li>
                   <li><a href="#testimonios">Comunidad</a></li>
                 </ul>
               </div>
@@ -738,7 +738,7 @@ $text = preg_replace('/(?<=[.?!])\s+/', "\n", $text);
                       <div class="text-icon">
                         📄
                       </div>
-                      <a href="index.php?text_id=<?= $ut['id'] ?>" class="text-title modern-text-title">
+                      <a href="?text_id=<?= $ut['id'] ?>" class="text-title modern-text-title">
                         <span class="title-english"><?= htmlspecialchars($ut['title']) ?></span>
                         <?php if (!empty($ut['title_translation'])): ?>
                           <span class="title-spanish color-orange fs-0-9 ml-8 fw-500">• <?= htmlspecialchars($ut['title_translation']) ?></span>
@@ -776,31 +776,69 @@ $text = preg_replace('/(?<=[.?!])\s+/', "\n", $text);
 
   <div id="end-message" class="end-message"></div>
 
-  <div id="login-modal" class="modal-overlay">
-    <div class="modal-container login-modal-container">
-      <button id="close-login-modal" class="modal-close-x">&times;</button>
-      <h2 class="modal-title">🔐 Iniciar sesión</h2>
-      <form id="login-form">
-        <div class="mb-15">
-          <label class="modal-label">📧 Email:</label>
-          <input type="email" name="email" required class="modal-input-field login-input">
-        </div>
-        <div class="mb-20">
-          <label class="modal-label">🔒 Contraseña:</label>
-          <div class="password-wrapper">
-            <input type="password" name="password" id="login-password" required class="modal-input-field w-90 login-input">
-            <span id="togglePasswordLoginModal" class="password-toggle-icon"></span>
+  <!-- MODAL DE AUTENTICACIÓN UNIFICADO (Login / Registro) -->
+  <div id="authModal" class="auth-modal" aria-hidden="true" role="dialog">
+    <div class="auth-modal__backdrop" id="authBackdrop"></div>
+    <div class="auth-modal__panel" role="document">
+      <button class="auth-close" id="authClose" aria-label="Cerrar">&times;</button>
+      
+      <div class="auth-modal__brand">
+        <img src="img/aprendiendoIngles.png" alt="Logo" class="auth-modal__logo">
+        <span class="auth-modal__app-name">LeeInglés</span>
+      </div>
+      <h2 id="authTitle" style="display:none;">Acceder / Registrar</h2>
+
+      <div class="auth-tabs">
+        <button class="auth-tab active" data-view="loginView">Iniciar sesión</button>
+        <button class="auth-tab" data-view="registerView">Crear cuenta</button>
+      </div>
+
+      <!-- Vista de Login -->
+      <div id="loginView" class="auth-view">
+        <form id="login-form" autocomplete="on" novalidate>
+          <div class="field">
+            <label>Email</label>
+            <input type="email" name="email" placeholder="tu@email.com" required>
           </div>
-          <div class="text-right mt-5">
-            <a href="#" onclick="showForgotPasswordModal(); return false;" class="color-blue fs-14 forgot-password-link">¿Olvidaste tu contraseña?</a>
+          <div class="field password-field">
+            <label>Contraseña</label>
+            <input type="password" name="password" id="login-password" placeholder="••••••••" required>
+            <button type="button" class="toggle-password" id="togglePasswordLogin" aria-label="Mostrar/Ocultar contraseña">
+              <span class="eye-icon">👁️</span>
+            </button>
           </div>
-        </div>
-        <button type="submit" class="modal-submit-btn">Entrar</button>
-        <div id="login-error" class="modal-error-msg"></div>
-      </form>
-      <hr class="mt-15 mb-15">
-      <p class="text-center mt-10 mb-10 color-gray">¿No tienes cuenta?</p>
-      <a href="#" onclick="showRegisterModal(); return false;" class="block text-center bg-blue color-white p-10 rounded-8 mt-10 register-btn-link">Registrarse</a>
+          <div class="flex-between items-center mb-15">
+            <label class="mb-0 fw-normal"><input type="checkbox" name="remember_me"> Recordarme</label>
+            <a href="#" onclick="showForgotPasswordModal(); return false;" class="forgot-link">¿Olvidaste tu contraseña?</a>
+          </div>
+          <div id="login-error" class="auth-msg error" aria-live="polite"></div>
+          <button type="submit" class="auth-btn">Entrar</button>
+        </form>
+      </div> 
+
+      <!-- Vista de Registro -->
+      <div id="registerView" class="auth-view" style="display:none">
+        <form id="register-form" autocomplete="on" novalidate>
+          <div class="field">
+            <label>Nombre de usuario</label>
+            <input type="text" name="username" placeholder="Ej: JuanPerez" required minlength="2" maxlength="50">
+          </div>
+          <div class="field">
+            <label>Email</label>
+            <input type="email" name="email" placeholder="tu@email.com" required>
+          </div>
+          <div class="field password-field">
+            <label>Contraseña</label>
+            <input type="password" name="password" id="register-password" placeholder="Mínimo 8 caracteres" required minlength="8">
+            <button type="button" class="toggle-password" id="togglePasswordRegister" aria-label="Mostrar/Ocultar contraseña">
+              <span class="eye-icon">👁️</span>
+            </button>
+          </div>
+          <div id="register-error" class="auth-msg error" aria-live="polite"></div>
+          <div id="register-success" class="register-success-tooltip"></div>
+          <button type="submit" class="auth-btn">Crear cuenta</button>
+        </form>
+      </div>
     </div>
   </div>
 
@@ -830,52 +868,24 @@ $text = preg_replace('/(?<=[.?!])\s+/', "\n", $text);
     </div>
   </div>
 
-  <!-- Modal de registro -->
-  <div id="register-modal" class="modal-overlay">
-    <div class="modal-container register-modal-container">
-      <button id="close-register-modal" class="modal-close-x">✕</button>
-      <h2 class="modal-title fs-22">📝 Crear cuenta</h2>
-      <form id="register-form">
-        <div class="mb-12">
-          <label class="modal-label">👤 Usuario:</label>
-          <input type="text" name="username" required class="modal-input-field fs-14">
-        </div>
-        <div class="mb-12">
-          <label class="modal-label">📧 Email:</label>
-          <input type="email" name="email" required class="modal-input-field fs-14">
-        </div>
-        <div class="mb-12">
-          <label class="modal-label">🔒 Contraseña:</label>
-          <div class="password-wrapper">
-            <input type="password" name="password" id="register-password" required class="modal-input-field w-90 fs-14">
-            <span id="togglePasswordRegisterModal" class="password-toggle-icon"></span>
-          </div>
-        </div>
-        <button type="submit" class="modal-submit-btn">Crear cuenta</button>
-      </form>
-      <div id="register-error" class="modal-error-msg"></div>
-      <div id="register-success" class="register-success-tooltip"></div>
-    </div>
-  </div>
-
-    <script src="js/global-state.js"></script>
-    <script src="js/common-functions.js"></script>
-    <script src="js/index-tabs.js"></script>
-    <script src="js/bulk-actions.js"></script>
-    <script src="js/index-functions.js"></script>
-    <script src="js/index-init.js"></script>
-    <script src="js/lector.js?v=dev2"></script>
+    <script src="js/global-state.js?v=1.1"></script>
+    <script src="js/common-functions.js?v=1.1"></script>
+    <script src="js/index-tabs.js?v=1.1"></script>
+    <script src="js/bulk-actions.js?v=1.1"></script>
+    <script src="js/index-functions.js?v=1.1"></script>
+    <script src="js/index-init.js?v=1.1"></script>
+    <script src="js/lector.js?v=1.1"></script>
     <!-- Motor de lectura simplificado -->
-    <script src="js/reading-engine.js?v=1"></script>
-    <script src="practicas/js/practice-functions.js"></script>
-    <script src="js/modal-functions.js"></script>
-    <script src="js/floating-menu.js"></script>
-    <script src="js/upload-form.js"></script>
-    <script src="js/header-functions.js"></script>
-    <script src="js/calendar-functions.js"></script>
-    <script src="js/multi-word-selection.js"></script>
-  <script src="js/title-translation-functions.js"></script>
-  <script src="logueo_seguridad/password_visibility.js"></script>
+    <script src="js/reading-engine.js?v=1.1"></script>
+    <script src="practicas/js/practice-functions.js?v=1.1"></script>
+    <script src="js/modal-functions.js?v=1.1"></script>
+    <script src="js/floating-menu.js?v=1.1"></script>
+    <script src="js/upload-form.js?v=1.1"></script>
+    <script src="js/header-functions.js?v=1.1"></script>
+    <script src="js/calendar-functions.js?v=1.1"></script>
+    <script src="js/multi-word-selection.js?v=1.1"></script>
+  <script src="js/title-translation-functions.js?v=1.1"></script>
+  <script src="logueo_seguridad/password_visibility.js?v=1.1"></script>
   
   <!-- Sistema de Límite de Traducciones -->
   <?php include 'dePago/limit_modal.php'; ?>

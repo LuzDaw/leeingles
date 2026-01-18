@@ -405,7 +405,7 @@ document.getElementById('upload-text-form').addEventListener('submit', function(
                 if (typeof loadTabContent === 'function') {
                     loadTabContent('my-texts');
                 } else {
-                    window.location.href = 'index.php?tab=texts';
+                    window.location.href = '?tab=texts';
                 }
             }, 1000);
         } else {

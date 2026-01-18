@@ -39,41 +39,9 @@
     flex-wrap: wrap;
 }
 
+/* Botones de landing (Estilos base en common-styles.css) */
 .btn-primary {
-    background: #1D3557;
-    color: white;
     padding: 15px 30px;
-    border: none;
-    border-radius: 8px;
-    font-size: 1rem;
-    font-weight: bold;
-    cursor: pointer;
-    text-decoration: none;
-    transition: all 0.3s ease;
-}
-
-.btn-secondary {
-    background: transparent;
-    color: white;
-    padding: 15px 30px;
-    border: 2px solid white;
-    border-radius: 8px;
-    font-size: 1rem;
-    font-weight: bold;
-    cursor: pointer;
-    text-decoration: none;
-    transition: all 0.3s ease;
-}
-
-.btn-primary:hover {
-    background: #457B9D;
-    transform: translateY(-2px);
-}
-
-.btn-secondary:hover {
-    background: white;
-    color: #ff8a00;
-    transform: translateY(-2px);
 }
 
 .hero-features {
@@ -562,14 +530,7 @@
     color: #333;
 }
 
-.sticky-nav .nav-btn {
-    color: #333;
-}
-
-.sticky-nav .nav-btn:hover {
-    background: #ff7f50;
-    color: white;
-}
+/* Botones de navegación (Estilos base en common-styles.css) */
 
 /* Layout de dos columnas para hero section */
 .hero-content {

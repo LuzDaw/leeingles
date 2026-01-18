@@ -134,15 +134,15 @@ $conn->close();
     <div class="form-group">
     <label for="new_password">Nueva Contraseña:</label>
     <div class="password-input-wrapper">
-    <input type="password" id="new_password" name="new_password" required style="width: 100%; padding: 8px; border: 2px solid #e0e0e0; border-radius: 6px; font-size: 14px; box-sizing: border-box;">
-    <span id="toggleNewPassword" class="password-toggle-icon" style="cursor: pointer; margin-left: 8px;">👁️</span>
+    <input type="password" id="new_password" name="new_password" required style="width: 85%; padding: 8px; border: 2px solid #e0e0e0; border-radius: 6px; font-size: 14px; box-sizing: border-box;">
+    <span id="toggleNewPassword" class="password-toggle-icon" style="cursor: pointer;    font-size: x-large; margin-left: 8px;">👁️</span>
     </div>
     </div>
     <div class="form-group" style="margin-top: 12px;">
     <label for="confirm_password">Confirmar Nueva Contraseña:</label>
     <div class="password-input-wrapper">
-    <input type="password" id="confirm_password" name="confirm_password" required style="width: 100%; padding: 8px; border: 2px solid #e0e0e0; border-radius: 6px; font-size: 14px; box-sizing: border-box;">
-    <span id="toggleConfirmPassword" class="password-toggle-icon" style="cursor: pointer; margin-left: 8px;">👁️</span>
+    <input type="password" id="confirm_password" name="confirm_password" required style="width: 85%; padding: 8px; border: 2px solid #e0e0e0; border-radius: 6px; font-size: 14px; box-sizing: border-box;">
+    <span id="toggleConfirmPassword" class="password-toggle-icon" style="cursor: pointer;    font-size: x-large; margin-left: 8px;">👁️</span>
     </div>
     </div>
     <button type="submit" class="btn-submit" style="width: 100%; padding: 10px; background: #3B82F6; color: white; border: none; border-radius: 6px; font-size: 16px; font-weight: 600; cursor: pointer; margin-top: 12px;">Restablecer Contraseña</button>
@@ -192,7 +192,7 @@ $conn->close();
                             
                             // Redirigir después de un momento para que vean el éxito
                             setTimeout(() => {
-                                window.location.href = 'index.php';
+                                window.location.href = './';
                             }, 2000);
                         } else {
                             newMessageDiv.classList.add('error');

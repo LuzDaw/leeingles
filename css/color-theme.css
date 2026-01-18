@@ -9,11 +9,10 @@
     --accent-hover: #e67e00;   /* Naranja hover */
 }
 
-/* Botones y elementos de éxito */
+/* Botones y elementos de éxito (Estilos base en common-styles.css) */
 .correct,
 .status-public,
-.success-button,
-.btn-success {
+.success-button {
     background: var(--accent-color) !important;
     border-color: var(--accent-color) !important;
     color: white !important;
@@ -24,9 +23,8 @@
     background: var(--accent-hover) !important;
 }
 
-/* Mensajes de éxito */
-.register-success,
-.success-message {
+/* Mensajes de éxito (Estilos base en common-styles.css) */
+.register-success {
     color: var(--success-dark) !important;
     background: var(--success-light) !important;
     border-color: var(--success-color) !important;
@@ -81,5 +79,3 @@ div[style*="background: #d1fae5"] {
     color: var(--success-dark) !important;
     border-color: var(--success-color) !important;
 }
-
-

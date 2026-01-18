@@ -6,6 +6,6 @@ $_SESSION['user_id'] = 74;
 $_SESSION['username'] = 'luz';
 
 // Redirigir a la pestaña de cuenta
-header('Location: ../index.php?tab=account');
+header('Location: ../?tab=account');
 exit;
 ?>

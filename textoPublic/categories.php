@@ -58,6 +58,6 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == '1') {
             </li>
         <?php endwhile; ?>
     </ul>
-    <p><a href="../index.php">Volver al inicio</a></p>
+    <p><a href="../">Volver al inicio</a></p>
 </body>
 </html>

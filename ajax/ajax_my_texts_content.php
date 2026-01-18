@@ -205,7 +205,7 @@ $public_read_count = count($public_read_rows);
                     <span class="text-icon">📄</span>
                     
                     <div class="text-main-info">
-                        <a href="index.php?text_id=<?= $row['id'] ?>" class="text-title">
+                        <a href="?text_id=<?= $row['id'] ?>" class="text-title">
                             <span class="title-english"><?= htmlspecialchars($row['title']) ?></span>
                             <?php if (!empty($row['title_translation'])): ?>
                                 <span class="title-spanish">• <?= htmlspecialchars($row['title_translation']) ?></span>
@@ -247,7 +247,7 @@ $public_read_count = count($public_read_rows);
                     <span class="text-icon">📄</span>
                     
                     <div class="text-main-info">
-                        <a href="index.php?public_text_id=<?= $row['id'] ?>" class="text-title">
+                        <a href="?public_text_id=<?= $row['id'] ?>" class="text-title">
                             <span class="title-english"><?= htmlspecialchars($row['title']) ?></span>
                             <?php if (!empty($row['title_translation'])): ?>
                                 <span class="title-spanish">• <?= htmlspecialchars($row['title_translation']) ?></span>

@@ -34,7 +34,7 @@ button:hover {
   background-color: #e67e00;
 }
 
-.form-group {
+.login-form-group {
     position: relative;
     display: flex; /* Usar flexbox para alinear el input y el icono */
     align-items: center; /* Centrar verticalmente los elementos */

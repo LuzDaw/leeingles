@@ -163,24 +163,21 @@ window.printFullTextWithTranslations = async function() {
 
 // Función para requerir login para subir texto
 window.requireLoginForUpload = function() {
-    const loginModal = document.getElementById('login-modal');
-    if (!loginModal) return;
+    const authModal = document.getElementById('authModal');
+    if (!authModal) return;
     
-    const loginTitle = loginModal.querySelector('h2');
-    const loginForm = loginModal.querySelector('#login-form');
+    const loginForm = authModal.querySelector('#login-form');
     
-    if (loginTitle) loginTitle.innerHTML = '📝 ¡Crea tu cuenta para subir textos!';
-    
-    const existingMessage = loginModal.querySelector('.upload-info-message');
+    const existingMessage = authModal.querySelector('.upload-info-message');
     if (!existingMessage && loginForm) {
         const infoMessage = document.createElement('div');
         infoMessage.className = 'upload-info-message';
-        infoMessage.style.cssText = 'background: #e6f3ff; color: #0066cc; padding: 15px; border-radius: 8px; margin-bottom: 20px; text-align: center;';
+        infoMessage.style.cssText = 'background: #e6f3ff; color: #0066cc; padding: 15px; border-radius: 8px; margin-bottom: 20px; text-align: center; font-size: 0.9rem;';
         infoMessage.innerHTML = '✨ Crea una cuenta gratuita para subir tus propios textos y practicar vocabulario personalizado';
         loginForm.parentNode.insertBefore(infoMessage, loginForm);
     }
     
-    loginModal.style.display = 'block';
+    showLoginModal();
 };
 
 // Función para traducir contextos de palabras guardadas

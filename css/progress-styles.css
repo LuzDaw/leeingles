@@ -24,7 +24,6 @@
 
 .stat-number {
     font-size: 32px;
-    font-weight: bold;
     color: #ff8a00;
     margin-bottom: 4px;
 }
@@ -257,4 +256,4 @@
 
 .clickable-stat:hover::after {
     opacity: 1;
-} 
+}

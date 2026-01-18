@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $result = registerUser($username, $email, $password, $send_verification = true);
         
         if ($result['success']) {
-            header("Location: ../index.php");
+            header("Location: ../");
             exit();
         } else {
             $errors[] = $result['error'];

@@ -1,10 +1,5 @@
 /* Estilos para el sistema de Explain Sidebar */
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -587,4 +582,4 @@ body {
     font-size: 0.9em;
     color: #666;
     font-style: italic;
-} 
+}

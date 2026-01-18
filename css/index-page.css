@@ -1,313 +1,96 @@
 /* index-page.css: estilos movidos desde index.php */
 
+/* Reset global movido a common-styles.css */
 
-
-* {
-
-    margin: 0;
-
-    padding: 0;
-
-    box-sizing: border-box;
-
-}
-
-
-
-
-
-/* Cards y contenedores */
-
-.card {
-
-  background: #fff;
-
-  border-radius: 12px;
-
-  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-
-  margin-bottom: 24px;
-
-  padding: 24px;
-
-}
-
-.card-body {
-
-  padding: 12px 0;
-
-}
-
-
+/* Cards y contenedores (Estilos base en common-styles.css) */
 
 /* Inputs y selects */
 
-
-
-
-
 /* Etiquetas y textos */
-
 label {
-
   display: block;
-
   margin-bottom: 5px;
-
   font-weight: bold;
-
 }
 
-
-
-
-
-
-
-.text-list {
-
-  list-style: none;
-
-  padding: 0;
-
-  background: white;
-
-  border-radius: 12px;
-
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-
-  overflow: hidden;
-
-}
-
-
-
-.text-item {
-
-  display: flex;
-
-  align-items: center;
-
-  padding: 15px 20px;
-
-  border-bottom: 1px solid #f1f3f4;
-
-  gap: 15px;
-
-  transition: all 0.2s ease;
-
-}
-
-.text-item:last-child {
-
-  border-bottom: none;
-
-}
-
-.text-item:hover {
-
-  background-color: #f8f9fa;
-
-  transform: translateY(-1px);
-
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-
-}
-
-
-
-.text-title {
-
-  flex-grow: 1;
-
-  text-decoration: none;
-
-  color: #333;
-
-  font-weight: 500;
-
-  font-size: 1.1rem;
-
-}
-
-.text-title:hover {
-
-  color: #4A90E2;
-
-}
-
-
-
-.text-author {
-
-  color: #888;
-
-  font-size: 0.95em;
-
-  margin-left: 10px;
-
-}
-
-
+/* Listas de texto (Estilos base en common-styles.css) */
 
 /* Otros estilos comunes */
-
 .main-container {
-
   max-width: 100%;
-
   margin: 0 auto;
-
 }
-
-
 
 #upload-form-container {
-
   background: #fff;
-
   border-radius: 12px;
-
   box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-
   padding: 24px;
-
   margin-bottom: 24px;
-
 }
-
-
 
 .progress-dashboard {
-
   background: #fff;
-
   border-radius: 12px;
-
   box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-
   padding: 24px;
-
   margin-bottom: 24px;
-
 }
-
-
 
 .progress-stats-grid {
-
   display: flex;
-
   gap: 24px;
-
   flex-wrap: wrap;
-
 }
-
-
 
 .progress-stat-card {
-
   background: #f3f4f6;
-
   border-radius: 8px;
-
   padding: 18px 24px;
-
   flex: 1 1 180px;
-
   text-align: center;
-
 }
-
-
 
 .stat-icon {
-
   font-size: 2rem;
-
   margin-bottom: 8px;
-
 }
-
-
 
 .stat-number {
-
   font-size: 1.5rem;
-
-  font-weight: bold;
-
   color: #3b82f6;
-
 }
-
-
 
 .stat-label {
   color: #64748b;
   font-size: 1rem;
 }
 
-/* Utility classes */
+/* Utility classes (Estilos base en common-styles.css) */
 .flex-between {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-.mb-5 { margin-bottom: 5px; }
-.mb-10 { margin-bottom: 10px; }
-.mb-12 { margin-bottom: 12px; }
-.mb-15 { margin-bottom: 15px; }
-.mb-20 { margin-bottom: 20px; }
-.mb-25 { margin-bottom: 25px; }
-.mb-30 { margin-bottom: 30px; }
-.mt-5 { margin-top: 5px; }
-.mt-10 { margin-top: 10px; }
-.mt-15 { margin-top: 15px; }
-.mt-20 { margin-top: 20px; }
-.mt-25 { margin-top: 25px; }
 .ml-8 { margin-left: 8px; }
-.p-8 { padding: 8px; }
-.p-10 { padding: 10px; }
-.p-12 { padding: 12px; }
-.p-15 { padding: 15px; }
-.p-20 { padding: 20px; }
-.p-25 { padding: 25px; }
-.p-40 { padding: 40px; }
 .p-10-20 { padding: 10px 20px; }
 .p-8-16 { padding: 8px 16px; }
 .p-15-30 { padding: 15px 30px; }
 .p-15-20 { padding: 15px 20px; }
 
-.text-center { text-align: center; }
-.text-right { text-align: right; }
 .no-underline { text-decoration: none; }
-.w-100 { width: 100%; }
 .w-90 { width: 90%; }
 .block { display: block; }
 .inline-block { display: inline-block; }
-.relative { position: relative; }
 .absolute { position: absolute; }
-.fixed { position: fixed; }
-.z-1000 { z-index: 1000; }
 .flex { display: flex; }
 .items-center { align-items: center; }
 .flex-1 { flex: 1; }
 
-.fs-14 { font-size: 14px; }
-.fs-16 { font-size: 16px; }
-.fs-18 { font-size: 18px; }
-.fs-22 { font-size: 22px; }
-.fs-24 { font-size: 24px; }
 .fs-0-9 { font-size: 0.9em; }
 .fs-1-1 { font-size: 1.1rem; }
 .fs-3rem { font-size: 3rem; }
-
-.fw-500 { font-weight: 500; }
-.fw-600 { font-weight: 600; }
-.fw-bold { font-weight: bold; }
 
 .color-gray { color: #6b7280; }
 .color-dark-gray { color: #374151; }
@@ -401,74 +184,7 @@ label {
     padding: 20px 0;
 }
 
-.modal-overlay {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.6);
-    z-index: 1000;
-}
-
-.modal-close-x {
-    position: absolute;
-    top: 10px;
-    right: 15px;
-    background: none;
-    border: none;
-    font-size: 20px;
-    cursor: pointer;
-    color: #999;
-}
-
-.modal-container {
-    background: #fff;
-    padding: 25px;
-    width: 350px;
-    margin: 120px auto;
-    position: relative;
-    border-radius: 12px;
-    margin-top: 5px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-}
-
-.modal-title {
-    text-align: center;
-    margin-bottom: 20px;
-    color: #374151;
-    font-size: 24px;
-    font-weight: bold;
-}
-
-.modal-label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: 600;
-    color: #6b7280;
-}
-
-.modal-input-field {
-    width: 100%;
-    padding: 10px;
-    border-radius: 8px;
-    font-size: 16px;
-    border: 2px solid #e0e0e0;
-    box-sizing: border-box;
-}
-
-.modal-submit-btn {
-    width: 100%;
-    padding: 12px;
-    border-radius: 8px;
-    font-weight: 600;
-    font-size: 16px;
-    background: linear-gradient(135deg, #3B82F6 0%, #60A5FA 100%);
-    color: white;
-    border: none;
-    cursor: pointer;
-}
+/* Modales (Estilos base en common-styles.css) */
 
 .login-modal-container {
     width: 350px;

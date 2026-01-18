@@ -72,7 +72,7 @@ function enviarRecordatorioInactividad($email, $nombre) {
     $mensaje = "Hemos notado que llevas unos días sin entrar a la aplicación. <br><br>
                 Recuerda que la constancia es la clave para dominar un nuevo idioma. Tenemos nuevos textos esperándote para que sigas mejorando tu vocabulario.";
     $botonTexto = "Continuar aprendiendo";
-    $botonUrl = "https://leeingles.com/index.php";
+    $botonUrl = "https://leeingles.com/";
 
     return enviarEmailPlantillaBase($email, $nombre, $asunto, $titulo, $mensaje, $botonTexto, $botonUrl);
 }

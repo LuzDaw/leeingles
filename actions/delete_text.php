@@ -70,6 +70,6 @@ if (isset($_GET['text_id'])) {
 $conn->close();
 
 // Redirigir de vuelta a la lista de textos
-header("Location: ../index.php?show_my_texts=1");
+header("Location: ../?show_my_texts=1");
 exit();
 ?>

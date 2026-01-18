@@ -9,13 +9,15 @@
     color: #1f1c1c;
     margin-bottom: 31px;
 }
+
 .write-input {
     color: rgb(68, 21, 21);
-  }
-  #text-selector {
+}
+
+#text-selector {
     color: black;
-    background-color: white; /* opcional, mejora visibilidad */
-  }
+    background-color: white;
+}
 
 /* Frase del ejercicio */
 .practice-sentence {
@@ -27,11 +29,11 @@
     background: #F5F7FA;
     border-radius: 8px;
     border-left: 4px solid #ff8a00;
-    COLOR: #000000;
+    color: #000000;
 }
 
 #publicTextsBtn {
-  color: #ffffff;
+    color: #ffffff;
 }
 
 /* Botón de ayuda de traducción */
@@ -127,7 +129,6 @@
     color: #3d62c5;
     border: 1px solid #ddd;
     font-weight: bold;
-
 }
 
 /* Contenedor de entrada con pista */
@@ -152,7 +153,6 @@
     text-align: center;
 }
 
-
 /* Destacar palabra que se está leyendo */
 .reading-highlight {
     background-color: #9ca3af !important;
@@ -172,17 +172,8 @@
     }
 }
 
-
-
-/* Spinner de carga */
-.loading-spinner {
-    display: inline-block;
-    width: 20px;
-    height: 20px;
-    border: 3px solid #F0F4F8;
-    border-top: 3px solid #ff8a00;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
+/* Spinner de carga (Estilos base en common-styles.css) */
+.loading-container .loading-spinner {
     margin-left: 10px;
 }
 
@@ -197,25 +188,7 @@
     margin-bottom: 20px;
 }
 
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-/* Mensaje de éxito */
-.success-message {
-    background: linear-gradient(135deg, #ff991383, #ff9813 );
-    color: white;
-    padding: 15px 20px;
-    border-radius: 8px;
-    text-align: center;
-    margin: 20px 0;
-    font-weight: bold;
-    font-size: 18px;
-    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
-    animation: slideInSuccess 0.5s ease-out;
-}
-
+/* Mensaje de éxito (Estilos base en common-styles.css) */
 .success-message .emoji {
     font-size: 24px;
     margin-right: 10px;
@@ -245,7 +218,7 @@
 
 /* Auto-complete visual feedback */
 .sentence-complete {
-    border: 2px solid #ff9813 !important !important;
+    border: 2px solid #ff9813 !important;
     background: #F0FDF4 !important;
     animation: pulseGreen 0.6s ease-out;
 }
@@ -261,8 +234,6 @@
         box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
     }
 }
-
-
 
 .sentence-controls {
     display: flex;
@@ -282,7 +253,7 @@
     color: #6b7280;
     border: 1px solid #e5e7eb;
     transition: all 0.3s ease;
-        color: #0d5bca;
+    color: #0d5bca;
     font-weight: bold;
     text-align: center;
 }
@@ -355,8 +326,6 @@
     color: white !important;
     border-color: #2980b9 !important;
 }
-
-
 
 .option-btn:hover {
     border-color: #506aff;
@@ -439,49 +408,9 @@
     transform: none;
 }
 
-/* Botón siguiente */
+/* Selector de modo (Estilos base en common-styles.css) */
 
-
-.next-btn:hover {
-    background: #0056b3;
-    transform: translateY(-1px);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-/* Selector de modo */
-.mode-selector {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-bottom: 20px;
-    flex-wrap: wrap;
-}
-
-.mode-btn {
-    padding: 10px 20px;
-    border: 2px solid #e5e7eb;
-    border-radius: 8px;
-    background: white;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    font-size: 14px;
-    font-weight: 500;
-    min-width: 150px;
-    COLOR: black;
-}
-
-.mode-btn:hover {
-    border-color: #506aff;
-    background: #f0f9ff;
-}
-
-.mode-btn.active {
-    background: #506aff;
-    color: white;
-    border-color: #506aff;
-}
-
-/* Estadísticas */
+/* Estadísticas (Estilos base en common-styles.css) */
 .practice-stats {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
@@ -495,13 +424,6 @@
 
 .stat-item {
     text-align: center;
-}
-
-.stat-number {
-    font-size: 24px;
-    font-weight: bold;
-    color: #506aff;
-    display: block;
 }
 
 .stat-label {
@@ -529,13 +451,10 @@
     border-radius: 4px;
 }
 
-/* Tarjeta de ejercicio */
+/* Tarjeta de ejercicio (Estilos base en common-styles.css) */
 .exercise-card {
     background: #60a5fa1c;
-    border-radius: 12px;
     padding: 30px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    border: 1px solid #e5e7eb;
     position: relative;
 }
 
@@ -564,34 +483,12 @@
     font-size: 16px;
 }
 
-/* Navegación */
-.nav-btn {
-    display: inline-block;
-     padding: 12px 15px;
-    color:  #334866;
-    text-decoration: none;
-    border-radius: 8px;
-    font-weight: 500;
-    transition: all 0.2s ease;
-    border: none;
-    cursor: pointer;
-    font-size: 14px;
-    
-}
-
-.nav-btn:hover {
-    background: #3b82f6;
-    transform: translateY(-1px);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    color: white;
-}
-
 .nav-btn2 {
- padding: 12px 24px;
-    border: 1px solid #3b82f6;
-    border-radius: 8px;
-    background: #ffffff;
-    color: #144799;
+    padding: 12px 24px;
+    border: 1px solid var(--secondary-color);
+    border-radius: var(--border-radius-md);
+    background: white;
+    color: var(--primary-color);
     cursor: pointer;
     font-weight: bold;
     transition: all 0.3s;
@@ -599,10 +496,9 @@
     font-size: 12px;
 }
 
-
 .nav-btn2:hover {
-    background: #3b82f6;
-    border-color: rgb(255 255 255 / 34%);
+    background: var(--secondary-color);
+    border-color: rgba(255, 255, 255, 0.34);
     transform: translateY(-1px);
     color: white;
     text-decoration: none;
@@ -629,16 +525,6 @@
     .practice-options {
         grid-template-columns: 1fr;
         gap: 8px;
-    }
-    
-    .mode-selector {
-        flex-direction: column;
-        align-items: center;
-    }
-    
-    .mode-btn {
-        width: 100%;
-        max-width: 250px;
     }
     
     .practice-stats {
@@ -738,25 +624,9 @@
     font-size: 1.3rem;
 }
 
-.loading-spinner::after {
-    content: '';
-    animation: dots 1.5s infinite;
-}
-
-@keyframes dots {
-    0%, 20% { content: ''; }
-    40% { content: '.'; }
-    60% { content: '..'; }
-    80%, 100% { content: '...'; }
-}
-
 @media (max-width: 480px) {
     .practice-stats {
         grid-template-columns: 1fr;
-    }
-    
-    .stat-number {
-        font-size: 20px;
     }
     
     .text-selector-container {
@@ -769,8 +639,7 @@
     }
     
     .check-btn,
-    .next-btn,
-    .nav-btn {
+    .next-btn {
         width: 100%;
         margin: 5px 0;
     }
@@ -782,38 +651,7 @@
   margin: 0 auto;
   padding: 20px;
 }
-.mode-selector {
-  display: flex;
-  gap: 15px;
-  margin-bottom: 30px;
-  justify-content: center;
-}
-.mode-btn {
-  padding: 12px 24px;
-  border: 2px solid #3b82f6;
-  border-radius: 8px;
-  background: white;
-  color: #3b82f6;
-  cursor: pointer;
-  font-weight: bold;
-  transition: all 0.3s;
-}
-.mode-btn.active {
-  background: #3b82f6;
-  color: white;
-}
-.mode-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
-}
-.exercise-card {
-  background: white;
-  border-radius: 12px;
-  padding: 0px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  margin-bottom: 2px;
-  padding: 14px;
-}
+
 .sentence {
   font-size: 20px;
   line-height: 1.6;
@@ -821,6 +659,7 @@
   text-align: center;
   color: #1f2937;
 }
+
 .blank {
   display: inline-block;
   min-width: 80px;
@@ -829,6 +668,7 @@
   text-align: center;
   font-weight: bold;
 }
+
 .options {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -836,53 +676,12 @@
   margin-bottom: 25px;
 }
 
-.option-btn:hover {
-  border-color: #3b82f6;
-  background: #f0f9ff;
-}
 .option-btn.selected {
   background: #3b82f6;
   color: white;
   border-color: #3b82f6;
 }
-.option-btn.correct {
-  background: #ff8a0087;
-  color: white;
-  border-color: #ff8a0087;
-}
-.option-btn.incorrect {
-  background: #ef4444;
-  color: white;
-  border-color: #ef4444;
-}
-.write-input {
-  width: 100%;
-  padding: 15px;
-  border: 2px solid #e5e7eb;
-  border-radius: 8px;
-  font-size: 18px;
-  text-align: center;
-  margin-bottom: 20px;
-}
-.write-input:focus {
-  outline: none;
-  border-color: #3b82f6;
-}
-.check-btn {
-  background: #3b82f6;
-  color: white;
-  padding: 12px 30px;
-  border: none;
-  border-radius: 8px;
-  font-size: 16px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: all 0.3s;
-}
-.check-btn:hover {
-  background: #2563eb;
-  transform: translateY(-2px);
-}
+
 .feedback {
   padding: 15px;
   border-radius: 8px;
@@ -890,34 +689,19 @@
   text-align: center;
   font-weight: bold;
 }
+
 .feedback.correct {
   background: #dbeafe;
   color: #1e40af;
   border: 2px solid #3b82f6;
 }
+
 .feedback.incorrect {
   background: #dbeafe;
   color: #1d4ed8;
   border: 2px solid #60a5fa;
 }
 
-
-.next-btn:hover {
-  background: #2563eb;
-  transform: translateY(-2px);
-}
-.progress {
-  background: #f3f4f6;
-  border-radius: 8px;
-  height: 8px;
-  margin-bottom: 20px;
-}
-.progress-bar {
-  background: #3b82f6;
-  height: 100%;
-  border-radius: 8px;
-  transition: width 0.3s;
-}
 .stats {
   display: flex;
   justify-content: space-around;
@@ -926,6 +710,7 @@
   font-size: 14px;
   opacity: 0.7;
 }
+
 .stat {
   background: #f8fafc;
   padding: 10px;
@@ -933,11 +718,7 @@
   flex: 1;
   margin: 0 5px;
 }
-.stat-number {
-  font-size: 18px;
-  font-weight: bold;
-  color: #3b82f6;
-}
+
 .no-words {
     text-align: center;
     padding: 40px;
@@ -981,14 +762,6 @@
 }
 
 @keyframes fadeInTooltip {
-    from {
-        opacity: 0;
-        transform: translateY(-5px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
 }
-
-

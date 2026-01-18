@@ -3,6 +3,6 @@ require_once __DIR__ . '/auth_functions.php';
 session_start();
 
 logoutUser();
-header("Location: ../index.php");
+header("Location: ../");
 exit();
 ?>

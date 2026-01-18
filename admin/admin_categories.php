@@ -305,7 +305,7 @@ $result = $conn->query("
         </div>
         
         <div class="admin-content">
-            <a href="index.php" class="back-link">
+            <a href="../" class="back-link">
                 ← Volver al inicio
             </a>
 

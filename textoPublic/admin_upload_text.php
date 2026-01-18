@@ -79,6 +79,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <hr>
     <p><a href="../textoPublic/admin_upload_category.php">➜ Añadir categorías</a></p>
     <p><a href="../logueo_seguridad/logout.php">Cerrar sesión</a></p>
-    <p><a href="../index.php">⬅ Volver al inicio</a></p>
+    <p><a href="../">⬅ Volver al inicio</a></p>
 </body>
 </html>

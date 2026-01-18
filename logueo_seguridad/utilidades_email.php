@@ -50,7 +50,7 @@ function enviarEmailVerificacion($destinatarioEmail, $destinatarioNombre, $token
 function enviarEmailRestablecerContrasena($destinatarioEmail, $destinatarioNombre, $token) {
     global $base_url;
     
-    $resetLink = $base_url . "/index.php?token=" . $token;
+    $resetLink = $base_url . "/?token=" . $token;
     
     $subject = "Restablece tu contraseña en Traductor";
     $body = "

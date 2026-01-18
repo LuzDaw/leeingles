@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $result = authenticateUser($email, $password, $remember_me);
             
             if ($result['success']) {
-                header("Location: ../index.php");
+                header("Location: ../");
                 exit();
             } else {
                 $errors[] = $result['error'];
