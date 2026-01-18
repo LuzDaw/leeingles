@@ -172,7 +172,7 @@ EventUtils.onDOMReady(() => {
                     
                     toast.innerHTML = `
                         <div style="text-align: center; font-family: sans-serif;">
-                            <p style="color: #059669; font-weight: bold; margin-bottom: 10px;">✓ ¡Registro exitoso!</p>
+                            <p style="color: #3B82F6; font-weight: bold; margin-bottom: 10px;">✓ ¡Registro exitoso!</p>
                             <p style="color: #1f2937; margin-bottom: 5px;">Tu cuenta está pendiente de activación.</p>
                             <p style="font-size: 0.85em; color: #4b5563; margin: 5px 0;">Revisa tu email: <strong>${userEmail}</strong></p>
                             <a href="mailto:${userEmail}" style="display: inline-block; margin-top: 10px; text-decoration: none; background: #2563eb; color: white; padding: 8px 20px; border-radius: 6px; font-size: 0.85em; font-weight: 600;">✉️ Abrir correo</a>

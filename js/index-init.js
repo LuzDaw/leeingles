@@ -23,6 +23,39 @@ document.addEventListener('DOMContentLoaded', function() {
     const showUpload = urlParams.get('show_upload');
     const resetToken = urlParams.get('token');
     const paymentSuccess = urlParams.get('payment_success');
+    const mensaje = urlParams.get('mensaje');
+
+    if (mensaje) {
+        // Limpiar la URL inmediatamente
+        const newUrl = window.location.pathname;
+        window.history.replaceState({}, document.title, newUrl);
+
+        // Mostrar notificación flotante si el mensaje es "cuenta activada"
+        if (mensaje === 'cuenta activada') {
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                z-index: 99999;
+                background: #fff;
+                padding: 15px 25px;
+                border-radius: 10px;
+                box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+                border-left: 5px solid #3B82F6;
+                font-family: sans-serif;
+                animation: slideInDown 0.5s ease;
+            `;
+            toast.innerHTML = `<span style="color: #3B82F6; font-weight: bold;">✓</span> Cuenta activada correctamente`;
+            document.body.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transition = 'opacity 0.5s ease';
+                setTimeout(() => toast.remove(), 500);
+            }, 4000);
+        }
+    }
 
     if (resetToken) {
         setTimeout(() => {
