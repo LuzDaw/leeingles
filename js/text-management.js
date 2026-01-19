@@ -14,7 +14,7 @@ window.saveTranslatedWord = async function(word, translation, sentence = '') {
         let textId = window.AppState && window.AppState.currentTextId;
         if (!textId) {
             // Buscar en el DOM un atributo data-text-id
-            const textContainer = document.getElementById('text') || document.querySelector('[data-text-id]');
+            const textContainer = document.getElementById('text') || document.querySelector('[data-text-id]') || document.querySelector('#pages-container');
             if (textContainer && textContainer.dataset.textId) {
                 textId = textContainer.dataset.textId;
             }

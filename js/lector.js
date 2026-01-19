@@ -69,6 +69,9 @@ function initLector() {
         if (!textId) {
             textId = document.querySelector('[data-text-id]')?.getAttribute('data-text-id');
         }
+        if (!textId) {
+            textId = document.querySelector('#pages-container')?.getAttribute('data-text-id');
+        }
         
         if (textId && duration > 0) {
             fetch('actions/save_reading_time.php', {
@@ -1107,12 +1110,12 @@ function initLector() {
         if (!fullContent) return;
         
         try {
-            // Traducir el contenido completo
-            const response = await fetch('traduciones/translate.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: 'word=' + encodeURIComponent(fullContent)
-            });
+        // Traducir el contenido completo
+        const response = await fetch('traduciones/translate.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: 'word=' + encodeURIComponent(fullContent)
+        });
             
             const data = await response.json();
             
@@ -1204,9 +1207,14 @@ function initLector() {
             clearWordHighlight();
             highlightWord(el, word);
 
-            // Usar caché si existe
+            // Usar caché si existe para mostrar rápido, pero seguir para asegurar guardado
             if (el.dataset.translation) {
                 showHoverTooltip(el, word, el.dataset.translation);
+                // Intentar guardar por si acaso no se guardó antes
+                if (typeof saveTranslatedWord === 'function') {
+                    const sentence = findSentenceContainingWord(el, word);
+                    saveTranslatedWord(word, el.dataset.translation, sentence);
+                }
                 return;
             }
             // Traducir y mostrar
@@ -1225,7 +1233,8 @@ function initLector() {
                 const tr = data && data.translation ? data.translation : 'Sin traducción';
                 el.dataset.translation = tr;
                 showHoverTooltip(el, word, tr);
-                // Guardar si aplica
+                
+                // SIEMPRE intentar guardar la palabra traducida al servidor
                 if (typeof saveTranslatedWord === 'function') {
                     const sentence = findSentenceContainingWord(el, word);
                     try { saveTranslatedWord(word, tr, sentence); } catch (e) {}
@@ -2087,7 +2096,7 @@ function initLector() {
         if (textId) {
             try {
                 const isActiveReading = window.autoReading ? '1' : '0';
-                const response = await fetch(`traduciones/get_content_translation.php?text_id=${textId}&active_reading=${isActiveReading}`);
+            const response = await fetch(`traduciones/get_content_translation.php?text_id=${textId}&active_reading=${isActiveReading}`);
                 const data = await response.json();
 
                 // Verificar límite de traducciones
@@ -2136,12 +2145,12 @@ function initLector() {
                 // 2. Si no hay en caché, usar API
                 if (!translation) {
                     try {
-                        const isActiveReading = window.autoReading ? '1' : '0';
-                        const res = await fetch('traduciones/translate.php', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                            body: 'word=' + encodeURIComponent(text) + '&active_reading=' + isActiveReading
-                        });
+                const isActiveReading = window.autoReading ? '1' : '0';
+                const res = await fetch('/traduciones/translate.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: 'word=' + encodeURIComponent(text) + '&active_reading=' + isActiveReading
+                });
                         const data = await res.json();
 
                         // Verificar límite de traducciones
@@ -2164,7 +2173,7 @@ function initLector() {
                                     formData.append('content', text);
                                     formData.append('translation', translation);
                                     
-                                    await fetch('traduciones/save_content_translation.php', {
+                                    await fetch('/traduciones/save_content_translation.php', {
                                         method: 'POST',
                                         body: formData
                                     });
@@ -2268,8 +2277,7 @@ function initLector() {
     function loadReadingProgress() {
         const textId = document.querySelector('.reading-area')?.getAttribute('data-text-id');
         if (!textId) return;
-        const basePath = (window.location.pathname || '').replace(/[^\/]+$/, '');
-        const url = basePath + 'ajax/ajax_progress_content.php?text_id=' + encodeURIComponent(textId);
+        const url = 'ajax/ajax_progress_content.php?text_id=' + encodeURIComponent(textId);
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 8000);
         fetch(url, { credentials: 'same-origin', cache: 'no-store', signal: controller.signal })
@@ -2295,8 +2303,7 @@ function initLector() {
         const textId = document.querySelector('.reading-area')?.getAttribute('data-text-id');
         if (!textId) return;
 
-        const basePath = (window.location.pathname || '').replace(/[^\/]+$/, '');
-        const url = basePath + 'ajax/ajax_progress_content.php';
+        const url = 'ajax/ajax_progress_content.php';
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 8000);
         const body = 'text_id=' + encodeURIComponent(textId) + '&percent=' + encodeURIComponent(percent) + '&pages_read=' + encodeURIComponent(JSON.stringify(window.readPages || []));

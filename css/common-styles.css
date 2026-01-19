@@ -15,8 +15,8 @@
 /* === VARIABLES CSS GLOBALES === */
 :root {
     /* Colores principales - Paleta unificada: Naranja, Azul, Negro */
-    --primary-color: #1D3557;      /* Azul oscuro */
-    --secondary-color: #457B9D;     /* Azul medio */
+    --primary-color: #60A5FA;       /* Azul oscuro */
+    --secondary-color: #3B82F6;     /* Azul medio */
     --accent-color: #ff8a00;        /* Naranja principal */
     --accent-hover: #e67e00;        /* Naranja hover */
     --background-color: #F5F7FA;    /* Gris muy claro */
@@ -46,6 +46,9 @@
     --font-lg: 18px;
     --font-xl: 24px;
     
+    /* Layout */
+    --max-width: 1200px;
+
     /* Bordes */
     --border-radius-sm: 4px;
     --border-radius-md: 8px;
@@ -669,7 +672,7 @@
 }
 
 .footer-container {
-    max-width: 1200px;
+    max-width: var(--max-width);
     margin: 0 auto;
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -712,6 +715,8 @@
     text-align: center;
     padding: 20px 0;
     width: 100%;
+    max-width: var(--max-width);
+    margin: 0 auto;
     background: transparent;
     color: var(--text-muted);
     font-size: var(--font-sm);

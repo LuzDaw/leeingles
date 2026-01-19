@@ -54,7 +54,7 @@ window.performBulkAction = function(action) {
 
     if (action === 'print') {
         const selectedIds = Array.from(checkboxes).map(cb => cb.value);
-        const printUrl = 'actions/print_texts.php?ids=' + selectedIds.join(',');
+        const printUrl = '/actions/print_texts.php?ids=' + selectedIds.join(',');
         window.open(printUrl, '_blank');
         return;
     }

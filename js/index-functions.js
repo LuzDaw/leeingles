@@ -224,25 +224,6 @@ window.loadPublicTexts = function() {
         });
 };
 
-// Guardar palabra traducida
-window.saveTranslatedWord = async function(word, translation, sentence = '') {
-    try {
-        const formData = new FormData();
-        formData.append('word', word);
-        formData.append('translation', translation);
-        formData.append('context', sentence);
-
-        const response = await fetch('traduciones/save_translated_word.php', {
-            method: 'POST',
-            body: formData
-        });
-
-        const data = await response.json();
-        return data.success;
-    } catch (error) {
-        return false;
-    }
-};
 
 // Función para recuperar contraseña
 window.showForgotPassword = function() {

@@ -6,9 +6,9 @@
 
 :root {
   --primary-color: #457B9D;      /* Azul medio */
-  --primary-light: #A8DADC;      /* Azul claro */
+  --primary-light: #60A5FA;      /* Azul claro */
   --primary-dark: #1D3557;       /* Azul oscuro */
-  --secondary-color: #A8DADC;    /* Azul claro */
+  --secondary-color: #3B82F6;    /* Azul claro */
   --accent-color: #ff8a00;       /* Naranja principal */
   --accent-hover: #e67e00;       /* Naranja hover */
   --bg-primary: #FFFFFF;         /* Blanco */
@@ -17,7 +17,7 @@
   --text-primary: #1f1c1c;       /* Negro */
   --text-secondary: #ff8a00;     /* Naranja */
   --text-muted: #666666;         /* Gris medio */
-  --border-color: #A8DADC;       /* Azul claro */
+  --border-color: #60A5FA;       /* Azul claro */
   --border-light: #F5F7FA;       /* Gris muy claro */
   --success-color: #457B9D;      /* Azul medio */
   --warning-color: #ff8a00;      /* Naranja */
@@ -94,7 +94,9 @@
 
 /* Contenedor principal */
 .main-container {
-    max-width: 1200px;
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 0 20px;
 }
 
 /* Tarjetas modernas (Estilos base en common-styles.css) */

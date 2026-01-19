@@ -201,7 +201,7 @@ if (isset($_GET['text_id']) || isset($_POST['text_id'])) {
      */
     async function loadPracticeStats() {
         try {
-            const response = await fetch('practicas/get_practice_stats.php');
+            const response = await fetch('/practicas/get_practice_stats.php');
             const data = await response.json();
             
             if (data.success) {

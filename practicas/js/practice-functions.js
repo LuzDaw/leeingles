@@ -789,7 +789,7 @@ window.handlePracticeWordClickInline = function(event, el) {
 }
 
 function translatePracticeSentence(originalSentence, wordTranslation) {
-    fetch('traduciones/translate.php', {
+    fetch('/traduciones/translate.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: 'word=' + encodeURIComponent(originalSentence)
@@ -1366,7 +1366,7 @@ window.sentenceIncorrectAnswers = 0;
 async function loadSentencePractice() {
     try {
         const basePath = (window.location.pathname || '').replace(/[^\/]+$/, '');
-        const url = 'ajax/ajax_user_texts.php?t=' + Date.now();
+        const url = '/ajax/ajax_user_texts.php?t=' + Date.now();
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 10000);
         const form = new URLSearchParams();
@@ -1386,7 +1386,7 @@ async function loadSentencePractice() {
         
         let responseText = await response.text();
         if (!responseText.trim()) {
-            const retryUrl = 'ajax/ajax_user_texts.php?t=' + Date.now();
+            const retryUrl = '/ajax/ajax_user_texts.php?t=' + Date.now();
             response = await fetch(retryUrl, { credentials: 'same-origin', cache: 'no-store' });
             responseText = await response.text();
             if (!responseText.trim()) {
@@ -1494,7 +1494,7 @@ window.startSentencePractice = async function() {
             </div>
         `;
         try {
-            const response = await fetch(`ajax/ajax_saved_words_content.php?get_words_by_text=1&text_id=${textId}`);
+            const response = await fetch(`/ajax/ajax_saved_words_content.php?get_words_by_text=1&text_id=${textId}`);
             const data = await response.json();
 
             if (data.success && data.words && data.words.length > 0) {
@@ -1536,7 +1536,7 @@ window.startSentencePractice = async function() {
         </div>
     `;
     try {
-        const response = await fetch(`ajax/ajax_saved_words_content.php?get_words_by_text=1&text_id=${textId}`);
+        const response = await fetch(`/ajax/ajax_saved_words_content.php?get_words_by_text=1&text_id=${textId}`);
         const data = await response.json();
         if (data.success && data.words && data.words.length > 0) {
             window.currentTextTitle = data.words[0].text_title || '';
@@ -1583,7 +1583,7 @@ function loadSentenceQuestion() {
     
     let spanishSentenceContent = sentence.es;
     if (sentence.needsTranslation && sentence.original_en) {
-        fetch('traduciones/translate.php', {
+        fetch('/traduciones/translate.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             body: 'word=' + encodeURIComponent(sentence.original_en)
@@ -1875,7 +1875,7 @@ function handlePracticeWordClick(event) {
     const word = this.textContent.trim();
     if (!word || word === '___') return;
 
-    fetch('traduciones/translate.php', {
+    fetch('/traduciones/translate.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: 'word=' + encodeURIComponent(word)
@@ -2172,7 +2172,7 @@ function renderPracticeSentence(sentence, highlightWord) {
                 event.stopPropagation();
                 const word = this.textContent.trim();
                 if (!word || word === '___') return;
-                fetch('traduciones/translate.php', {
+                fetch('/traduciones/translate.php', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                     body: 'word=' + encodeURIComponent(word)

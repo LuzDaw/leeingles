@@ -5,6 +5,8 @@
   background: #F5F7FA;
   min-height: 80vh;
   padding: 0;
+  max-width: var(--max-width);
+  margin: 0 auto;
 }
 
 /* Navegación de pestañas */
@@ -223,6 +225,7 @@
 .progress-stats-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-auto-columns: 1fr;
   gap: 20px;
   margin-bottom: 32px;
 }
@@ -322,6 +325,7 @@
 .practice-modes-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-auto-columns: 1fr;
   gap: 20px;
   margin-bottom: 24px;
 }

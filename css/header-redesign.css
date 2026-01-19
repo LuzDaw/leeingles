@@ -10,7 +10,7 @@
 }
 
 .nav-container {
-    max-width: 1200px;
+    max-width: var(--max-width);
     margin: 0 auto;
     padding: 0 2rem;
     display: flex;
@@ -45,7 +45,7 @@
 .brand-text h1 {
        margin-bottom: 0.2rem;
     text-shadow: 1px 1px 1px #6b7280;
-    font-family: 'math', cursive;
+    font-family: 'math';
     font-size: 2rem;
     font-weight: bold;
     color: var(--accent-color);
@@ -80,7 +80,7 @@
     position: absolute;
     top: 100%;
     right: 0;
-    background: white;
+    background: rgba(72, 55, 55, 0.615);
     border: 1px solid #e5e7eb;
     border-radius: 6px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -90,7 +90,8 @@
     transform: translateY(-5px);
     transition: all 0.2s ease;
     z-index: 1000;
-    margin-top: 0.5rem;
+   margin-top: -1rem;
+    margin-right: 2rem;
 }
 
 .user-dropdown:hover .user-dropdown-menu {

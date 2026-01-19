@@ -220,7 +220,7 @@ $text = preg_replace('/(?<=[.?!])\s+/', "\n", $text);
         <div class="brand-text">
           <h1>LeeInglés</h1>
           <div class="slogan">
-            El Inglés que se queda contigo
+            Entendiéndolo
           </div>
         </div>
 
@@ -228,7 +228,7 @@ $text = preg_replace('/(?<=[.?!])\s+/', "\n", $text);
 
 
       <div class="nav-right" id="nav-menu">
-        <a href="./" class="nav-btn">🏠 Inicio</a>
+        <a href="/" class="nav-btn">🏠 Inicio</a>
         <?php if (isset($_SESSION['user_id'])): ?>
           <div class="user-dropdown">
             <button class="user-dropdown-btn">
@@ -236,7 +236,7 @@ $text = preg_replace('/(?<=[.?!])\s+/', "\n", $text);
               <span class="dropdown-arrow">▼</span>
             </button>
             <div class="user-dropdown-menu">
-              <a href="logueo_seguridad/logout.php" class="dropdown-item">
+              <a href="/logueo_seguridad/logout.php" class="dropdown-item">
                 <span class="dropdown-icon">🚪</span>
                 Cerrar sesión
               </a>
@@ -832,6 +832,7 @@ $text = preg_replace('/(?<=[.?!])\s+/', "\n", $text);
   </div>
 
     <script src="js/global-state.js?v=1.1"></script>
+    <script src="js/text-management.js?v=1.1"></script>
     <script src="js/common-functions.js?v=1.1"></script>
     <script src="js/index-tabs.js?v=1.1"></script>
     <script src="js/bulk-actions.js?v=1.1"></script>

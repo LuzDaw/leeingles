@@ -17,8 +17,9 @@ label {
 
 /* Otros estilos comunes */
 .main-container {
-  max-width: 100%;
+  max-width: var(--max-width);
   margin: 0 auto;
+  padding: 0 20px;
 }
 
 #upload-form-container {

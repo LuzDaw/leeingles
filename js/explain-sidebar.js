@@ -288,7 +288,7 @@ class ExplainSidebar {
     async fetchWordData(word) {
         try {
             // Usar el nuevo sistema de diccionario Merriam-Webster
-            const response = await fetch(`traduciones/diccionario.php?palabra=${encodeURIComponent(word)}`);
+            const response = await fetch(`/traduciones/diccionario.php?palabra=${encodeURIComponent(word)}`);
             const data = await response.json();
             
             if (!data.definicion) {
@@ -502,7 +502,7 @@ class ExplainSidebar {
     async translateSynonyms(synonyms) {
         const promises = synonyms.map(async (synonym, index) => {
             try {
-                const response = await fetch('traduciones/translate.php', {
+                const response = await fetch('/traduciones/translate.php', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                     body: 'word=' + encodeURIComponent(synonym)
@@ -535,7 +535,7 @@ class ExplainSidebar {
     async translateAntonyms(antonyms) {
         const promises = antonyms.map(async (antonym, index) => {
             try {
-                const response = await fetch('traduciones/translate.php', {
+                const response = await fetch('/traduciones/translate.php', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                     body: 'word=' + encodeURIComponent(antonym)

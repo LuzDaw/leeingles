@@ -134,7 +134,7 @@ $conn->close();
   <!-- Columna izquierda: Formulario de subida de texto -->
   <div class="upload-form-container" id="upload-form-container" style="display: flex !important;">
     <!-- Formulario de subida de texto -->
-    <form action="ajax/ajax_upload_text.php" method="post" id="upload-text-form">
+    <form action="/ajax/ajax_upload_text.php" method="post" id="upload-text-form">
       <div class="upload-form-group">
         <label for="title-input" class="upload-label">Título:</label>
         <input type="text" name="title" id="title-input" class="upload-input">
@@ -363,7 +363,7 @@ document.getElementById('upload-text-form').addEventListener('submit', function(
     // Mostrar mensaje de carga
     messagesDiv.innerHTML = '<div style="color: #0066cc; padding: 10px; background: #e6f3ff; border-radius: 4px;">Subiendo texto...</div>';
     
-    fetch('ajax/ajax_upload_text.php', {
+    fetch('/ajax/ajax_upload_text.php', {
         method: 'POST',
         body: formData
     })
