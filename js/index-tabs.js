@@ -66,6 +66,11 @@ window.loadTabContent = function(tab, isPaymentSuccess = false, scrollTarget = n
     })
     .then(response => response.text())
     .then(data => {
+        // Desplazar al principio al cargar nueva pestaña (a menos que haya un scrollTarget)
+        if (!scrollTarget && !new URLSearchParams(window.location.search).get('scroll')) {
+            window.scrollTo(0, 0);
+        }
+
         tabContent.innerHTML = data;
         
         // Ejecutar scripts que puedan estar en el contenido cargado

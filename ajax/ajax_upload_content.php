@@ -357,6 +357,9 @@ initializeCustomSelect();
 document.getElementById('upload-text-form').addEventListener('submit', function(e) {
     e.preventDefault();
     
+    // Desplazar al principio para ver el mensaje de carga/error
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    
     const formData = new FormData(this);
     const messagesDiv = document.getElementById('upload-messages');
     
@@ -378,6 +381,9 @@ document.getElementById('upload-text-form').addEventListener('submit', function(
     })
     .then(data => {
         if (data.success) {
+            // Asegurar que estamos arriba para ver el mensaje de éxito
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            
             messagesDiv.innerHTML = '<div style="color: #1e40af; padding: 15px; background: #d1fae5; border-radius: 8px; border: 1px solid #10b981; font-weight: bold; margin-bottom: 20px;">✅ ¡Texto subido exitosamente! Redirigiendo...</div>';
             
             // Resetear formulario de forma segura
