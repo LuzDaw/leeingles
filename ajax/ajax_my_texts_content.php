@@ -259,7 +259,7 @@ $public_read_count = count($public_read_rows);
                 <div style="font-size: 4rem; margin-bottom: 20px; opacity: 0.5;">📚</div>
                 <h3 style="margin-bottom: 10px; color: #374151;">No hay textos en tu lista</h3>
                 <p style="margin-bottom: 30px;">¡Comienza subiendo un texto o explora los públicos!</p>
-                <button onclick="loadTabContent('upload')" class="nav-btn primary" style="padding: 15px 40px;">⬆ Subir mi primer texto</button>
+                <button type="button" onclick="loadTabContent('upload')" class="nav-btn primary" style="padding: 15px 40px;">⬆ Subir mi primer texto</button>
             </div>
         <?php endif; ?>
     </form>

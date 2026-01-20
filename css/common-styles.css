@@ -335,7 +335,6 @@
     list-style: none;
     padding: 0;
     background: white;
-    border-radius: var(--border-radius-lg);
     box-shadow: var(--shadow-sm);
     overflow: hidden;
 }
