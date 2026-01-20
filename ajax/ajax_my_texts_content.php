@@ -94,30 +94,6 @@ $public_read_count = count($public_read_rows);
 ?>
 
 <style>
-    .text-list { list-style: none; padding: 0; margin: 0; }
-    .text-item { 
-        display: flex; 
-        align-items: center; 
-        background: #fff; 
-        border-radius: 12px; 
-        box-shadow: 0 2px 8px rgba(0,0,0,0.04); 
-        margin-bottom: 12px; 
-        padding: 15px 25px; 
-        transition: box-shadow 0.2s, transform 0.1s; 
-        gap: 15px;
-    }
-    .text-item:hover { 
-        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-        transform: translateY(-1px);
-    }
-    .text-checkbox { width: 18px; height: 18px; margin: 0; cursor: pointer; flex-shrink: 0; }
-    .text-icon { font-size: 1.3em; color: #64748b; flex-shrink: 0; }
-    
-    .text-main-info { flex: 1; min-width: 0; }
-    .text-title { text-decoration: none; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .title-english { font-size: 1.1em; font-weight: 600; color: #1e293b; }
-    .title-spanish { color: #eaa827; font-size: 0.9em; margin-left: 8px; font-weight: 500; }
-    
     .text-meta-container { 
         display: flex; 
         align-items: center; 

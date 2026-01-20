@@ -92,12 +92,7 @@
     gap: 1rem;
 }
 
-/* Contenedor principal */
-.main-container {
-    max-width: var(--max-width);
-    margin: 0 auto;
-    padding: 0 20px;
-}
+
 
 /* Tarjetas modernas (Estilos base en common-styles.css) */
 .card-header {

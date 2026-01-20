@@ -181,24 +181,25 @@ $text = preg_replace('/(?<=[.?!])\s+/', "\n", $text);
   <meta name="description" content="Aprende inglés leyendo textos con traducciones instantáneas">
   <title>LeeInglés - Aprende inglés leyendo y entendiéndolo</title>
   <!-- CSS Principal -->
-  <link rel="stylesheet" href="css/common-styles.css?v=1.1">
-  <link rel="stylesheet" href="css/modern-styles.css?v=1.1">
-  <link rel="stylesheet" href="css/color-theme.css?v=1.1">
-  <link rel="stylesheet" href="css/header-redesign.css?v=1.1">
-  <link rel="stylesheet" href="css/text-styles.css?v=1.1">
-  <link rel="stylesheet" href="css/floating-menu.css?v=1.1">
-  <link rel="stylesheet" href="css/reading-styles.css?v=1.1">
-  <link rel="stylesheet" href="practicas/css/practice-styles.css?v=1.1">
-  <link rel="stylesheet" href="css/modal-styles.css?v=1.1">
-  <link rel="stylesheet" href="css/tab-system.css?v=1.1">
-  <link rel="stylesheet" href="css/mobile-ready.css?v=1.1">
-  <link rel="stylesheet" href="css/landing-page.css?v=1.1">
-  <link rel="stylesheet" href="css/index-page.css?v=1.1">
-  <link rel="stylesheet" href="css/calendar-styles.css?v=1.1">
+  <link rel="stylesheet" href="css/common-styles.css">
+  <link rel="stylesheet" href="css/modern-styles.css">
+  <link rel="stylesheet" href="css/color-theme.css">
+  <link rel="stylesheet" href="css/header-redesign.css">
+  <link rel="stylesheet" href="css/text-styles.css">
+  <link rel="stylesheet" href="css/floating-menu.css">
+  <link rel="stylesheet" href="css/reading-styles.css">
+  <link rel="stylesheet" href="practicas/css/practice-styles.css">
+  <link rel="stylesheet" href="css/modal-styles.css">
+  <link rel="stylesheet" href="css/tab-system.css">
+  <link rel="stylesheet" href="css/mobile-ready.css">
+  <link rel="stylesheet" href="css/landing-page.css">
+  <link rel="stylesheet" href="css/index-page.css">
+  <link rel="stylesheet" href="css/calendar-styles.css">
 
   <!-- Favicon -->
   <link rel="icon" href="img/aprender_ingles.gif" type="image/gif">
   <link href="https://fonts.googleapis.com/css2?family=Gruppo&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
     <!-- Sistema de voz ResponsiveVoice unificado -->
     <script>
@@ -254,8 +255,8 @@ $text = preg_replace('/(?<=[.?!])\s+/', "\n", $text);
   </header>
 
 
-
-  <div class="main-container">
+<div class="main-container">
+ <div class="main-containerdos">
     <div id="text" class="reading-area" data-text-id="<?php if (isset($text_id)) { echo $text_id; } elseif (isset($public_id)) { echo $public_id; } else { echo ''; } ?>">
 
       <?php if (empty($text)): ?>
@@ -737,6 +738,7 @@ $text = preg_replace('/(?<=[.?!])\s+/', "\n", $text);
 
     </div>
   </div>
+ </div>
 
   <div id="end-message" class="end-message"></div>
 
@@ -831,25 +833,25 @@ $text = preg_replace('/(?<=[.?!])\s+/', "\n", $text);
     </div>
   </div>
 
-    <script src="js/global-state.js?v=1.1"></script>
-    <script src="js/text-management.js?v=1.1"></script>
-    <script src="js/common-functions.js?v=1.1"></script>
-    <script src="js/index-tabs.js?v=1.1"></script>
-    <script src="js/bulk-actions.js?v=1.1"></script>
-    <script src="js/index-functions.js?v=1.1"></script>
-    <script src="js/index-init.js?v=1.1"></script>
-    <script src="js/lector.js?v=1.1"></script>
+    <script src="js/global-state.js"></script>
+    <script src="js/text-management.js"></script>
+    <script src="js/common-functions.js"></script>
+    <script src="js/index-tabs.js"></script>
+    <script src="js/bulk-actions.js"></script>
+    <script src="js/index-functions.js"></script>
+    <script src="js/index-init.js"></script>
+    <script src="js/lector.js"></script>
     <!-- Motor de lectura simplificado -->
-    <script src="js/reading-engine.js?v=1.1"></script>
-    <script src="practicas/js/practice-functions.js?v=1.1"></script>
-    <script src="js/modal-functions.js?v=1.1"></script>
-    <script src="js/floating-menu.js?v=1.1"></script>
-    <script src="js/upload-form.js?v=1.1"></script>
-    <script src="js/header-functions.js?v=1.1"></script>
-    <script src="js/calendar-functions.js?v=1.1"></script>
-    <script src="js/multi-word-selection.js?v=1.1"></script>
-  <script src="js/title-translation-functions.js?v=1.1"></script>
-  <script src="logueo_seguridad/password_visibility.js?v=1.1"></script>
+    <script src="js/reading-engine.js"></script>
+    <script src="practicas/js/practice-functions.js"></script>
+    <script src="js/modal-functions.js"></script>
+    <script src="js/floating-menu.js"></script>
+    <script src="js/upload-form.js"></script>
+    <script src="js/header-functions.js"></script>
+    <script src="js/calendar-functions.js"></script>
+    <script src="js/multi-word-selection.js"></script>
+  <script src="js/title-translation-functions.js"></script>
+  <script src="logueo_seguridad/password_visibility.js"></script>
   
   <!-- Sistema de Límite de Traducciones -->
   <?php include 'dePago/limit_modal.php'; ?>

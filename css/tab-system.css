@@ -459,28 +459,6 @@
     padding: 4px 8px;
   }
 }
-.title-english {
-  font-weight: 600;
-  color: #1f2937;
-}
-.title-spanish {
-  font-style: italic;
-  font-weight: 500;
-  opacity: 0.9;
-  display: inline-block;
-  transition: opacity 0.3s ease;
-}
-.text-title:hover .title-spanish {
-  opacity: 1;
-}
-@media (max-width: 768px) {
-  .title-spanish {
-    display: block;
-    margin-left: 0 !important;
-    margin-top: 4px;
-    font-size: 0.85em !important;
-  }
-}
 .progress-dashboard .header-controls {
   display: flex;
   justify-content: space-between;
