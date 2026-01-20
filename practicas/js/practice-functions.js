@@ -78,10 +78,10 @@ function showPracticeModeSelector() {
         <div class="progress"><div class="progress-bar" id="practice-progress-bar" style="width: 0%"></div></div>
         <div class="exercise-card" id="practice-exercise-card"></div>
         <div class="practice-stats">
-            <div class="stat-item"><div class="stat-number" id="practice-current-question">0</div><div class="stat-label">Pregunta</div></div>
-            <div class="stat-item"><div class="stat-number" id="practice-total-questions">0</div><div class="stat-label">Total</div></div>
-            <div class="stat-item"><div class="stat-number" id="practice-correct-count">0</div><div class="stat-label">Correctas</div></div>
-            <div class="stat-item"><div class="stat-number" id="practice-incorrect-count">0</div><div class="stat-label">Incorrectas</div></div>
+            <div class="stat-item"><div class="stat-number" id="practice-current-question">0</div><div class="stat-label" id="label-current">Pregunta</div></div>
+            <div class="stat-item"><div class="stat-number" id="practice-total-questions">0</div><div class="stat-label" id="label-total">Total</div></div>
+            <div class="stat-item"><div class="stat-number" id="practice-correct-count">0</div><div class="stat-label" id="label-correct">Correctas</div></div>
+            <div class="stat-item"><div class="stat-number" id="practice-incorrect-count">0</div><div class="stat-label" id="label-incorrect">Incorrectas</div></div>
         </div>
     `;
     document.getElementById('practice-content').innerHTML = practiceHTML;
@@ -94,6 +94,13 @@ window.setPracticeMode = function(mode) {
     window.practiceCurrentMode = mode;
     document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
     if (typeof event !== 'undefined' && event.target) event.target.classList.add('active');
+    
+    // Actualizar etiquetas según el modo
+    const labelCurrent = document.getElementById('label-current');
+    if (labelCurrent) {
+        labelCurrent.textContent = mode === 'sentences' ? 'Frase' : 'Pregunta';
+    }
+    
     loadSentencePractice();
 }
 
@@ -197,6 +204,8 @@ window.loadPracticeQuestion = function() {
         };
     }
     if (window.practiceAlwaysShowTranslation) showPracticeTranslation();
+    
+    updatePracticeStats();
 }
 
 function normalizeWord(word) {
@@ -231,7 +240,10 @@ window.checkWordInput = function(correctWord) {
     if (normalizedUser.length > 0 && !normalizedCorrect.startsWith(normalizedUser)) {
         window.currentWordErrors = (window.currentWordErrors || 0) + 1;
         playErrorSound();
+        
         if (window.currentWordErrors >= 2) {
+            window.practiceIncorrectAnswers++;
+            updatePracticeStats();
             input.value = getSmartHint(userText, correctWord);
             window.currentWordErrors = 0;
         } else {
@@ -419,11 +431,32 @@ window.nextPracticeQuestion = function() {
 
 function updatePracticeStats() {
     const total = window.practiceWords.length;
-    const done = window.practiceCorrectAnswers;
-    document.getElementById('practice-current-question').textContent = done;
-    document.getElementById('practice-correct-count').textContent = window.practiceCorrectAnswers;
-    document.getElementById('practice-incorrect-count').textContent = window.practiceIncorrectAnswers;
-    document.getElementById('practice-progress-bar').style.width = (total > 0 ? (done / total) * 100 : 0) + '%';
+    const correct = window.practiceCorrectAnswers;
+    const incorrect = window.practiceIncorrectAnswers;
+    
+    // Calcular pregunta actual de forma consistente
+    let current = 0;
+    if (window.practiceCurrentMode === 'sentences') {
+        current = window.currentSentenceIndex + 1;
+    } else {
+        current = total - window.practiceRemainingWords.length;
+        if (!window.practiceAnswered && current < total) current++;
+    }
+    
+    const elCurrent = document.getElementById('practice-current-question');
+    const elTotal = document.getElementById('practice-total-questions');
+    const elCorrect = document.getElementById('practice-correct-count');
+    const elIncorrect = document.getElementById('practice-incorrect-count');
+    
+    if (elCurrent) elCurrent.textContent = Math.min(current, total);
+    if (elTotal) elTotal.textContent = total;
+    if (elCorrect) elCorrect.textContent = correct;
+    if (elIncorrect) elIncorrect.textContent = incorrect;
+    
+    const progressBar = document.getElementById('practice-progress-bar');
+    if (progressBar) {
+        progressBar.style.width = (total > 0 ? (correct / total) * 100 : 0) + '%';
+    }
 }
 
 function showPracticeResults() {
@@ -455,6 +488,31 @@ window.restartPracticeExercise = function() {
 
 window.showPracticeHint = function(word) {
     const hint = word.substring(0, 2);
+    
+    // 1. Mostrar en el hueco (gap) de la frase
+    const gap = document.querySelector('.practice-gap');
+    if (gap) {
+        const originalText = gap.textContent;
+        gap.textContent = hint + '...';
+        gap.classList.add('highlighted-word');
+        setTimeout(() => {
+            gap.textContent = originalText;
+            gap.classList.remove('highlighted-word');
+        }, 3000);
+    }
+
+    // 2. Si estamos en modo escritura, insertar en el input
+    if (window.practiceCurrentMode === 'writing') {
+        const input = document.querySelector('[data-practice-input="true"]');
+        if (input && !input.disabled) {
+            const smartHint = getSmartHint(input.value, word);
+            input.value = smartHint;
+            input.focus();
+            input.setSelectionRange(input.value.length, input.value.length);
+        }
+    }
+    
+    // 3. Feedback visual en el botón
     const hintBtn = document.querySelector('.hint-btn');
     if (hintBtn) {
         hintBtn.innerHTML = `💡 Pista: ${hint}...`;
@@ -464,8 +522,6 @@ window.showPracticeHint = function(word) {
 
 window.currentSentences = [];
 window.currentSentenceIndex = 0;
-window.sentenceCorrectAnswers = 0;
-window.sentenceIncorrectAnswers = 0;
 
 async function loadSentencePractice() {
     try {
@@ -496,6 +552,8 @@ window.startSentencePractice = async function() {
     if (data.success && data.words && data.words.length > 0) {
         window.practiceWords = data.words;
         window.practiceRemainingWords = [...data.words];
+        window.practiceCorrectAnswers = 0;
+        window.practiceIncorrectAnswers = 0;
         if (window.practiceCurrentMode === 'sentences') {
             window.currentSentences = data.words.map(w => generatePracticeSentence(w.word));
             window.currentSentenceIndex = 0;
@@ -542,6 +600,8 @@ function loadSentenceQuestion() {
         };
     }
     if (window.practiceAlwaysShowTranslation) showEnglishSentence();
+    
+    updatePracticeStats();
 }
 
 window.showEnglishSentence = function() {
@@ -560,7 +620,7 @@ window.nextSentenceQuestion = function() {
 }
 
 function showSentenceResults() {
-    savePracticeProgress('sentences', window.currentSentences.length, window.sentenceCorrectAnswers, 0);
+    savePracticeProgress('sentences', window.currentSentences.length, window.practiceCorrectAnswers, window.practiceIncorrectAnswers);
     window.stopPracticeTimer();
     document.getElementById('practice-exercise-card').innerHTML = `
         <div style="text-align:center; padding:40px;">
@@ -637,6 +697,9 @@ window.initForcedDictationInput = function(correctText) {
                         handleSentenceCompletion(input);
                     }
                 }
+                playErrorSound();
+                window.practiceIncorrectAnswers++;
+                updatePracticeStats();
             }
         } else if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Home", "End"].includes(e.key)) {
             e.preventDefault();
@@ -645,7 +708,7 @@ window.initForcedDictationInput = function(correctText) {
 };
 
 function handleSentenceCompletion(input) {
-    window.sentenceCorrectAnswers++;
+    window.practiceCorrectAnswers++;
     playSuccessSound();
     input.disabled = true;
     const nextBtn = document.querySelector('.next-btn');
@@ -657,6 +720,7 @@ function handleSentenceCompletion(input) {
     feedback.style.cssText = 'position:fixed; top:30px; left:50%; transform:translateX(-50%); z-index:9999; padding:6px 10px; border-radius:6px; font-weight:bold; color:#fff; background:#e48415e5;';
     document.body.appendChild(feedback);
     setTimeout(() => feedback.remove(), 1500);
+    updatePracticeStats();
 }
 
 function renderPracticeSentence(sentence, highlightWord) {

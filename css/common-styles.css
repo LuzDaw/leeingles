@@ -836,9 +836,9 @@
 button:focus,
 input:focus,
 .clickable-word:focus {
-    /* outline: 1px solid #f2790073; */
-    outline-offset: 2px;
-    
+    outline: none !important;
+    outline-offset: 0 !important;
+    box-shadow: none !important;
 }
 
 /* Reducción de movimiento */
