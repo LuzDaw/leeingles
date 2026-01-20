@@ -14,6 +14,9 @@ if (!isset($_SESSION['user_id'])) {
 
 $user_id = $_SESSION['user_id'];
 
+// Liberar bloqueo de sesión para permitir otras peticiones paralelas
+session_write_close();
+
 // 1. Estadísticas de palabras guardadas
 $stmt = $conn->prepare("SELECT COUNT(*) as total_words FROM saved_words WHERE user_id = ?");
 $stmt->bind_param("i", $user_id);

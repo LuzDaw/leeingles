@@ -8,6 +8,10 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 $user_id = $_SESSION['user_id'];
+
+// Liberar bloqueo de sesión para permitir otras peticiones paralelas
+session_write_close();
+
 $conn->close();
 ?>
 

@@ -1,7 +1,7 @@
 /* Header Sencillo y Minimalista */
 
 .header {
-    background: transparent;
+    background: #457b9d;
     padding: 1rem 0;
     position: relative;
     z-index: 100;
@@ -43,12 +43,12 @@
 }
 
 .brand-text h1 {
-       margin-bottom: 0.2rem;
-    text-shadow: 1px 1px 1px #6b7280;
+margin-bottom: 0.2rem;
+    text-shadow: 1px 1px 1px #3b3e44;
     font-family: 'math';
     font-size: 2rem;
     font-weight: bold;
-    color: var(--accent-color);
+    color: #ff8a00;
 }
 
 .slogan {
@@ -68,7 +68,7 @@
 
 /* Dropdown del usuario (Estilos base en common-styles.css) */
 .user-greeting {
-    color: #1D3557;
+    color: #ffffff;
 }
 
 .dropdown-arrow {

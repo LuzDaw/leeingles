@@ -530,14 +530,23 @@
 }
 
 .nav-btn.minimal,
-.nav-right .nav-btn,
-.user-dropdown-btn {
+.nav-right .nav-btn
+ {
     opacity: 0.7;
     background: transparent;
     color: var(--primary-color);
     font-weight: 400;
     padding: 0.5rem 1rem;
     font-size: 0.9rem;
+}
+
+.user-dropdown-btn{
+    background: #0000001c;
+    color: #ffffff;
+    font-weight: 400;
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    border-radius: 8px; 
 }
 
 .nav-btn.minimal:hover,

@@ -17,6 +17,9 @@ if (!isset($_SESSION['user_id'])) {
 
 $user_id = $_SESSION['user_id'];
 
+// Liberar bloqueo de sesión para permitir otras peticiones paralelas
+session_write_close();
+
 // Obtener datos del usuario
 $user_data = ['username' => 'Usuario', 'email' => ''];
 $stmt_user = $conn->prepare("SELECT username, email FROM users WHERE id = ?");

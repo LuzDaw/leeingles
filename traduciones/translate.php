@@ -32,8 +32,9 @@ if ($text === '') {
 
 // Verificar límite de suscripción si el usuario está logueado
 if (isset($_SESSION['user_id'])) {
+    $user_id = $_SESSION['user_id']; // Guardar ID antes de cerrar sesión
     $is_active_reading = isset($_POST['active_reading']) && $_POST['active_reading'] === '1';
-    $limit_check = checkTranslationLimit($_SESSION['user_id'], $is_active_reading);
+    $limit_check = checkTranslationLimit($user_id, $is_active_reading);
     
     if (!$limit_check['can_translate']) {
         echo json_encode([
@@ -44,6 +45,10 @@ if (isset($_SESSION['user_id'])) {
         exit();
     }
 }
+
+// Liberar bloqueo de sesión inmediatamente para permitir otras peticiones paralelas
+// Especialmente importante ya que este script hace llamadas a APIs externas lentas
+session_write_close();
 
 // Función simplificada para detectar idioma
 function detectLanguage($text) {
@@ -133,8 +138,8 @@ if ($translation === false) {
 }
 
 // Registrar el uso si la traducción fue exitosa y el usuario está logueado
-if (isset($_SESSION['user_id'])) {
-    incrementTranslationUsage($_SESSION['user_id'], $text);
+if (isset($user_id)) {
+    incrementTranslationUsage($user_id, $text);
 }
 
 echo json_encode([

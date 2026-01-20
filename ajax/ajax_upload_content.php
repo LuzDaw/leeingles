@@ -7,6 +7,9 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
+// Liberar bloqueo de sesión para permitir otras peticiones paralelas
+session_write_close();
+
 // Obtener categorías para el formulario de subir texto
 $categories_result = $conn->query("SELECT id, name FROM categories ORDER BY name");
 $categories = [];

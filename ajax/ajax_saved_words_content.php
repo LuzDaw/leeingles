@@ -9,6 +9,9 @@ if (!isset($_SESSION['user_id'])) {
 
 $user_id = $_SESSION['user_id'];
 
+// Liberar bloqueo de sesión para permitir otras peticiones paralelas
+session_write_close();
+
 // Endpoint para obtener el número de palabras de un texto específico
 if (isset($_GET['get_word_count']) && isset($_GET['text_id'])) {
     $text_id = intval($_GET['text_id']);

@@ -16,6 +16,9 @@ if (!isset($_SESSION['user_id'])) {
 $user_id = $_SESSION['user_id'];
 $is_admin = isset($_SESSION['is_admin']) ? intval($_SESSION['is_admin']) : 0;
 
+// Liberar bloqueo de sesión para permitir otras peticiones paralelas
+session_write_close();
+
 // Procesar acciones masivas via AJAX
 if ($_POST && isset($_POST['action']) && isset($_POST['selected_texts'])) {
     $selected_texts = $_POST['selected_texts'];
@@ -73,7 +76,7 @@ $stmt->bind_param("i", $user_id);
 $stmt->execute();
 $result = $stmt->get_result();
 
-// Consulta textos públicos leídos
+// Consulta textos públicos leídos (Ya optimizada con INNER JOIN)
 $public_read_stmt = $conn->prepare('
     SELECT t.id, t.title, t.title_translation, t.content, t.user_id, t.is_public, t.created_at, rp.percent, rp.read_count
     FROM texts t

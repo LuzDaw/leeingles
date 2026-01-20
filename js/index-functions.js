@@ -180,30 +180,37 @@ window.requireLoginForUpload = function() {
     showLoginModal();
 };
 
-// Función para traducir contextos de palabras guardadas
-window.translateAllContextsForSavedWords = function() {
-    document.querySelectorAll('.word-context').forEach(function(span) {
+// Función para traducir contextos de palabras guardadas (Optimizada para evitar saturación)
+window.translateAllContextsForSavedWords = async function() {
+    const contexts = document.querySelectorAll('.word-context');
+    
+    // Procesar de uno en uno para no saturar la sesión ni el servidor
+    for (const span of contexts) {
         const context = span.getAttribute('data-context');
         const translationDiv = span.nextElementSibling;
-        if (context && translationDiv && translationDiv.classList.contains('context-translation')) {
-            fetch('traduciones/translate.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: 'text=' + encodeURIComponent(context) + '&target_lang=es'
-            })
-            .then(response => response.json())
-            .then(data => {
+        
+        if (context && translationDiv && translationDiv.classList.contains('context-translation') && !translationDiv.textContent) {
+            try {
+                const response = await fetch('traduciones/translate.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: 'text=' + encodeURIComponent(context) + '&target_lang=es'
+                });
+                const data = await response.json();
+                
                 if (data && data.translation) {
                     translationDiv.textContent = data.translation;
                 } else {
                     translationDiv.textContent = '[No se pudo traducir]';
                 }
-            })
-            .catch(() => {
+            } catch (error) {
                 translationDiv.textContent = '[Error de traducción]';
-            });
+            }
+            
+            // Pequeña pausa entre peticiones para dejar respirar al servidor
+            await new Promise(resolve => setTimeout(resolve, 100));
         }
-    });
+    }
 };
 
 // Función para cargar textos públicos
