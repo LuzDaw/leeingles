@@ -363,6 +363,12 @@ window.selectPracticeOption = function(selected, correct) {
     const nextBtn = document.querySelector('.practice-controls .next-btn');
     if (nextBtn) nextBtn.style.display = 'inline-flex';
     
+    // Rellenar el hueco con la palabra correcta
+    if (window.practiceCurrentSentenceData) {
+        const sentenceWithWord = window.practiceCurrentSentenceData.original_en || window.practiceCurrentSentenceData.en.replace(/____+/g, correct);
+        renderPracticeSentence(sentenceWithWord, correct);
+    }
+
     if (isCorrect) {
         window.practiceCorrectAnswers++;
         window.practiceRemainingWords.splice(window.practiceCurrentWordIndex, 1);
@@ -383,23 +389,31 @@ window.checkPracticeWriteAnswer = function(correct) {
     if (window.practiceAnswered) return;
     const input = document.querySelector('[data-practice-input="true"]');
     if (!input || !input.value.trim()) return;
+    
+    const isCorrect = normalizeWord(input.value) === normalizeWord(correct);
+    if (!isCorrect) {
+        window.practiceIncorrectAnswers++;
+        updatePracticeStats();
+        playErrorSound();
+        return; // No bloqueamos el input si falla al pulsar Enter, dejamos que siga intentando o use pista
+    }
+
     window.practiceAnswered = true;
     input.disabled = true;
-    const isCorrect = normalizeWord(input.value) === normalizeWord(correct);
     
+    // Rellenar el hueco con la palabra correcta
+    if (window.practiceCurrentSentenceData) {
+        const sentenceWithWord = window.practiceCurrentSentenceData.original_en || window.practiceCurrentSentenceData.en.replace(/____+/g, correct);
+        renderPracticeSentence(sentenceWithWord, correct);
+    }
+
     const nextBtn = document.querySelector('.practice-controls .next-btn');
     if (nextBtn) nextBtn.style.display = 'inline-flex';
 
-    if (isCorrect) {
-        window.practiceCorrectAnswers++;
-        window.practiceRemainingWords.splice(window.practiceCurrentWordIndex, 1);
-        playSuccessSound();
-    } else {
-        window.practiceIncorrectAnswers++;
-        const word = window.practiceRemainingWords.splice(window.practiceCurrentWordIndex, 1)[0];
-        window.practiceRemainingWords.push(word);
-        playErrorSound();
-    }
+    window.practiceCorrectAnswers++;
+    window.practiceRemainingWords.splice(window.practiceCurrentWordIndex, 1);
+    playSuccessSound();
+    
     showTranslationAfterAnswer();
     updatePracticeStats();
     if (window.practiceRemainingWords.length === 0) showPracticeResults();
