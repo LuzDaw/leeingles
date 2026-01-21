@@ -105,9 +105,8 @@ window.setPracticeMode = function(mode) {
 }
 
 window.loadPracticeQuestion = function() {
-    const header = document.querySelector('header');
-    if (header) header.style.display = 'none';
-
+    // El header ahora se mantiene visible en las pestañas de práctica
+    
     const randomIndex = Math.floor(Math.random() * window.practiceRemainingWords.length);
     const currentWord = window.practiceRemainingWords[randomIndex];
     window.practiceCurrentWordIndex = randomIndex;
@@ -474,8 +473,6 @@ function updatePracticeStats() {
 }
 
 function showPracticeResults() {
-    const header = document.querySelector('header');
-    if (header) header.style.display = '';
     savePracticeProgress(window.practiceCurrentMode, window.practiceWords.length, window.practiceCorrectAnswers, window.practiceIncorrectAnswers);
     window.stopPracticeTimer();
     

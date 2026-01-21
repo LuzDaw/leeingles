@@ -58,7 +58,8 @@ function onReadingStop() {
 // Detectar cuando se inicia práctica
 function onPracticeStart() {
     isInPractice = true;
-    hideHeader();
+    // El header ahora se mantiene visible en las pestañas de práctica
+    showHeader();
 }
 
 // Detectar cuando se termina práctica

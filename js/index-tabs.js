@@ -31,9 +31,9 @@ window.loadTabContent = function(tab, isPaymentSuccess = false, scrollTarget = n
         }
     });
     
-    // Ocultar header cuando se entra en las pestañas
-    if (typeof window.hideHeader === 'function') {
-        window.hideHeader();
+    // Asegurar que el header sea visible al entrar en las pestañas (excepto si es lectura)
+    if (typeof window.showHeader === 'function') {
+        window.showHeader();
     }
     
     // Mapear pestañas a archivos AJAX
