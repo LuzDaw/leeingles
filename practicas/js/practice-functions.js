@@ -538,12 +538,43 @@ window.currentSentences = [];
 window.currentSentenceIndex = 0;
 
 async function loadSentencePractice() {
+    const container = document.getElementById('practice-exercise-card');
     try {
         const form = new URLSearchParams(); form.set('action', 'list');
-        const res = await fetch('/ajax/ajax_user_texts.php', { method: 'POST', body: form });
+        const res = await fetch('ajax/ajax_user_texts.php', { method: 'POST', body: form });
         const data = await res.json();
-        if (data.success && data.texts && data.texts.length > 0) showTextSelector(data.texts);
-    } catch (e) { console.error(e); }
+        if (data.success && data.texts && data.texts.length > 0) {
+            showTextSelector(data.texts);
+        } else {
+            // Mostrar estado vacío si no hay textos
+            if (container) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 40px 20px; color: #6b7280;">
+                        <div style="font-size: 3.5rem; margin-bottom: 15px; opacity: 0.5;">📚</div>
+                        <h3 style="margin-bottom: 10px; color: #374151;">No hay textos en tu lista</h3>
+                        <p style="margin-bottom: 25px;">¡Comienza subiendo un texto o explora los públicos!</p>
+                        <button type="button" onclick="loadTabContent('upload')" class="nav-btn primary" style="padding: 12px 30px;">
+                            ⬆ Carga tu primer texto
+                        </button>
+                    </div>
+                `;
+            }
+        }
+    } catch (e) { 
+        console.error(e);
+        if (container) {
+            container.innerHTML = `
+                <div style="text-align: center; padding: 40px 20px; color: #6b7280;">
+                    <div style="font-size: 3.5rem; margin-bottom: 15px; opacity: 0.5;">📚</div>
+                    <h3 style="margin-bottom: 10px; color: #374151;">No hay textos en tu lista</h3>
+                    <p style="margin-bottom: 25px;">¡Comienza subiendo un texto o explora los públicos!</p>
+                    <button type="button" onclick="loadTabContent('upload')" class="nav-btn primary" style="padding: 12px 30px;">
+                        ⬆ Carga tu primer texto
+                    </button>
+                </div>
+            `;
+        }
+    }
 }
 
 function showTextSelector(texts) {
@@ -561,7 +592,7 @@ function showTextSelector(texts) {
 window.startSentencePractice = async function() {
     const id = document.getElementById('text-selector').value;
     if (!id) return;
-    const res = await fetch(`/ajax/ajax_saved_words_content.php?get_words_by_text=1&text_id=${id}`);
+    const res = await fetch(`ajax/ajax_saved_words_content.php?get_words_by_text=1&text_id=${id}`);
     const data = await res.json();
     if (data.success && data.words && data.words.length > 0) {
         window.practiceWords = data.words;

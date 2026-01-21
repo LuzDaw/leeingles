@@ -122,6 +122,14 @@ if (isset($_GET['text_id']) || isset($_POST['text_id'])) {
 <link rel="stylesheet" href="css/progress-styles.css">
 
 <div class="tab-content-wrapper">
+    <?php if ($total_words == 0 && $total_texts == 0): ?>
+    <div class="empty-state">
+        <div class="empty-icon">📊</div>
+        <h3>¡Comienza tu viaje de aprendizaje!</h3>
+        <p>Sube tu primer texto y comienza a guardar palabras para ver tu progreso aquí.</p>
+        <button type="button" onclick="loadTabContent('upload')" class="btn btn-primary">⬆ Subir Primer Texto</button>
+    </div>
+    <?php else: ?>
     <!-- Grid de Estadísticas Principales -->
     <div class="stats-grid">
         <div class="stat-card clickable-stat" onclick="switchToTab('texts')" title="Ver mis textos">
@@ -280,12 +288,5 @@ if (isset($_GET['text_id']) || isset($_POST['text_id'])) {
     }
     </script>
 
-    <?php if ($total_words == 0 && $total_texts == 0): ?>
-    <div class="empty-state">
-        <div class="empty-icon">📊</div>
-        <h3>¡Comienza tu viaje de aprendizaje!</h3>
-        <p>Sube tu primer texto y comienza a guardar palabras para ver tu progreso aquí.</p>
-        <button onclick="loadTabContent('upload')" class="btn btn-primary">⬆ Subir Primer Texto</button>
-    </div>
     <?php endif; ?>
 </div>

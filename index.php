@@ -724,7 +724,7 @@ $text = preg_replace('/(?<=[.?!])\s+/', "\n", $text);
                   <div class="empty-state-icon">📚</div>
                   <h3 class="empty-state-title">No has subido ningún texto todavía</h3>
                   <p class="mb-30">¡Comienza tu viaje de aprendizaje subiendo tu primer texto!</p>
-                  <button onclick="loadTabContent('upload')" class="nav-btn primary p-15-30">
+                  <button type="button" onclick="loadTabContent('upload')" class="nav-btn primary p-15-30">
                     ⬆ Subir mi primer texto
                   </button>
                 </div>

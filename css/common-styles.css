@@ -47,7 +47,7 @@
     --font-xl: 24px;
     
     /* Layout */
-    --max-width: 1200px;
+    --max-width: 1700px;
 
     /* Bordes */
     --border-radius-sm: 4px;
@@ -531,9 +531,9 @@
 .nav-btn.minimal,
 .nav-right .nav-btn
  {
-    opacity: 0.7;
+   
     background: transparent;
-    color: var(--primary-color);
+    color:#ffffff;
     font-weight: 400;
     padding: 0.5rem 1rem;
     font-size: 0.9rem;

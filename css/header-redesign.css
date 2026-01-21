@@ -2,11 +2,11 @@
 
 .header {
     background: #457b9d;
-    padding: 1rem 0;
+    padding: 0.3rem 0;
     position: relative;
     z-index: 100;
-    border: 1px solid #ccc;   /* borde gris claro */
-  box-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+  border: 1px solid #1b161633;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
 }
 
 .nav-container {

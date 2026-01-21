@@ -1,7 +1,7 @@
 /* Estilos para la página de landing "Aprende Idiomas Naturalmente" */
 
 .landing-container {
-    min-height: 100vh;
+    min-height: 50vh;
         background: linear-gradient(135deg, #ffe0b2 0%, #ff7f50 100%);
     color: white;
 }
@@ -15,7 +15,6 @@
 
 .hero-title {
     font-size: 3rem;
-    margin-bottom: 20px;
     background: linear-gradient(to right, #1D3557, #1D3557);
     -webkit-background-clip: text;
     -webkit-text-fill-color: #bc8f8f00;
@@ -548,7 +547,7 @@
 }
 
 .hero-advertising {
-    flex: 0 0 45%;
+    flex: 0 0 41%;
     text-align: center;
     padding: 20px;
     background: rgba(255, 255, 255, 0.1);
