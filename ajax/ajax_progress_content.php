@@ -122,14 +122,6 @@ if (isset($_GET['text_id']) || isset($_POST['text_id'])) {
 <link rel="stylesheet" href="css/progress-styles.css">
 
 <div class="tab-content-wrapper">
-    <?php if ($total_words == 0 && $total_texts == 0): ?>
-    <div class="empty-state">
-        <div class="empty-icon">📊</div>
-        <h3>¡Comienza tu viaje de aprendizaje!</h3>
-        <p>Sube tu primer texto y comienza a guardar palabras para ver tu progreso aquí.</p>
-        <button type="button" onclick="loadTabContent('upload')" class="btn btn-primary">⬆ Subir Primer Texto</button>
-    </div>
-    <?php else: ?>
     <!-- Grid de Estadísticas Principales -->
     <div class="stats-grid">
         <div class="stat-card clickable-stat" onclick="switchToTab('texts')" title="Ver mis textos">
@@ -195,13 +187,13 @@ if (isset($_GET['text_id']) || isset($_POST['text_id'])) {
 
             <!-- Estadísticas de Práctica por Modo -->
             <div class="activity-section">
-                <h3>🎯 Progreso de Práctica por Modo</h3>
-                <div class="practice-modes" id="practice-modes-container">
-                    <div style="text-align: center; padding: 20px; color: #6b7280;">
-                        <div class="loading-spinner"></div>
-                        <p>Cargando estadísticas...</p>
-                    </div>
-                </div>
+            <h3>🎯 Progreso de Práctica por Modo</h3>
+            <div class="practice-modes" id="practice-modes-container">
+            <div style="text-align: center; padding: 20px; color: #6b7280;">
+                <div class="loading-spinner"></div>
+            <p>Cargando...</p>
+            </div>
+            </div>
             </div>
         </div>
     </div>
@@ -254,16 +246,23 @@ if (isset($_GET['text_id']) || isset($_POST['text_id'])) {
                 }
                 
                 if (!hasStats) {
+                    <?php if ($total_words == 0 && $total_texts == 0): ?>
                     html = `
                         <div style="text-align: center; padding: 40px; color: #6b7280;">
-                            <div style="font-size: 3rem; margin-bottom: 20px;">🎯</div>
-                            <h3>No hay estadísticas de práctica aún</h3>
+                            <p style="margin-bottom: 20px; font-size: 0.95em;">Sube tu primer texto para comenzar</p>
+                            <button onclick="loadTabContent('upload')" class="btn btn-primary">⬆ Subir Primer Texto</button>
+                        </div>
+                    `;
+                    <?php else: ?>
+                    html = `
+                        <div style="text-align: center; padding: 40px; color: #6b7280;">
                             <p>Comienza a practicar para ver tu progreso aquí.</p>
                             <button onclick="loadTabContent('practice')" class="nav-btn primary" style="margin-top: 20px;">
                                 🎯 Ir a Práctica
                             </button>
                         </div>
                     `;
+                    <?php endif; ?>
                 }
                 
                 if (container) container.innerHTML = html;
@@ -288,5 +287,4 @@ if (isset($_GET['text_id']) || isset($_POST['text_id'])) {
     }
     </script>
 
-    <?php endif; ?>
 </div>

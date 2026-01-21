@@ -1,18 +1,15 @@
 /* Header Sencillo y Minimalista */
 
 .header {
-    background: #457b9d;
-    padding: 0.3rem 0;
+        background: #457b9d;
     position: relative;
     z-index: 100;
-  border: 1px solid #1b161633;
-    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
 }
 
 .nav-container {
     max-width: var(--max-width);
     margin: 0 auto;
-    padding: 0 2rem;
+    padding: 0.5rem 2rem;
     display: flex;
     align-items: center;
     justify-content: space-between;

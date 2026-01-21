@@ -14,27 +14,23 @@
   display: flex;
   gap: 0;
   margin-bottom: 0;
-  background: #F5F7FA;
-  padding: 20px 20px 0 20px;
+  background: #457b9d;
+  padding: 11px 19px 0 135px;
   border-radius: 0;
 }
 
 /* Pestañas individuales */
 .tab-btn {
-  background: transparent;
-  color: #666666;
-  border: none !important;
-  outline: none !important;
-  padding: 16px 24px;
-  border-radius: 12px 12px 0 0;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 500;
-  transition: all 0.3s ease;
-  border-bottom: 3px solid transparent !important;
-  position: relative;
-  margin-bottom: -1px;
-  box-shadow: none !important;
+     background: #c2d3e4;
+    border: 1px solid #e5e7eb00;
+    border-bottom: none;
+    padding: 0.75rem 1.25rem;
+    font-weight: 500;
+    color: #6b7280;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-left: 5px;
+    border-radius: 4px 4px 0px 0px;
 }
 
 .tab-btn:focus, 
@@ -46,16 +42,15 @@
 }
 
 .tab-btn:hover {
-  background: rgba(255, 255, 255, 0.7);
-  color: #1f1c1c;
+  background: rgba(255, 255, 255, 0.843);
+  color: #262121;
   transform: translateY(-2px);
 }
 
 .tab-btn.active {
   background: white;
   color: #1f1c1c;
-  border-bottom: 3px solid #ff8a00 !important;
-  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.08) !important;
+  /* box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.08) !important; */
   transform: translateY(0);
 }
 

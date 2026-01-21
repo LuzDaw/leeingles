@@ -221,7 +221,7 @@ $text = preg_replace('/(?<=[.?!])\s+/', "\n", $text);
         <div class="brand-text">
           <h1>LeeInglés</h1>
           <div class="slogan">
-            Entendiéndolo
+            
           </div>
         </div>
 
@@ -653,6 +653,8 @@ $text = preg_replace('/(?<=[.?!])\s+/', "\n", $text);
           <div class="user-dashboard">
             <!-- Navegación de pestañas -->
             <div class="tab-navigation tab-nav-container">
+
+            
               <button onclick="loadTabContent('progress')" class="tab-btn active" data-tab="progress">
                 📊 Progreso
               </button>
