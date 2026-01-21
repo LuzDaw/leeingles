@@ -1621,6 +1621,12 @@ function initLector() {
     
     // Centralizar el control del header en las funciones de lectura
     window.startReading = async function() {
+        // Ocultar el nuevo encabezado de lectura
+        const encabezadoLectura = document.querySelector('.encabezado-lectura');
+        if (encabezadoLectura) {
+            encabezadoLectura.classList.add('hidden');
+        }
+
         // VERIFICACIÓN PROACTIVA DE LÍMITE
         // Solo verificamos si NO ha sido aceptado ya en esta sesión/texto
         if (!window._limitAceptado) {
@@ -1713,6 +1719,12 @@ function initLector() {
     };
 
     window.pauseSpeech = function() {
+        // Mostrar el nuevo encabezado de lectura
+        const encabezadoLectura = document.querySelector('.encabezado-lectura');
+        if (encabezadoLectura) {
+            encabezadoLectura.classList.remove('hidden');
+        }
+
         // CORRECCIÓN: Mantener el estado de lectura como true pero marcarlo como pausado
         window.isCurrentlyPaused = true;
         window.isCurrentlyReading = true; // Mantener como true para permitir reanudar
@@ -1751,6 +1763,12 @@ function initLector() {
     };
 
     window.resumeSpeech = function() {
+        // Ocultar el nuevo encabezado de lectura
+        const encabezadoLectura = document.querySelector('.encabezado-lectura');
+        if (encabezadoLectura) {
+            encabezadoLectura.classList.add('hidden');
+        }
+
         // CORRECCIÓN: Verificar que realmente estemos pausados antes de reanudar
         if (!window.isCurrentlyPaused) {
             window.startReading();
@@ -1965,6 +1983,12 @@ function initLector() {
     };
 
     window.stopReading = function() {
+        // Mostrar el nuevo encabezado de lectura
+        const encabezadoLectura = document.querySelector('.encabezado-lectura');
+        if (encabezadoLectura) {
+            encabezadoLectura.classList.remove('hidden');
+        }
+
         window.autoReading = false;
         autoReading = false;
         // Invalidar la sesión actual y cancelar TTS

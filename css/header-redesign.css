@@ -1,9 +1,18 @@
 /* Header Sencillo y Minimalista */
 
 .header {
-        background: #457b9d;
+    background: #457b9d;
     position: relative;
     z-index: 100;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.header.hidden {
+    transform: translateY(-100%);
+    opacity: 0;
+    pointer-events: none;
+    position: absolute;
+    width: 100%;
 }
 
 .nav-container {

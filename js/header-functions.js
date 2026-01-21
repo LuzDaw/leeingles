@@ -45,8 +45,8 @@ function toggleMobileMenu() {
 // Detectar cuando se inicia la lectura
 function onReadingStart() {
     isReading = true;
-    // NO ocultar el header automáticamente al iniciar la lectura
-    // El header se ocultará solo cuando el usuario haga clic en elementos interactivos
+    // Ocultar el header principal automáticamente al iniciar la lectura
+    hideHeader();
 }
 
 // Detectar cuando se para la lectura
@@ -70,6 +70,10 @@ function onPracticeEnd() {
 
 // Detectar clics fuera de botones para mostrar header
 function handleDocumentClick(event) {
+    // Sincronizar variables locales con globales por si acaso
+    isReading = window.isReading || (window.isCurrentlyReading && !window.isCurrentlyPaused);
+    isInPractice = window.isInPractice;
+
     // Si estamos en lectura o práctica y hacemos clic fuera de botones/controles
     if ((isReading || isInPractice) && !headerVisible) {
         const clickedElement = event.target;
