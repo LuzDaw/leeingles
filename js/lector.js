@@ -328,41 +328,23 @@ function initLector() {
         if (window.readingProgressPercent === 100) percent = 100;
         if (percent > 100) percent = 100;
         if (readPages.length === 0 && percent !== 0) percent = 0;
-        let progressContainer = document.getElementById('reading-progress-container');
-        if (!progressContainer) {
-            progressContainer = document.createElement('div');
-            progressContainer.id = 'reading-progress-container';
-            progressContainer.style.cssText = 'display: flex; align-items: center; gap: 12px; margin: 20px auto; width: fit-content;';
-            
-            // Crear barra de progreso
-            let bar = document.createElement('div');
-            bar.id = 'reading-progress-bar';
-            bar.style.cssText = 'width: 180px; height: 12px; background: #e5e7eb; border-radius: 6px; overflow: hidden;';
-            
-            let inner = document.createElement('div');
-            inner.id = 'reading-progress-inner';
-            inner.style.cssText = 'height: 100%; width: 0%; background: linear-gradient(90deg, #3B82F6, #60A5FA); transition: width 0.4s; border-radius: 6px;';
-            bar.appendChild(inner);
-            
-            // Crear texto de porcentaje
-            let text = document.createElement('span');
-            text.id = 'reading-progress-text';
-            text.style.cssText = 'font-size: 13px; font-weight: 600; color: #64748b; min-width: 35px;';
-            text.textContent = '0%';
-            
-            progressContainer.appendChild(bar);
-            progressContainer.appendChild(text);
-            pagesContainer.parentNode.insertBefore(progressContainer, pagesContainer);
-        }
         
-        let inner = document.getElementById('reading-progress-inner');
-        let textEl = document.getElementById('reading-progress-text');
+        // Actualizar elementos del nuevo encabezado
+        let inner = document.querySelector('.encabezado-lectura .progreso');
+        let textEl = document.querySelector('.encabezado-lectura .porcentaje');
+        
         if (inner) {
             inner.style.width = percent + '%';
         }
         if (textEl) {
             textEl.textContent = percent + '%';
         }
+
+        // Mantener compatibilidad con el contenedor antiguo si existiera por alguna razón
+        let oldInner = document.getElementById('reading-progress-inner');
+        let oldTextEl = document.getElementById('reading-progress-text');
+        if (oldInner) oldInner.style.width = percent + '%';
+        if (oldTextEl) oldTextEl.textContent = percent + '%';
     }
 
     // Inicializar controles cuando se carga el DOM

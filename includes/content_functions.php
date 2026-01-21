@@ -225,7 +225,7 @@ function getTotalUserTexts($user_id) {
 /**
  * Renderiza el texto con palabras clickeables y paginación
  */
-function render_text_clickable($text)
+function render_text_clickable($text, $title = '', $title_translation = '')
 {
   $sentences = preg_split('/(?<=[.?!])\s+|\n+/', $text);
   $pages = [];
@@ -259,7 +259,19 @@ function render_text_clickable($text)
     $text_id = intval($_GET['public_text_id']);
   }
 
-  $output = '<div id="pages-container" data-total-pages="' . count($pages) . '" data-total-words="' . str_word_count(strip_tags($text)) . '" data-text-id="' . $text_id . '">';
+  $output = '<div class="encabezado-lectura">
+            <button class="btn-volver" onclick="window.cambiarPestana(\'textos\')" aria-label="Volver a Mis Textos">←</button>
+            <div class="titulos-lectura-contenedor">
+                <h1 class="titulo-lectura">' . htmlspecialchars($title) . '</h1>
+                <h1 class="titulo-lectura-traduccion">' . htmlspecialchars($title_translation) . '</h1>
+            </div>
+            <div class="progreso-lectura" aria-label="Progreso">
+                <div class="barra-progreso"><span class="progreso" style="width:0%"></span></div>
+                <span class="porcentaje" aria-live="polite">0%</span>
+            </div>
+</div>';
+
+  $output .= '<div id="pages-container" data-total-pages="' . count($pages) . '" data-total-words="' . str_word_count(strip_tags($text)) . '" data-text-id="' . $text_id . '">';
   
   foreach ($pages as $index => $page) {
     $output .= '<div class="page' . ($index === 0 ? ' active' : '') . '">';

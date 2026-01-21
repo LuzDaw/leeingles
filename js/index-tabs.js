@@ -2,6 +2,12 @@
  * Sistema de pestañas dinámicas para index.php
  */
 
+// Alias para compatibilidad
+window.cambiarPestana = function(tab) {
+    if (tab === 'textos') tab = 'my-texts';
+    window.loadTabContent(tab);
+};
+
 window.loadTabContent = function(tab, isPaymentSuccess = false, scrollTarget = null) {
     const tabContent = document.getElementById('tab-content');
     

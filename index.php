@@ -36,13 +36,14 @@ if ($is_guest) {
   // Mostrar texto privado
   if (isset($_GET['text_id'])) {
     $text_id = intval($_GET['text_id']);
-    $stmt = $conn->prepare("SELECT content, title FROM texts WHERE id = ? AND user_id = ?");
+    $stmt = $conn->prepare("SELECT content, title, title_translation FROM texts WHERE id = ? AND user_id = ?");
     $stmt->bind_param("ii", $text_id, $user_id);
     $stmt->execute();
-    $stmt->bind_result($content, $title);
+    $stmt->bind_result($content, $title, $title_translation);
     if ($stmt->fetch()) {
       $text = $content;
       $current_text_title = $title;
+      $current_text_translation = $title_translation;
     }
     $stmt->close();
   }
@@ -50,28 +51,30 @@ if ($is_guest) {
   // Mostrar texto público
   if (isset($_GET['public_text_id'])) {
     $public_id = intval($_GET['public_text_id']);
-    $stmt = $conn->prepare("SELECT content, title FROM texts WHERE id = ? AND is_public = 1");
+    $stmt = $conn->prepare("SELECT content, title, title_translation FROM texts WHERE id = ? AND is_public = 1");
     $stmt->bind_param("i", $public_id);
     $stmt->execute();
-    $stmt->bind_result($content, $title);
+    $stmt->bind_result($content, $title, $title_translation);
     if ($stmt->fetch()) {
       $text = $content;
       $current_text_title = $title;
+      $current_text_translation = $title_translation;
     }
     $stmt->close();
   }
 }
 
-// Mostrar texto público (disponible para todos, incluidos invitados)
-if (isset($_GET['public_text_id'])) {
+// Mostrar texto público (disponible para todos, incluidos invitados) - Evitar duplicidad si ya se procesó arriba
+if (isset($_GET['public_text_id']) && empty($text)) {
   $public_id = intval($_GET['public_text_id']);
-  $stmt = $conn->prepare("SELECT content, title FROM texts WHERE id = ? AND is_public = 1");
+  $stmt = $conn->prepare("SELECT content, title, title_translation FROM texts WHERE id = ? AND is_public = 1");
   $stmt->bind_param("i", $public_id);
   $stmt->execute();
-  $stmt->bind_result($content, $title);
+  $stmt->bind_result($content, $title, $title_translation);
   if ($stmt->fetch()) {
     $text = $content;
     $current_text_title = $title;
+    $current_text_translation = $title_translation;
   }
   $stmt->close();
 }
@@ -691,7 +694,7 @@ $text = preg_replace('/(?<=[.?!])\s+/', "\n", $text);
           </div>
         <?php endif; ?>
       <?php else: ?>
-        <?= render_text_clickable($text) ?>
+        <?= render_text_clickable($text, $current_text_title ?? '', $current_text_translation ?? '') ?>
       <?php endif; ?>
 
     </div>
