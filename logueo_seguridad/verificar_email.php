@@ -29,7 +29,7 @@ if (isset($_GET['token'])) {
             $stmt_delete->execute();
             $stmt_delete->close();
 
-            header("Location: login.php?mensaje=" . urlencode("El enlace de verificación ha expirado. Por favor, regístrate de nuevo o solicita un nuevo enlace."));
+            header("Location: ../?mensaje=" . urlencode("El enlace de verificación ha expirado. Por favor, regístrate de nuevo o solicita un nuevo enlace."));
             exit();
         }
 
@@ -59,20 +59,20 @@ if (isset($_GET['token'])) {
                 header("Location: ../?mensaje=" . urlencode("cuenta activada"));
                 exit();
             } else {
-                header("Location: login.php?mensaje=" . urlencode("Tu cuenta ha sido activada, pero no pudimos iniciar sesión automáticamente. Por favor, inicia sesión manualmente."));
+                header("Location: ../?mensaje=" . urlencode("Tu cuenta ha sido activada, pero no pudimos iniciar sesión automáticamente. Por favor, inicia sesión manualmente."));
                 exit();
             }
         } else {
-            header("Location: login.php?mensaje=" . urlencode("Error al activar tu cuenta. Por favor, inténtalo de nuevo."));
+            header("Location: ../?mensaje=" . urlencode("Error al activar tu cuenta. Por favor, inténtalo de nuevo."));
             exit();
         }
         $stmt_update_user->close();
     } else {
-        header("Location: login.php?mensaje=" . urlencode("El token de verificación no es válido o ya ha sido utilizado."));
+        header("Location: ../?mensaje=" . urlencode("El token de verificación no es válido o ya ha sido utilizado."));
         exit();
     }
 } else {
-    header("Location: login.php?mensaje=" . urlencode("Token de verificación no proporcionado."));
+    header("Location: ../?mensaje=" . urlencode("Token de verificación no proporcionado."));
     exit();
 }
 

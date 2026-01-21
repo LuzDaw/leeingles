@@ -30,31 +30,42 @@ document.addEventListener('DOMContentLoaded', function() {
         const newUrl = window.location.pathname;
         window.history.replaceState({}, document.title, newUrl);
 
-        // Mostrar notificación flotante si el mensaje es "cuenta activada"
-        if (mensaje === 'cuenta activada') {
-            const toast = document.createElement('div');
-            toast.style.cssText = `
-                position: fixed;
-                top: 20px;
-                left: 50%;
-                transform: translateX(-50%);
-                z-index: 99999;
-                background: #fff;
-                padding: 15px 25px;
-                border-radius: 10px;
-                box-shadow: 0 5px 20px rgba(0,0,0,0.15);
-                border-left: 5px solid #3B82F6;
-                font-family: sans-serif;
-                animation: slideInDown 0.5s ease;
-            `;
-            toast.innerHTML = `<span style="color: #3B82F6; font-weight: bold;">✓</span> Cuenta activada correctamente`;
-            document.body.appendChild(toast);
-            setTimeout(() => {
-                toast.style.opacity = '0';
-                toast.style.transition = 'opacity 0.5s ease';
-                setTimeout(() => toast.remove(), 500);
-            }, 4000);
-        }
+        // Mostrar notificación flotante para cualquier mensaje recibido
+        const isError = mensaje.toLowerCase().includes('error') || 
+                        mensaje.toLowerCase().includes('no es válido') || 
+                        mensaje.toLowerCase().includes('expirado') ||
+                        mensaje.toLowerCase().includes('ya ha sido utilizado');
+        
+        const toast = document.createElement('div');
+        toast.style.cssText = `
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 99999;
+            background: #fff;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+            border-left: 5px solid ${isError ? '#EF4444' : '#3B82F6'};
+            font-family: sans-serif;
+            animation: slideInDown 0.5s ease;
+            max-width: 90%;
+            text-align: center;
+        `;
+        
+        const icon = isError ? '❌' : '✓';
+        const iconColor = isError ? '#EF4444' : '#3B82F6';
+        const displayMsg = mensaje === 'cuenta activada' ? 'Cuenta activada correctamente' : mensaje;
+
+        toast.innerHTML = `<span style="color: ${iconColor}; font-weight: bold; margin-right: 8px;">${icon}</span> ${displayMsg}`;
+        document.body.appendChild(toast);
+        
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            toast.style.transition = 'opacity 0.5s ease';
+            setTimeout(() => toast.remove(), 500);
+        }, 5000);
     }
 
     if (resetToken) {
