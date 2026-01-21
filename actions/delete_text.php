@@ -23,31 +23,19 @@ if (isset($_GET['text_id'])) {
         $stmt1->execute();
         $stmt1->close();
 
-        // 2. Borrar progreso de práctica asociado
-        $stmt2 = $conn->prepare("DELETE FROM practice_progress WHERE text_id = ? AND user_id = ?");
-        $stmt2->bind_param("ii", $text_id, $user_id);
-        $stmt2->execute();
-        $stmt2->close();
-
-        // 3. Borrar tiempos de lectura asociados
-        $stmt3 = $conn->prepare("DELETE FROM reading_time WHERE text_id = ? AND user_id = ?");
-        $stmt3->bind_param("ii", $text_id, $user_id);
-        $stmt3->execute();
-        $stmt3->close();
-
-        // 4. Borrar progreso de lectura
+        // 2. Borrar progreso de lectura
         $stmt4 = $conn->prepare("DELETE FROM reading_progress WHERE text_id = ? AND user_id = ?");
         $stmt4->bind_param("ii", $text_id, $user_id);
         $stmt4->execute();
         $stmt4->close();
 
-        // 5. Borrar de textos ocultos
+        // 3. Borrar de textos ocultos
         $stmt5 = $conn->prepare("DELETE FROM hidden_texts WHERE text_id = ? AND user_id = ?");
         $stmt5->bind_param("ii", $text_id, $user_id);
         $stmt5->execute();
         $stmt5->close();
 
-        // 6. Finalmente, borrar el texto
+        // 4. Finalmente, borrar el texto
         $stmt6 = $conn->prepare("DELETE FROM texts WHERE id = ? AND user_id = ?");
         $stmt6->bind_param("ii", $text_id, $user_id);
         
@@ -63,8 +51,6 @@ if (isset($_GET['text_id'])) {
         $conn->rollback();
         $message = "Error al eliminar el texto: " . $e->getMessage();
     }
-    
-    $stmt->close();
 }
 
 $conn->close();

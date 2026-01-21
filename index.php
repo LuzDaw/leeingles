@@ -684,53 +684,9 @@ $text = preg_replace('/(?<=[.?!])\s+/', "\n", $text);
 
             <!-- Contenedor dinámico para pestañas -->
             <div id="tab-content">
-              <div class="tab-header">
-                <h2 id="main-title">Subir nuevo texto</h2>
+              <div class="empty-state">
+                <div style="padding: 40px; color: #64748b;">Cargando contenido...</div>
               </div>
-              <?php if (!empty($user_titles)): ?>
-                <div class="recent-texts-summary">
-                  <div class="summary-text">
-                    <span class="summary-count"><?= count($user_titles) ?></span> textos recientes
-                  </div>
-                  <div>
-                    <button onclick="loadTabContent('my-texts')" class="nav-btn fs-0-9 p-8-16">
-                      Ver todos →
-                    </button>
-                  </div>
-                </div>
-
-                <ul class="text-list modern-text-list">
-                  <?php foreach ($user_titles as $ut): ?>
-                    <li class="text-item modern-text-item">
-                      <div class="text-icon">
-                        📄
-                      </div>
-                      <a href="?text_id=<?= $ut['id'] ?>" class="text-title modern-text-title">
-                        <span class="title-english"><?= htmlspecialchars($ut['title']) ?></span>
-                        <?php if (!empty($ut['title_translation'])): ?>
-                          <span class="title-spanish color-orange fs-0-9 ml-8 fw-500">• <?= htmlspecialchars($ut['title_translation']) ?></span>
-                        <?php else: ?>
-                          <span class="title-spanish color-gray fs-0-9 ml-8"></span>
-                        <?php endif; ?>
-                      </a>
-                      <div class="text-actions">
-                        <span class="text-status status-private">
-                          Privado
-                        </span>
-                      </div>
-                    </li>
-                  <?php endforeach; ?>
-                </ul>
-              <?php else: ?>
-                <div class="empty-state">
-                  <div class="empty-state-icon">📚</div>
-                  <h3 class="empty-state-title">No has subido ningún texto todavía</h3>
-                  <p class="mb-30">¡Comienza tu viaje de aprendizaje subiendo tu primer texto!</p>
-                  <button type="button" onclick="loadTabContent('upload')" class="nav-btn primary p-15-30">
-                    ⬆ Subir mi primer texto
-                  </button>
-                </div>
-              <?php endif; ?>
             </div>
           </div>
         <?php endif; ?>

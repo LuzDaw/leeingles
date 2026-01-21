@@ -42,9 +42,9 @@
 }
 
 .tab-btn:hover {
-  background: rgba(255, 255, 255, 0.843);
-  color: #262121;
-  transform: translateY(-2px);
+     background: #dae5f0;
+  color: #03072b;
+  
 }
 
 .tab-btn.active {

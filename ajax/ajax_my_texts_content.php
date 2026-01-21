@@ -53,17 +53,50 @@ if ($_POST && isset($_POST['action']) && isset($_POST['selected_texts'])) {
                 $stmt_hide->close();
             }
             
-            // Borrar textos privados
-            if (!empty($to_delete)) {
-                $params = array_merge($to_delete, [$user_id]);
-                $types = str_repeat('i', count($params));
-                $stmt = $conn->prepare("DELETE FROM texts WHERE id IN ($placeholders) AND user_id = ?");
-                $stmt->bind_param($types, ...$params);
-                $stmt->execute();
-                $stmt->close();
-                echo json_encode(['success' => true, 'message' => 'Textos eliminados correctamente.']);
-            } else {
-                echo json_encode(['success' => true, 'message' => 'Textos ocultados correctamente.']);
+            // Limpiar datos de usuario para TODOS los textos seleccionados (públicos y privados)
+            $conn->begin_transaction();
+            try {
+                $params = array_merge($selected_texts, [$user_id]);
+                $types = str_repeat('i', count($selected_texts)) . 'i';
+                $placeholders_all = str_repeat('?,', count($selected_texts) - 1) . '?';
+
+                // 1. Borrar palabras guardadas del usuario para estos textos
+                $stmt1 = $conn->prepare("DELETE FROM saved_words WHERE text_id IN ($placeholders_all) AND user_id = ?");
+                $stmt1->bind_param($types, ...$params);
+                $stmt1->execute();
+                $stmt1->close();
+
+                // 2. Borrar progreso de lectura del usuario para estos textos
+                $stmt2 = $conn->prepare("DELETE FROM reading_progress WHERE text_id IN ($placeholders_all) AND user_id = ?");
+                $stmt2->bind_param($types, ...$params);
+                $stmt2->execute();
+                $stmt2->close();
+
+                // Ocultar textos públicos
+                foreach ($to_hide as $tid) {
+                    $stmt_hide = $conn->prepare("INSERT IGNORE INTO hidden_texts (user_id, text_id) VALUES (?, ?)");
+                    $stmt_hide->bind_param("ii", $user_id, $tid);
+                    $stmt_hide->execute();
+                    $stmt_hide->close();
+                }
+                
+                // Borrar textos privados
+                if (!empty($to_delete)) {
+                    $params_del = array_merge($to_delete, [$user_id]);
+                    $types_del = str_repeat('i', count($to_delete)) . 'i';
+                    $placeholders_del = str_repeat('?,', count($to_delete) - 1) . '?';
+                    
+                    $stmt = $conn->prepare("DELETE FROM texts WHERE id IN ($placeholders_del) AND user_id = ?");
+                    $stmt->bind_param($types_del, ...$params_del);
+                    $stmt->execute();
+                    $stmt->close();
+                }
+
+                $conn->commit();
+                echo json_encode(['success' => true, 'message' => 'Acción completada correctamente.']);
+            } catch (Exception $e) {
+                $conn->rollback();
+                echo json_encode(['success' => false, 'message' => 'Error al procesar: ' . $e->getMessage()]);
             }
             exit();
         }
@@ -257,7 +290,7 @@ $public_read_count = count($public_read_rows);
         <?php if ($result->num_rows == 0 && $public_read_count == 0): ?>
             <div style="text-align: center; padding: 60px 20px; color: #6b7280;">
                 <div style="font-size: 4rem; margin-bottom: 20px; opacity: 0.5;">📚</div>
-                <h3 style="margin-bottom: 10px; color: #374151;">No hay textos en tu lista</h3>
+                <h3 style="margin-bottom: 10px; color: #374151;">No hayqq textos en tu lista</h3>
                 <p style="margin-bottom: 30px;">¡Comienza subiendo un texto o explora los públicos!</p>
                 <button type="button" onclick="loadTabContent('upload')" class="nav-btn primary" style="padding: 15px 40px;">⬆ Subir mi primer texto</button>
             </div>
