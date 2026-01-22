@@ -173,7 +173,7 @@ window.loadPracticeQuestion = function() {
         html += '</div>';
     } else {
         html += `<input type="text" placeholder="Escribe la palabra..." style="width:25%; padding:12px; border:2px solid #e5e7eb; border-radius:8px; margin:15px auto; display:block;" data-practice-input="true" data-correct-word="${currentWord.word}">
-                 <div id="word-hint" style="display:none; font-size:12px; color:#999; text-align:center; font-style:italic;"></div>`;
+                 <div id="word-hint" class="word-hint" style="display:none;"></div>`;
     }
 
     html += `<div class="practice-controls">
@@ -246,13 +246,18 @@ window.checkWordInput = function(correctWord) {
             window.practiceIncorrectAnswers++;
             updatePracticeStats();
             input.value = getSmartHint(userText, correctWord);
+            
+            // Mostrar pista solo al llegar a los 2 fallos
+            if (wordHint) {
+                wordHint.textContent = correctWord;
+                wordHint.style.display = 'block';
+                if (window.hintTimer) clearTimeout(window.hintTimer);
+                window.hintTimer = setTimeout(() => { wordHint.style.display = 'none'; }, 2000);
+            }
+            
             window.currentWordErrors = 0;
         } else {
             input.value = userText.substring(0, userText.length - 1);
-        }
-        if (wordHint) {
-            wordHint.textContent = correctWord;
-            wordHint.style.display = 'block';
         }
     }
 };
@@ -816,6 +821,11 @@ window.initForcedDictationInput = function(correctText) {
                     const remaining = correctText.substring(val.length);
                     const match = remaining.match(/^[^\s]+/);
                     wordHint.textContent = match ? match[0] : nextChar;
+                    
+                    if (window.hintTimerSentences) clearTimeout(window.hintTimerSentences);
+                    window.hintTimerSentences = setTimeout(() => { 
+                        wordHint.textContent = '';
+                    }, 2000);
                 }
                 if (errorCount >= 3) {
                     input.value = val + nextChar;

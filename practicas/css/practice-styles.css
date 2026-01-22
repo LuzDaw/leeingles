@@ -141,7 +141,7 @@
 }
 
 .word-hint {
-    width: 25%;
+   width: 20%;
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
@@ -153,7 +153,9 @@
     border-radius: 0 0 6px 6px;
     font-family: monospace;
     z-index: 10;
+    color: #bda991;
     text-align: center;
+    margin-top: -11px;
 }
 
 /* Destacar palabra que se está leyendo */
