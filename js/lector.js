@@ -2411,27 +2411,31 @@ function initLector() {
         }
     };
 
-    // NUEVO: Toggle lectura al pinchar fuera de las letras (en el fondo)
+    // NUEVO: Toggle lectura al pinchar en el área de lectura
     if (!window._clickToggleInitialized) {
         document.addEventListener('click', function(e) {
-            // Solo si el usuario está logueado y hay área de lectura
+            // Solo si el usuario está logueado
             if (!window.userLoggedIn) return;
             
-            // Ignorar si el clic es en elementos interactivos conocidos
+            // Solo actuar si el clic es dentro del contenedor de lectura
+            const pagesContainer = document.getElementById('pages-container');
+            if (!pagesContainer || !pagesContainer.contains(e.target)) return;
+            
+            // Elementos que NO deben disparar play/stop (palabras, botones, etc.)
             const interactiveSelectors = [
                 '.clickable-word', 'button', 'a', 'input', 'select', 'textarea', 
                 '.tab-navigation', '#floating-menu', '.explain-sidebar', '.simple-tooltip',
                 '.user-dropdown', '.nav-btn', '.logo', '.modal-container', '.simple-tooltip.hover',
-                '.translation', '.page-number', '.pagination-controls'
+                '.page-number', '.pagination-controls'
+                // .translation ha sido eliminado de aquí para que SÍ dispare el play/stop
             ];
             
             for (const selector of interactiveSelectors) {
                 if (e.target.closest(selector)) return;
             }
 
-            // Si pinchamos en el área de lectura (fondo), en el body o en el contenedor de páginas
-            // Pero NO en las palabras, toggle play/stop
-            readingLog('background_click', { target: e.target.tagName });
+            // Si pinchamos en el área de lectura (incluyendo traducciones), toggle play/stop
+            readingLog('reading_area_click', { target: e.target.tagName });
             if (typeof window.toggleFloatingPlayPause === 'function') {
                 window.toggleFloatingPlayPause();
             }
