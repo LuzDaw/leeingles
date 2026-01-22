@@ -139,9 +139,10 @@ window.loadPracticeQuestion = function() {
     
     window.practiceAnswered = false;
     const textTitle = currentWord.text_title || 'este texto';
+    const titleTranslation = currentWord.title_translation ? ` (${currentWord.title_translation})` : '';
     const instruction = window.practiceCurrentMode === 'selection' ? 
-        `Elige la palabra correcta del texto <span class="text-title-highlight">"${textTitle}"</span>:` : 
-        `Escribe la palabra correcta del texto <span class="text-title-highlight">"${textTitle}"</span>:`;
+        `Elige la palabra correcta del texto <span class="text-title-highlight">"${textTitle}${titleTranslation}"</span>:` : 
+        `Escribe la palabra correcta del texto <span class="text-title-highlight">"${textTitle}${titleTranslation}"</span>:`;
 
     let html = `
         <div class="practice-instruction">${instruction}</div>
@@ -280,7 +281,7 @@ function showWordSuccessFeedback(inputElement) {
             if (document.querySelector('.practice-results') === null) {
                 showPracticeResults();
             }
-        }, 4000);
+        }, 5000);
     }
 }
 

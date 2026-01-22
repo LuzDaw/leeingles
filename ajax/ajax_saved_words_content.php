@@ -32,7 +32,7 @@ if (isset($_GET['get_word_count']) && isset($_GET['text_id'])) {
 if (isset($_GET['get_words_by_text']) && isset($_GET['text_id'])) {
     $text_id = intval($_GET['text_id']);
     
-    $stmt = $conn->prepare("SELECT sw.word, sw.translation, sw.context, sw.text_id, t.title as text_title FROM saved_words sw LEFT JOIN texts t ON sw.text_id = t.id WHERE sw.user_id = ? AND sw.text_id = ? ORDER BY sw.created_at DESC");
+    $stmt = $conn->prepare("SELECT sw.word, sw.translation, sw.context, sw.text_id, t.title as text_title, t.title_translation FROM saved_words sw LEFT JOIN texts t ON sw.text_id = t.id WHERE sw.user_id = ? AND sw.text_id = ? ORDER BY sw.created_at DESC");
     $stmt->bind_param("ii", $user_id, $text_id);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -83,7 +83,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'delete' && isset($_POST['se
 }
 
 // Obtener palabras guardadas del usuario, con título del texto
-$stmt = $conn->prepare("SELECT sw.word, sw.translation, sw.context, sw.created_at, sw.text_id, t.title as text_title FROM saved_words sw LEFT JOIN texts t ON sw.text_id = t.id WHERE sw.user_id = ? ORDER BY t.title, sw.created_at DESC");
+$stmt = $conn->prepare("SELECT sw.word, sw.translation, sw.context, sw.created_at, sw.text_id, t.title as text_title, t.title_translation FROM saved_words sw LEFT JOIN texts t ON sw.text_id = t.id WHERE sw.user_id = ? ORDER BY t.title, sw.created_at DESC");
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
 $result = $stmt->get_result();
