@@ -696,7 +696,7 @@ function loadSentenceQuestion() {
     document.getElementById('practice-exercise-card').innerHTML = `
         <div class="sentence-practice-container">
             <div class="practice-instruction">Escribe la frase en inglés:</div>
-            <div class="spanish-sentence">${s.es || 'Cargando traducción...'}</div>
+            <div class="spanish-sentence" id="spanish-translation">${s.es || 'Cargando traducción...'}</div>
             <div class="translation-help-container" style="display:flex; align-items:center; justify-content:flex-end; width:100%; margin-top:8px; gap:6px;">
                 <button class="translation-help-btn" id="show-english-btn" onclick="showEnglishSentence()" style="padding:1px 12px; font-size:0.8em; height:22px;">Mostrar en inglés</button>
                 <span id="always-visible-eye-sentences" style="font-size:1.25em; color:#2563eb; cursor:pointer; padding:2px 6px;">👁️</span>
