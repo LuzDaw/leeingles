@@ -280,7 +280,7 @@ function showWordSuccessFeedback(inputElement) {
             if (document.querySelector('.practice-results') === null) {
                 showPracticeResults();
             }
-        }, 1000);
+        }, 4000);
     }
 }
 
@@ -510,8 +510,10 @@ function showPracticeResults() {
         <div class="practice-results">
             <h3>🎉 ¡Ejercicio completado!</h3>
             <div class="practice-score">${window.practiceCorrectAnswers} palabras aprendidas</div>
-            <div style="margin-top:30px;">
-                <button class="nav-btn2" id="practice-next-btn" onclick="window.location.href='index.php?tab=practice'">Seguir practicando</button>
+            <div style="margin-top:30px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+                <button class="nav-btn2" onclick="loadTabContent('progress')">Ir a Progreso</button>
+                <button class="nav-btn2" onclick="loadTabContent('my-texts')">Ir a Texto</button>
+                <button class="nav-btn2" id="practice-next-btn" onclick="loadTabContent('practice')">Seguir practicando</button>
             </div>
         </div>
     `;
