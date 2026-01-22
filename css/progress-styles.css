@@ -8,14 +8,15 @@
 }
 
 .stat-card {
-    background: white;
+    background: rgba(255, 255, 255, 0.9);
     border-radius: 12px;
-    padding: 13px;
+    padding: 16px;
     text-align: center;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    border: 1px solid #A8DADC;
-    flex: 1 1 100px; /* crece, encoge, tamaño base */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(168, 218, 220, 0.5);
+    flex: 1 1 100px;
     max-width: 200px;
+    transition: all 0.3s ease;
 }
 
 .stat-icon {
@@ -35,12 +36,12 @@
 }
 
 .progress-section {
-    background: white;
+    background: rgba(255, 255, 255, 0.9);
     border-radius: 12px;
     padding: 24px;
     margin-bottom: 20px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    border: 1px solid #A8DADC;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(168, 218, 220, 0.5);
 }
 
 /* Layout horizontal para calendario y actividad reciente */

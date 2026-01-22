@@ -21,15 +21,19 @@
 
 /* Frase del ejercicio */
 .practice-sentence {
-  font-size: 18px;
+    font-size: 18px;
     font-weight: 500;
     text-align: center;
     margin: 0px 0;
-    padding: 0px;
+    padding: 12px;
     background: #64748b14;
     border-radius: 8px;
     border-left: 4px solid #ff8a00f2;
     color: #493d3ddb;
+    min-height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 #publicTextsBtn {
@@ -249,17 +253,18 @@
 
 /* Traducción española */
 .spanish-translation {
-  border: 1px solid #e5e7eb;
+    border: 1px solid #e5e7eb;
     transition: all 0.3s ease;
     font-size: 16px;
     font-weight: 500;
     text-align: center;
     margin: 8px 0;
-    padding: 0px;
+    padding: 12px;
     background: #ebeff5;
     border-radius: 8px;
     border-left: 4px solid #ff8a00;
     color: #0262ffab;
+    min-height: 40px;
 }
 
 .spanish-translation.hidden {
@@ -268,10 +273,20 @@
 
 /* Palabra resaltada */
 .highlighted-word {
-    background: #3b82f6a3;
-    padding: 2px 3px;
+    background: #3b82f6;
+    padding: 2px 6px;
     border-radius: 4px;
     color: #ffffff;
+    font-weight: bold;
+}
+
+.word-highlighted {
+    background-color: #3B82F6 !important;
+    color: white !important;
+    border-radius: 4px;
+    padding: 2px 4px;
+    font-weight: bold;
+    transition: all 0.3s ease;
 }
 
 /* Animación pulse para la pista */
@@ -853,6 +868,22 @@
 /* Tooltip específico para práctica */
 .practice-tooltip {
     animation: fadeInTooltip 0.2s ease-in;
+}
+
+/* Toast de feedback */
+.practice-feedback-toast {
+    position: fixed;
+    top: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: bold;
+    color: #fff;
+    background: #ff8a00;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    animation: fadeInUp 0.3s ease;
 }
 
 @keyframes fadeInTooltip {

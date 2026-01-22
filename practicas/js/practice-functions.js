@@ -855,7 +855,7 @@ function handleSentenceCompletion(input) {
     const feedback = document.createElement('div');
     feedback.className = 'practice-feedback-toast success';
     feedback.textContent = '¡Correcto!';
-    feedback.style.cssText = 'position:fixed; top:30px; left:50%; transform:translateX(-50%); z-index:9999; padding:6px 10px; border-radius:6px; font-weight:bold; color:#fff; background:#e48415e5;';
+    // Estilos movidos a CSS (clase practice-feedback-toast)
     document.body.appendChild(feedback);
     setTimeout(() => feedback.remove(), 1500);
     updatePracticeStats();

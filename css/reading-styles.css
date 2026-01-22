@@ -103,13 +103,17 @@
 
 
 
-.currently-reading {
-    background-color: #F5F7FA !important;
-    border: 2px solid #A8DADC !important;
+.paragraph {
+    padding: 8px;
+    border: 2px solid transparent;
     border-radius: 8px;
-    padding: 10px;
-    margin: 5px 0;
     transition: all 0.3s ease;
+    margin-bottom: 10px;
+}
+
+.currently-reading {
+    background-color: #f0f9ff !important;
+    border-color: #93c5fd !important;
 }
 
 #pagination-controls {
@@ -146,6 +150,46 @@ html:fullscreen, html:-webkit-full-screen, html:-moz-full-screen {
     color: #ff9813;
     font-weight: bold;
     text-align: center;
+}
+
+.reading-end-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(245, 247, 250, 0.95);
+    color: #1D3557;
+    padding: 25px 35px;
+    border: 1px solid #A8DADC;
+    border-radius: 12px;
+    font-size: 16px;
+    text-align: center;
+    z-index: 999999;
+    box-shadow: 0 10px 30px rgba(29, 53, 87, 0.2);
+    min-width: 250px;
+    backdrop-filter: blur(5px);
+    animation: fadeInUp 0.3s ease;
+}
+
+.reading-end-modal .spinner {
+    width: 24px;
+    height: 24px;
+    border: 2px solid #A8DADC;
+    border-top: 2px solid #457B9D;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 15px;
+}
+
+.reading-end-modal .title {
+    font-weight: 600;
+    color: #1D3557;
+    margin-bottom: 8px;
+}
+
+.reading-end-modal .subtitle {
+    font-size: 14px;
+    color: #457B9D;
 }
 
 /* Formulario de subir texto */

@@ -537,17 +537,11 @@ function initLector() {
 
         // Limpiar resaltado anterior
         document.querySelectorAll('.paragraph').forEach(p => {
-            p.style.backgroundColor = '';
-            p.style.border = '';
-            p.style.borderRadius = '';
-            p.style.padding = '';
+            p.classList.remove('currently-reading');
         });
         
         // Resaltar párrafo actual
-        paragraphs[index].style.backgroundColor = '#f0f9ff';
-        paragraphs[index].style.border = '2px solid #93c5fd';
-        paragraphs[index].style.borderRadius = '5px';
-        paragraphs[index].style.padding = '5px';
+        paragraphs[index].classList.add('currently-reading');
 
         // Mostrar traducción SOLO del párrafo actual (línea a línea)
         if (box) {
@@ -811,35 +805,14 @@ function initLector() {
                                         if (window.userLoggedIn) {
                                             const endMsg = document.createElement('div');
                                             const isFullscreen = document.fullscreenElement || document.webkitFullscreenElement;
-                                            endMsg.style.cssText = `
-                                                position: fixed;
-                                                top: 50%;
-                                                left: 50%;
-                                                transform: translate(-50%, -50%);
-                                                background: #F5F7FA;
-                                                color: #1D3557;
-                                                padding: 25px 35px;
-                                                border: 1px solid #A8DADC;
-                                                border-radius: 8px;
-                                                font-size: 16px;
-                                                text-align: center;
-                                                z-index: ${isFullscreen ? '2147483647' : '999999'};
-                                                box-shadow: 0 2px 10px rgba(29, 53, 87, 0.15);
-                                                min-width: 200px;
-                                            `;
+                                            endMsg.className = 'reading-end-modal';
+                                            if (isFullscreen) endMsg.style.zIndex = '2147483647';
+                                            
                                             endMsg.innerHTML = `
-                                                <div style="margin-bottom: 15px;">
-                                                    <div style="width: 24px; height: 24px; border: 2px solid #A8DADC; border-top: 2px solid #457B9D; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto;"></div>
-                                                </div>
-                                                <div style="font-weight: 500; color: #1D3557; margin-bottom: 8px;">Lectura finalizada</div>
-                                                <div style="font-size: 14px; color: #457B9D;">Redirigiendo...</div>
+                                                <div class="spinner"></div>
+                                                <div class="title">Lectura finalizada</div>
+                                                <div class="subtitle">Redirigiendo...</div>
                                             `;
-                                            if (!document.getElementById('spin-animation')) {
-                                                const style = document.createElement('style');
-                                                style.id = 'spin-animation';
-                                                style.textContent = '@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }';
-                                                document.head.appendChild(style);
-                                            }
                                             document.body.appendChild(endMsg);
                                             setTimeout(() => {
                                                 window.location.href = "index.php?tab=practice";
@@ -1478,15 +1451,7 @@ function initLector() {
             word: word
         };
         
-        // Aplicar estilo de destacado
-        element.style.backgroundColor = '#3B82F6';
-        element.style.color = 'white';
-        element.style.borderRadius = '4px';
-        element.style.padding = '2px 4px';
-        element.style.fontWeight = 'bold';
-        element.style.transition = 'all 0.3s ease';
-        
-        // Añadir clase para identificación
+        // Añadir clase para identificación (estilos movidos a CSS)
         element.classList.add('word-highlighted');
     }
     
@@ -1495,11 +1460,6 @@ function initLector() {
         // Limpiar destacado anterior
         const previousHighlighted = document.querySelector('.word-highlighted');
         if (previousHighlighted) {
-            previousHighlighted.style.backgroundColor = '';
-            previousHighlighted.style.color = '';
-            previousHighlighted.style.borderRadius = '';
-            previousHighlighted.style.padding = '';
-            previousHighlighted.style.fontWeight = '';
             previousHighlighted.classList.remove('word-highlighted');
         }
         
@@ -1516,10 +1476,6 @@ function initLector() {
     function clearCurrentHighlight() {
         document.querySelectorAll('p').forEach(p => {
             p.classList.remove('currently-reading');
-            p.style.backgroundColor = '';
-            p.style.border = '';
-            p.style.borderRadius = '';
-            p.style.padding = '';
         });
     }
 
