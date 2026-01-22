@@ -575,16 +575,63 @@ async function loadSentencePractice() {
 }
 
 function showTextSelector(texts) {
-    let options = texts.map(t => `<option value="${t.id}">${t.title} (${t.saved_word_count || 0} palabras)</option>`).join('');
+    let items = texts.map(t => {
+        const translation = t.title_translation ? `<span class="title-translation-dropdown"> — ${t.title_translation}</span>` : '';
+        return `
+            <div class="custom-select-item" onclick="selectPracticeText(event, ${t.id})">
+                <span class="title-original-dropdown">${t.title}</span>
+                ${translation}
+                <span class="word-count-dropdown">(${t.saved_word_count || 0} palabras)</span>
+            </div>
+        `;
+    }).join('');
+    
     document.getElementById('practice-exercise-card').innerHTML = `
         <div class="text-selector-container">
             <h3>Elige un texto para practicar:</h3>
-            <select id="text-selector" class="text-select" onchange="startSentencePractice()">
-                <option value="">Selecciona...</option>${options}
-            </select>
+            <div class="custom-select-container">
+                <div class="custom-select-trigger" onclick="toggleCustomSelect()">
+                    <span id="selected-text-label">Selecciona un texto...</span>
+                    <span class="arrow">▼</span>
+                </div>
+                <div id="custom-select-options" class="custom-select-options">
+                    ${items}
+                </div>
+            </div>
+            <input type="hidden" id="text-selector" value="">
         </div>
     `;
 }
+
+window.toggleCustomSelect = function() {
+    const options = document.getElementById('custom-select-options');
+    options.classList.toggle('show');
+};
+
+window.selectPracticeText = function(event, id) {
+    const input = document.getElementById('text-selector');
+    input.value = id;
+    
+    // Actualizar el label del trigger
+    const selectedItem = event.currentTarget;
+    const title = selectedItem.querySelector('.title-original-dropdown').textContent;
+    document.getElementById('selected-text-label').textContent = title;
+    
+    // Cerrar el menú
+    const options = document.getElementById('custom-select-options');
+    options.classList.remove('show');
+    
+    // Iniciar la práctica
+    startSentencePractice();
+};
+
+// Cerrar el dropdown si se hace clic fuera
+document.addEventListener('click', function(e) {
+    if (!e.target.closest('.custom-select-container')) {
+        const options = document.getElementById('custom-select-options');
+        if (options) options.classList.remove('show');
+    }
+});
 
 window.startSentencePractice = async function() {
     const id = document.getElementById('text-selector').value;
