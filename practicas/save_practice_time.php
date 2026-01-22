@@ -41,13 +41,29 @@ $conn->query("
 // Por si la tabla ya existía pero sin AUTO_INCREMENT (caso reportado)
 $conn->query("ALTER TABLE practice_time MODIFY id INT AUTO_INCREMENT");
 
-$stmt = $conn->prepare("INSERT INTO practice_time (user_id, mode, duration_seconds) VALUES (?, ?, ?)");
+// Optimización: Buscar si ya existe un registro para este usuario, modo y día actual
+$stmt_check = $conn->prepare("SELECT id FROM practice_time WHERE user_id = ? AND mode = ? AND DATE(created_at) = CURRENT_DATE() LIMIT 1");
+$stmt_check->bind_param('is', $user_id, $mode);
+$stmt_check->execute();
+$res_check = $stmt_check->get_result();
+$existing_row = $res_check->fetch_assoc();
+$stmt_check->close();
+
+if ($existing_row) {
+    // Si existe, acumular el tiempo
+    $stmt = $conn->prepare("UPDATE practice_time SET duration_seconds = duration_seconds + ? WHERE id = ?");
+    $stmt->bind_param('ii', $duration, $existing_row['id']);
+} else {
+    // Si no existe, crear nuevo registro para hoy
+    $stmt = $conn->prepare("INSERT INTO practice_time (user_id, mode, duration_seconds) VALUES (?, ?, ?)");
+    $stmt->bind_param('isi', $user_id, $mode, $duration);
+}
+
 if (!$stmt) {
     echo json_encode(['success' => false, 'error' => 'Error preparando consulta: ' . $conn->error]);
     exit;
 }
 
-$stmt->bind_param('isi', $user_id, $mode, $duration);
 $ok = $stmt->execute();
 
 if ($ok) {

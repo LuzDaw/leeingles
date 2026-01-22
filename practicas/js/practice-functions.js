@@ -44,11 +44,12 @@ window.startPracticeTimer = function() {
     window.practiceUpdateInterval = setInterval(() => {
         const now = Date.now();
         const delta = Math.floor((now - window.practiceLastSaveTime) / 1000);
-        if (delta >= 10) {
+        // Optimización: Aumentado a 30 segundos para reducir carga en BD
+        if (delta >= 30) {
             window.savePracticeTime(delta);
             window.practiceLastSaveTime = now;
         }
-    }, 10000);
+    }, 30000);
 };
 
 window.stopPracticeTimer = function() {

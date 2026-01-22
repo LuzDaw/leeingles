@@ -24,7 +24,7 @@ window.ReadingManager = (function() {
 
     // Configuración
     const CONFIG = {
-        SAVE_INTERVAL: 10000, // 10 segundos
+        SAVE_INTERVAL: 30000, // 30 segundos (Optimizado para reducir carga en BD)
         SAFETY_TIMEOUT: 30000, // 30 segundos
         LANG: 'en-GB',
         PITCH: 1.0,
@@ -159,7 +159,7 @@ window.ReadingManager = (function() {
         if (state.isReading && !state.isPaused && state.lastSaveTime) {
             const now = Date.now();
             const delta = Math.floor((now - state.lastSaveTime) / 1000);
-            if (delta >= 10) {
+            if (delta >= 30) {
                 saveTime(delta);
                 state.lastSaveTime = now;
             }

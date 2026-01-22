@@ -101,8 +101,8 @@ function initLector() {
             const currentTime = Date.now();
             const delta = Math.floor((currentTime - readingLastSaveTime) / 1000);
             
-            // Solo actualizar si han pasado al menos 10 segundos desde la última actualización
-            if (delta >= 10) {
+            // Optimización: Aumentado a 30 segundos para reducir carga en BD
+            if (delta >= 30) {
                 saveReadingTime(delta);
                 readingLastSaveTime = currentTime;
             }
@@ -1641,9 +1641,9 @@ function initLector() {
             readingLastSaveTime = Date.now();
         }
         
-        // Iniciar actualización en tiempo real cada 10 segundos
+        // Iniciar actualización en tiempo real cada 30 segundos
         if (!readingUpdateInterval) {
-            readingUpdateInterval = setInterval(updateReadingTimeRealTime, 10000);
+            readingUpdateInterval = setInterval(updateReadingTimeRealTime, 30000);
         }
         
         if (typeof window.hideHeader === 'function') {
