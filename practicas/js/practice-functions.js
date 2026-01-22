@@ -159,7 +159,7 @@ window.loadPracticeQuestion = function() {
         <div class="spanish-translation hidden" id="spanish-translation"></div>
         <div class="translation-help-container" style="display:flex; align-items:center; justify-content:flex-end; width:100%; margin-top:8px; gap:6px;">
             <button class="translation-help-btn" id="show-translation-btn" onclick="showPracticeTranslation()" style="padding:1px 12px; font-size:0.8em; height:22px;">📖 Ver traducción</button>
-            <span id="always-visible-eye" style="font-size:1.25em; color:#2563eb; cursor:pointer; padding:2px 6px;">👁️</span>
+            <span id="always-visible-eye" title="dejar visible" style="font-size:1.25em; color:#2563eb; cursor:pointer; padding:2px 6px;">👁️</span>
         </div>
     `;
     
@@ -295,7 +295,9 @@ function generatePracticeSentence(word) {
         original_en: context,
         word: word,
         translation: practiceWord ? practiceWord.translation : '',
-        needsTranslation: true
+        needsTranslation: true,
+        text_title: practiceWord ? practiceWord.text_title : '',
+        title_translation: practiceWord ? practiceWord.title_translation : ''
     };
 }
 
@@ -692,14 +694,18 @@ function loadSentenceQuestion() {
     if (window.currentSentenceIndex >= window.currentSentences.length) { showSentenceResults(); return; }
     const s = window.currentSentences[window.currentSentenceIndex];
     const correct = s.original_en || s.en;
-    
+
+    const textTitle = s.text_title || 'este texto';
+    const titleTranslation = s.title_translation ? ` (${s.title_translation})` : '';
+    const instruction = `Escribe la frase en inglés del texto <span class="text-title-highlight">"${textTitle}${titleTranslation}"</span>:`;
+
     document.getElementById('practice-exercise-card').innerHTML = `
         <div class="sentence-practice-container">
-            <div class="practice-instruction">Escribe la frase en inglés:</div>
+            <div class="practice-instruction">${instruction}</div>
             <div class="spanish-sentence" id="spanish-translation">${s.es || 'Cargando traducción...'}</div>
             <div class="translation-help-container" style="display:flex; align-items:center; justify-content:flex-end; width:100%; margin-top:8px; gap:6px;">
                 <button class="translation-help-btn" id="show-english-btn" onclick="showEnglishSentence()" style="padding:1px 12px; font-size:0.8em; height:22px;">Mostrar en inglés</button>
-                <span id="always-visible-eye-sentences" style="font-size:1.25em; color:#2563eb; cursor:pointer; padding:2px 6px;">👁️</span>
+                <span id="always-visible-eye-sentences" title="dejar visible" style="font-size:1.25em; color:#2563eb; cursor:pointer; padding:2px 6px;">👁️</span>
             </div>
             <div id="english-reference" class="english-sentence hidden"></div>
             <input type="text" class="sentence-input" id="sentence-input" placeholder="Escribe en inglés..." autocomplete="off">
