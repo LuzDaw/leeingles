@@ -774,7 +774,7 @@ $text = preg_replace('/(?<=[.?!])\s+/', "\n", $text);
   <div id="forgot-password-modal" class="modal-overlay">
     <div class="modal-container forgot-password-modal-container">
       <button id="close-forgot-password-modal" class="modal-close-x">✕</button>
-      <h2 class="modal-title fs-22">❓ Olvidé mi Contraseña</h2>
+      <h2 class="modal-title fs-22">Recuperar Contraseña</h2>
       <form id="forgot-password-form">
         <div class="mb-12">
           <label class="modal-label">📧 Email:</label>

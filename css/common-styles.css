@@ -252,14 +252,14 @@
 }
 
 .modal-close-x {
-    position: absolute;
+  position: absolute;
     top: 16px;
     right: 16px;
     background: none;
     border: none;
-    font-size: 24px;
     cursor: pointer;
-    color: var(--text-muted);
+    font-size: medium;
+    color: #ff8a00;
     transition: color 0.2s;
 }
 
