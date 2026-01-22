@@ -30,6 +30,7 @@ function readingLog(event, data) {
     window.ReadingLog.push(entry);
     // Limitar tamaño del log
     if (window.ReadingLog.length > 500) window.ReadingLog.splice(0, window.ReadingLog.length - 500);
+    if (window.READING_DEBUG) console.log(`[ReadingLog] ${event}`, data);
   } catch(e) {}
 }
 
@@ -506,12 +507,14 @@ function initLector() {
                 }
                 
                 // Mostrar modal de finalización usando la función genérica
-                window.showLoadingRedirectModal(
-                    'Lectura finalizada',
-                    'Redirigiendo...',
-                    'index.php?tab=practice',
-                    2000
-                );
+                if (window.userLoggedIn && typeof window.showLoadingRedirectModal === 'function') {
+                    window.showLoadingRedirectModal(
+                        'Lectura finalizada',
+                        'Redirigiendo...',
+                        'index.php?tab=practice',
+                        2000
+                    );
+                }
             }
             isReadingInProgress = false; // Liberar el flag
             return;
@@ -672,12 +675,14 @@ function initLector() {
                                     if (typeof updateFloatingButton === 'function') {
                                         updateFloatingButton();
                                     }
-                                    window.showLoadingRedirectModal(
-                                        'Lectura finalizada',
-                                        'Redirigiendo...',
-                                        'index.php?tab=practice',
-                                        2000
-                                    );
+                                    if (window.userLoggedIn && typeof window.showLoadingRedirectModal === 'function') {
+                                        window.showLoadingRedirectModal(
+                                            'Lectura finalizada',
+                                            'Redirigiendo...',
+                                            'index.php?tab=practice',
+                                            2000
+                                        );
+                                    }
                                 }
                             } else {
                                 readAndTranslate(index + 1).catch(err => {
@@ -698,7 +703,7 @@ function initLector() {
                         // Para otros errores: fallback controlado al TTS nativo
                         isReadingInProgress = false;
                         try {
-                            if (window.speechSynthesis && window.SpeechSynthesisUtterance) {
+                            if (window.speechSynthesis && window.speechSynthesis.Utterance) {
                                 const fallbackUtterance = new SpeechSynthesisUtterance(speakText);
                                 fallbackUtterance.rate = rate || 1.0;
                                 fallbackUtterance.pitch = 1.0;
@@ -803,41 +808,43 @@ function initLector() {
                                         if (typeof updateFloatingButton === 'function') {
                                             updateFloatingButton();
                                         }
-                                        const endMsg = document.createElement('div');
-                                        const isFullscreen = document.fullscreenElement || document.webkitFullscreenElement;
-                                        endMsg.style.cssText = `
-                                            position: fixed;
-                                            top: 50%;
-                                            left: 50%;
-                                            transform: translate(-50%, -50%);
-                                            background: #F5F7FA;
-                                            color: #1D3557;
-                                            padding: 25px 35px;
-                                            border: 1px solid #A8DADC;
-                                            border-radius: 8px;
-                                            font-size: 16px;
-                                            text-align: center;
-                                            z-index: ${isFullscreen ? '2147483647' : '999999'};
-                                            box-shadow: 0 2px 10px rgba(29, 53, 87, 0.15);
-                                            min-width: 200px;
-                                        `;
-                                        endMsg.innerHTML = `
-                                            <div style="margin-bottom: 15px;">
-                                                <div style="width: 24px; height: 24px; border: 2px solid #A8DADC; border-top: 2px solid #457B9D; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto;"></div>
-                                            </div>
-                                            <div style="font-weight: 500; color: #1D3557; margin-bottom: 8px;">Lectura finalizada</div>
-                                            <div style="font-size: 14px; color: #457B9D;">Redirigiendo...</div>
-                                        `;
-                                        if (!document.getElementById('spin-animation')) {
-                                            const style = document.createElement('style');
-                                            style.id = 'spin-animation';
-                                            style.textContent = '@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }';
-                                            document.head.appendChild(style);
+                                        if (window.userLoggedIn) {
+                                            const endMsg = document.createElement('div');
+                                            const isFullscreen = document.fullscreenElement || document.webkitFullscreenElement;
+                                            endMsg.style.cssText = `
+                                                position: fixed;
+                                                top: 50%;
+                                                left: 50%;
+                                                transform: translate(-50%, -50%);
+                                                background: #F5F7FA;
+                                                color: #1D3557;
+                                                padding: 25px 35px;
+                                                border: 1px solid #A8DADC;
+                                                border-radius: 8px;
+                                                font-size: 16px;
+                                                text-align: center;
+                                                z-index: ${isFullscreen ? '2147483647' : '999999'};
+                                                box-shadow: 0 2px 10px rgba(29, 53, 87, 0.15);
+                                                min-width: 200px;
+                                            `;
+                                            endMsg.innerHTML = `
+                                                <div style="margin-bottom: 15px;">
+                                                    <div style="width: 24px; height: 24px; border: 2px solid #A8DADC; border-top: 2px solid #457B9D; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto;"></div>
+                                                </div>
+                                                <div style="font-weight: 500; color: #1D3557; margin-bottom: 8px;">Lectura finalizada</div>
+                                                <div style="font-size: 14px; color: #457B9D;">Redirigiendo...</div>
+                                            `;
+                                            if (!document.getElementById('spin-animation')) {
+                                                const style = document.createElement('style');
+                                                style.id = 'spin-animation';
+                                                style.textContent = '@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }';
+                                                document.head.appendChild(style);
+                                            }
+                                            document.body.appendChild(endMsg);
+                                            setTimeout(() => {
+                                                window.location.href = "index.php?tab=practice";
+                                            }, 2000);
                                         }
-                                        document.body.appendChild(endMsg);
-                                        setTimeout(() => {
-                                            window.location.href = "index.php?tab=practice";
-                                        }, 2000);
                                     }
                                 } else {
                                     readAndTranslate(index + 1);
@@ -935,12 +942,14 @@ function initLector() {
                 if (typeof updateFloatingButton === 'function') {
                     updateFloatingButton();
                 }
-                window.showLoadingRedirectModal(
-                    'Lectura finalizada',
-                    'Redirigiendo...',
-                    'index.php?tab=practice',
-                    2000
-                );
+                if (window.userLoggedIn && typeof window.showLoadingRedirectModal === 'function') {
+                    window.showLoadingRedirectModal(
+                        'Lectura finalizada',
+                        'Redirigiendo...',
+                        'index.php?tab=practice',
+                        2000
+                    );
+                }
             }
         }
     }
@@ -1180,7 +1189,9 @@ function initLector() {
             // Pausar lectura automática al entrar (solo si no está ya pausado por hover ni abierto el panel)
             const alreadyPausedByHover = window.ReadingPauseReasons && window.ReadingPauseReasons.has('word-hover');
             const panelOpenReason = window.ReadingPauseReasons && window.ReadingPauseReasons.has('explain');
-            if (!alreadyPausedByHover && !panelOpenReason && window.pauseReading && !window._hoverPaused && window.isCurrentlyReading && !window.isCurrentlyPaused) {
+            
+            // NUEVO: Claim the pause even if already paused, to keep the chain alive
+            if (!alreadyPausedByHover && !panelOpenReason && window.pauseReading && !window._hoverPaused && (window.isCurrentlyReading || window.autoReading)) {
                 window.pauseReading('word-hover');
                 window._hoverPaused = true;
             }
@@ -1230,28 +1241,35 @@ function initLector() {
 
     function handleWordLeave(event) {
         const el = event.currentTarget;
-        // Cancelar hover intent si no se llegó a mostrar nada
-        if (hoverIntentEl === el && hoverIntentTimer) {
-            clearTimeout(hoverIntentTimer);
-            hoverIntentTimer = null;
+        
+        // Limpiar el elemento actual de hover SIEMPRE al salir
+        if (hoverIntentEl === el) {
             hoverIntentEl = null;
+            if (hoverIntentTimer) {
+                clearTimeout(hoverIntentTimer);
+                hoverIntentTimer = null;
+            }
         }
         
         // Si el sidebar está abierto, no reanudar al salir del hover
         const sidebarOpen = !!(document.getElementById('explainSidebar') && document.getElementById('explainSidebar').classList.contains('open'));
-        if (sidebarOpen) {
-            hideHoverTooltip();
-            clearWordHighlight();
-            return;
-        }
-
+        
         hideHoverTooltip();
         clearWordHighlight();
+
+        if (sidebarOpen) return;
+
         // Reanudar si veníamos de hover
         if (window.resumeReading && window.ReadingPauseReasons && window.ReadingPauseReasons.has('word-hover')) {
             // Forzar reanudación con un ligero retardo para evitar carreras con nuevos hovers
             setTimeout(() => {
-                try { window.resumeReading({ reason: 'word-hover', force: false }); window._hoverPaused = false; } catch (e) {}
+                try { 
+                    // Solo reanudar si no hemos entrado en otra palabra (hoverIntentEl es null)
+                    if (!hoverIntentEl) {
+                        window.resumeReading({ reason: 'word-hover', force: false }); 
+                    }
+                    window._hoverPaused = false; 
+                } catch (e) {}
             }, 100);
         } else {
             window._hoverPaused = false;
@@ -1856,8 +1874,12 @@ function initLector() {
 
         // Liberar el flag para permitir relanzar lectura y recordar estado previo
         isReadingInProgress = false;
+        
         // Recordar si la lectura automática estaba activa
-        window.ReadingControl.wasAutoReading = !!(window.AppState && window.AppState.isCurrentlyReading) || !!isCurrentlyReading || !!autoReading;
+        // Solo actualizar wasAutoReading si NO estábamos ya pausados, para preservar el estado original
+        if (!window.isCurrentlyPaused) {
+            window.ReadingControl.wasAutoReading = !!(window.AppState && window.AppState.isCurrentlyReading) || !!isCurrentlyReading || !!autoReading;
+        }
         window.ReadingControl.pausedBy = by;
 
         // Flags de estado
@@ -1903,7 +1925,9 @@ function initLector() {
         // Solo reanudar automáticamente si la pausa fue por tooltip/sidebar y estaba leyendo antes
         if (!force) {
             const by = window.ReadingControl.pausedBy;
-            if (by !== 'explain' && by !== 'word-click' && by !== 'word-hover') return;
+            const isAllowedReason = (reason === 'explain' || reason === 'word-click' || reason === 'word-hover' || 
+                                     by === 'explain' || by === 'word-click' || by === 'word-hover');
+            if (!isAllowedReason) return;
             if (!window.ReadingControl.wasAutoReading) return;
         }
 
@@ -1927,19 +1951,25 @@ function initLector() {
             }
         }
 
-        // PRIORIDAD: Si el motor nativo está en pausa, reanudarlo primero (antes que speaking)
+        // PRIORIDAD: Si el motor nativo está en pausa, intentar reanudarlo
         if (window.speechSynthesis && window.speechSynthesis.paused) {
             try { window.speechSynthesis.resume(); } catch(e) {}
-            window.autoReading = true;
-            autoReading = true;
-            window.isCurrentlyPaused = false;
-            isCurrentlyReading = true;
-            isReadingInProgress = false;
-            readingLog('resume_engine_resume', {});
-            if (typeof window.hideHeader === 'function') window.hideHeader();
-            if (typeof window.updateFloatingButton === 'function') window.updateFloatingButton();
-            if (window.ReadingControl) { window.ReadingControl.pausedBy = null; window.ReadingControl.wasAutoReading = false; if (window.ReadingControl.retryTimer) { clearTimeout(window.ReadingControl.retryTimer); window.ReadingControl.retryTimer = null; } }
-            return;
+            
+            // Si después de resume() sigue pausado o no está hablando, forzar reinicio manual abajo
+            if (!window.speechSynthesis.speaking) {
+                readingLog('resume_engine_failed_resume', {});
+            } else {
+                window.autoReading = true;
+                autoReading = true;
+                window.isCurrentlyPaused = false;
+                isCurrentlyReading = true;
+                isReadingInProgress = false;
+                readingLog('resume_engine_resume_ok', {});
+                if (typeof window.hideHeader === 'function') window.hideHeader();
+                if (typeof window.updateFloatingButton === 'function') window.updateFloatingButton();
+                if (window.ReadingControl) { window.ReadingControl.pausedBy = null; window.ReadingControl.wasAutoReading = false; if (window.ReadingControl.retryTimer) { clearTimeout(window.ReadingControl.retryTimer); window.ReadingControl.retryTimer = null; } }
+                return;
+            }
         }
 
         // Esperar a que termine cualquier pronunciación aislada
@@ -2424,23 +2454,37 @@ function initLector() {
         } catch (error) {
         }
     };
-}
 
-// Asegurar inicialización cuando el DOM esté listo, solo si el usuario está logueado
-function conditionalInitLector() {
-    if (window.userLoggedIn) {
-        initLector();
-        // CORRECCIÓN: Inicializar estados después de cargar el lector
-        if (typeof window.initializeReadingStates === 'function') {
-            window.initializeReadingStates();
-        }
+    // NUEVO: Toggle lectura al pinchar fuera de las letras (en el fondo)
+    if (!window._clickToggleInitialized) {
+        document.addEventListener('click', function(e) {
+            // Solo si el usuario está logueado y hay área de lectura
+            if (!window.userLoggedIn) return;
+            
+            // Ignorar si el clic es en elementos interactivos conocidos
+            const interactiveSelectors = [
+                '.clickable-word', 'button', 'a', 'input', 'select', 'textarea', 
+                '.tab-navigation', '#floating-menu', '.explain-sidebar', '.simple-tooltip',
+                '.user-dropdown', '.nav-btn', '.logo', '.modal-container', '.simple-tooltip.hover',
+                '.translation', '.page-number', '.pagination-controls'
+            ];
+            
+            for (const selector of interactiveSelectors) {
+                if (e.target.closest(selector)) return;
+            }
+
+            // Si pinchamos en el área de lectura (fondo), en el body o en el contenedor de páginas
+            // Pero NO en las palabras, toggle play/stop
+            readingLog('background_click', { target: e.target.tagName });
+            if (typeof window.toggleFloatingPlayPause === 'function') {
+                window.toggleFloatingPlayPause();
+            }
+        });
+        window._clickToggleInitialized = true;
     }
-}
 
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', conditionalInitLector);
-} else {
-    conditionalInitLector();
+    // Inicializa vista
+    updatePageDisplay();
 }
 
 // Exponer explícitamente en window para acceso desde consola

@@ -212,6 +212,7 @@ $text = preg_replace('/(?<=[.?!])\s+/', "\n", $text);
 
 <body>
 
+  <?php if (empty($text)): ?>
   <header class="header" id="main-header">
     <div class="nav-container">
       <div class="nav-left">
@@ -256,6 +257,7 @@ $text = preg_replace('/(?<=[.?!])\s+/', "\n", $text);
       <button class="mobile-menu-toggle" id="mobile-toggle">☰</button>
     </div>
   </header>
+  <?php endif; ?>
 
 
 <div class="main-container">

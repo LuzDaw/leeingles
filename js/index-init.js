@@ -74,17 +74,20 @@ document.addEventListener('DOMContentLoaded', function() {
                 window.showResetPasswordModal(resetToken);
             }
         }, 500);
-    } else if (tab === 'texts') {
-        if (typeof window.loadTabContent === 'function') window.loadTabContent('my-texts');
-    } else if (showUpload === '1') {
-        if (typeof window.loadTabContent === 'function') window.loadTabContent('upload');
-    } else if (tab && ['progress','my-texts','saved-words','practice','upload','account'].includes(tab)) {
-        const scroll = urlParams.get('scroll');
-        if (typeof window.loadTabContent === 'function') window.loadTabContent(tab, paymentSuccess === '1', scroll);
-    } else {
-        const isViewingText = window.location.search.includes('text_id=') || window.location.search.includes('public_text_id=');
-        if (window.userLoggedIn && !isViewingText) {
-            if (typeof window.loadTabContent === 'function') window.loadTabContent('progress');
+    } else if (window.userLoggedIn) {
+        // Solo cargar pestañas si el usuario está logueado
+        if (tab === 'texts') {
+            if (typeof window.loadTabContent === 'function') window.loadTabContent('my-texts');
+        } else if (showUpload === '1') {
+            if (typeof window.loadTabContent === 'function') window.loadTabContent('upload');
+        } else if (tab && ['progress','my-texts','saved-words','practice','upload','account'].includes(tab)) {
+            const scroll = urlParams.get('scroll');
+            if (typeof window.loadTabContent === 'function') window.loadTabContent(tab, paymentSuccess === '1', scroll);
+        } else {
+            const isViewingText = window.location.search.includes('text_id=') || window.location.search.includes('public_text_id=');
+            if (!isViewingText) {
+                if (typeof window.loadTabContent === 'function') window.loadTabContent('progress');
+            }
         }
     }
 

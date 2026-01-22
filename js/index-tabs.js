@@ -13,6 +13,11 @@ window.loadTabContent = function(tab, isPaymentSuccess = false, scrollTarget = n
     
     // Si no estamos en la vista de dashboard (no hay tab-content), redirigir
     if (!tabContent) {
+        // SEGURIDAD: No redirigir si el usuario no está logueado (evita bucles)
+        if (!window.userLoggedIn) {
+            console.warn("Intento de cargar pestaña sin estar logueado:", tab);
+            return;
+        }
         let url = `index.php?tab=${tab}`;
         if (isPaymentSuccess) url += '&payment_success=1';
         if (scrollTarget) url += `&scroll=${scrollTarget}`;
