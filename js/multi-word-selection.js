@@ -18,9 +18,6 @@ class MultiWordSelector {
     }
     
     init() {
-        // Agregar estilos CSS para la selección
-        this.addStyles?.();
-        
         // Event listeners para selección usando arrow functions para mantener el contexto
         document.addEventListener('mousedown', (e) => this.onMouseDown(e));
         document.addEventListener('mousemove', (e) => this.onMouseMove(e));
@@ -30,33 +27,15 @@ class MultiWordSelector {
         document.addEventListener('click', (e) => this.onDocumentClick(e));
     }
     
-    addStyles() {
-        const style = document.createElement('style');
-        style.textContent = `
-            .word-selection { background: rgba(74,144,226,0.2) !important; border-radius: 3px; transition: background 0.2s ease; }
-            .word-selection-start { background: rgba(74,144,226,0.35) !important; border-left: 2px solid #4a90e2; }
-            .word-selection-end { background: rgba(74,144,226,0.35) !important; border-right: 2px solid #4a90e2; }
-            
-        `;
-        document.head.appendChild(style);
-    }
-    
     onMouseDown(event) {
         const target = event.target;
         
-        // Ignorar completamente elementos de interfaz y formularios
-        if (target.closest('.dropdown, .select, .menu, .modal, .popup, .tooltip, .practice-menu, .text-selector, .text-select, select, option, optgroup, textarea, input, button, form, .upload-form-container, .tab-navigation')) {
+        // Solo activar si el clic es DIRECTAMENTE en una palabra clickeable
+        const isWord = target.classList.contains('clickable-word') || target.classList.contains('practice-word');
+        
+        if (!isWord) {
             return;
         }
-        
-        // Solo activar en palabras clickeables
-        if (!target.classList.contains('clickable-word') && 
-            !target.classList.contains('practice-word') &&
-            !target.closest('.reading-area, .text-example')) {
-            return;
-        }
-        
-        // Debug: MouseDown en elemento clickeable
         
         this.isSelecting = true;
         this.startElement = target;
@@ -74,15 +53,10 @@ class MultiWordSelector {
         
         const target = event.target;
         
-        // Ignorar elementos de interfaz y formularios
-        if (target.closest('.dropdown, .select, .menu, .modal, .popup, .tooltip, .practice-menu, .text-selector, .text-select, select, option, optgroup, textarea, input, button, form, .upload-form-container, .tab-navigation')) {
-            return;
-        }
+        // Solo procesar si estamos sobre una palabra clickeable
+        const isWord = target.classList.contains('clickable-word') || target.classList.contains('practice-word');
         
-        // Solo procesar palabras clickeables
-        if (!target.classList.contains('clickable-word') && 
-            !target.classList.contains('practice-word') &&
-            !target.closest('.reading-area, .text-example')) {
+        if (!isWord) {
             return;
         }
         
@@ -93,7 +67,7 @@ class MultiWordSelector {
                 Math.pow(event.clientY - this.startPosition.y, 2)
             );
             
-            if (distance > 5) { // Si se movió más de 5 píxeles
+            if (distance > 5) {
                 this.hasDragged = true;
             }
         }
@@ -109,27 +83,18 @@ class MultiWordSelector {
         
         const target = event.target;
         
-        // Ignorar elementos de interfaz
-        if (target.closest('.dropdown, .select, .menu, .modal, .popup, .tooltip, .practice-menu, .text-selector, .text-select, select, option, optgroup')) {
-            this.isSelecting = false;
-            return;
-        }
-        
         // Solo procesar si el elemento final es clickeable
-        if (!target.classList.contains('clickable-word') && 
-            !target.classList.contains('practice-word')) {
+        const isWord = target.classList.contains('clickable-word') || target.classList.contains('practice-word');
+        
+        if (!isWord) {
             this.isSelecting = false;
+            this.clearSelection();
             return;
         }
         
         this.endElement = target;
         
-        // Debug: MouseUp completado
-        
-        // Si el usuario no arrastró, es un clic simple
         if (!this.hasDragged) {
-            // Para clic simple, usar la funcionalidad de traducción individual
-            // que ya está implementada en la página
             this.isSelecting = false;
             this.clearSelection();
             return;
@@ -401,6 +366,11 @@ class MultiWordSelector {
     }
     
     highlightWord(element, position) {
+        // SEGURIDAD: Solo aplicar a palabras, nunca a contenedores
+        if (!element.classList.contains('clickable-word') && !element.classList.contains('practice-word')) {
+            return;
+        }
+
         element.classList.add('word-selection');
         
         if (position === 'start') {
@@ -411,8 +381,12 @@ class MultiWordSelector {
     }
     
     clearSelection() {
-        document.querySelectorAll('.word-selection').forEach(element => {
-            element.classList.remove('word-selection', 'word-selection-start', 'word-selection-end');
+        // Limpiar clases de selección en TODA la página para mayor seguridad
+        const selectors = ['.word-selection', '.word-selection-start', '.word-selection-end'];
+        selectors.forEach(selector => {
+            document.querySelectorAll(selector).forEach(element => {
+                element.classList.remove('word-selection', 'word-selection-start', 'word-selection-end');
+            });
         });
     }
     
@@ -484,7 +458,7 @@ class MultiWordSelector {
         this.hideTooltip();
         
         this.tooltip = document.createElement('div');
-      //  this.tooltip.className = 'multi-word-tooltip';
+        this.tooltip.className = 'multi-word-tooltip';
         
         if (isLoading) {
             this.tooltip.innerHTML = `

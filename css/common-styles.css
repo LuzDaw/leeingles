@@ -838,13 +838,27 @@
 
 /* === ACCESIBILIDAD === */
 
-/* Estados focus mejorados */
+/* Estados focus mejorados - Eliminación de líneas y bordes al pinchar */
 button:focus,
 input:focus,
-.clickable-word:focus {
+.clickable-word:focus,
+.tab-btn:focus,
+.nav-btn:focus,
+a:focus,
+[role="button"]:focus,
+button:active,
+.tab-btn:active,
+.nav-btn:active,
+a:active {
     outline: none !important;
     outline-offset: 0 !important;
     box-shadow: none !important;
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* Reset universal para evitar líneas de enfoque del navegador en elementos interactivos */
+:focus-visible {
+    outline: none !important;
 }
 
 /* Reducción de movimiento */

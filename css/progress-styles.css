@@ -8,15 +8,22 @@
 }
 
 .stat-card {
-    background: rgba(255, 255, 255, 0.9);
-    border-radius: 12px;
-    padding: 16px;
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 16px;
+    padding: 20px;
     text-align: center;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    border: 1px solid rgba(168, 218, 220, 0.5);
-    flex: 1 1 100px;
-    max-width: 200px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    flex: 1 1 150px;
+    max-width: 220px;
     transition: all 0.3s ease;
+    backdrop-filter: blur(5px);
+}
+
+.stat-card:hover {
+    background: rgba(255, 255, 255, 0.9);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
 }
 
 .stat-icon {
@@ -36,12 +43,13 @@
 }
 
 .progress-section {
-    background: rgba(255, 255, 255, 0.9);
-    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.6);
+    border-radius: 16px;
     padding: 24px;
     margin-bottom: 20px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    border: 1px solid rgba(168, 218, 220, 0.5);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(5px);
 }
 
 /* Layout horizontal para calendario y actividad reciente */

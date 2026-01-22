@@ -21,9 +21,8 @@
 
 /* Pestañas individuales */
 .tab-btn {
-     background: #c2d3e4;
-    border: 1px solid #e5e7eb00;
-    border-bottom: none;
+    background: #c2d3e4;
+    border: none !important;
     padding: 0.75rem 1.25rem;
     font-weight: 500;
     color: #6b7280;
@@ -48,20 +47,23 @@
 }
 
 .tab-btn.active {
-  background: white;
+  background: var(--background-color);
   color: #1f1c1c;
-  /* box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.08) !important; */
+  border-bottom: none !important;
   transform: translateY(0);
+  font-weight: 600;
+  box-shadow: none !important;
 }
 
 /* Contenedor de contenido integrado */
 #tab-content {
-  background: white;
-  margin: 0 0px 20px 0px;
-  border-radius: 0 12px 12px 12px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  background: var(--background-color);
+  margin: 0;
+  border-radius: 0 0 12px 12px;
+  box-shadow: none;
   overflow: visible;
   position: relative;
+  border: none !important;
 }
 
 /* Contenido de pestañas sin márgenes externos */
@@ -353,11 +355,10 @@
 }
 
 .practice-stats {
-  display: flex ;
-      gap: 20px;
-      justify-content: center;
-  }
-
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+}
 
 .practice-stat {
   text-align: center;
