@@ -18,6 +18,7 @@ window.practiceAnswered = false;
 window.practiceCurrentWordIndex = 0;
 window.practiceCurrentSentenceData = {};
 window.practiceAlwaysShowTranslation = false;
+window.practiceAutoNextTimer = null;
 
 // === CONTADOR DE TIEMPO DE PRÁCTICA ===
 window.practiceStartTime = null;
@@ -272,6 +273,15 @@ function showWordSuccessFeedback(inputElement) {
     if (nextButton) nextButton.style.display = 'inline-flex';
     updatePracticeStats();
     showTranslationAfterAnswer();
+
+    if (window.practiceRemainingWords.length === 0) {
+        if (window.practiceAutoNextTimer) clearTimeout(window.practiceAutoNextTimer);
+        window.practiceAutoNextTimer = setTimeout(() => {
+            if (document.querySelector('.practice-results') === null) {
+                showPracticeResults();
+            }
+        }, 1000);
+    }
 }
 
 function generatePracticeSentence(word) {
@@ -381,7 +391,15 @@ window.selectPracticeOption = function(selected, correct) {
     
     showTranslationAfterAnswer();
     updatePracticeStats();
-    if (window.practiceRemainingWords.length === 0) showPracticeResults();
+    
+    if (window.practiceRemainingWords.length === 0) {
+        if (window.practiceAutoNextTimer) clearTimeout(window.practiceAutoNextTimer);
+        window.practiceAutoNextTimer = setTimeout(() => {
+            if (document.querySelector('.practice-results') === null) {
+                showPracticeResults();
+            }
+        }, 5000);
+    }
 }
 
 window.checkPracticeWriteAnswer = function(correct) {
@@ -415,7 +433,15 @@ window.checkPracticeWriteAnswer = function(correct) {
     
     showTranslationAfterAnswer();
     updatePracticeStats();
-    if (window.practiceRemainingWords.length === 0) showPracticeResults();
+    
+    if (window.practiceRemainingWords.length === 0) {
+        if (window.practiceAutoNextTimer) clearTimeout(window.practiceAutoNextTimer);
+        window.practiceAutoNextTimer = setTimeout(() => {
+            if (document.querySelector('.practice-results') === null) {
+                showPracticeResults();
+            }
+        }, 5000);
+    }
 }
 
 window.showPracticeTranslation = function() {
@@ -438,6 +464,10 @@ function showTranslationAfterAnswer() {
 }
 
 window.nextPracticeQuestion = function() {
+    if (window.practiceAutoNextTimer) {
+        clearTimeout(window.practiceAutoNextTimer);
+        window.practiceAutoNextTimer = null;
+    }
     if (window.practiceRemainingWords.length === 0) showPracticeResults();
     else loadPracticeQuestion();
 }
