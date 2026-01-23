@@ -633,23 +633,21 @@ extract(get_index_page_data($conn));
   </div>
 
     <script src="js/global-state.js"></script>
-    <script src="js/text-management.js"></script>
+    <script src="js/lectura/text-management.js"></script>
     <script src="js/common-functions.js"></script>
     <script src="js/index-tabs.js"></script>
     <script src="js/bulk-actions.js"></script>
     <script src="js/index-functions.js"></script>
     <script src="js/index-init.js"></script>
-    <script src="js/lector.js"></script>
-    <!-- Motor de lectura simplificado -->
-    <script src="js/reading-engine.js"></script>
+    <script src="js/lectura/electron-voice-integration.js"></script>
+    <script src="js/lectura/lector.js"></script>
     <script src="practicas/js/practice-functions.js"></script>
     <script src="js/modal-functions.js"></script>
-    <script src="js/floating-menu.js"></script>
+    <script src="js/lectura/floating-menu.js"></script>
     <script src="js/upload-form.js"></script>
     <script src="js/header-functions.js"></script>
     <script src="js/calendar-functions.js"></script>
-    <script src="js/multi-word-selection.js"></script>
-  <script src="js/title-translation-functions.js"></script>
+    <script src="js/lectura/multi-word-selection.js"></script>
   <script src="logueo_seguridad/password_visibility.js"></script>
   
   <!-- Sistema de Límite de Traducciones -->
@@ -662,7 +660,7 @@ extract(get_index_page_data($conn));
   <?php include 'includes/footer.php'; ?>
 
   <!-- Al final del body, antes de cerrar -->
-  <script src="js/public-texts-dropdown.js"></script>
+  <script src="js/lectura/public-texts-dropdown.js"></script>
 
   <?php if (isset($_GET['text_id']) || isset($_GET['public_text_id'])): ?>
     <!-- Sidebar de explicaciones -->
@@ -698,7 +696,7 @@ extract(get_index_page_data($conn));
     <!-- Overlay para cerrar sidebar -->
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
     <link rel="stylesheet" href="css/explain-sidebar.css?v=2">
-    <script src="js/explain-sidebar.js"></script>
+    <script src="js/lectura/explain-sidebar.js"></script>
   <?php endif; ?>
 </body>
 

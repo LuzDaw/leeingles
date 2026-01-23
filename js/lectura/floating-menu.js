@@ -1,13 +1,8 @@
 // Funciones del menú flotante de lectura
 
 // Variables globales para controlar visibilidad de traducciones y estado de lectura
-let translationsVisible = true;
-// Exponer también en window para que otros scripts (p.ej. lector.js) puedan leerlo
-window.translationsVisible = translationsVisible;
-window.isCurrentlyReading = false;
-window.isCurrentlyPaused = false;
-window.lastReadParagraphIndex = 0;
-window.lastReadPageIndex = 0;
+// Variables globales (AppState centralizado en global-state.js)
+window.translationsVisible = true;
 
 // Parar lectura al salir de la página
 window.addEventListener('beforeunload', function() {

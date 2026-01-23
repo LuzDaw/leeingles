@@ -2,37 +2,6 @@
 let rateInput = null;
 let rateValue = null;
 
-// ===== Debug de lectura (activable) ===== d
-window.READING_DEBUG = window.READING_DEBUG || false;
-window.ReadingLog = window.ReadingLog || [];
-window.enableReadingDebug = function(){ window.READING_DEBUG = true; };
-window.disableReadingDebug = function(){ window.READING_DEBUG = false; };
-window.dumpReadingState = function(){
-  try {
-    return {
-      isCurrentlyReading: window.isCurrentlyReading,
-      isCurrentlyPaused: window.isCurrentlyPaused,
-      autoReading: typeof autoReading !== 'undefined' ? autoReading : undefined,
-      isReadingInProgress: typeof isReadingInProgress !== 'undefined' ? isReadingInProgress : undefined,
-      currentIndex: typeof currentIndex !== 'undefined' ? currentIndex : undefined,
-      currentReadingIndex: typeof currentReadingIndex !== 'undefined' ? currentReadingIndex : undefined,
-      lastReadParagraphIndex: window.lastReadParagraphIndex,
-      lastReadWordIndex: window.lastReadWordIndex,
-      currentPage: typeof currentPage !== 'undefined' ? currentPage : undefined,
-      activeSpeakSessionId: typeof activeSpeakSessionId !== 'undefined' ? activeSpeakSessionId : undefined,
-      pauseReasons: Array.from(window.ReadingPauseReasons || []),
-    };
-  } catch(e) { return { error: String(e) }; }
-};
-function readingLog(event, data) {
-  try {
-    const entry = { t: Date.now(), event, ...data };
-    window.ReadingLog.push(entry);
-    // Limitar tamaño del log
-    if (window.ReadingLog.length > 500) window.ReadingLog.splice(0, window.ReadingLog.length - 500);
-    if (window.READING_DEBUG) console.log(`[ReadingLog] ${event}`, data);
-  } catch(e) {}
-}
 
 function initLector() {
     // Hacer estas variables globales para asegurar consistencia entre funciones
@@ -43,10 +12,7 @@ function initLector() {
     let currentIndex = window.currentIndex;
     let currentPage = window.currentPage;
     let autoReading = window.autoReading;
-    // Por defecto, usar SpeechSynthesis nativo para lectura por párrafos (evita saltos internos de RV)
-    if (typeof window.useResponsiveVoiceForParagraphs === 'undefined') {
-        window.useResponsiveVoiceForParagraphs = false;
-    }
+    window.useResponsiveVoiceForParagraphs = false;
     // Variables para el tiempo de lectura
     let readingStartTime = null;
     let readingLastSaveTime = null;
@@ -254,7 +220,6 @@ function initLector() {
         
         assignWordClickHandlers();
 
-        // --- NUEVO: Si la lectura automática está activa, sincronizar con la nueva página ---
         if (window.autoReading || autoReading) {
             if (window.speechSynthesis) window.speechSynthesis.cancel();
             
@@ -300,7 +265,6 @@ function initLector() {
         updateReadingProgressBar();
     }
 
-    // === BARRA DE PROGRESO DE LECTURA ===
     function updateReadingProgressBar() {
         let pagesContainer = document.getElementById('pages-container');
         if (!pagesContainer) return;
@@ -358,31 +322,20 @@ function initLector() {
     let doubleReadCurrentIndex = null; // Para rastrear el índice durante la lectura doble
     let doubleReadButton = null;
 
-    // Variable para evitar múltiples llamadas simultáneas
     let isReadingInProgress = false;
-    // CORRECCIÓN: Variable para evitar múltiples eventos onend
     let onEndHandled = false;
     let currentReadingIndex = -1;
-    // Control de sesiones de habla para ignorar callbacks obsoletos
     let speakSessionId = 0;
     let activeSpeakSessionId = 0;
     
     async function readAndTranslate(index, startWord = 0) {
-        // CORRECCIÓN: Si intentamos leer un índice diferente, limpiar el flag anterior
         if (isReadingInProgress && currentReadingIndex !== index) {
             isReadingInProgress = false;
             onEndHandled = false;
         }
         
-        // CORRECCIÓN: Protección mejorada contra múltiples llamadas simultáneas
-        if (isReadingInProgress) {
-            return;
-        }
-        
-        // CORRECCIÓN: Verificar si ya estamos procesando este índice específico
-        if (currentReadingIndex === index && onEndHandled) {
-            return;
-        }
+        if (isReadingInProgress) return;
+        if (currentReadingIndex === index && onEndHandled) return;
         
         // Invalidate cualquier callback de una sesión anterior y cancelar TTS
         activeSpeakSessionId = ++speakSessionId;
@@ -430,41 +383,23 @@ function initLector() {
             return;
         }
         
-        // CORRECCIÓN: Marcar que la lectura está en progreso y resetear flags
         isReadingInProgress = true;
         onEndHandled = false;
         currentReadingIndex = index;
-        readingLog('read_start', { index, page: currentPage, session: activeSpeakSessionId });
         
-        // CORRECCIÓN: Timeout de seguridad para casos donde onend no se dispare
-        const timeoutSessionId = activeSpeakSessionId; // ligar a la sesión actual
-        // Cancelar watchdog anterior si existiera y registrar el nuevo
+        const timeoutSessionId = activeSpeakSessionId;
         try { if (window.ReadingControl && window.ReadingControl.safetyTimeout) { clearTimeout(window.ReadingControl.safetyTimeout); } } catch(e) {}
         let safetyTimeout = setTimeout(() => {
-            // Ignorar si cambió la sesión, si ya no estamos auto-leyendo o si ya cambiamos de índice
-            if (timeoutSessionId !== activeSpeakSessionId) {
-                return;
-            }
-            if (!window.autoReading) {
-                return;
-            }
-            if (!autoReading) {
-                return;
-            }
-            if (currentReadingIndex !== index) {
-                return;
-            }
+            if (timeoutSessionId !== activeSpeakSessionId || !window.autoReading || !autoReading || currentReadingIndex !== index) return;
 
             if (!onEndHandled && isReadingInProgress) {
-                readingLog('safety_fire', { index, page: window.currentPage, session: activeSpeakSessionId });
                 onEndHandled = true;
                 isReadingInProgress = false;
                 if (window.autoReading || autoReading) {
-                    readAndTranslate(index + 1).catch(err => {
-                    });
+                    readAndTranslate(index + 1).catch(err => {});
                 }
             }
-        }, 30000); // 30 segundos de timeout
+        }, 30000);
         try { if (window.ReadingControl) window.ReadingControl.safetyTimeout = safetyTimeout; } catch(e) {}
 
         // En fullscreen, verificar si hemos leído 6 líneas o si terminamos la página
@@ -755,9 +690,8 @@ function initLector() {
 
                     fallbackUtterance.onend = async () => {
                         if (localId !== activeSpeakSessionId) { return; }
-                        readingLog('onend', { index, page: currentPage, session: activeSpeakSessionId });
                         
-                        // CORRECCIÓN: Solo aplicar protección contra duplicados si NO estamos en modo lectura doble
+                        // Solo aplicar protección contra duplicados si NO estamos en modo lectura doble
                         if (!window.doubleReadingMode) {
                             // CORRECCIÓN: Evitar múltiples llamadas al evento onend solo en lectura normal
                             if (onEndHandled) {
@@ -829,8 +763,6 @@ function initLector() {
                     // Agregar manejador de error para el fallback
                     fallbackUtterance.onerror = (error) => {
                         if (localId !== activeSpeakSessionId) { return; }
-                        const errType = (error && (error.error || error.name)) || 'unknown';
-                        readingLog('onerror', { index, page: currentPage, session: activeSpeakSessionId, err: errType });
                         // Limpiar timeout de seguridad si existe
                         if (typeof safetyTimeout !== 'undefined') {
                             clearTimeout(safetyTimeout);
@@ -1816,7 +1748,6 @@ function initLector() {
 	        window.pauseReading = function(by = 'unknown') {
         // Registrar razón de pausa
         try { window.ReadingPauseReasons.add(by); } catch(e) {}
-        readingLog('pause', { by, reasons: Array.from(window.ReadingPauseReasons || []) });
 
         // Cancelar watchdog de seguridad si existe
         try { if (window.ReadingControl && window.ReadingControl.safetyTimeout) { clearTimeout(window.ReadingControl.safetyTimeout); window.ReadingControl.safetyTimeout = null; } } catch(e) {}
@@ -1871,12 +1802,8 @@ function initLector() {
         }
         // Si no es force y aún quedan razones activas, no reanudar
         if (!force && window.ReadingPauseReasons && window.ReadingPauseReasons.size > 0) {
-            const reasons = Array.from(window.ReadingPauseReasons || []);
-            readingLog('resume_blocked', { reason, reasons });
             return;
         }
-
-        readingLog('resume_called', { reason, force, reasons: Array.from(window.ReadingPauseReasons || []) });
 
         // Solo reanudar automáticamente si la pausa fue por tooltip/sidebar y estaba leyendo antes
         if (!force) {
@@ -1912,15 +1839,12 @@ function initLector() {
             try { window.speechSynthesis.resume(); } catch(e) {}
             
             // Si después de resume() sigue pausado o no está hablando, forzar reinicio manual abajo
-            if (!window.speechSynthesis.speaking) {
-                readingLog('resume_engine_failed_resume', {});
-            } else {
+            if (window.speechSynthesis.speaking) {
                 window.autoReading = true;
                 autoReading = true;
                 window.isCurrentlyPaused = false;
                 isCurrentlyReading = true;
                 isReadingInProgress = false;
-                readingLog('resume_engine_resume_ok', {});
                 if (typeof window.hideHeader === 'function') window.hideHeader();
                 if (typeof window.updateFloatingButton === 'function') window.updateFloatingButton();
                 if (window.ReadingControl) { window.ReadingControl.pausedBy = null; window.ReadingControl.wasAutoReading = false; if (window.ReadingControl.retryTimer) { clearTimeout(window.ReadingControl.retryTimer); window.ReadingControl.retryTimer = null; } }
@@ -1932,7 +1856,6 @@ function initLector() {
         if (window.speechSynthesis && window.speechSynthesis.speaking) {
             if (window.ReadingControl && window.ReadingControl.retryTimer) clearTimeout(window.ReadingControl.retryTimer);
             if (window.ReadingControl) window.ReadingControl.retryTimer = setTimeout(() => window.resumeReading({ reason, force }), 300);
-            readingLog('resume_wait_speaking', {});
             return;
         }
 
@@ -1957,7 +1880,6 @@ function initLector() {
         }
         
         // Continuar desde el índice y palabra correctos si están disponibles
-        readingLog('resume_restart', { resumeIndex, resumeWord });
         readAndTranslate(resumeIndex, resumeWord);
         
         // Reset
@@ -2041,29 +1963,42 @@ function initLector() {
         readAndTranslate(currentIndex);
     };
     
-    // Funciones simples para pantalla completa  
+    // Funciones para pantalla completa integradas
     window.enableFullscreenPagination = function() {
-        // En fullscreen, usar CSS para mostrar solo 6 párrafos por página
         const style = document.createElement('style');
         style.id = 'fullscreen-pagination-style';
         style.textContent = `
-            .page p.paragraph:nth-child(n+13) {
-                display: none !important;
-            }
-            .page p.translation:nth-child(n+14) {
-                display: none !important;
-            }
+            .page p.paragraph:nth-child(n+13) { display: none !important; }
+            .page p.translation:nth-child(n+14) { display: none !important; }
         `;
         document.head.appendChild(style);
     };
     
     window.disableFullscreenPagination = function() {
-        // Quitar el CSS de fullscreen
         const style = document.getElementById('fullscreen-pagination-style');
-        if (style) {
-            style.remove();
-        }
+        if (style) style.remove();
     };
+
+    // Manejador de clics en pantalla completa (reemplaza fullscreen-fix.js)
+    document.addEventListener('click', function(e) {
+        if ((document.fullscreenElement || document.webkitFullscreenElement) && e.target.classList.contains('clickable-word')) {
+            const word = e.target.textContent.trim();
+            if (!word) return;
+            
+            if (window.explainSidebar && typeof window.explainSidebar.showExplanation === 'function') {
+                window.explainSidebar.showExplanation(word, e.target);
+            }
+        }
+    });
+
+    // Manejador de cambios de pantalla completa (reemplaza fullscreen-translation.js)
+    const handleFSChange = () => {
+        setTimeout(() => {
+            if (typeof window.assignWordClickHandlers === 'function') window.assignWordClickHandlers();
+        }, 500);
+    };
+    document.addEventListener('fullscreenchange', handleFSChange);
+    document.addEventListener('webkitfullscreenchange', handleFSChange);
     
     // Mostrar todas las traducciones del texto con caché
     window.showAllTranslations = async function() {
@@ -2225,8 +2160,7 @@ function initLector() {
         }
     }
 
-    // --- NUEVO: Leer todo el texto dos veces desde el punto actual ---
-    doubleReadButton = document.querySelector('.double-read');
+        doubleReadButton = document.querySelector('.double-read');
     if (doubleReadButton) {
         doubleReadButton.onclick = function(e) {
             e.stopPropagation();
@@ -2260,7 +2194,6 @@ function initLector() {
         doubleReadButton.textContent = '🔊 Leer dos veces';
     }
 
-    // === PROGRESO DE LECTURA REAL ===
     window.readPages = [];
     window.readingProgressLoaded = false;
     window.readingProgressPercent = 0;
@@ -2411,7 +2344,6 @@ function initLector() {
         }
     };
 
-    // NUEVO: Toggle lectura al pinchar en el área de lectura
     if (!window._clickToggleInitialized) {
         document.addEventListener('click', function(e) {
             // Solo si el usuario está logueado
@@ -2435,7 +2367,6 @@ function initLector() {
             }
 
             // Si pinchamos en el área de lectura (incluyendo traducciones), toggle play/stop
-            readingLog('reading_area_click', { target: e.target.tagName });
             if (typeof window.toggleFloatingPlayPause === 'function') {
                 window.toggleFloatingPlayPause();
             }

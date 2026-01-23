@@ -2,11 +2,7 @@
 // FUNCIONES DE GESTIÓN DE TEXTOS
 // ============================================
 
-// Variables globales
-window.isCurrentlyReading = false;
-window.isCurrentlyPaused = false;
-window.lastReadParagraphIndex = 0;
-window.lastReadPageIndex = 0;
+// Variables globales (AppState centralizado en global-state.js)
 
 // Guardar palabra traducida
 window.saveTranslatedWord = async function(word, translation, sentence = '') {
