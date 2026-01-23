@@ -335,4 +335,162 @@ function render_text_clickable($text, $title = '', $title_translation = '')
 
   return $output;
 }
+
+/**
+ * Prepara los datos necesarios para la página de inicio (index.php)
+ * Centraliza la lógica que antes estaba en el cuerpo de index.php
+ */
+function get_index_page_data($conn) {
+    $is_guest = !isset($_SESSION['user_id']);
+    $user_id = $is_guest ? null : $_SESSION['user_id'];
+    
+    // Definir variables para bind_result
+    $res_content = ""; 
+    $res_title = ""; 
+    $res_title_translation = "";
+
+    $data = [
+        'is_guest' => $is_guest,
+        'user_id' => $user_id,
+        'public_titles' => [],
+        'user_titles' => [],
+        'text' => "",
+        'current_text_title' => "",
+        'current_text_translation' => "",
+        'progress_data' => [],
+        'categories' => []
+    ];
+
+    // VISITANTE: Mostrar títulos públicos más recientes 
+    if ($is_guest) {
+        $result = $conn->query("SELECT t.id, t.title, t.title_translation, u.username FROM texts t JOIN users u ON t.user_id = u.id WHERE t.is_public = 1 ORDER BY t.created_at DESC LIMIT 6");
+        if ($result) {
+            while ($row = $result->fetch_assoc()) {
+                $data['public_titles'][] = $row;
+            }
+            $result->close();
+        }
+    } else {
+        // USUARIO LOGUEADO: Mostrar sus textos recientes si no hay texto seleccionado
+        if (!isset($_GET['text_id']) && !isset($_GET['public_text_id'])) {
+            $stmt = $conn->prepare("SELECT id, title, title_translation FROM texts WHERE user_id = ? ORDER BY created_at DESC LIMIT 10");
+            $stmt->bind_param("i", $user_id);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            while ($row = $result->fetch_assoc()) {
+                $data['user_titles'][] = $row;
+            }
+            $stmt->close();
+        }
+
+        // Mostrar texto privado
+        if (isset($_GET['text_id'])) {
+            $text_id = intval($_GET['text_id']);
+            $stmt = $conn->prepare("SELECT content, title, title_translation FROM texts WHERE id = ? AND user_id = ?");
+            $stmt->bind_param("ii", $text_id, $user_id);
+            $stmt->execute();
+            $stmt->bind_result($res_content, $res_title, $res_title_translation);
+            if ($stmt->fetch()) {
+                $data['text'] = $res_content;
+                $data['current_text_title'] = $res_title;
+                $data['current_text_translation'] = $res_title_translation;
+            }
+            $stmt->close();
+        }
+
+        // Mostrar texto público
+        if (isset($_GET['public_text_id'])) {
+            $public_id = intval($_GET['public_text_id']);
+            $stmt = $conn->prepare("SELECT content, title, title_translation FROM texts WHERE id = ? AND is_public = 1");
+            $stmt->bind_param("i", $public_id);
+            $stmt->execute();
+            $stmt->bind_result($res_content, $res_title, $res_title_translation);
+            if ($stmt->fetch()) {
+                $data['text'] = $res_content;
+                $data['current_text_title'] = $res_title;
+                $data['current_text_translation'] = $res_title_translation;
+            }
+            $stmt->close();
+        }
+    }
+
+    // Mostrar texto público (disponible para todos, incluidos invitados)
+    if (isset($_GET['public_text_id']) && empty($data['text'])) {
+        $public_id = intval($_GET['public_text_id']);
+        $stmt = $conn->prepare("SELECT content, title, title_translation FROM texts WHERE id = ? AND is_public = 1");
+        $stmt->bind_param("i", $public_id);
+        $stmt->execute();
+        $stmt->bind_result($res_content, $res_title, $res_title_translation);
+        if ($stmt->fetch()) {
+            $data['text'] = $res_content;
+            $data['current_text_title'] = $res_title;
+            $data['current_text_translation'] = $res_title_translation;
+        }
+        $stmt->close();
+    }
+
+    // Mostrar todos los textos públicos cuando se solicite
+    if (isset($_GET['show_public_texts'])) {
+        $result = $conn->query("SELECT t.id, t.title, u.username FROM texts t JOIN users u ON t.user_id = u.id WHERE t.is_public = 1 ORDER BY t.created_at DESC");
+        if ($result) {
+            $data['public_titles'] = [];
+            while ($row = $result->fetch_assoc()) {
+                $data['public_titles'][] = $row;
+            }
+            $result->close();
+        }
+    }
+
+    // Estadísticas de progreso
+    if (isset($_GET['show_progress']) && isset($_SESSION['user_id'])) {
+        $stmt = $conn->prepare("SELECT COUNT(*) as total_words FROM saved_words WHERE user_id = ?");
+        $stmt->bind_param("i", $user_id);
+        $stmt->execute();
+        $data['progress_data']['total_words'] = $stmt->get_result()->fetch_assoc()['total_words'];
+        $stmt->close();
+
+        $stmt = $conn->prepare("SELECT word, translation, created_at FROM saved_words WHERE user_id = ? ORDER BY created_at DESC LIMIT 10");
+        $stmt->bind_param("i", $user_id);
+        $stmt->execute();
+        $res = $stmt->get_result();
+        $data['progress_data']['recent_words'] = [];
+        while ($row = $res->fetch_assoc()) { $data['progress_data']['recent_words'][] = $row; }
+        $stmt->close();
+
+        $data['progress_data']['total_texts'] = getTotalUserTexts($user_id);
+
+        $stmt = $conn->prepare("SELECT title, created_at FROM texts WHERE user_id = ? ORDER BY created_at DESC LIMIT 5");
+        $stmt->bind_param("i", $user_id);
+        $stmt->execute();
+        $res = $stmt->get_result();
+        $data['progress_data']['recent_texts'] = [];
+        while ($row = $res->fetch_assoc()) { $data['progress_data']['recent_texts'][] = $row; }
+        $stmt->close();
+
+        $data['progress_data']['practice'] = ['selection' => ['count' => 0, 'accuracy' => 0], 'writing' => ['count' => 0, 'accuracy' => 0], 'sentences' => ['count' => 0, 'accuracy' => 0], 'total_exercises' => 0];
+        $stmt = $conn->prepare("SELECT mode, COUNT(*) as cnt, SUM(total_words) as words, AVG(accuracy) as avg_accuracy FROM practice_progress WHERE user_id = ? GROUP BY mode");
+        $stmt->bind_param("i", $user_id);
+        $stmt->execute();
+        $res = $stmt->get_result();
+        $total_exercises = 0;
+        while ($row = $res->fetch_assoc()) {
+            $mode = $row['mode'];
+            $data['progress_data']['practice'][$mode] = ['count' => intval($row['words']), 'accuracy' => round(floatval($row['avg_accuracy']), 1)];
+            $total_exercises += intval($row['cnt']);
+        }
+        $data['progress_data']['practice']['total_exercises'] = $total_exercises;
+        $stmt->close();
+    }
+
+    // Categorías
+    $categories_result = $conn->query("SELECT id, name FROM categories ORDER BY name");
+    if ($categories_result) {
+        while ($cat = $categories_result->fetch_assoc()) { $data['categories'][] = $cat; }
+        $categories_result->close();
+    }
+
+    $data['text'] = preg_replace('/(?<=[.?!])\s+/', "\n", $data['text']);
+    
+    return $data;
+}
 ?>
