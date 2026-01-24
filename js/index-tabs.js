@@ -49,7 +49,7 @@ window.loadTabContent = function(tab, isPaymentSuccess = false, scrollTarget = n
     
     // Mapear pestañas a archivos AJAX
     const tabFiles = {
-        'progress': 'ajax/ajax_progress_content.php',
+        'progress': 'lectura/ajax/ajax_progress_content.php',
         'my-texts': 'ajax/ajax_my_texts_content.php',
         'saved-words': 'ajax/ajax_saved_words_content.php',
         'practice': 'practicas/ajax_practice_content.php',
@@ -77,6 +77,13 @@ window.loadTabContent = function(tab, isPaymentSuccess = false, scrollTarget = n
     })
     .then(response => response.text())
     .then(data => {
+        // SEGURIDAD: Si la respuesta contiene el encabezado completo, es una redirección errónea a index.php
+        if (data.includes('<header') || data.includes('<!DOCTYPE')) {
+            console.error("Error: Se recibió la página completa en lugar del fragmento AJAX para:", ajaxFile);
+            tabContent.innerHTML = '<div style="text-align: center; padding: 40px; color: #ff8a00;"><p>Error cargando contenido (Redirección detectada). Por favor, recarga la página.</p></div>';
+            return;
+        }
+
         // Desplazar al principio al cargar nueva pestaña (a menos que haya un scrollTarget)
         if (!scrollTarget && !new URLSearchParams(window.location.search).get('scroll')) {
             window.scrollTo(0, 0);

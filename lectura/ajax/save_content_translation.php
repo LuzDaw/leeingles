@@ -1,7 +1,7 @@
 <?php
 session_start();
-require_once '../db/connection.php';
-require_once '../includes/content_functions.php';
+require_once '../../db/connection.php';
+require_once '../../includes/content_functions.php';
 
 header('Content-Type: application/json; charset=utf-8');
 

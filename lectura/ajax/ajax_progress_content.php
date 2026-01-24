@@ -4,8 +4,8 @@
  * Muestra estadísticas generales, tiempo de actividad y calendario
  */
 session_start();
-require_once '../db/connection.php';
-require_once '../includes/content_functions.php';
+require_once '../../db/connection.php';
+require_once '../../includes/content_functions.php';
 
 if (!isset($_SESSION['user_id'])) {
     echo '<div style="text-align: center; padding: 40px; color: #ff8a00;">Debes iniciar sesión para ver tu progreso.</div>';
@@ -204,7 +204,7 @@ if (isset($_GET['text_id']) || isset($_POST['text_id'])) {
      */
     async function loadPracticeStats() {
         try {
-            const response = await fetch('/practicas/get_practice_stats.php');
+            const response = await fetch('practicas/get_practice_stats.php');
             const data = await response.json();
             
             if (data.success) {

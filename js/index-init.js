@@ -137,14 +137,5 @@ window.addEventListener('beforeunload', function() {
     }
 });
 
-// Cargar práctica si estamos en modo práctica
-if (window.location.search.includes('practice=1')) {
-    const loadPractice = () => {
-        if (typeof window.loadPracticeMode === 'function') {
-            window.loadPracticeMode();
-        } else {
-            setTimeout(loadPractice, 100);
-        }
-    };
-    loadPractice();
-}
+// La carga de práctica se maneja ahora exclusivamente a través del sistema de pestañas
+// o mediante el script incluido en practicas/ajax_practice_content.php

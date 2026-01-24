@@ -25,8 +25,8 @@ extract(get_index_page_data($conn));
   <link rel="stylesheet" href="css/color-theme.css">
   <link rel="stylesheet" href="css/header-redesign.css">
   <link rel="stylesheet" href="css/text-styles.css">
-  <link rel="stylesheet" href="css/floating-menu.css">
-  <link rel="stylesheet" href="css/reading-styles.css">
+  <link rel="stylesheet" href="lectura/css/floating-menu.css">
+  <link rel="stylesheet" href="lectura/css/reading-styles.css">
   <link rel="stylesheet" href="practicas/css/practice-styles.css">
   <link rel="stylesheet" href="css/modal-styles.css">
   <link rel="stylesheet" href="css/tab-system.css">
@@ -147,158 +147,6 @@ extract(get_index_page_data($conn));
           <?php else: ?>
             <p>No hay textos públicos disponibles.</p>
           <?php endif; ?>
-        <?php elseif (isset($_GET['show_progress']) && isset($_SESSION['user_id'])): ?>
-          <!-- Página de Progreso -->
-          <div class="progress-dashboard">
-            <div class="header-controls">
-              <h2>📊 Tu Progreso de Aprendizaje</h2>
-            </div>
-
-            <!-- Estadísticas Generales -->
-            <div class="progress-stats-grid">
-              <div class="progress-stat-card">
-                <div class="stat-icon">📚</div>
-                <div class="stat-number"><?= $progress_data['total_texts'] ?></div>
-                <div class="stat-label">Textos Subidos</div>
-              </div>
-
-              <div class="progress-stat-card">
-                <div class="stat-icon">💬</div>
-                <div class="stat-number"><?= $progress_data['total_words'] ?></div>
-                <div class="stat-label">Palabras Guardadas</div>
-              </div>
-
-              <div class="progress-stat-card">
-                <div class="stat-icon">🎯</div>
-                <div class="stat-number"><?= $progress_data['practice']['total_exercises'] ?></div>
-                <div class="stat-label">Ejercicios Completados</div>
-                <div class="stat-note">Total de sesiones de práctica</div>
-              </div>
-
-              <div class="progress-stat-card">
-                <div class="stat-icon">🏆</div>
-                <div class="stat-number">
-                  <?php
-                    $accs = array_filter([
-                      $progress_data['practice']['selection']['accuracy'],
-                      $progress_data['practice']['writing']['accuracy'],
-                      $progress_data['practice']['sentences']['accuracy']
-                    ], fn($a) => $a > 0);
-                    echo count($accs) ? round(array_sum($accs)/count($accs), 1) . '%' : '0%';
-                  ?>
-                </div>
-                <div class="stat-label">Precisión Global</div>
-                <div class="stat-note">Promedio de precisión</div>
-              </div>
-            </div>
-
-            <!-- Actividad Reciente -->
-            <div class="progress-sections">
-              <div class="progress-section">
-                <h3>📖 Textos Recientes</h3>
-                <?php if (!empty($progress_data['recent_texts'])): ?>
-                  <ul class="recent-items-list">
-                    <?php foreach ($progress_data['recent_texts'] as $text): ?>
-                      <li class="recent-item">
-                        <div class="recent-item-content">
-                          <span class="recent-title"><?= htmlspecialchars($text['title']) ?></span>
-                          <span class="recent-date"><?= date('d/m/Y', strtotime($text['created_at'])) ?></span>
-                        </div>
-                      </li>
-                    <?php endforeach; ?>
-                  </ul>
-                  <div class="text-center mt-15">
-                    <a href="?tab=my-texts" class="nav-btn">Ver todos mis textos →</a>
-                  </div>
-                <?php else: ?>
-                  <p class="color-gray text-center p-20">
-                    No has subido textos aún. <a href="?show_upload=1">Subir uno</a>
-                  </p>
-                <?php endif; ?>
-              </div>
-
-              <div class="progress-section">
-                <h3>💬 Palabras Recientes</h3>
-                <?php if (!empty($progress_data['recent_words'])): ?>
-                  <ul class="recent-items-list">
-                    <?php foreach ($progress_data['recent_words'] as $word): ?>
-                      <li class="recent-item">
-                        <div class="recent-item-content">
-                          <span class="recent-word">
-                            <span class="word-english"><?= htmlspecialchars($word['word']) ?></span>
-                            <span class="word-spanish">→ <?= htmlspecialchars($word['translation']) ?></span>
-                          </span>
-                          <span class="recent-date"><?= date('d/m/Y', strtotime($word['created_at'])) ?></span>
-                        </div>
-                      </li>
-                    <?php endforeach; ?>
-                  </ul>
-                  <div class="text-center mt-15">
-                    <a href="?tab=saved-words" class="nav-btn">Ver todas las palabras →</a>
-                  </div>
-                <?php else: ?>
-                  <p class="color-gray text-center p-20">
-                    No has guardado palabras aún. Lee un texto y haz clic en las palabras para guardarlas.
-                  </p>
-                <?php endif; ?>
-              </div>
-
-              <!-- NUEVA SECCIÓN: Actividad semanal de práctica -->
-           
-            </div>
-
-            <!-- Sección de Práctica Detallada -->
-            <div class="practice-progress-section">
-              <h3>🎯 Progreso de Práctica</h3>
-              <div class="practice-modes-grid">
-                <div class="practice-mode-card">
-                  <div class="practice-mode-icon">🔤</div>
-                  <h4>Modo Selección</h4>
-                  <div class="practice-stats">
-                    <div class="practice-stat">
-                      <span class="practice-number"><?= $progress_data['practice']['selection']['count'] ?></span>
-                      <span class="practice-label">Palabras practicadas</span>
-                    </div>
-                    <div class="practice-stat">
-                      <span class="practice-number"><?= $progress_data['practice']['selection']['accuracy'] ?>%</span>
-                      <span class="practice-label">Precisión</span>
-                    </div>
-                  </div>
-                </div>
-                <div class="practice-mode-card">
-                  <div class="practice-mode-icon">✍️</div>
-                  <h4>Modo Escritura</h4>
-                  <div class="practice-stats">
-                    <div class="practice-stat">
-                      <span class="practice-number"><?= $progress_data['practice']['writing']['count'] ?></span>
-                      <span class="practice-label">Palabras escritas</span>
-                    </div>
-                    <div class="practice-stat">
-                      <span class="practice-number"><?= $progress_data['practice']['writing']['accuracy'] ?>%</span>
-                      <span class="practice-label">Precisión</span>
-                    </div>
-                  </div>
-                </div>
-                <div class="practice-mode-card">
-                  <div class="practice-mode-icon">📖</div>
-                  <h4>Modo Frases</h4>
-                  <div class="practice-stats">
-                    <div class="practice-stat">
-                      <span class="practice-number"><?= $progress_data['practice']['sentences']['count'] ?></span>
-                      <span class="practice-label">Frases completadas</span>
-                    </div>
-                    <div class="practice-stat">
-                      <span class="practice-number"><?= $progress_data['practice']['sentences']['accuracy'] ?>%</span>
-                      <span class="practice-label">Precisión</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="text-center mt-25">
-                <a href="?practice=1" class="nav-btn primary">🎯 Practicar Ahora</a>
-              </div>
-            </div>
-          </div>
         <?php elseif ($is_guest): ?>
           <!-- Landing Page para visitantes -->
           <div class="landing-container">
@@ -633,21 +481,25 @@ extract(get_index_page_data($conn));
   </div>
 
     <script src="js/global-state.js"></script>
-    <script src="js/lectura/text-management.js"></script>
     <script src="js/common-functions.js"></script>
     <script src="js/index-tabs.js"></script>
-    <script src="js/bulk-actions.js"></script>
     <script src="js/index-functions.js"></script>
     <script src="js/index-init.js"></script>
-    <script src="js/lectura/electron-voice-integration.js"></script>
-    <script src="js/lectura/lector.js"></script>
-    <script src="practicas/js/practice-functions.js"></script>
     <script src="js/modal-functions.js"></script>
-    <script src="js/lectura/floating-menu.js"></script>
-    <script src="js/upload-form.js"></script>
     <script src="js/header-functions.js"></script>
     <script src="js/calendar-functions.js"></script>
-    <script src="js/lectura/multi-word-selection.js"></script>
+    <script src="js/upload-form.js"></script>
+    <script src="js/bulk-actions.js"></script>
+    
+    <!-- Scripts de Lectura -->
+    <script src="lectura/js/text-management.js"></script>
+    <script src="lectura/js/electron-voice-integration.js"></script>
+    <script src="lectura/js/lector.js"></script>
+    <script src="lectura/js/floating-menu.js"></script>
+    <script src="lectura/js/multi-word-selection.js"></script>
+    
+    <!-- Scripts de Práctica -->
+    <script src="practicas/js/practice-functions.js"></script>
   <script src="logueo_seguridad/password_visibility.js"></script>
   
   <!-- Sistema de Límite de Traducciones -->
@@ -660,7 +512,7 @@ extract(get_index_page_data($conn));
   <?php include 'includes/footer.php'; ?>
 
   <!-- Al final del body, antes de cerrar -->
-  <script src="js/lectura/public-texts-dropdown.js"></script>
+  <script src="lectura/js/public-texts-dropdown.js"></script>
 
   <?php if (isset($_GET['text_id']) || isset($_GET['public_text_id'])): ?>
     <!-- Sidebar de explicaciones -->
@@ -695,8 +547,8 @@ extract(get_index_page_data($conn));
 
     <!-- Overlay para cerrar sidebar -->
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
-    <link rel="stylesheet" href="css/explain-sidebar.css?v=2">
-    <script src="js/lectura/explain-sidebar.js"></script>
+    <link rel="stylesheet" href="lectura/css/explain-sidebar.css?v=2">
+    <script src="lectura/js/explain-sidebar.js"></script>
   <?php endif; ?>
 </body>
 

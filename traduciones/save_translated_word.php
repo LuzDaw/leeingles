@@ -26,16 +26,14 @@ if (isset($_POST['text_id']) && is_numeric($_POST['text_id'])) {
 } elseif (isset($_GET['text_id']) && is_numeric($_GET['text_id'])) {
     $text_id = intval($_GET['text_id']);
 } elseif (isset($_SERVER['HTTP_REFERER'])) {
-    // Intentar extraer text_id de la URL referer
-    if (preg_match('/[?&]text_id=(\d+)/', $_SERVER['HTTP_REFERER'], $matches)) {
+    // Intentar extraer text_id o public_text_id de la URL referer
+    if (preg_match('/[?&](?:text_id|public_text_id)=(\d+)/', $_SERVER['HTTP_REFERER'], $matches)) {
         $text_id = intval($matches[1]);
     }
 }
 
-if (!$text_id) {
-    echo json_encode(['success' => false, 'error' => 'No se pudo determinar el id del texto']);
-    exit;
-}
+// El text_id ya no es estrictamente obligatorio para permitir guardar palabras sueltas
+// pero lo usaremos si está disponible.
 
 if (empty($word) || empty($translation)) {
     echo json_encode(['error' => 'Palabra y traducción son requeridas']);
@@ -44,15 +42,24 @@ if (empty($word) || empty($translation)) {
 
 try {
     // Verificar si la palabra ya existe para este usuario y texto
-    $stmt = $conn->prepare("SELECT id FROM saved_words WHERE user_id = ? AND word = ? AND (text_id = ? OR (? IS NULL AND text_id IS NULL))");
-    $stmt->bind_param("isis", $user_id, $word, $text_id, $text_id);
+    // Si text_id es null, buscamos registros donde text_id sea null
+    if ($text_id !== null) {
+        $stmt = $conn->prepare("SELECT id FROM saved_words WHERE user_id = ? AND word = ? AND text_id = ?");
+        $stmt->bind_param("isi", $user_id, $word, $text_id);
+    } else {
+        $stmt = $conn->prepare("SELECT id FROM saved_words WHERE user_id = ? AND word = ? AND text_id IS NULL");
+        $stmt->bind_param("is", $user_id, $word);
+    }
+    
     $stmt->execute();
     $result = $stmt->get_result();
     
     if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        $id = $row['id'];
         // Actualizar traducción existente
-        $stmt = $conn->prepare("UPDATE saved_words SET translation = ?, context = ?, text_id = ?, created_at = NOW() WHERE user_id = ? AND word = ? AND (text_id = ? OR (? IS NULL AND text_id IS NULL))");
-        $stmt->bind_param("sssisis", $translation, $context, $text_id, $user_id, $word, $text_id, $text_id);
+        $stmt = $conn->prepare("UPDATE saved_words SET translation = ?, context = ?, text_id = ?, created_at = NOW() WHERE id = ?");
+        $stmt->bind_param("ssii", $translation, $context, $text_id, $id);
     } else {
         // Insertar nueva palabra
         $stmt = $conn->prepare("INSERT INTO saved_words (user_id, word, translation, context, text_id) VALUES (?, ?, ?, ?, ?)");
