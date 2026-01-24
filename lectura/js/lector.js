@@ -715,18 +715,20 @@ function initLector() {
             window._hoverTimeout = null;
         }
         
-        // Limpiar visualmente de inmediato
+        // Limpiar visualmente de inmediato (siempre, independientemente del sidebar)
         hideHoverTooltip();
         clearWordHighlight();
         
+        // Si el sidebar está abierto, NO reanudamos la lectura (comportamiento deseado)
         const sidebarOpen = !!(document.getElementById('explainSidebar')?.classList.contains('open'));
         if (sidebarOpen) return;
         
-        // Reanudar lectura si estaba pausada por hover
+        // Reanudar lectura si estaba pausada por hover y el sidebar está cerrado
         if (window._hoverPaused) {
-            if (window.resumeReading) {
+            // Usar la lógica de reanudación unificada
+            if (typeof window.resumeReading === 'function') {
                 window.resumeReading({ reason: 'word-hover', force: false });
-            } else if (window.resumeSpeech) {
+            } else if (typeof window.resumeSpeech === 'function') {
                 window.resumeSpeech();
             }
             window._hoverPaused = false;
@@ -880,22 +882,29 @@ function initLector() {
         if (typeof window.updateFloatingButton === 'function') window.updateFloatingButton();
     };
 
-    window.pauseReading = function() {
+    window.pauseReading = function(reason = '') {
         window.isCurrentlyPaused = true;
         isCurrentlyReading = false;
+        isReadingInProgress = false;
         autoReading = false;
+        onEndHandled = false;
         if (window.speechSynthesis) window.speechSynthesis.pause();
+        cancelAllTTS();
+        // Limpiar timeout de seguridad al pausar para evitar retrasos
+        try { if (window.ReadingControl && window.ReadingControl.safetyTimeout) { clearTimeout(window.ReadingControl.safetyTimeout); window.ReadingControl.safetyTimeout = null; } } catch(e) {}
     };
 
-    window.resumeReading = function() {
+    window.resumeReading = function(options = {}) {
         window.isCurrentlyPaused = false;
+        isReadingInProgress = false;
+        onEndHandled = false;
         isCurrentlyReading = true;
         autoReading = true;
         
         if (window.speechSynthesis && window.speechSynthesis.paused) {
             window.speechSynthesis.resume();
         } else {
-            // Usar siempre el índice guardado para consistencia
+            // Usar siempre el índice guardado para consistencia - SIN DELAY para reanudación instantánea
             const resumeIdx = (typeof window.lastReadParagraphIndex !== 'undefined') ? window.lastReadParagraphIndex : 0;
             readAndTranslate(resumeIdx);
         }
