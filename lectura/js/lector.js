@@ -272,6 +272,13 @@ function initLector() {
         if (isReadingInProgress) return;
         if (currentReadingIndex === index && onEndHandled) return;
         
+        // Actualizar índices globales para persistencia
+        window.currentIndex = index;
+        window.lastReadParagraphIndex = index;
+        if (typeof window.lastReadPageIndex !== 'undefined') {
+            window.lastReadPageIndex = window.currentPage;
+        }
+
         activeSpeakSessionId = ++speakSessionId;
         cancelAllTTS();
         if (index < 0) return;
@@ -829,8 +836,10 @@ function initLector() {
         if (!readingUpdateInterval) readingUpdateInterval = setInterval(updateReadingTimeRealTime, 30000);
         if (typeof window.hideHeader === 'function') window.hideHeader();
         
+        // Asegurar que retomamos desde el último punto guardado
         if (typeof window.lastReadPageIndex === 'number') window.currentPage = window.lastReadPageIndex;
         window.currentIndex = window.lastReadParagraphIndex || 0;
+        
         window.autoReading = true;
         autoReading = true;
         window._resumeIndexPending = window.currentIndex;
@@ -852,15 +861,22 @@ function initLector() {
 
     window.resumeSpeech = function() {
         document.querySelector('.encabezado-lectura')?.classList.add('hidden');
+        // Si no estaba pausado, iniciar normalmente (que ya maneja el índice guardado)
         if (!window.isCurrentlyPaused) { window.startReading(); return; }
+        
         cancelAllTTS();
         if (isReadingInProgress) return;
+        
         window.isCurrentlyPaused = false;
         isCurrentlyReading = true;
         readingLastSaveTime = Date.now();
         autoReading = true;
         if (typeof window.hideHeader === 'function') window.hideHeader();
-        readAndTranslate(currentReadingIndex >= 0 ? currentReadingIndex : (window.lastReadParagraphIndex || 0));
+        
+        // Usar siempre el índice guardado para consistencia
+        const resumeIdx = (typeof window.lastReadParagraphIndex !== 'undefined') ? window.lastReadParagraphIndex : 0;
+        readAndTranslate(resumeIdx);
+        
         if (typeof window.updateFloatingButton === 'function') window.updateFloatingButton();
     };
 
@@ -875,8 +891,14 @@ function initLector() {
         window.isCurrentlyPaused = false;
         isCurrentlyReading = true;
         autoReading = true;
-        if (window.speechSynthesis && window.speechSynthesis.paused) window.speechSynthesis.resume();
-        else readAndTranslate(window.lastReadParagraphIndex || 0);
+        
+        if (window.speechSynthesis && window.speechSynthesis.paused) {
+            window.speechSynthesis.resume();
+        } else {
+            // Usar siempre el índice guardado para consistencia
+            const resumeIdx = (typeof window.lastReadParagraphIndex !== 'undefined') ? window.lastReadParagraphIndex : 0;
+            readAndTranslate(resumeIdx);
+        }
     };
 
     window.stopReading = function() {
