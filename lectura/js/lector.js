@@ -664,12 +664,19 @@ function initLector() {
         const word = el.textContent?.trim();
         if (!word) return;
 
-        setTimeout(() => {
+        // Cancelar cualquier temporizador previo para evitar marcado agresivo
+        if (window._hoverTimeout) clearTimeout(window._hoverTimeout);
+
+        window._hoverTimeout = setTimeout(() => {
             if (window.pauseReading && !window._hoverPaused && (window.isCurrentlyReading || window.autoReading)) {
                 window.pauseReading('word-hover');
                 window._hoverPaused = true;
             }
+            
+            // Limpiar cualquier resaltado previo antes de marcar la nueva
+            clearWordHighlight();
             highlightWord(el, word);
+            
             if (el.dataset.translation) {
                 showHoverTooltip(el, word, el.dataset.translation);
                 return;
@@ -683,19 +690,31 @@ function initLector() {
             .then(data => {
                 const tr = data?.translation || 'Sin traducción';
                 el.dataset.translation = tr;
-                showHoverTooltip(el, word, tr);
+                // Solo mostrar si el ratón sigue sobre el elemento
+                if (el.matches(':hover')) {
+                    showHoverTooltip(el, word, tr);
+                }
                 if (typeof saveTranslatedWord === 'function') {
                     saveTranslatedWord(word, tr, findSentenceContainingWord(el, word));
                 }
             });
-        }, 250);
+        }, 300); // Aumentado ligeramente a 300ms para mayor consistencia
     }
 
     function handleWordLeave() {
+        // Cancelar temporizador pendiente inmediatamente
+        if (window._hoverTimeout) {
+            clearTimeout(window._hoverTimeout);
+            window._hoverTimeout = null;
+        }
+        
+        // Limpiar visualmente de inmediato
         hideHoverTooltip();
         clearWordHighlight();
+        
         const sidebarOpen = !!(document.getElementById('explainSidebar')?.classList.contains('open'));
         if (sidebarOpen) return;
+        
         if (window.resumeReading && window.ReadingPauseReasons?.has('word-hover')) {
             setTimeout(() => {
                 window.resumeReading({ reason: 'word-hover', force: false });

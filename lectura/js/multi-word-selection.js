@@ -424,6 +424,7 @@ class MultiWordSelector {
 
 // Inicializar solo en páginas de lectura, no en práctica
 document.addEventListener('DOMContentLoaded', () => {
+    /* DESACTIVADO TEMPORALMENTE: Evitar marcado agresivo de múltiples palabras
     // Solo inicializar si estamos en una página de lectura (no práctica)
     const isPracticePage = window.location.href.includes('practice') || 
                           document.querySelector('.practice-area') ||
@@ -438,6 +439,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!isPracticePage && !isPracticeTab) {
         window.multiWordSelector = new MultiWordSelector();
     }
+    */
 });
 
 // Exportar para uso global
