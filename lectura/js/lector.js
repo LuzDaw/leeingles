@@ -715,11 +715,14 @@ function initLector() {
         const sidebarOpen = !!(document.getElementById('explainSidebar')?.classList.contains('open'));
         if (sidebarOpen) return;
         
-        if (window.resumeReading && window.ReadingPauseReasons?.has('word-hover')) {
-            setTimeout(() => {
+        // Reanudar lectura si estaba pausada por hover
+        if (window._hoverPaused) {
+            if (window.resumeReading) {
                 window.resumeReading({ reason: 'word-hover', force: false });
-                window._hoverPaused = false;
-            }, 100);
+            } else if (window.resumeSpeech) {
+                window.resumeSpeech();
+            }
+            window._hoverPaused = false;
         }
     }
 
