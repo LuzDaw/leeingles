@@ -1,0 +1,121 @@
+/* dispositivo.css - Menú colapsable para pestañas en dispositivos pequeños */
+
+/* Ocultar botones de pestañas en dispositivos pequeños por defecto */
+@media (max-width: 768px) {
+  .tab-navigation.tab-nav-container {
+    position: relative;
+    padding: 11px 19px 11px 19px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 50px;
+  }
+
+  /* Botón hamburguesa para abrir/cerrar el menú (creado por JavaScript) */
+  .tab-navigation.tab-nav-container .mobile-tab-menu-toggle {
+    background: #c2d3e4;
+    color: #6b7280;
+    padding: 0.75rem 1.25rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    z-index: 10;
+    border: none;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+  }
+
+  .tab-navigation.tab-nav-container .mobile-tab-menu-toggle:hover {
+    background: #dae5f0;
+    color: #03072b;
+  }
+
+  /* Contenedor para los botones de pestañas que se extiende hacia abajo */
+  .tab-navigation.tab-nav-container .tab-buttons-container {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    flex-direction: column;
+    padding: 1rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transform: translateY(-100%);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    z-index: 999;
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  /* Cuando el menú está abierto, mostrar el contenedor */
+  .tab-navigation.tab-nav-container.menu-open .tab-buttons-container {
+    transform: translateY(0);
+    opacity: 1;
+    visibility: visible;
+  }
+
+  /* Ocultar todos los botones de pestañas del contenedor original */
+  .tab-navigation.tab-nav-container > .tab-btn {
+    display: none !important;
+  }
+
+  /* Ocultar el flex-1 spacer */
+  .tab-navigation.tab-nav-container .flex-1 {
+    display: none;
+  }
+
+  /* Ocultar el botón de salir en móvil */
+  .tab-navigation.tab-nav-container .exit-tab-btn {
+    display: none;
+  }
+
+  /* Estilos para los botones dentro del contenedor desplegable */
+  .tab-navigation.tab-nav-container .tab-buttons-container .tab-btn {
+    display: block;
+    width: 100%;
+    background: #c2d3e4;
+    border: none !important;
+    padding: 0.75rem 1.25rem;
+    font-weight: 500;
+    color: #6b7280;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+    border-radius: 4px;
+    margin: 0;
+  }
+
+  .tab-navigation.tab-nav-container .tab-buttons-container .tab-btn:hover {
+    background: #dae5f0;
+    color: #03072b;
+  }
+
+  .tab-navigation.tab-nav-container .tab-buttons-container .tab-btn.active {
+    background: #457b9d;
+    color: white;
+    font-weight: 600;
+  }
+
+  /* Ajustar el contenido de las pestañas en móvil */
+  #tab-content {
+    margin-top: 0;
+  }
+}
+
+/* Para tablets (ajuste intermedio) */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .tab-navigation.tab-nav-container {
+    padding: 11px 19px 0 19px;
+    flex-wrap: wrap;
+  }
+
+  .tab-btn {
+    padding: 0.6rem 1rem;
+    font-size: 14px;
+  }
+}

@@ -25,7 +25,6 @@ if ($_POST && isset($_POST['action']) && isset($_POST['selected_texts'])) {
     $action = $_POST['action'];
 
     if (!empty($selected_texts) && in_array($action, ['delete', 'make_public'])) {
-        $placeholders = str_repeat('?,', count($selected_texts) - 1) . '?';
         if ($action === 'delete') {
             // Obtener info de los textos seleccionados
             $in = implode(',', array_fill(0, count($selected_texts), '?'));
@@ -45,28 +44,19 @@ if ($_POST && isset($_POST['action']) && isset($_POST['selected_texts'])) {
             }
             $stmt_info->close();
             
-            // Ocultar textos públicos
-            foreach ($to_hide as $tid) {
-                $stmt_hide = $conn->prepare("INSERT IGNORE INTO hidden_texts (user_id, text_id) VALUES (?, ?)");
-                $stmt_hide->bind_param("ii", $user_id, $tid);
-                $stmt_hide->execute();
-                $stmt_hide->close();
-            }
-            
-            // Limpiar datos de usuario para TODOS los textos seleccionados (públicos y privados)
             $conn->begin_transaction();
             try {
                 $params = array_merge($selected_texts, [$user_id]);
                 $types = str_repeat('i', count($selected_texts)) . 'i';
                 $placeholders_all = str_repeat('?,', count($selected_texts) - 1) . '?';
 
-                // 1. Borrar palabras guardadas del usuario para estos textos
+                // 1. Borrar palabras guardadas
                 $stmt1 = $conn->prepare("DELETE FROM saved_words WHERE text_id IN ($placeholders_all) AND user_id = ?");
                 $stmt1->bind_param($types, ...$params);
                 $stmt1->execute();
                 $stmt1->close();
 
-                // 2. Borrar progreso de lectura del usuario para estos textos
+                // 2. Borrar progreso de lectura
                 $stmt2 = $conn->prepare("DELETE FROM reading_progress WHERE text_id IN ($placeholders_all) AND user_id = ?");
                 $stmt2->bind_param($types, ...$params);
                 $stmt2->execute();
@@ -103,65 +93,103 @@ if ($_POST && isset($_POST['action']) && isset($_POST['selected_texts'])) {
     }
 }
 
-// Obtener textos propios
-$stmt = $conn->prepare("SELECT id, title, title_translation, content, is_public, created_at FROM texts WHERE user_id = ? ORDER BY created_at DESC");
-$stmt->bind_param("i", $user_id);
+/**
+ * Función para renderizar un item de la lista de textos
+ */
+function renderTextItem($row, $user_id, $is_public_list = false) {
+    $num_words = str_word_count(strip_tags($row['content'] ?? ''));
+    $read_count = isset($row['read_count']) ? intval($row['read_count']) : 0;
+    $last_read_date = isset($row['updated_at']) ? $row['updated_at'] : null;
+
+    $formatted_date = isset($row['created_at']) ? date('d/m/Y', strtotime($row['created_at'])) : '-';
+    $link_param = $is_public_list ? "public_text_id" : "text_id";
+    ?>
+    <li class="text-item">
+        <input type="checkbox" class="text-checkbox" name="selected_texts[]" value="<?= $row['id'] ?>" onchange="updateBulkActions()">
+        <span class="text-icon">📄</span>
+        
+        <div class="text-main-info">
+            <a href="?<?= $link_param ?>=<?= $row['id'] ?>" class="text-title">
+                <span class="title-english"><?= htmlspecialchars($row['title'] ?? 'Sin título') ?></span>
+                <?php if (!empty($row['title_translation'])): ?>
+                    <span class="title-spanish">• <?= htmlspecialchars($row['title_translation']) ?></span>
+                <?php endif; ?>
+            </a>
+        </div>
+
+        <div class="text-meta-container">
+            <div class="meta-col meta-words"><?= $num_words ?> palabras</div>
+            <div class="meta-col meta-status">
+                <?php if ($read_count > 0): ?>
+                    <div style="display: flex; flex-direction: column; align-items: center;">
+                        <span class="reading-status-label">Leído <?= $read_count ?> <?= $read_count == 1 ? 'vez' : 'veces' ?></span>
+                        <?php if ($last_read_date): ?>
+                            <span style="font-size: 0.75em; color: #94a3b8; margin-top: 2px;"><?= date('d/m/Y', strtotime($last_read_date)) ?></span>
+                        <?php endif; ?>
+                    </div>
+                <?php else: ?>
+                    <span style="color: #cbd5e1;">-</span>
+                <?php endif; ?>
+            </div>
+            <div class="meta-col meta-date"><?= $formatted_date ?></div>
+            <div class="meta-col meta-public">
+                <?php if (isset($row['is_public']) && $row['is_public']): ?>
+                    <span class="status-public-tag">Público</span>
+                <?php endif; ?>
+            </div>
+        </div>
+    </li>
+    <?php
+}
+
+// 1. Obtener textos propios con su progreso (si existe)
+$stmt = $conn->prepare("
+    SELECT t.id, t.title, t.title_translation, t.content, t.is_public, t.created_at, 
+           rp.read_count, rp.updated_at, rp.percent
+    FROM texts t
+    LEFT JOIN reading_progress rp ON rp.text_id = t.id AND rp.user_id = ?
+    WHERE t.user_id = ? 
+    ORDER BY t.created_at DESC
+");
+$stmt->bind_param("ii", $user_id, $user_id);
 $stmt->execute();
 $result = $stmt->get_result();
+$own_texts = [];
+while ($row = $result->fetch_assoc()) { $own_texts[] = $row; }
+$stmt->close();
 
-// Consulta textos públicos leídos (Ya optimizada con INNER JOIN)
+// 2. Obtener textos públicos leídos (que no sean del usuario)
+// Eliminamos GROUP BY para evitar errores en modo estricto de SQL
 $public_read_stmt = $conn->prepare('
-    SELECT t.id, t.title, t.title_translation, t.content, t.user_id, t.is_public, t.created_at, rp.percent, rp.read_count, rp.updated_at
+    SELECT t.id, t.title, t.title_translation, t.content, t.user_id, t.is_public, t.created_at, 
+           rp.read_count, rp.updated_at, rp.percent
     FROM texts t
     INNER JOIN reading_progress rp ON rp.text_id = t.id
     WHERE rp.user_id = ? AND t.is_public = 1 AND t.user_id != ? AND (rp.percent > 0 OR rp.read_count > 0)
     AND t.id NOT IN (SELECT text_id FROM hidden_texts WHERE user_id = ?)
-    GROUP BY t.id
     ORDER BY rp.updated_at DESC, t.title ASC
 ');
 $public_read_stmt->bind_param('iii', $user_id, $user_id, $user_id);
 $public_read_stmt->execute();
 $public_read_result = $public_read_stmt->get_result();
 $public_read_rows = [];
-while ($row = $public_read_result->fetch_assoc()) {
-    $public_read_rows[] = $row;
-}
-$public_read_count = count($public_read_rows);
+while ($row = $public_read_result->fetch_assoc()) { $public_read_rows[] = $row; }
+$public_read_stmt->close();
+
+$total_found = count($own_texts) + count($public_read_rows);
 ?>
 
 <style>
-    .text-meta-container { 
-        display: flex; 
-        align-items: center; 
-        color: #64748b; 
-        font-size: 0.92em; 
-        white-space: nowrap; 
-        flex-shrink: 0;
-    }
+    .text-meta-container { display: flex; align-items: center; color: #64748b; font-size: 0.92em; white-space: nowrap; flex-shrink: 0; }
     .meta-col { padding: 0 15px; border-right: 1px solid #f1f5f9; text-align: center; }
     .meta-col:last-child { border-right: none; padding-right: 0; }
     .meta-words { width: 100px; text-align: right; }
     .meta-status { width: 130px; }
     .meta-date { width: 100px; color: #94a3b8; }
     .meta-public { width: 70px; text-align: right; }
-    
     .reading-status-label { color: #3B82F6; font-weight: bold; }
-    .progress-percent { color: #2563eb; font-weight: 500; }
-    .status-public-tag { 
-        font-size: 0.65em; 
-        padding: 2px 6px; 
-        background: #eff6ff; 
-        color: #2563eb; 
-        border: 1px solid #dbeafe; 
-        border-radius: 4px; 
-        text-transform: uppercase; 
-        letter-spacing: 0.05em; 
-        font-weight: 600;
-    }
-
-    @media (max-width: 850px) {
-        .text-meta-container { display: none; }
-    }
+    .status-public-tag { font-size: 0.65em; padding: 2px 6px; background: #eff6ff; color: #2563eb; border: 1px solid #dbeafe; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; }
+    @media (max-width: 850px) { .text-meta-container { display: none; } }
 </style>
 
 <div class="tab-content-wrapper">
@@ -169,7 +197,7 @@ $public_read_count = count($public_read_rows);
 
     <div class="bulk-actions-container">
         <div style="color: #64748b; font-weight: 500;">
-            <span style="color: #3b82f6; font-weight: 600;"><?php echo ($result->num_rows + $public_read_count) ?></span> textos encontrados
+            <span style="color: #3b82f6; font-weight: 600;"><?php echo $total_found ?></span> textos encontrados
         </div>
         <div class="bulk-actions" style="display: flex; gap: 12px; align-items: center;">
             <div class="dropdown">
@@ -191,115 +219,19 @@ $public_read_count = count($public_read_rows);
 
     <form id="bulkForm">
         <ul class="text-list">
-            <?php
+            <?php 
             // Renderizar textos propios
-            while ($row = $result->fetch_assoc()) {
-                $num_words = str_word_count(strip_tags($row['content']));
-                $progress = 0;
-                $is_read = false;
-                $read_count = 0;
-                $last_read_date = null;
-                
-                $stmt2 = $conn->prepare("SELECT percent, read_count, updated_at FROM reading_progress WHERE user_id = ? AND text_id = ?");
-                $stmt2->bind_param('ii', $user_id, $row['id']);
-                $stmt2->execute();
-                $stmt2->bind_result($percent, $rc, $updated_at);
-                if ($stmt2->fetch()) {
-                    $progress = intval($percent);
-                    $is_read = ($progress >= 100);
-                    $read_count = intval($rc);
-                    $last_read_date = $updated_at;
-                }
-                $stmt2->close();
-                
-                $formatted_date = date('d/m/Y', strtotime($row['created_at']));
-                ?>
-                <li class="text-item">
-                    <input type="checkbox" class="text-checkbox" name="selected_texts[]" value="<?= $row['id'] ?>" onchange="updateBulkActions()">
-                    <span class="text-icon">📄</span>
-                    
-                    <div class="text-main-info">
-                        <a href="?text_id=<?= $row['id'] ?>" class="text-title">
-                            <span class="title-english"><?= htmlspecialchars($row['title']) ?></span>
-                            <?php if (!empty($row['title_translation'])): ?>
-                                <span class="title-spanish">• <?= htmlspecialchars($row['title_translation']) ?></span>
-                            <?php endif; ?>
-                        </a>
-                    </div>
-
-                    <div class="text-meta-container">
-                    <div class="meta-col meta-words"><?= $num_words ?> palabras</div>
-                    <div class="meta-col meta-status">
-                    <?php if ($read_count > 0): ?>
-                    <div style="display: flex; flex-direction: column; align-items: center;">
-                        <span class="reading-status-label">Leído <?= $read_count ?> <?= $read_count == 1 ? 'vez' : 'veces' ?></span>
-                        <?php if ($last_read_date): ?>
-                        <span style="font-size: 0.75em; color: #94a3b8; margin-top: 2px;"><?= date('d/m/Y', strtotime($last_read_date)) ?></span>
-                        <?php endif; ?>
-                    </div>
-                    <?php else: ?>
-                    <span style="color: #cbd5e1;">-</span>
-                    <?php endif; ?>
-                    </div>
-                    <div class="meta-col meta-date"><?= $formatted_date ?></div>
-                    <div class="meta-col meta-public">
-                        <?php if ($row['is_public']): ?>
-                            <span class="status-public-tag">Público</span>
-                    <?php endif; ?>
-                    </div>
-                    </div>
-                </li>
-            <?php } ?>
-
-            <?php
+            foreach ($own_texts as $row) { renderTextItem($row, $user_id, false); } 
+            
             // Renderizar textos públicos leídos
-            foreach ($public_read_rows as $row) {
-                $num_words = str_word_count(strip_tags($row['content']));
-                $percent = intval($row['percent']);
-                $read_count = intval($row['read_count']);
-                $last_read_date = isset($row['updated_at']) ? $row['updated_at'] : null;
-                $formatted_date = date('d/m/Y', strtotime($row['created_at']));
-                ?>
-                <li class="text-item">
-                    <input type="checkbox" class="text-checkbox" name="selected_texts[]" value="<?= $row['id'] ?>" onchange="updateBulkActions()">
-                    <span class="text-icon">📄</span>
-                    
-                    <div class="text-main-info">
-                        <a href="?public_text_id=<?= $row['id'] ?>" class="text-title">
-                            <span class="title-english"><?= htmlspecialchars($row['title']) ?></span>
-                            <?php if (!empty($row['title_translation'])): ?>
-                                <span class="title-spanish">• <?= htmlspecialchars($row['title_translation']) ?></span>
-                            <?php endif; ?>
-                        </a>
-                    </div>
-
-                    <div class="text-meta-container">
-                    <div class="meta-col meta-words"><?= $num_words ?> palabras</div>
-                    <div class="meta-col meta-status">
-                    <?php if ($read_count > 0): ?>
-                    <div style="display: flex; flex-direction: column; align-items: center;">
-                        <span class="reading-status-label">Leído <?= $read_count ?> <?= $read_count == 1 ? 'vez' : 'veces' ?></span>
-                        <?php if ($last_read_date): ?>
-                        <span style="font-size: 0.75em; color: #94a3b8; margin-top: 2px;"><?= date('d/m/Y', strtotime($last_read_date)) ?></span>
-                        <?php endif; ?>
-                    </div>
-                    <?php else: ?>
-                    <span style="color: #cbd5e1;">-</span>
-                    <?php endif; ?>
-                    </div>
-                    <div class="meta-col meta-date"><?= $formatted_date ?></div>
-                    <div class="meta-col meta-public">
-                        <span class="status-public-tag">Público</span>
-                    </div>
-                    </div>
-                </li>
-            <?php } ?>
+            foreach ($public_read_rows as $row) { renderTextItem($row, $user_id, true); }
+            ?>
         </ul>
 
-        <?php if ($result->num_rows == 0 && $public_read_count == 0): ?>
+        <?php if ($total_found == 0): ?>
             <div style="text-align: center; padding: 60px 20px; color: #6b7280;">
                 <div style="font-size: 4rem; margin-bottom: 20px; opacity: 0.5;">📚</div>
-                <h3 style="margin-bottom: 10px; color: #374151;">No hayqq textos en tu lista</h3>
+                <h3 style="margin-bottom: 10px; color: #374151;">No hay textos en tu lista</h3>
                 <p style="margin-bottom: 30px;">¡Comienza subiendo un texto o explora los públicos!</p>
                 <button type="button" onclick="loadTabContent('upload')" class="nav-btn primary" style="padding: 15px 40px;">⬆ Subir mi primer texto</button>
             </div>
@@ -308,8 +240,4 @@ $public_read_count = count($public_read_rows);
 </div>
 
 <link rel="stylesheet" href="css/tab-system.css">
-<?php
-$stmt->close();
-$public_read_stmt->close();
-$conn->close();
-?>
+<?php $conn->close(); ?>

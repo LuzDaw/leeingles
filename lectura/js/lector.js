@@ -160,6 +160,11 @@ function initLector() {
                     currentPage = window.currentPage;
                     currentIndex = window.currentIndex;
                     updatePageDisplay();
+                    
+                    // Si es la última página, marcar como leída manualmente
+                    if (window.currentPage === totalPages - 1) {
+                        onPageReadByTTS(window.currentPage);
+                    }
                 }
             });
             nextBtn.setAttribute('data-listener', 'true');
@@ -1015,11 +1020,25 @@ function initLector() {
             }).catch(() => {});
     }
 
-    function saveReadingProgress(percent) {
-        const textId = document.querySelector('.reading-area')?.getAttribute('data-text-id');
+    function saveReadingProgress(percent, finish = 0) {
+        const textId = document.querySelector('.reading-area')?.getAttribute('data-text-id') || 
+                       document.querySelector('#pages-container')?.getAttribute('data-text-id');
         if (!textId) return;
-        const body = 'text_id=' + encodeURIComponent(textId) + '&percent=' + encodeURIComponent(percent) + '&pages_read=' + encodeURIComponent(JSON.stringify(window.readPages || []));
-        fetch('lectura/ajax/ajax_progress_content.php', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body });
+        let body = 'text_id=' + encodeURIComponent(textId) + '&percent=' + encodeURIComponent(percent) + '&pages_read=' + encodeURIComponent(JSON.stringify(window.readPages || []));
+        if (finish) body += '&finish=1';
+        
+        fetch('lectura/ajax/ajax_progress_content.php', { 
+            method: 'POST', 
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, 
+            body 
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                console.log('Progreso guardado correctamente');
+            }
+        })
+        .catch(err => console.error('Error guardando progreso:', err));
     }
 
     function onPageReadByTTS(pageIdx) {
@@ -1027,7 +1046,7 @@ function initLector() {
             window.readPages.push(pageIdx);
             updateReadingProgressBar();
             const totalPages = parseInt(document.getElementById('pages-container')?.getAttribute('data-total-pages') || 1);
-            if (window.readPages.length === totalPages) saveReadingProgress(100);
+            if (window.readPages.length === totalPages) saveReadingProgress(100, 1);
             else {
                 const totalWords = parseInt(document.getElementById('pages-container')?.getAttribute('data-total-words') || 1);
                 let wordsRead = 0;

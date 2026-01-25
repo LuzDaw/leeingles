@@ -34,6 +34,7 @@ extract(get_index_page_data($conn));
   <link rel="stylesheet" href="css/landing-page.css">
   <link rel="stylesheet" href="css/index-page.css">
   <link rel="stylesheet" href="css/calendar-styles.css">
+  <link rel="stylesheet" href="css/dispositivo.css">
 
   <!-- Favicon -->
   <link rel="icon" href="img/aprender_ingles.gif" type="image/gif">

@@ -194,3 +194,125 @@ function handleTabAreaClick(event) {
         }
     }
 }
+
+// Toggle del menú móvil de pestañas
+(function() {
+    let closeMenuHandler = null;
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        const tabNav = document.querySelector('.tab-navigation.tab-nav-container');
+        if (tabNav) {
+            let menuToggle = null;
+            let buttonsContainer = null;
+
+            function setupMobileMenu() {
+                // Limpiar listener anterior si existe
+                if (closeMenuHandler) {
+                    document.removeEventListener('click', closeMenuHandler);
+                    closeMenuHandler = null;
+                }
+
+                // Limpiar elementos anteriores si existen
+                const existingToggle = tabNav.querySelector('.mobile-tab-menu-toggle');
+                const existingContainer = tabNav.querySelector('.tab-buttons-container');
+                
+                if (existingToggle) existingToggle.remove();
+                if (existingContainer) {
+                    // Si hay un contenedor existente, mover los botones de vuelta
+                    const buttonsInContainer = existingContainer.querySelectorAll('.tab-btn');
+                    buttonsInContainer.forEach(btn => {
+                        tabNav.appendChild(btn);
+                    });
+                    existingContainer.remove();
+                }
+
+                if (window.innerWidth <= 768) {
+                    // Guardar referencia a los botones originales
+                    const originalButtons = Array.from(tabNav.querySelectorAll('.tab-btn'));
+                    
+                    // Crear el botón hamburguesa
+                    menuToggle = document.createElement('button');
+                    menuToggle.className = 'mobile-tab-menu-toggle';
+                    menuToggle.innerHTML = '☰';
+                    menuToggle.setAttribute('aria-label', 'Abrir menú de pestañas');
+                    
+                    // Crear contenedor para los botones
+                    buttonsContainer = document.createElement('div');
+                    buttonsContainer.className = 'tab-buttons-container';
+                    
+                    // Mover todos los botones de pestañas al contenedor (no clonar, mover)
+                    originalButtons.forEach(btn => {
+                        // Omitir el botón de salir y el spacer
+                        if (!btn.classList.contains('exit-tab-btn') && !btn.classList.contains('flex-1')) {
+                            buttonsContainer.appendChild(btn);
+                        }
+                    });
+                    
+                    // Agregar el contenedor al tabNav
+                    tabNav.appendChild(buttonsContainer);
+                    
+                    // Agregar el botón toggle al inicio
+                    tabNav.insertBefore(menuToggle, tabNav.firstChild);
+                    
+                    // Evento para toggle del menú
+                    menuToggle.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        tabNav.classList.toggle('menu-open');
+                        menuToggle.innerHTML = tabNav.classList.contains('menu-open') ? '✕' : '☰';
+                        menuToggle.setAttribute('aria-label', tabNav.classList.contains('menu-open') ? 'Cerrar menú de pestañas' : 'Abrir menú de pestañas');
+                    });
+
+                    // Cerrar el menú al hacer clic en un botón de pestaña
+                    const containerButtons = buttonsContainer.querySelectorAll('.tab-btn');
+                    containerButtons.forEach(btn => {
+                        btn.addEventListener('click', function() {
+                            setTimeout(function() {
+                                tabNav.classList.remove('menu-open');
+                                if (menuToggle) {
+                                    menuToggle.innerHTML = '☰';
+                                    menuToggle.setAttribute('aria-label', 'Abrir menú de pestañas');
+                                }
+                            }, 100);
+                        });
+                    });
+
+                    // Cerrar el menú al hacer clic fuera
+                    closeMenuHandler = function(e) {
+                        if (tabNav.classList.contains('menu-open') && 
+                            !tabNav.contains(e.target) && 
+                            e.target !== menuToggle) {
+                            tabNav.classList.remove('menu-open');
+                            if (menuToggle) {
+                                menuToggle.innerHTML = '☰';
+                                menuToggle.setAttribute('aria-label', 'Abrir menú de pestañas');
+                            }
+                        }
+                    };
+                    document.addEventListener('click', closeMenuHandler);
+                } else {
+                    // En pantallas grandes, remover elementos móviles y restaurar botones
+                    tabNav.classList.remove('menu-open');
+                    if (buttonsContainer) {
+                        const buttonsInContainer = buttonsContainer.querySelectorAll('.tab-btn');
+                        buttonsInContainer.forEach(btn => {
+                            tabNav.appendChild(btn);
+                        });
+                        buttonsContainer.remove();
+                    }
+                }
+            }
+
+            // Configurar al cargar
+            setupMobileMenu();
+
+            // Manejar cambios de tamaño de ventana
+            let resizeTimeout;
+            window.addEventListener('resize', function() {
+                clearTimeout(resizeTimeout);
+                resizeTimeout = setTimeout(function() {
+                    setupMobileMenu();
+                }, 250);
+            });
+        }
+    });
+})();

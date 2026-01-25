@@ -91,6 +91,10 @@ if (isset($_GET['text_id']) || isset($_POST['text_id'])) {
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['percent']) && isset($_POST['pages_read'])) {
         $percent = intval($_POST['percent']);
         $pages_read = $_POST['pages_read'];
+        $finish = isset($_POST['finish']) ? intval($_POST['finish']) : 0;
+        
+        // Forzar updated_at para asegurar que se registra el cambio
+        $now = date('Y-m-d H:i:s');
         
         $stmt = $conn->prepare("SELECT percent, read_count FROM reading_progress WHERE user_id = ? AND text_id = ?");
         $stmt->bind_param('ii', $user_id, $text_id);
@@ -99,16 +103,20 @@ if (isset($_GET['text_id']) || isset($_POST['text_id'])) {
         
         if ($stmt->fetch()) {
             $stmt->close();
-            $new_read_count = ($percent >= 100 && $old_percent < 100) ? $old_read_count + 1 : $old_read_count;
-            $stmt2 = $conn->prepare("UPDATE reading_progress SET percent = ?, pages_read = ?, updated_at = NOW(), read_count = ? WHERE user_id = ? AND text_id = ?");
-            $stmt2->bind_param('isiii', $percent, $pages_read, $new_read_count, $user_id, $text_id);
+            $new_read_count = (int)$old_read_count;
+            if ($finish === 1 || ($percent >= 100 && (int)$old_percent < 100)) {
+                $new_read_count++;
+            }
+            
+            $stmt2 = $conn->prepare("UPDATE reading_progress SET percent = ?, pages_read = ?, updated_at = ?, read_count = ? WHERE user_id = ? AND text_id = ?");
+            $stmt2->bind_param('issiii', $percent, $pages_read, $now, $new_read_count, $user_id, $text_id);
             $stmt2->execute();
             $stmt2->close();
         } else {
             $stmt->close();
-            $init_read_count = ($percent >= 100) ? 1 : 0;
-            $stmt2 = $conn->prepare("INSERT INTO reading_progress (user_id, text_id, percent, pages_read, updated_at, read_count) VALUES (?, ?, ?, ?, NOW(), ?)");
-            $stmt2->bind_param('iiisi', $user_id, $text_id, $percent, $pages_read, $init_read_count);
+            $init_read_count = ($percent >= 100 || $finish === 1) ? 1 : 0;
+            $stmt2 = $conn->prepare("INSERT INTO reading_progress (user_id, text_id, percent, pages_read, updated_at, read_count) VALUES (?, ?, ?, ?, ?, ?)");
+            $stmt2->bind_param('iiissi', $user_id, $text_id, $percent, $pages_read, $now, $init_read_count);
             $stmt2->execute();
             $stmt2->close();
         }
