@@ -154,6 +154,11 @@
     color: #666;
 }
 
+/* Estado para ocultar traducciones */
+#pages-container.hide-translations .translation {
+    display: none !important;
+}
+
 #floating-btn {
     width: 60px;
     height: 60px;

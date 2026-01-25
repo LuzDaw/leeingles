@@ -13,34 +13,24 @@ window.addEventListener('beforeunload', function() {
 
 // Función para ocultar/mostrar traducciones simultáneas
 window.toggleTranslations = function() {
-    const translations = document.querySelectorAll('.translation');
+    const container = document.getElementById('pages-container');
     const button = document.getElementById('toggle-translations-btn');
     
-    if (translationsVisible) {
-        // Ocultar traducciones completamente - limpiar contenido y estilos
-        translations.forEach(t => {
-            // Limpiar completamente el elemento
-            t.textContent = '';
-            t.style.cssText = '';
-            t.className = 'translation';
-        });
+    if (window.translationsVisible) {
+        // Ocultar traducciones usando CSS
+        if (container) container.classList.add('hide-translations');
         button.textContent = '👁️ Lectura normal';
-        translationsVisible = false;
-        window.translationsVisible = translationsVisible;
+        window.translationsVisible = false;
     } else {
-        // Volver a modo lectura normal: NO restaurar en masa las traducciones
-        translations.forEach(t => {
-            // Limpiar cualquier estilo residual
-            t.style.cssText = '';
-            t.className = 'translation';
-            // Eliminar caché de contenido original para no volver a restaurar
-            if (t.dataset && t.dataset.originalContent) {
-                delete t.dataset.originalContent;
-            }
-        });
+        // Volver a modo lectura normal
+        if (container) container.classList.remove('hide-translations');
         button.textContent = '👁️ Ocultar Traducciones';
-        translationsVisible = true;
-        window.translationsVisible = translationsVisible;
+        window.translationsVisible = true;
+    }
+    
+    // Asegurar que la variable global sin window también se actualice si existe
+    if (typeof translationsVisible !== 'undefined') {
+        translationsVisible = window.translationsVisible;
     }
 }
 

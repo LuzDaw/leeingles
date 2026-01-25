@@ -376,16 +376,14 @@ function initLector() {
         paragraphs[index].classList.add('currently-reading');
 
         if (box) {
-            const showTranslations = (typeof window.translationsVisible === 'undefined') ? true : !!window.translationsVisible;
-            if (showTranslations && box.innerText.trim() === '') {
+            // Siempre intentar traducir si está vacío, la visibilidad se controla por CSS (.hide-translations)
+            if (box.innerText.trim() === '') {
                 const textId = document.querySelector('#pages-container')?.dataset?.textId;
                 if (textId) {
                     translateAndSaveParagraph(text, box, textId);
                 } else {
                     translateParagraphOnly(text, box);
                 }
-            } else if (!showTranslations) {
-                box.innerText = '';
             }
         }
 

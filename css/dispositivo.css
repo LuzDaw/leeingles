@@ -119,3 +119,29 @@
     font-size: 14px;
   }
 }
+
+/* Ocultar el bloque de "Palabras Guardadas" en dispositivos pequeños */
+@media (max-width: 768px) {
+  /* Ocultar el tercer stat-card (Palabras Guardadas) usando nth-child */
+  .stats-grid .stat-card:nth-child(3) {
+    display: none !important;
+  }
+  
+  /* Alternativa: ocultar usando selector de atributo onclick */
+  .stats-grid .stat-card[onclick*="saved-words"] {
+    display: none !important;
+  }
+  
+  /* Ajustar el grid para que siempre haya 2 bloques por fila */
+  .stats-grid {
+    justify-content: center;
+    gap: 15px;
+  }
+  
+  .stats-grid .stat-card {
+    flex: 0 0 calc(50% - 7.5px) !important;
+    width: calc(50% - 7.5px) !important;
+    max-width: calc(50% - 7.5px) !important;
+    min-width: 0 !important;
+  }
+}
