@@ -111,7 +111,7 @@ $result = $stmt->get_result();
 
 // Consulta textos públicos leídos (Ya optimizada con INNER JOIN)
 $public_read_stmt = $conn->prepare('
-    SELECT t.id, t.title, t.title_translation, t.content, t.user_id, t.is_public, t.created_at, rp.percent, rp.read_count
+    SELECT t.id, t.title, t.title_translation, t.content, t.user_id, t.is_public, t.created_at, rp.percent, rp.read_count, rp.updated_at
     FROM texts t
     INNER JOIN reading_progress rp ON rp.text_id = t.id
     WHERE rp.user_id = ? AND t.is_public = 1 AND t.user_id != ? AND (rp.percent > 0 OR rp.read_count > 0)
@@ -198,15 +198,17 @@ $public_read_count = count($public_read_rows);
                 $progress = 0;
                 $is_read = false;
                 $read_count = 0;
+                $last_read_date = null;
                 
-                $stmt2 = $conn->prepare("SELECT percent, read_count FROM reading_progress WHERE user_id = ? AND text_id = ?");
+                $stmt2 = $conn->prepare("SELECT percent, read_count, updated_at FROM reading_progress WHERE user_id = ? AND text_id = ?");
                 $stmt2->bind_param('ii', $user_id, $row['id']);
                 $stmt2->execute();
-                $stmt2->bind_result($percent, $rc);
+                $stmt2->bind_result($percent, $rc, $updated_at);
                 if ($stmt2->fetch()) {
                     $progress = intval($percent);
                     $is_read = ($progress >= 100);
                     $read_count = intval($rc);
+                    $last_read_date = $updated_at;
                 }
                 $stmt2->close();
                 
@@ -226,22 +228,25 @@ $public_read_count = count($public_read_rows);
                     </div>
 
                     <div class="text-meta-container">
-                        <div class="meta-col meta-words"><?= $num_words ?> palabras</div>
-                        <div class="meta-col meta-status">
-                            <?php if ($is_read || $read_count > 0): ?>
-                                <span class="reading-status-label">Leído <?= $read_count ?> <?= $read_count == 1 ? 'vez' : 'veces' ?></span>
-                            <?php elseif ($progress > 0): ?>
-                                <span class="progress-percent"><?= $progress ?>%</span>
-                            <?php else: ?>
-                                <span style="color: #cbd5e1;">-</span>
-                            <?php endif; ?>
-                        </div>
-                        <div class="meta-col meta-date"><?= $formatted_date ?></div>
-                        <div class="meta-col meta-public">
-                            <?php if ($row['is_public']): ?>
-                                <span class="status-public-tag">Público</span>
-                            <?php endif; ?>
-                        </div>
+                    <div class="meta-col meta-words"><?= $num_words ?> palabras</div>
+                    <div class="meta-col meta-status">
+                    <?php if ($read_count > 0): ?>
+                    <div style="display: flex; flex-direction: column; align-items: center;">
+                        <span class="reading-status-label">Leído <?= $read_count ?> <?= $read_count == 1 ? 'vez' : 'veces' ?></span>
+                        <?php if ($last_read_date): ?>
+                        <span style="font-size: 0.75em; color: #94a3b8; margin-top: 2px;"><?= date('d/m/Y', strtotime($last_read_date)) ?></span>
+                        <?php endif; ?>
+                    </div>
+                    <?php else: ?>
+                    <span style="color: #cbd5e1;">-</span>
+                    <?php endif; ?>
+                    </div>
+                    <div class="meta-col meta-date"><?= $formatted_date ?></div>
+                    <div class="meta-col meta-public">
+                        <?php if ($row['is_public']): ?>
+                            <span class="status-public-tag">Público</span>
+                    <?php endif; ?>
+                    </div>
                     </div>
                 </li>
             <?php } ?>
@@ -252,6 +257,7 @@ $public_read_count = count($public_read_rows);
                 $num_words = str_word_count(strip_tags($row['content']));
                 $percent = intval($row['percent']);
                 $read_count = intval($row['read_count']);
+                $last_read_date = isset($row['updated_at']) ? $row['updated_at'] : null;
                 $formatted_date = date('d/m/Y', strtotime($row['created_at']));
                 ?>
                 <li class="text-item">
@@ -268,20 +274,23 @@ $public_read_count = count($public_read_rows);
                     </div>
 
                     <div class="text-meta-container">
-                        <div class="meta-col meta-words"><?= $num_words ?> palabras</div>
-                        <div class="meta-col meta-status">
-                            <?php if ($percent >= 100 || $read_count > 0): ?>
-                                <span class="reading-status-label">Leído <?= $read_count ?> <?= $read_count == 1 ? 'vez' : 'veces' ?></span>
-                            <?php elseif ($percent > 0): ?>
-                                <span class="progress-percent"><?= $percent ?>%</span>
-                            <?php else: ?>
-                                <span style="color: #cbd5e1;">-</span>
-                            <?php endif; ?>
-                        </div>
-                        <div class="meta-col meta-date"><?= $formatted_date ?></div>
-                        <div class="meta-col meta-public">
-                            <span class="status-public-tag">Público</span>
-                        </div>
+                    <div class="meta-col meta-words"><?= $num_words ?> palabras</div>
+                    <div class="meta-col meta-status">
+                    <?php if ($read_count > 0): ?>
+                    <div style="display: flex; flex-direction: column; align-items: center;">
+                        <span class="reading-status-label">Leído <?= $read_count ?> <?= $read_count == 1 ? 'vez' : 'veces' ?></span>
+                        <?php if ($last_read_date): ?>
+                        <span style="font-size: 0.75em; color: #94a3b8; margin-top: 2px;"><?= date('d/m/Y', strtotime($last_read_date)) ?></span>
+                        <?php endif; ?>
+                    </div>
+                    <?php else: ?>
+                    <span style="color: #cbd5e1;">-</span>
+                    <?php endif; ?>
+                    </div>
+                    <div class="meta-col meta-date"><?= $formatted_date ?></div>
+                    <div class="meta-col meta-public">
+                        <span class="status-public-tag">Público</span>
+                    </div>
                     </div>
                 </li>
             <?php } ?>
