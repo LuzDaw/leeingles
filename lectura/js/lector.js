@@ -262,6 +262,14 @@ function initLector() {
     }, 100);
 
     window.doubleReadingMode = false;
+    window.readCurrentParagraphTwice = function() {
+        window.doubleReadingMode = !window.doubleReadingMode;
+        const btn = document.querySelector('.submenu-button.double-read');
+        if (btn) {
+            btn.innerHTML = window.doubleReadingMode ? '🔊 Repetición: ON' : '🔊 Leer dos veces';
+            btn.classList.toggle('active', window.doubleReadingMode);
+        }
+    };
     let doubleReadCurrentIndex = null;
     let isReadingInProgress = false;
     let onEndHandled = false;
