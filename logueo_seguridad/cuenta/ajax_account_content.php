@@ -439,6 +439,9 @@ $stmt->close();
 </script>
 
 <div class="tab-content-wrapper account-dashboard">
+    <div class="tab-header-container">
+        <h3>👤 Mi Cuenta</h3>
+    </div>
     <?php 
     if (isset($_GET['payment_success'])) {
         include '../../dePago/payment_success_modal.php';

@@ -130,6 +130,9 @@ if (isset($_GET['text_id']) || isset($_POST['text_id'])) {
 <link rel="stylesheet" href="css/progress-styles.css">
 
 <div class="tab-content-wrapper">
+    <div class="tab-header-container">
+        <h3>📊 Mi Progreso</h3>
+    </div>
     <!-- Grid de Estadísticas Principales -->
     <div class="stats-grid">
         <div class="stat-card clickable-stat" onclick="switchToTab('texts')" title="Ver mis textos">

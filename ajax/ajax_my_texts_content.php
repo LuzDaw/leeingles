@@ -193,6 +193,9 @@ $total_found = count($own_texts) + count($public_read_rows);
 </style>
 
 <div class="tab-content-wrapper">
+    <div class="tab-header-container">
+        <h3>📋 Mi Biblioteca</h3>
+    </div>
     <div id="messages-container"></div>
 
     <div class="bulk-actions-container">

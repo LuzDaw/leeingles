@@ -98,6 +98,9 @@ foreach ($words as $word) {
 ?>
 
 <div class="tab-content-wrapper">
+    <div class="tab-header-container">
+        <h3>📚 Mis Palabras</h3>
+    </div>
     <div class="bulk-actions-container">
         <div style="color: #64748b; font-weight: 500;">
             <span style="color: #3b82f6; font-weight: 600;">

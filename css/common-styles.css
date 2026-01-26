@@ -395,6 +395,18 @@
 
 /* === HEADER COMÚN === */
 
+.tab-header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 22px;
+    margin-top: -2px;
+}
+
+.tab-header-container h3 {
+    margin: 0;
+}
+
 /* Controles de header */
 .header-controls {
     display: flex;

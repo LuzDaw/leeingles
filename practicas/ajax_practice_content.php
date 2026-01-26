@@ -17,7 +17,7 @@ $conn->close();
 
 
 <div id="practice-container">
-    <div style="display: flex; justify-content: space-between; align-items: center; padding:22px; margin-top: -2px;">
+    <div class="tab-header-container">
         <h3>🎯 Practicar Vocabulario</h3>
     </div>
     <div id="practice-content">
