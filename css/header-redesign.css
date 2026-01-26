@@ -121,54 +121,7 @@ margin-bottom: 0.2rem;
     padding: 0.5rem;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-    .nav-container {
-        padding: 0 1rem;
-    }
-    
-    .nav-right {
-        position: absolute;
-        top: 100%;
-        left: 0;
-        right: 0;
-        background: white;
-        flex-direction: column;
-        padding: 1rem;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        transform: translateY(-100%);
-        opacity: 0;
-        visibility: hidden;
-        transition: all 0.3s ease;
-        z-index: 999;
-    }
-    
-    .nav-right.active {
-        transform: translateY(0);
-        opacity: 1;
-        visibility: visible;
-    }
-    
-    .mobile-menu-toggle {
-        display: block;
-    }
-    
-    
-    
-    .user-dropdown {
-        width: 100%;
-    }
-    
-    .user-dropdown-menu {
-        position: static;
-        opacity: 1;
-        visibility: visible;
-        transform: none;
-        margin-top: 0.5rem;
-        box-shadow: none;
-        border: 1px solid #e5e7eb;
-    }
-}
+
 
 @media (max-width: 480px) {
     .brand-text h1 {
@@ -183,4 +136,5 @@ margin-bottom: 0.2rem;
     .slogan {
         font-size: 0.7rem;
     }
+   
 }

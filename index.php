@@ -70,7 +70,7 @@ extract(get_index_page_data($conn));
 
 
       <div class="nav-right" id="nav-menu">
-        <a href="/" class="nav-btn">🏠 Inicio</a>
+        <a href="/" id="home-link" class="nav-btn">🏠 Inicio</a>
         <?php if (isset($_SESSION['user_id'])): ?>
           <div class="user-dropdown">
             <button class="user-dropdown-btn">
