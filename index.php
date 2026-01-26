@@ -369,7 +369,7 @@ extract(get_index_page_data($conn));
                 </button>
               <?php endif; ?>
               <div class="flex-1"></div>
-              <button onclick="exitTabs()" class="exit-tab-btn" title="Salir de las pestañas">☰</button>
+              <!-- <button onclick="exitTabs()" class="exit-tab-btn" title="Salir de las pestañas">☰</button> -->
             </div>
 
             <!-- Contenedor dinámico para pestañas -->
