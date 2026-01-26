@@ -3,12 +3,14 @@
 /* Ocultar botones de pestañas en dispositivos pequeños por defecto */
 @media (max-width: 768px) {
   .tab-navigation.tab-nav-container {
-    position: relative;
-    padding: 11px 19px 11px 19px;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    min-height: 50px;
+            background: #ffffff00;
+        position: relative;
+        padding: 0px 29px 0px 0px;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        min-height: 50px;
+        width: 100%;
   }
 
   /* Botón hamburguesa para abrir/cerrar el menú (creado por JavaScript) */
@@ -26,6 +28,7 @@
     align-items: center;
     justify-content: center;
     font-size: 1rem;
+    width: 10%;
   }
 
   .tab-navigation.tab-nav-container .mobile-tab-menu-toggle:hover {
@@ -135,8 +138,11 @@
   /* Ajustar el grid para que siempre haya 2 bloques por fila */
   .stats-grid {
     justify-content: center;
-    gap: 15px;
-  }
+    gap: 12px 15px !important;
+  
+}
+  
+
   
   .stats-grid .stat-card {
     /* width: calc(50% - 7.5px) !important; */
