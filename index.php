@@ -345,11 +345,11 @@ extract(get_index_page_data($conn));
             <div class="tab-navigation tab-nav-container">
 
             
-              <button onclick="loadTabContent('progress')" class="tab-btn active" data-tab="progress">
+              <button onclick="loadTabContent('progress')" class="tab-btn" data-tab="progress">
                 📊 Progreso
               </button>
-              <button onclick="loadTabContent('my-texts')" class="tab-btn" data-tab="my-texts">
-                📋 Textos
+              <button onclick="loadTabContent('my-texts')" class="tab-btn active" data-tab="my-texts">
+                📋 Biblioteca
               </button>
               <button onclick="loadTabContent('saved-words')" class="tab-btn" data-tab="saved-words">
                 📚 Palabras

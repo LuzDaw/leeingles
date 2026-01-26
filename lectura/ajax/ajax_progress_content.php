@@ -195,6 +195,12 @@ if (isset($_GET['text_id']) || isset($_POST['text_id'])) {
 
             <!-- Estadísticas de Práctica por Modo -->
             <div class="activity-section">
+            <?php if ($total_words == 0 && $total_texts == 0): ?>
+                <div style="text-align: center; padding: 20px; margin-bottom: 10px;">
+                    <p style="margin-bottom: 15px; color: #6b7280; font-size: 0.95em;">Sube tu primer texto para comenzar</p>
+                    <button onclick="loadTabContent('upload')" class="btn btn-primary">⬆ Subir Primer Texto</button>
+                </div>
+            <?php endif; ?>
             <h3>🎯 Progreso de Práctica por Modo</h3>
             <div class="practice-modes" id="practice-modes-container">
             <div style="text-align: center; padding: 20px; color: #6b7280;">
@@ -255,12 +261,7 @@ if (isset($_GET['text_id']) || isset($_POST['text_id'])) {
                 
                 if (!hasStats) {
                     <?php if ($total_words == 0 && $total_texts == 0): ?>
-                    html = `
-                        <div style="text-align: center; padding: 40px; color: #6b7280;">
-                            <p style="margin-bottom: 20px; font-size: 0.95em;">Sube tu primer texto para comenzar</p>
-                            <button onclick="loadTabContent('upload')" class="btn btn-primary">⬆ Subir Primer Texto</button>
-                        </div>
-                    `;
+                    html = '';
                     <?php else: ?>
                     html = `
                         <div style="text-align: center; padding: 40px; color: #6b7280;">

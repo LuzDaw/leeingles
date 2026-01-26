@@ -239,5 +239,4 @@ $total_found = count($own_texts) + count($public_read_rows);
     </form>
 </div>
 
-<link rel="stylesheet" href="css/tab-system.css">
 <?php $conn->close(); ?>
