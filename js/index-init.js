@@ -86,7 +86,7 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             const isViewingText = window.location.search.includes('text_id=') || window.location.search.includes('public_text_id=');
             if (!isViewingText) {
-                if (typeof window.loadTabContent === 'function') window.loadTabContent('progress');
+                if (typeof window.loadTabContent === 'function') window.loadTabContent('my-texts');
             }
         }
     }
