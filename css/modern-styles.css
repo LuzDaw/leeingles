@@ -230,14 +230,7 @@
         /* -webkit-font-smoothing: antialiased; */
         -moz-osx-font-smoothing: grayscale;
     }
-    .paragraph {
-        border-radius: 5px;
-        font-size: 1rem;
-        background: linear-gradient(to right, #ff6a00, #045d7c);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: #bc8f8f00;
-    text-shadow: 2px 2px 4px rgb(255 255 255 / 34%);
-}
+    
     }
 
 
