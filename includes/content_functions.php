@@ -279,9 +279,10 @@ function render_text_clickable($text, $title = '', $title_translation = '')
 
   // Controles de paginación (JS los activará y actualizará el total de páginas)
   $output .= '<div id="pagination-controls" style="display: none;">
-          <button id="prev-page" class="pagination-btn" disabled>◀ Anterior</button>
+          <button id="prev-page" class="pagination-btn" disabled>◀</button>
+          <button onclick="window.toggleFloatingPlayPause()" id="floating-btn" class="play-btn" title="Iniciar lectura">▶️</button>
           <span class="page-info"><span id="page-number">1</span> / <span id="total-pages">1</span></span>
-          <button id="next-page" class="pagination-btn">Siguiente ▶</button>
+          <button id="next-page" class="pagination-btn">▶</button>
   </div>';
 
   $output .= '</div>';
@@ -310,11 +311,6 @@ function render_text_clickable($text, $title = '', $title_translation = '')
             <input type="range" id="rate" min="0.5" max="0.9" value="0.9" step="0.1" />
             <span id="rate-value">100%</span>
         </div>
-    </div>';
-
-  // Nuevo contenedor para el botón de play flotante, fuera de floating-menu
-  $output .= '<div id="floating-play" style="display: none;">
-        <button onclick="window.toggleFloatingPlayPause()" id="floating-btn" title="Iniciar lectura">▶️</button>
     </div>';
 
   return $output;

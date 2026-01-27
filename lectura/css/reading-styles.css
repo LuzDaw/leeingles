@@ -144,27 +144,37 @@
 }
 
 #pagination-controls {
-    margin-top: auto; /* Empujar al fondo si hay poco texto */
-    padding: 20px 0;
+    margin-top: auto;
+    padding: 10px 0;
     text-align: center;
     border-top: 1px solid #f1f5f9;
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 20px;
-    background: white; /* Asegurar visibilidad */
+    gap: 15px;
+    background: white;
     width: 100%;
 }
 
-.pagination-btn {
+.pagination-btn, .play-btn {
     background: #457B9D;
     color: white;
     border: none;
-    padding: 10px 20px;
-    border-radius: 8px;
+    padding: 8px 16px;
+    border-radius: 6px;
     cursor: pointer;
     font-weight: 600;
     transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    height: 40px;
+}
+
+.play-btn {
+    background: #1D3557;
+    font-size: 1.2rem;
 }
 
 .pagination-btn:disabled {
