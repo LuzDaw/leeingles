@@ -1,13 +1,56 @@
 /* Paleta de colores unificada - Naranja, Azul, Negro */
-
-/* Variables actualizadas */
+/* === VARIABLES CSS GLOBALES === */
 :root {
-    --success-color: #457B9D;  /* Azul medio */
-    --success-light: #A8DADC;  /* Azul claro */
-    --success-dark: #1D3557;   /* Azul oscuro */
-    --accent-color: #ff8a00;   /* Naranja principal */
-    --accent-hover: #e67e00;   /* Naranja hover */
+    /* Colores principales - Paleta unificada: Naranja, Azul, Negro */
+   /* === SISTEMA DE COLOR UNIFICADO === */
+--primary-color: #1E3A8A;        /* Azul principal */
+--secondary-color: #3B82F6;      /* Azul activo */
+--accent-color: #ff8a00;         /* Naranja CTA */
+--accent-hover: #e67e00;
+
+--background-color: #F5F7FA;
+--text-color: #111827;
+--text-muted: #6B7280;
+
+/* Estados */
+--success-color: #1D3557;
+--success-light: #E8F1F5;
+--success-dark: #0F243E;
+
+--warning-color: #ff8a00;
+--error-color: #DC2626;          /* ROJO real */
+
+    
+    /* Espaciado */
+    --spacing-xs: 4px;
+    --spacing-sm: 8px;
+    --spacing-md: 16px;
+    --spacing-lg: 24px;
+    --spacing-xl: 32px;
+    
+    /* Tamaños de fuente */
+    --font-xs: 12px;
+    --font-sm: 14px;
+    --font-md: 16px;
+    --font-lg: 18px;
+    --font-xl: 24px;
+    
+    /* Layout */
+    --max-width: 1700px;
+
+    /* Bordes */
+ 
+    /* Sombras */
+ 
+  --shadow-sm: 0 1px 2px 0 rgba(27, 38, 59, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(27, 38, 59, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(27, 38, 59, 0.1);
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
 }
+
 
 /* Botones y elementos de éxito (Estilos base en common-styles.css) */
 .correct,
@@ -59,23 +102,6 @@ button[style*="#457B9D"] {
     color: var(--success-dark) !important;
 }
 
-/* div[style*="#ff8a0087"],
-span[style*="#ff8a0087"],
-button[style*="#ff8a0087"] {
-    background: var(--success-color) !important;
-    border-color: var(--success-dark) !important;
-} */
 
-/* div[style*="#eaa827"],
-span[style*="#eaa827"],
-button[style*="#eaa827"] {
-    background: var(--accent-color) !important;
-    border-color: var(--accent-hover) !important;
-} */
 
-/* Para elementos con background verde */
-div[style*="background: #d1fae5"] {
-    background: var(--success-light) !important;
-    color: var(--success-dark) !important;
-    border-color: var(--success-color) !important;
-}
+

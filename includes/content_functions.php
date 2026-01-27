@@ -329,7 +329,7 @@ function render_text_clickable($text, $title = '', $title_translation = '')
     </div>';
 
   // Nuevo contenedor para el botón de play flotante, fuera de floating-menu
-  $output .= '<div id="floating-play" style="display: block;">
+  $output .= '<div id="floating-play" style="display: none;">
         <button onclick="window.toggleFloatingPlayPause()" id="floating-btn" title="Iniciar lectura">▶️</button>
     </div>';
 

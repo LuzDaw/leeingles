@@ -4,7 +4,7 @@
  * Sistema de plantillas de email reutilizables para LeeIngles
  */
 
-require_once __DIR__ . '/../email_handler.php';
+require_once __DIR__ . '/../actions/email_handler.php';
 
 /**
  * Envía un email con un diseño profesional y personalizable.

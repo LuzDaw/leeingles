@@ -2,7 +2,7 @@
 // logueo_seguridad/utilidades_email.php
 // Utilidades para envío de emails
 
-require_once __DIR__ . '/../actions/email_handler.php';
+require_once __DIR__ . '/../recordatorio/email_templates.php';
 
 // Determinar la URL base (se usa para generar links en los emails)
 $base_url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://" . $_SERVER['HTTP_HOST'];
@@ -16,35 +16,12 @@ function enviarEmailVerificacion($destinatarioEmail, $destinatarioNombre, $token
     
     $verificationLink = $base_url . "/logueo_seguridad/verificar_email.php?token=" . $token;
     
-    $subject = "Verifica tu cuenta en Traductor";
-    $body = "
-<html>
-<head>
-    <meta charset='UTF-8'>
-</head>
-<body style='font-family: Arial, sans-serif; background-color: #f5f5f5; padding: 20px;'>
-    <div style='background-color: #ffffff; padding: 20px; border-radius: 8px; max-width: 600px; margin: 0 auto;'>
-        <div style='text-align: center; margin-bottom: 20px;'>
-            <img src='cid:logo_idoneoweb' alt='Idoneoweb Logo' style='max-width: 50px;'> 
-        </div>
-        <h2 style='color: #333;'>Bienvenido a Traductor</h2>
-        <p>Hola $destinatarioNombre,</p>
-        <p>Gracias por registrarte. Por favor, haz clic en el siguiente enlace para activar tu cuenta:</p>
-        <p>
-            <a href='$verificationLink' style='background:#3B82F6; color:white; padding:10px 20px; text-decoration:none; border-radius:5px; display:inline-block;'>
-                Activar mi cuenta
-            </a>
-        </p>
-        <p>O copia y pega este enlace:</p>
-        <p style='word-break: break-all; color: #666;'>$verificationLink</p>
-        <p style='color: #999; font-size: 12px;'>Este enlace expirará en 24 horas.</p>
-        <p style='color: #999; font-size: 12px;'>Si no te registraste, ignora este correo.</p>
-    </div>
-</body>
-</html>
-    ";
+    $subject = "Verifica tu cuenta en LeeIngles";
+    $titulo = "¡Bienvenido a LeeIngles!";
+    $mensaje = "Gracias por registrarte. Estamos encantados de tenerte con nosotros. Para empezar a mejorar tu inglés, por favor activa tu cuenta haciendo clic en el botón de abajo.<br><br>
+                <small style='color: #94a3b8;'>Este enlace expirará en 24 horas. Si no te registraste, puedes ignorar este correo.</small>";
     
-    return enviarEmailConPHPMailer($destinatarioEmail, $destinatarioNombre, $subject, $body);
+    return enviarEmailPlantillaBase($destinatarioEmail, $destinatarioNombre, $subject, $titulo, $mensaje, "Activar mi cuenta", $verificationLink);
 }
 
 function enviarEmailRestablecerContrasena($destinatarioEmail, $destinatarioNombre, $token) {
@@ -52,33 +29,10 @@ function enviarEmailRestablecerContrasena($destinatarioEmail, $destinatarioNombr
     
     $resetLink = $base_url . "/?token=" . $token;
     
-    $subject = "Restablece tu contraseña en Traductor";
-    $body = "
-<html>
-<head>
-    <meta charset='UTF-8'>
-</head>
-<body style='font-family: Arial, sans-serif; background-color: #f5f5f5; padding: 20px;'>
-    <div style='background-color: #ffffff; padding: 20px; border-radius: 8px; max-width: 600px; margin: 0 auto;'>
-        <div style='text-align: center; margin-bottom: 20px;'>
-            <img src='cid:logo_idoneoweb' alt='Idoneoweb Logo' style='max-width: 150px;'>
-        </div>
-        <h2 style='color: #333;'>Restablecer Contraseña</h2>
-        <p>Hola $destinatarioNombre,</p>
-        <p>Has solicitado restablecer tu contraseña. Por favor, haz clic en el siguiente enlace para establecer una nueva contraseña:</p>
-        <p>
-            <a href='$resetLink' style='background:#3B82F6; color:white; padding:10px 20px; text-decoration:none; border-radius:5px; display:inline-block;'>
-                Restablecer mi contraseña
-            </a>
-        </p>
-        <p>O copia y pega este enlace:</p>
-        <p style='word-break: break-all; color: #666;'>$resetLink</p>
-        <p style='color: #999; font-size: 12px;'>Este enlace expirará en 1 hora.</p>
-        <p style='color: #999; font-size: 12px;'>Si no solicitaste esto, ignora este correo.</p>
-    </div>
-</body>
-</html>
-    ";
+    $subject = "Restablece tu contraseña en LeeIngles";
+    $titulo = "Restablecer Contraseña";
+    $mensaje = "Has solicitado restablecer tu contraseña. Haz clic en el botón de abajo para establecer una nueva contraseña y volver a disfrutar de LeeIngles.<br><br>
+                <small style='color: #94a3b8;'>Este enlace expirará en 1 hora. Si no solicitaste esto, puedes ignorar este correo con seguridad.</small>";
     
-    return enviarEmailConPHPMailer($destinatarioEmail, $destinatarioNombre, $subject, $body);
+    return enviarEmailPlantillaBase($destinatarioEmail, $destinatarioNombre, $subject, $titulo, $mensaje, "Restablecer mi contraseña", $resetLink);
 }

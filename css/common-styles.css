@@ -12,53 +12,7 @@
     box-sizing: border-box;
 }
 
-/* === VARIABLES CSS GLOBALES === */
-:root {
-    /* Colores principales - Paleta unificada: Naranja, Azul, Negro */
-    --primary-color: #60A5FA;       /* Azul oscuro */
-    --secondary-color: #3B82F6;     /* Azul medio */
-    --accent-color: #ff8a00;        /* Naranja principal */
-    --accent-hover: #e67e00;        /* Naranja hover */
-    --background-color: #F5F7FA;    /* Gris muy claro */
-    --text-color: #1f1c1c;          /* Negro */
-    --text-muted: #666666;          /* Gris medio */
-    --success-color: #457B9D;       /* Azul para éxito */
-    --warning-color: #ff8a00;       /* Naranja para advertencias */
-    --error-color: #1D3557;         /* Azul oscuro para errores */
-    
-    /* Colores de tema - Reemplazando lila/morado por azul/naranja */
-    --theme-success: #457B9D;
-    --theme-success-light: #A8DADC;
-    --theme-success-dark: #1D3557;
-    --theme-background: #F0F4F8;
-    
-    /* Espaciado */
-    --spacing-xs: 4px;
-    --spacing-sm: 8px;
-    --spacing-md: 16px;
-    --spacing-lg: 24px;
-    --spacing-xl: 32px;
-    
-    /* Tamaños de fuente */
-    --font-xs: 12px;
-    --font-sm: 14px;
-    --font-md: 16px;
-    --font-lg: 18px;
-    --font-xl: 24px;
-    
-    /* Layout */
-    --max-width: 1700px;
 
-    /* Bordes */
-    --border-radius-sm: 4px;
-    --border-radius-md: 8px;
-    --border-radius-lg: 12px;
-    
-    /* Sombras */
-    --shadow-sm: 0 2px 4px rgba(0,0,0,0.1);
-    --shadow-md: 0 4px 12px rgba(0,0,0,0.2);
-    --shadow-lg: 0 10px 30px rgba(0,0,0,0.3);
-}
 
 /* === ELEMENTOS DE FORMULARIO COMUNES === */
 
@@ -132,9 +86,9 @@
 .success-message,
 .message.success,
 .msg-success {
-    color: var(--theme-success-dark);
-    background: var(--theme-background);
-    border: 1px solid var(--theme-success-light);
+    color: var(--success-dark);
+    background: var(--success-light);
+    border: 1px solid var(--success-color);
 }
 
 /* === ELEMENTOS CLICKEABLES === */
@@ -149,9 +103,8 @@
 }
 
 .clickable-word:hover {
-    background: rgb(255 157 0 / 75%);
-    color: #ffffffd9;
-    transform: translateY(-1px);
+    background: var(--success-light);
+    color: var(--success-dark);
 }
 
 .clickable-word:focus {
@@ -611,7 +564,7 @@
 
 /* Botón de éxito (Legacy support) */
 .btn-success {
-    background: var(--accent-color);
+    background: var(--success-color);
     color: white;
     border: none;
     padding: var(--spacing-sm) var(--spacing-md);
@@ -622,7 +575,7 @@
 }
 
 .btn-success:hover {
-    background: var(--accent-hover);
+    background: var(--success-dark);
     transform: translateY(-1px);
     box-shadow: var(--shadow-sm);
 }

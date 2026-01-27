@@ -4,32 +4,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 
-:root {
-  --primary-color: #457B9D;      /* Azul medio */
-  --primary-light: #60A5FA;      /* Azul claro */
-  --primary-dark: #1D3557;       /* Azul oscuro */
-  --secondary-color: #3B82F6;    /* Azul claro */
-  --accent-color: #ff8a00;       /* Naranja principal */
-  --accent-hover: #e67e00;       /* Naranja hover */
-  --bg-primary: #FFFFFF;         /* Blanco */
-  --bg-secondary: #F5F7FA;       /* Gris muy claro */
-  --bg-tertiary: #A8DADC;        /* Azul claro */
-  --text-primary: #1f1c1c;       /* Negro */
-  --text-secondary: #ff8a00;     /* Naranja */
-  --text-muted: #666666;         /* Gris medio */
-  --border-color: #60A5FA;       /* Azul claro */
-  --border-light: #F5F7FA;       /* Gris muy claro */
-  --success-color: #457B9D;      /* Azul medio */
-  --warning-color: #ff8a00;      /* Naranja */
-  --error-color: #1D3557;        /* Azul oscuro */
-  --shadow-sm: 0 1px 2px 0 rgba(27, 38, 59, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(27, 38, 59, 0.1);
-  --shadow-lg: 0 10px 15px -3px rgba(27, 38, 59, 0.1);
-  --radius-sm: 0.375rem;
-  --radius-md: 0.5rem;
-  --radius-lg: 0.75rem;
-  --radius-xl: 1rem;
-}
+
 
 /* Reset y base */
 
