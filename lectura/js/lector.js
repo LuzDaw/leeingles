@@ -142,7 +142,7 @@ function initLector() {
         
         // Altura disponible: Altura de la ventana menos encabezado y controles (aprox)
         const headerHeight = document.querySelector('.encabezado-lectura')?.offsetHeight || 60;
-        const controlsHeight = 100; // Espacio para controles de paginación
+        const controlsHeight = document.getElementById('pagination-controls')?.offsetHeight || 80;
         const availableHeight = window.innerHeight - headerHeight - controlsHeight - 40;
 
         let currentPageWrappers = [];
