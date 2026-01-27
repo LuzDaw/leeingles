@@ -1,6 +1,6 @@
 /* Calendario de Lectura */
 .calendar-container {
-    background: #f8f9fa;
+    background: var(--background-color);
     border-radius: 12px;
     padding: 20px;
     margin-bottom: 20px;
@@ -20,8 +20,8 @@
 }
 
 .calendar-nav-btn {
-    background: white;
-    border: 2px solid #e9ecef;
+    background: #ffffff;
+    border: 2px solid var(--success-light);
     border-radius: 50%;
     width: 40px;
     height: 40px;
@@ -31,20 +31,20 @@
     cursor: pointer;
     transition: all 0.3s ease;
     font-size: 18px;
-    color: #6c757d;
+    color: var(--text-muted);
 }
 
 .calendar-nav-btn:hover {
-    background: #4facfe;
-    border-color: #4facfe;
-    color: white;
+    background: var(--secondary-color);
+    border-color: var(--secondary-color);
+    color: #ffffff;
     transform: scale(1.1);
 }
 
 .current-month {
     font-size: 1.8em;
     font-weight: 600;
-    color: #2c3e50;
+    color: var(--text-color);
 }
 
 .calendar-grid {
@@ -58,7 +58,7 @@
     text-align: center;
     padding: 8px 2px;
     font-weight: 600;
-    color: #6c757d;
+    color: var(--text-muted);
     font-size: 0.8em;
     text-transform: uppercase;
 }
@@ -73,7 +73,7 @@
     cursor: pointer;
     transition: all 0.3s ease;
     position: relative;
-    background: white;
+    background: #ffffff;
     border: 1px solid transparent;
 }
 
@@ -85,18 +85,18 @@
 .day-number {
     font-size: 0.9em;
     font-weight: 600;
-    color: #2c3e50;
+    color: var(--text-color);
     margin-bottom: 2px;
 }
 
 .activity-time {
     font-size: 0.65em;
     font-weight: 500;
-    color: #457B9D;
+    color: var(--success-color);
 }
 
 .activity-time.zero {
-    color: #6c757d;
+    color: var(--text-muted);
     opacity: 0.5;
 }
 
@@ -113,34 +113,34 @@
 
 /* Estados de los días */
 .calendar-day.today {
-    border-color: #4facfe;
-    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-    color: white;
+    border-color: var(--secondary-color);
+    background: linear-gradient(135deg, var(--secondary-color) 0%, var(--primary-color) 100%);
+    color: #ffffff;
 }
 
 .calendar-day.today .day-number,
 .calendar-day.today .activity-time {
-    color: white;
+    color: #ffffff;
 }
 
 .calendar-day.has-activity {
-    background: linear-gradient(135deg, #457B9D 0%, #3b82f6 100%);
-    color: white;
+    background: linear-gradient(135deg, var(--success-color) 0%, var(--secondary-color) 100%);
+    color: #ffffff;
 }
 
 .calendar-day.has-activity .day-number,
 .calendar-day.has-activity .activity-time {
-    color: white;
+    color: #ffffff;
 }
 
 .calendar-day.other-month {
     opacity: 0.3;
-    background: #f8f9fa;
+    background: var(--background-color);
 }
 
 .calendar-day.other-month .day-number,
 .calendar-day.other-month .activity-time {
-    color: #6c757d;
+    color: var(--text-muted);
 }
 
 /* Estadísticas del mes */
@@ -152,7 +152,7 @@
 }
 
 .stat-card {
-    background: white;
+    background: #ffffff;
     border-radius: 10px;
     padding: 15px;
     text-align: center;
@@ -167,12 +167,12 @@
 .stat-number {
     font-size: 1.8em;
     font-weight: 700;
-    color: #4facfe;
+    color: var(--secondary-color);
     margin-bottom: 5px;
 }
 
 .stat-label {
-    color: #6c757d;
+    color: var(--text-muted);
     font-size: 0.75em;
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -246,13 +246,13 @@
 .reading-stats {
     margin-top: 20px;
     padding: 15px;
-    background: #f8f9fa;
+    background: var(--background-color);
     border-radius: 8px;
 }
 
 .reading-stats h3 {
     margin-bottom: 15px;
-    color: #2c3e50;
+    color: var(--text-color);
     font-size: 1.1em;
 }
 
@@ -268,13 +268,13 @@
 
 .stat-number {
     font-size: 1.2em;
-    color: #457B9D;
+    color: var(--success-color);
     margin-bottom: 5px;
 }
 
 .stat-label {
     font-size: 0.8em;
-    color: #6c757d;
+    color: var(--text-muted);
 }
 
 /* Responsive para el layout horizontal */

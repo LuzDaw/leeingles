@@ -49,7 +49,7 @@
     border: none; 
     font-size: 1.5rem; 
     cursor: pointer; 
-    color: #6b7280;
+    color: var(--text-muted);
     width: 2rem;
     height: 2rem;
     display: flex;
@@ -60,8 +60,8 @@
 }
 
 .auth-close:hover {
-    background: #f3f4f6;
-    color: #374151;
+    background: var(--background-color);
+    color: var(--text-color);
 }
 
 .auth-modal__brand {
@@ -90,7 +90,7 @@
     margin: 0 0 1.5rem 0;
     font-size: 1.5rem;
     font-weight: 700;
-    color: #1f2937;
+    color: var(--text-color);
     text-align: center;
 }
 
@@ -98,7 +98,7 @@
     display: flex; 
     gap: 0.25rem; 
     margin-bottom: 1rem; 
-    background: #f3f4f6;
+    background: var(--background-color);
     border-radius: 8px;
     padding: 0.2rem;
 }
@@ -111,17 +111,17 @@
     background: transparent; 
     border: none;
     font-weight: 500;
-    color: #6b7280;
+    color: var(--text-muted);
     transition: all 0.2s ease;
 }
 
 .auth-tab.active { 
     background: #fff; 
-    color: #3B82F6;
+    color: var(--secondary-color);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 .forgot-link{
-    color: #457b9d;
+    color: var(--success-color);
     font-size: 13px;
 }
 
@@ -134,7 +134,7 @@
     display: block;
     margin-bottom: 0.5rem;
     font-weight: 500;
-    color: #374151;
+    color: var(--text-color);
     font-size: 0.875rem;
 }
 
@@ -167,7 +167,7 @@
     border: none; 
     border-radius: 8px; 
     cursor: pointer; 
-    background: #3B82F6; 
+    background: var(--secondary-color); 
     color: #fff; 
     font-weight: 600; 
     font-size: 1rem;
@@ -176,19 +176,19 @@
 
 /* Estilo específico para el botón de crear cuenta */
 #registerView .auth-btn {
-    background: linear-gradient(135deg, #3B82F6 0%, #60A5FA 100%);
+    background: linear-gradient(135deg, var(--secondary-color) 0%, var(--primary-color) 100%);
 }
 
 #registerView .auth-btn:active,
 #registerView .auth-btn:hover {
     background: #fff !important;
-    color: #3B82F6;
-    border: 2px solid #3B82F6;
+    color: var(--secondary-color);
+    border: 2px solid var(--secondary-color);
     box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
 }
 
 .auth-btn:hover {
-    background: #2563eb;
+    background: var(--primary-color);
     transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
 }
@@ -214,12 +214,12 @@
 
 .auth-msg.success {
     color: var(--secondary-color);
-    background: #fdfbf0;
-    border: 1px solid #f7f0bb;
+    background: var(--success-light);
+    border: 1px solid var(--success-color);
 }
 
 .auth-msg.error {
-    color: #dc2626;
+    color: var(--error-color);
     background: #fef2f2;
     border: 1px solid #fecaca;
 }
@@ -240,7 +240,7 @@
     background: none;
     border: none;
     cursor: pointer;
-    color: #6b7280;
+    color: var(--text-muted);
     width: 2.5rem;
     height: 2.5rem;
     display: flex;
@@ -252,8 +252,8 @@
 }
 
 .toggle-password:hover {
-    background: #f3f4f6;
-    color: #374151;
+    background: var(--background-color);
+    color: var(--text-color);
 }
 
 /* Animaciones */
@@ -290,13 +290,13 @@
 
 #login-error.auth-msg.error, #register-error.auth-msg.error {
     background-color: #fef2f2;
-    color: #dc2626;
+    color: var(--error-color);
     border: 1px solid #fecaca;
 }
 
 #login-error.auth-msg.info {
     background-color: #eff6ff;
-    color: #2563eb;
+    color: var(--secondary-color);
     border: 1px solid #bfdbfe;
 }
 
@@ -322,10 +322,10 @@
 }
 
 .loading-redirect-content {
-    background: #F5F7FA;
-    color: #1D3557;
+    background: var(--background-color);
+    color: var(--success-color);
     padding: 25px 35px;
-    border: 1px solid #A8DADC;
+    border: 1px solid var(--success-light);
     border-radius: 8px;
     font-size: 16px;
     text-align: center;
@@ -336,8 +336,8 @@
 .loading-redirect-spinner {
     width: 24px;
     height: 24px;
-    border: 2px solid #A8DADC;
-    border-top: 2px solid #457B9D;
+    border: 2px solid var(--success-light);
+    border-top: 2px solid var(--success-color);
     border-radius: 50%;
     animation: spin 1s linear infinite;
     margin: 0 auto 15px auto;
@@ -345,13 +345,13 @@
 
 .loading-redirect-main-message {
     font-weight: 500;
-    color: #1D3557;
+    color: var(--success-color);
     margin-bottom: 8px;
 }
 
 .loading-redirect-sub-message {
     font-size: 14px;
-    color: #457B9D;
+    color: var(--success-color);
 }
 
 /* Animación de giro */

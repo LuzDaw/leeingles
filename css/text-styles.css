@@ -7,7 +7,7 @@
 
 .page-info {
     font-size: 16px;
-    color: #1D3557;
+    color: var(--primary-color);
     font-weight: 500;
 }
 

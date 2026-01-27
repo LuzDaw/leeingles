@@ -30,8 +30,10 @@ function enviarEmailPlantillaBase($destinatarioEmail, $destinatarioNombre, $subj
         
         <!-- Header / Logo -->
         <div style='text-align: center; margin-bottom: 25px;'>
-            <img src='cid:logo_idoneoweb' alt='LeeIngles Logo' style='max-width: 60px;'>
-            <h1 style='color: #1e40af; margin: 10px 0; font-size: 24px;'>LeeIngles</h1>
+            <div style='display: inline-block; vertical-align: middle;'>
+                <img src='cid:logo_idoneoweb' alt='LeeIngles Logo' width='60' style='display:inline-block; vertical-align: middle; max-width:100%; height:auto;'>
+                <span style='color: #1e40af; font-size: 28px; font-weight: bold; vertical-align: middle; margin-left: 10px; font-family: Arial, sans-serif;'>LeeInglés</span>
+            </div>
         </div>
 
         <!-- Contenido -->
@@ -45,7 +47,7 @@ function enviarEmailPlantillaBase($destinatarioEmail, $destinatarioNombre, $subj
 
         <!-- Botón de Acción -->
         <div style='text-align: center; margin: 35px 0;'>
-            <a href='$botonUrl' style='background-color: #2563eb; color: #ffffff; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; display: inline-block; font-size: 16px; box-shadow: 0 4px 6px rgba(37, 99, 235, 0.2);'>
+            <a href='$botonUrl' style='background-color: #2564eb8b; color: #ffffff; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; display: inline-block; font-size: 16px; box-shadow: 0 4px 6px rgba(37, 99, 235, 0.2);'>
                 $botonTexto
             </a>
         </div>

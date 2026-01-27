@@ -30,7 +30,7 @@ button, .submenu-button {
     min-height: 25px;
     min-width: 44px;
     touch-action: manipulation;
-    color: #f2790073;
+    color: var(--accent-color);
     border: none;
 }
 

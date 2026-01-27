@@ -45,7 +45,7 @@ label {
 }
 
 .progress-stat-card {
-  background: #f3f4f6;
+  background: var(--background-color);
   border-radius: 8px;
   padding: 18px 24px;
   flex: 1 1 180px;
@@ -59,11 +59,11 @@ label {
 
 .stat-number {
   font-size: 1.5rem;
-  color: #3b82f6;
+  color: var(--secondary-color);
 }
 
 .stat-label {
-  color: #64748b;
+  color: var(--text-muted);
   font-size: 1rem;
 }
 
@@ -93,15 +93,15 @@ label {
 .fs-1-1 { font-size: 1.1rem; }
 .fs-3rem { font-size: 3rem; }
 
-.color-gray { color: #6b7280; }
+.color-gray { color: var(--text-muted); }
 .color-dark-gray { color: #374151; }
-.color-blue { color: #4A90E2; }
-.color-orange { color: #eaa827; }
-.color-green { color: green; }
-.color-red { color: #dc3545; }
-.color-white { color: white; }
+.color-blue { color: var(--secondary-color); }
+.color-orange { color: var(--accent-color); }
+.color-green { color: #16a34a; }
+.color-red { color: var(--error-color); }
+.color-white { color: #ffffff; }
 
-.bg-white { background: white; }
+.bg-white { background: #ffffff; }
 .bg-modal { background: rgba(0,0,0,0.6); }
 .rounded-8 { border-radius: 8px; }
 .rounded-12 { border-radius: 12px; }
@@ -133,19 +133,19 @@ label {
 }
 
 .summary-text {
-    color: #6b7280;
+    color: var(--text-muted);
     font-weight: 500;
 }
 
 .summary-count {
-    color: #4A90E2;
+    color: var(--secondary-color);
     font-weight: 600;
 }
 
 .empty-state {
     text-align: center;
     padding: 40px;
-    color: #6b7280;
+    color: var(--text-muted);
 }
 
 .empty-state-icon {
@@ -159,7 +159,7 @@ label {
 }
 
 .hero-gradient-text {
-    background: linear-gradient(to right, #ff6a00, #045d7c);
+    background: linear-gradient(to right, var(--accent-color), var(--secondary-color));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     font-weight: bold;
@@ -176,8 +176,8 @@ label {
 }
 
 .admin-tab-btn {
-    background: #ff8a00;
-    color: white;
+    background: var(--accent-color);
+    color: #ffffff;
 }
 
 .footer-main {
@@ -190,7 +190,7 @@ label {
 .login-modal-container {
    width: 350px;
     padding: 12px;
-    color: #1d3557;
+    color: var(--success-color);
 }
 
 .login-input {
@@ -199,8 +199,8 @@ label {
 }
 
 .login-submit-btn {
-    background: linear-gradient(135deg, #3B82F6 0%, #60A5FA 100%);
-    color: white;
+    background: linear-gradient(135deg, var(--secondary-color) 0%, var(--primary-color) 100%);
+    color: #ffffff;
     border: none;
     cursor: pointer;
 }
@@ -230,8 +230,8 @@ label {
 }
 
 .info-box-blue {
-    background: #e6f3ff;
-    color: #0066cc;
+    background: var(--success-light);
+    color: var(--success-color);
     padding: 15px;
     border-radius: 8px;
     margin-bottom: 20px;
@@ -242,7 +242,7 @@ label {
     display: none;
     margin-top: 20px;
     font-size: 18px;
-    color: rgb(255, 170, 0);
+    color: var(--accent-color);
     font-weight: bold;
     text-align: center;
 }

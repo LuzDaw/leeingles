@@ -10,26 +10,26 @@
   margin-right: 10px;
 }
 .word-translation {
-  color: #457B9D;
+  color: var(--success-color);
   font-style: italic;
   margin-left: 10px;
 }
 .word-context {
-  background: #F0F4F8;
+  background: var(--background-color);
   padding: 8px 12px;
   border-radius: 4px;
   font-size: 14px;
-  color: #666666;
+  color: var(--text-muted);
   margin-top: 8px;
 }
 .word-date {
   font-size: 12px;
-  color: #666666;
+  color: var(--text-muted);
   margin-top: 8px;
 }
 .delete-btn {
-  background: #1D3557;
-  color: white;
+  background: var(--primary-color);
+  color: #ffffff;
   border: none;
   padding: 6px 12px;
   border-radius: 4px;
@@ -38,16 +38,16 @@
   transition: all 0.2s;
 }
 .delete-btn:hover {
-  background: #457B9D;
+  background: var(--success-color);
   transform: translateY(-1px);
 }
 /* Mensajes (Estilos base en common-styles.css) */
 /* Dropdowns (Estilos base en common-styles.css) */
 .dropdown-content {
-  border: 1px solid #A8DADC;
+  border: 1px solid var(--success-light);
   padding: 8px 0;
 }
 .dropdown-content button[style*='color: #ff8a00'] {
-  color: #1D3557;
+  color: var(--primary-color);
   font-weight: 600;
 }

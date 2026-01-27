@@ -33,12 +33,12 @@
 
 .stat-number {
     font-size: 32px;
-    color: #ff8a00;
+    color: var(--accent-color);
     margin-bottom: 4px;
 }
 
 .stat-label {
-    color: #666666;
+    color: var(--text-muted);
     font-size: 14px;
 }
 
@@ -102,7 +102,7 @@
 .day-bar-bg {
     width: 40px;
     height: 60px;
-    background: #F0F4F8;
+    background: var(--background-color);
     border-radius: 12px;
     position: relative;
     overflow: hidden;
@@ -113,14 +113,14 @@
 }
 
 .day-bar-h {
-    background: linear-gradient(90deg, #ff8a00, #e67e00);
+    background: linear-gradient(90deg, var(--accent-color), var(--accent-hover));
     height: 100%;
     border-radius: 12px 0 0 12px;
     transition: width 0.5s cubic-bezier(.4,2,.6,1);
 }
 
 .day-bar-empty {
-    background: #A8DADC;
+    background: var(--success-light);
     height: 100%;
     border-radius: 12px;
     transition: width 0.5s cubic-bezier(.4,2,.6,1);
@@ -128,7 +128,7 @@
 
 .day-count-h {
     font-size: 13px;
-    color: #ff8a00;
+    color: var(--accent-color);
     font-weight: bold;
     margin-bottom: 2px;
     letter-spacing: 0.5px;
@@ -136,7 +136,7 @@
 
 .day-label-h {
     font-size: 13px;
-    color: #666666;
+    color: var(--text-muted);
     margin-top: 2px;
     font-weight: 500;
     text-align: center;
@@ -149,10 +149,10 @@
 }
 
 .practice-mode-card {
-    border: 1px solid #A8DADC;
+    border: 1px solid var(--success-light);
     border-radius: 8px;
     padding: 16px;
-    background: #F5F7FA;
+    background: var(--background-color);
 }
 
 .mode-header {
@@ -169,7 +169,7 @@
 
 .mode-success {
     font-weight: bold;
-    color: #457B9D;
+    color: var(--success-color);
 }
 
 .mode-details {
@@ -177,19 +177,19 @@
     gap: 16px;
     margin-bottom: 12px;
     font-size: 14px;
-    color: #666666;
+    color: var(--text-muted);
 }
 
 .progress-bar {
     height: 6px;
-    background: #A8DADC;
+    background: var(--success-light);
     border-radius: 3px;
     overflow: hidden;
 }
 
 .progress-fill {
     height: 100%;
-    background: linear-gradient(135deg, #457B9D, #1D3557);
+    background: linear-gradient(135deg, var(--success-color), var(--primary-color));
     border-radius: 3px;
     transition: width 0.3s ease;
 }
