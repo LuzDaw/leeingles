@@ -15,11 +15,7 @@
 }
 
 .encabezado-lectura.hidden {
-    transform: translateY(-100%);
-    opacity: 0;
-    pointer-events: none;
-    position: absolute; /* Para que no ocupe espacio cuando está oculto */
-    width: 100%;
+    display: none; /* Eliminar del flujo completamente sin dejar huecos */
 }
 
 .btn-volver {
@@ -102,18 +98,14 @@
 }
 
 #pages-container {
-    padding: 8px;
-}
-
-/* #pages-container {
     padding: 20px 20px 60px 20px; /* Espacio para los controles fijos */
-    /* max-width: 800px;
+    max-width: 800px;
     margin: 0 auto;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
-} */ 
+}
 
 /* Estructura para paginación dinámica */
 .dynamic-pagination #dynamic-content-viewport {
@@ -147,12 +139,22 @@
 }
 
 #pagination-controls {
-  
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 800px;
+    padding: 10px 0;
+    text-align: center;
+    display: flex;
     justify-content: center;
     align-items: center;
     gap: 20px;
     background: none;
-  
+    z-index: 1000;
+    border: none;
+    box-shadow: none;
 }
 
 .pagination-btn, .play-btn {
