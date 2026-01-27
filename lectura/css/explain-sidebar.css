@@ -1,11 +1,7 @@
 /* Estilos para el sistema de Explain Sidebar */
 
 
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: var(--background-color);
-    overflow-x: hidden;
-}
+
 
 /* Botón flotante de explicar */
 .explain-floating-btn {

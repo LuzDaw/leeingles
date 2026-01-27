@@ -170,11 +170,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 openMenu();
             });
             
-            // Cerrar menú 2 segundos después de salir del contenedor
+            // Cerrar menú 500ms después de salir del contenedor
             toolsContainer.addEventListener('mouseleave', function() {
                 closeTimeout = setTimeout(() => {
                     closeMenu();
-                }, 2000);
+                }, 500);
             });
             
             // Mantener menú visible si hacemos hover sobre él
@@ -183,11 +183,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 openMenu();
             });
             
-            // Cerrar menú 2 segundos después de salir del submenú
+            // Cerrar menú 500ms después de salir del submenú
             submenu.addEventListener('mouseleave', function() {
                 closeTimeout = setTimeout(() => {
                     closeMenu();
-                }, 2000);
+                }, 500);
             });
         }
         
