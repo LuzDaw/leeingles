@@ -542,9 +542,9 @@ extract(get_index_page_data($conn));
     </div>
 
     <!-- Botón flotante de explicar -->
-    <button class="explain-floating-btn" id="explainFloatingBtn">
+    <!-- <button class="explain-floating-btn" id="explainFloatingBtn">
       <span class="explain-icon">?</span>
-    </button>
+    </button> -->
 
     <!-- Overlay para cerrar sidebar -->
     <div class="sidebar-overlay" id="sidebarOverlay"></div>

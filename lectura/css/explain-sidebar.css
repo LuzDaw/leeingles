@@ -35,11 +35,11 @@ body {
     height: 40px; /* Alto fijo para hacerlo cuadrado */
 }
 
-.explain-floating-btn.show {
+/* .explain-floating-btn.show {
     opacity: 1;
     visibility: visible;
     transform: translateY(0);
-}
+} */
 
 .explain-floating-btn:hover {
     transform: translateY(-2px);
