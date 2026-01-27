@@ -248,6 +248,28 @@ function render_text_clickable($text, $title = '', $title_translation = '')
                 <div class="barra-progreso"><span class="progreso" style="width:0%"></span></div>
                 <span class="porcentaje" aria-live="polite">0%</span>
             </div>
+            <div class="menu-herramientas-contenedor">
+                <button onclick="window.toggleFloatingMenu(); event.stopPropagation();" id="menu-btn" title="Herramientas de lectura">🛠️</button>
+                <div id="submenu">
+                    <div class="submenu-item">
+                        <button onclick="showAllTranslations()" id="show-all-translations-btn" class="submenu-button">📖 Mostrar todas las traducciones</button>
+                    </div>
+                    <div class="submenu-item">
+                        <button onclick="toggleTranslations()" id="toggle-translations-btn" class="submenu-button translations">👁️ Ocultar Traducciones</button>
+                    </div>
+                    <div class="submenu-item">
+                        <button onclick="printFullTextWithTranslations()" class="submenu-button print">🖨️ Imprimir</button>
+                    </div>
+                    <div class="submenu-item">
+                        <button onclick="readCurrentParagraphTwice(); event.stopPropagation();" class="submenu-button double-read">🔊 Leer dos veces</button>
+                    </div>
+                    <div class="speed-control">
+                        <label>Velocidad:</label>
+                        <input type="range" id="rate" min="0.5" max="0.9" value="0.9" step="0.1" />
+                        <span id="rate-value">100%</span>
+                    </div>
+                </div>
+            </div>
 </div>';
 
   // Contenedor principal con estructura fluida (sin páginas estáticas de PHP)
@@ -288,30 +310,6 @@ function render_text_clickable($text, $title = '', $title_translation = '')
   $output .= '</div>';
 
   // Sin área de traducción fija - usaremos tooltips
-
-  // Pestaña del menú - siempre visible
-  $output .= '<button onclick="window.toggleFloatingMenu(); event.stopPropagation();" id="menu-btn">☰</button>';
-  
-  // Menú desplegable - siempre visible pero oculto por CSS
-  $output .= '<div id="submenu">
-        <div class="submenu-item">
-            <button onclick="showAllTranslations()" id="show-all-translations-btn" class="submenu-button">📖 Mostrar todas las traducciones</button>
-        </div>
-        <div class="submenu-item">
-            <button onclick="toggleTranslations()" id="toggle-translations-btn" class="submenu-button translations">👁️ Ocultar Traducciones</button>
-        </div>
-        <div class="submenu-item">
-            <button onclick="printFullTextWithTranslations()" class="submenu-button print">🖨️ Imprimir</button>
-        </div>
-        <div class="submenu-item">
-            <button onclick="readCurrentParagraphTwice(); event.stopPropagation();" class="submenu-button double-read">🔊 Leer dos veces</button>
-        </div>
-        <div class="speed-control">
-            <label>Velocidad:</label>
-            <input type="range" id="rate" min="0.5" max="0.9" value="0.9" step="0.1" />
-            <span id="rate-value">100%</span>
-        </div>
-    </div>';
 
   return $output;
 }

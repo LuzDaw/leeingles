@@ -43,13 +43,13 @@ window.toggleFloatingMenu = function() {
     // Si el menú está abierto, cerrarlo
     if (menuOpen) {
         submenu.style.opacity = '0';
-        submenu.style.transform = 'translateX(20px) translateY(-50%)'; // Combinar transformaciones
+        submenu.style.transform = 'translateY(-10px)';
         submenu.style.pointerEvents = 'none';
         menuOpen = false;
     } else {
         // Si está cerrado, abrirlo
         submenu.style.opacity = '1';
-        submenu.style.transform = 'translateX(0) translateY(-50%)'; // Combinar transformaciones
+        submenu.style.transform = 'translateY(0)';
         submenu.style.pointerEvents = 'auto';
         menuOpen = true;
     }
@@ -60,7 +60,7 @@ function closeMenu() {
     const submenu = document.getElementById('submenu');
     if (submenu) {
         submenu.style.opacity = '0';
-        submenu.style.transform = 'translateX(20px) translateY(-50%)'; // Combinar transformaciones
+        submenu.style.transform = 'translateY(-10px)';
         submenu.style.pointerEvents = 'none';
         menuOpen = false;
     }
@@ -71,7 +71,7 @@ function openMenu() {
     const submenu = document.getElementById('submenu');
     if (submenu) {
         submenu.style.opacity = '1';
-        submenu.style.transform = 'translateX(0) translateY(-50%)'; // Combinar transformaciones
+        submenu.style.transform = 'translateY(0)';
         submenu.style.pointerEvents = 'auto';
         menuOpen = true;
     }
@@ -159,19 +159,19 @@ let closeTimeout = null;
 // Agregar eventos de hover al menú flotante
 document.addEventListener('DOMContentLoaded', function() {
     setTimeout(() => {
-        const floatingMenu = document.getElementById('floating-menu');
+        const toolsContainer = document.querySelector('.menu-herramientas-contenedor');
         const submenu = document.getElementById('submenu');
         const menuBtn = document.getElementById('menu-btn');
         
-        if (floatingMenu && submenu) {
-            // Mostrar menú al hacer hover sobre el botón flotante
-            floatingMenu.addEventListener('mouseenter', function() {
+        if (toolsContainer && submenu) {
+            // Mostrar menú al hacer hover sobre el contenedor de herramientas
+            toolsContainer.addEventListener('mouseenter', function() {
                 clearTimeout(closeTimeout);
                 openMenu();
             });
             
-            // Cerrar menú 2 segundos después de salir del botón flotante
-            floatingMenu.addEventListener('mouseleave', function() {
+            // Cerrar menú 2 segundos después de salir del contenedor
+            toolsContainer.addEventListener('mouseleave', function() {
                 closeTimeout = setTimeout(() => {
                     closeMenu();
                 }, 2000);
