@@ -877,6 +877,10 @@ function initLector() {
     
     window.startReading = async function() {
         document.querySelector('.encabezado-lectura')?.classList.add('hidden');
+        // Repaginar inmediatamente para aprovechar el espacio del encabezado oculto
+        if (typeof window.paginateDynamically === 'function') {
+            window.paginateDynamically();
+        }
         if (!window._limitAceptado) {
             try {
                 const res = await fetch('dePago/ajax_check_limit.php?active_reading=0');
@@ -912,6 +916,10 @@ function initLector() {
 
     window.pauseSpeech = function() {
         document.querySelector('.encabezado-lectura')?.classList.remove('hidden');
+        // Repaginar para ajustar el texto al espacio con encabezado visible
+        if (typeof window.paginateDynamically === 'function') {
+            window.paginateDynamically();
+        }
         window.isCurrentlyPaused = true;
         isReadingInProgress = false;
         onEndHandled = false;
@@ -973,6 +981,10 @@ function initLector() {
 
     window.stopReading = function() {
         document.querySelector('.encabezado-lectura')?.classList.remove('hidden');
+        // Repaginar para ajustar el texto al espacio con encabezado visible
+        if (typeof window.paginateDynamically === 'function') {
+            window.paginateDynamically();
+        }
         window.autoReading = false;
         autoReading = false;
         cancelAllTTS();
