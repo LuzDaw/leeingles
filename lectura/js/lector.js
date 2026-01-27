@@ -126,16 +126,71 @@ function initLector() {
         }
     }
 
-    let pages = document.querySelectorAll(".page");
-    let totalPages = pages.length;
-    let prevBtn, nextBtn, pageNumber;
+    let prevBtn, nextBtn, pageNumber, totalPagesSpan;
+    window.virtualPages = [];
+
+    window.paginateDynamically = function() {
+        const container = document.getElementById('pages-container');
+        const viewport = document.getElementById('dynamic-content-viewport');
+        if (!container || !viewport) return;
+
+        const wrappers = Array.from(viewport.querySelectorAll('.paragraph-wrapper'));
+        if (wrappers.length === 0) return;
+
+        // Limpiar páginas virtuales previas
+        window.virtualPages = [];
+        
+        // Altura disponible: Altura de la ventana menos encabezado y controles (aprox)
+        const headerHeight = document.querySelector('.encabezado-lectura')?.offsetHeight || 60;
+        const controlsHeight = 100; // Espacio para controles de paginación
+        const availableHeight = window.innerHeight - headerHeight - controlsHeight - 40;
+
+        let currentPageWrappers = [];
+        let currentHeight = 0;
+
+        wrappers.forEach((wrapper, index) => {
+            // Mostrar temporalmente para medir
+            wrapper.style.display = 'block';
+            const height = wrapper.offsetHeight;
+            
+            if (currentHeight + height > availableHeight && currentPageWrappers.length > 0) {
+                window.virtualPages.push(currentPageWrappers);
+                currentPageWrappers = [];
+                currentHeight = 0;
+            }
+            
+            currentPageWrappers.push(wrapper);
+            currentHeight += height;
+            
+            // Ocultar después de medir
+            wrapper.style.display = 'none';
+        });
+
+        if (currentPageWrappers.length > 0) {
+            window.virtualPages.push(currentPageWrappers);
+        }
+
+        const totalPages = window.virtualPages.length;
+        const controls = document.getElementById('pagination-controls');
+        if (controls) {
+            controls.style.display = totalPages > 1 ? 'flex' : 'none';
+            const totalPagesSpan = document.getElementById('total-pages');
+            if (totalPagesSpan) totalPagesSpan.textContent = totalPages;
+        }
+
+        // Asegurar que la página actual es válida tras repaginar
+        if (window.currentPage >= totalPages) {
+            window.currentPage = Math.max(0, totalPages - 1);
+        }
+
+        updatePageDisplay();
+    };
 
     window.initializePaginationControls = function() {
-        pages = document.querySelectorAll(".page");
-        totalPages = pages.length;
         prevBtn = document.getElementById("prev-page");
         nextBtn = document.getElementById("next-page");
         pageNumber = document.getElementById("page-number");
+        totalPagesSpan = document.getElementById("total-pages");
 
         if (prevBtn && !prevBtn.hasAttribute('data-listener')) {
             prevBtn.addEventListener("click", () => {
@@ -143,8 +198,6 @@ function initLector() {
                     window.currentPage--;
                     window.currentIndex = 0;
                     window._resumeIndexPending = 0;
-                    currentPage = window.currentPage;
-                    currentIndex = window.currentIndex;
                     updatePageDisplay();
                 }
             });
@@ -153,39 +206,43 @@ function initLector() {
 
         if (nextBtn && !nextBtn.hasAttribute('data-listener')) {
             nextBtn.addEventListener("click", () => {
-                if (window.currentPage < totalPages - 1) {
+                if (window.currentPage < window.virtualPages.length - 1) {
                     window.currentPage++;
                     window.currentIndex = 0;
                     window._resumeIndexPending = 0;
-                    currentPage = window.currentPage;
-                    currentIndex = window.currentIndex;
                     updatePageDisplay();
                     
-                    // Si es la última página, marcar como leída manualmente
-                    if (window.currentPage === totalPages - 1) {
+                    if (window.currentPage === window.virtualPages.length - 1) {
                         onPageReadByTTS(window.currentPage);
                     }
                 }
             });
             nextBtn.setAttribute('data-listener', 'true');
         }
+
+        // Repaginar al cambiar el tamaño de la ventana
+        window.removeEventListener('resize', window.paginateDynamically);
+        window.addEventListener('resize', window.paginateDynamically);
+        
+        window.paginateDynamically();
     };
 
     function updatePageDisplay() {
-        if (!pages.length) return;
-        if (typeof window.currentPage === 'number') currentPage = window.currentPage;
+        if (!window.virtualPages || !window.virtualPages.length) return;
+        const currentPageIdx = window.currentPage || 0;
         
-        pages.forEach((page, idx) => {
-            if (idx === currentPage) {
-                page.classList.add('active');
-            } else {
-                page.classList.remove('active');
-            }
-        });
+        // Ocultar todos los párrafos
+        document.querySelectorAll('.paragraph-wrapper').forEach(w => w.style.display = 'none');
         
-        if (pageNumber) pageNumber.textContent = currentPage + 1;
-        if (prevBtn) prevBtn.disabled = currentPage === 0;
-        if (nextBtn) nextBtn.disabled = currentPage === totalPages - 1;
+        // Mostrar solo los de la página actual
+        const currentWrappers = window.virtualPages[currentPageIdx];
+        if (currentWrappers) {
+            currentWrappers.forEach(w => w.style.display = 'block');
+        }
+        
+        if (pageNumber) pageNumber.textContent = currentPageIdx + 1;
+        if (prevBtn) prevBtn.disabled = currentPageIdx === 0;
+        if (nextBtn) nextBtn.disabled = currentPageIdx === window.virtualPages.length - 1;
         
         assignWordClickHandlers();
 
@@ -230,7 +287,6 @@ function initLector() {
         let pagesContainer = document.getElementById('pages-container');
         if (!pagesContainer) return;
         let totalWords = parseInt(pagesContainer.getAttribute('data-total-words') || 1);
-        let pages = pagesContainer.querySelectorAll('.page');
         let readPages = Array.isArray(window.readPages) ? window.readPages : [];
         let wordsRead = 0;
         
@@ -238,10 +294,12 @@ function initLector() {
             wordsRead = totalWords;
         } else if (readPages.length > 0) {
             readPages.forEach(idx => {
-                if (pages[idx]) {
-                    let paragraphs = pages[idx].querySelectorAll('p.paragraph');
-                    paragraphs.forEach(p => {
-                        wordsRead += (p.innerText.match(/\b\w+\b/g) || []).length;
+                if (window.virtualPages && window.virtualPages[idx]) {
+                    window.virtualPages[idx].forEach(wrapper => {
+                        let p = wrapper.querySelector('p.paragraph');
+                        if (p) {
+                            wordsRead += (p.innerText.match(/\b\w+\b/g) || []).length;
+                        }
                     });
                 }
             });
@@ -296,19 +354,17 @@ function initLector() {
         cancelAllTTS();
         if (index < 0) return;
         
-        if (typeof window.currentPage === 'number') currentPage = window.currentPage;
-        const pageEl = pages[currentPage];
-        if (!pageEl) return;
+        const currentPageIdx = window.currentPage || 0;
+        const currentWrappers = window.virtualPages[currentPageIdx];
+        if (!currentWrappers) return;
         
-        const paragraphs = pageEl.querySelectorAll("p.paragraph");
-        const translationBoxes = pageEl.querySelectorAll(".translation");
+        const paragraphs = currentWrappers.map(w => w.querySelector('p.paragraph'));
+        const translationBoxes = currentWrappers.map(w => w.querySelector('.translation'));
         
         if (index >= paragraphs.length) {
-            if (window.autoReading && window.currentPage < totalPages - 1) {
+            if (window.autoReading && window.currentPage < window.virtualPages.length - 1) {
                 window.currentPage++;
                 window.currentIndex = 0;
-                currentPage = window.currentPage;
-                currentIndex = window.currentIndex;
                 isReadingInProgress = false;
                 window._resumeIndexPending = 0;
                 updatePageDisplay();
@@ -336,16 +392,12 @@ function initLector() {
         }, 30000);
         try { if (window.ReadingControl) window.ReadingControl.safetyTimeout = safetyTimeout; } catch(e) {}
 
-        const isFullscreen = document.fullscreenElement || document.webkitFullscreenElement;
-        const maxLinesInFullscreen = 6;
-        const shouldChangePage = isFullscreen ? (index >= maxLinesInFullscreen || index >= paragraphs.length) : (index >= paragraphs.length);
+        const shouldChangePage = (index >= paragraphs.length);
         
         if (shouldChangePage) {
-            if (window.currentPage < totalPages - 1) {
+            if (window.currentPage < window.virtualPages.length - 1) {
                 window.currentPage++;
                 window.currentIndex = 0;
-                currentPage = window.currentPage;
-                currentIndex = window.currentIndex;
                 isReadingInProgress = false;
                 window._resumeIndexPending = 0;
                 updatePageDisplay();
@@ -425,12 +477,10 @@ function initLector() {
                         }
                         if (autoReading) {
                             if (index + 1 >= paragraphs.length) {
-                                onPageReadByTTS(currentPage);
-                                if (window.currentPage < totalPages - 1) {
+                                onPageReadByTTS(window.currentPage);
+                                if (window.currentPage < window.virtualPages.length - 1) {
                                     window.currentPage++;
                                     window.currentIndex = 0;
-                                    currentPage = window.currentPage;
-                                    currentIndex = window.currentIndex;
                                     isReadingInProgress = false;
                                     window._resumeIndexPending = 0;
                                     updatePageDisplay();
@@ -485,12 +535,10 @@ function initLector() {
                         } else {
                             if (autoReading) {
                                 if (index + 1 >= paragraphs.length) {
-                                    onPageReadByTTS(currentPage);
-                                    if (window.currentPage < totalPages - 1) {
+                                    onPageReadByTTS(window.currentPage);
+                                    if (window.currentPage < window.virtualPages.length - 1) {
                                         window.currentPage++;
                                         window.currentIndex = 0;
-                                        currentPage = window.currentPage;
-                                        currentIndex = window.currentIndex;
                                         isReadingInProgress = false;
                                         window._resumeIndexPending = 0;
                                         updatePageDisplay();
@@ -531,17 +579,15 @@ function initLector() {
         }
     }
 
-    function advanceToNextParagraphSafely(currentIndex, currentPage, paragraphs, totalPages) {
+    function advanceToNextParagraphSafely(currentIndex, currentPageIdx, paragraphs, totalPages) {
         const nextIndex = currentIndex + 1;
         if (nextIndex < paragraphs.length) {
             readAndTranslate(nextIndex);
         } else {
-            onPageReadByTTS(currentPage);
-            if (window.currentPage < totalPages - 1) {
+            onPageReadByTTS(currentPageIdx);
+            if (window.currentPage < window.virtualPages.length - 1) {
                 window.currentPage++;
                 window.currentIndex = 0;
-                currentPage = window.currentPage;
-                currentIndex = window.currentIndex;
                 isReadingInProgress = false;
                 window._resumeIndexPending = 0;
                 updatePageDisplay();
@@ -1051,13 +1097,18 @@ function initLector() {
         if (!window.readPages.includes(pageIdx)) {
             window.readPages.push(pageIdx);
             updateReadingProgressBar();
-            const totalPages = parseInt(document.getElementById('pages-container')?.getAttribute('data-total-pages') || 1);
+            const totalPages = window.virtualPages.length;
             if (window.readPages.length === totalPages) saveReadingProgress(100, 1);
             else {
                 const totalWords = parseInt(document.getElementById('pages-container')?.getAttribute('data-total-words') || 1);
                 let wordsRead = 0;
                 window.readPages.forEach(idx => {
-                    document.querySelectorAll('.page')[idx]?.querySelectorAll('p.paragraph').forEach(p => { wordsRead += (p.innerText.match(/\b\w+\b/g) || []).length; });
+                    if (window.virtualPages[idx]) {
+                        window.virtualPages[idx].forEach(wrapper => {
+                            let p = wrapper.querySelector('p.paragraph');
+                            if (p) wordsRead += (p.innerText.match(/\b\w+\b/g) || []).length;
+                        });
+                    }
                 });
                 saveReadingProgress(Math.round((wordsRead / totalWords) * 100));
             }

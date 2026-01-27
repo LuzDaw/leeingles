@@ -223,34 +223,13 @@ function getTotalUserTexts($user_id) {
 }
 
 /**
- * Renderiza el texto con palabras clickeables y paginación
+ * Renderiza el texto con palabras clickeables y estructura fluida para paginación dinámica
  */
 function render_text_clickable($text, $title = '', $title_translation = '')
 {
-  $sentences = preg_split('/(?<=[.?!])\s+|\n+/', $text);
-  $pages = [];
-  $currentPage = [];
-  $wordCount = 0;
-
-  foreach ($sentences as $sentence) {
-    $sentence = trim($sentence); // Limpiar espacios
-    if (empty($sentence)) continue; // Saltar oraciones vacías
-
-    $wordsInSentence = str_word_count($sentence);
-    // 50 palabras por página para oraciones más cortas
-    if ($wordCount + $wordsInSentence > 120 && count($currentPage) > 0) {
-      $pages[] = $currentPage;
-      $currentPage = [];
-      $wordCount = 0;
-    }
-    $currentPage[] = $sentence;
-    $wordCount += $wordsInSentence;
-  }
-
-  if (count($currentPage) > 0) {
-    $pages[] = $currentPage;
-  }
-
+  // Dividir por párrafos o oraciones largas para mantener estructura
+  $paragraphs = preg_split('/\n+/', $text);
+  
   // Obtener el text_id del contexto actual
   $text_id = '';
   if (isset($_GET['text_id'])) {
@@ -271,34 +250,39 @@ function render_text_clickable($text, $title = '', $title_translation = '')
             </div>
 </div>';
 
-  $output .= '<div id="pages-container" data-total-pages="' . count($pages) . '" data-total-words="' . str_word_count(strip_tags($text)) . '" data-text-id="' . $text_id . '">';
+  // Contenedor principal con estructura fluida (sin páginas estáticas de PHP)
+  $output .= '<div id="pages-container" class="dynamic-pagination" data-total-words="' . str_word_count(strip_tags($text)) . '" data-text-id="' . $text_id . '">';
   
-  foreach ($pages as $index => $page) {
-    $output .= '<div class="page' . ($index === 0 ? ' active' : '') . '">';
-    foreach ($page as $sentence) {
-      $words = preg_split('/(\s+)/', $sentence, -1, PREG_SPLIT_DELIM_CAPTURE);
-      $output .= '<p class="paragraph">';
-      foreach ($words as $word) {
-        if (trim($word) === '') {
-          $output .= $word;
-        } else {
-          $output .= '<span class="clickable-word">' . htmlspecialchars($word) . '</span>';
-        }
+  // Envolvemos todo en un contenedor de scroll que JS gestionará
+  $output .= '<div id="dynamic-content-viewport">';
+  
+  foreach ($paragraphs as $p_text) {
+    $p_text = trim($p_text);
+    if (empty($p_text)) continue;
+
+    $words = preg_split('/(\s+)/', $p_text, -1, PREG_SPLIT_DELIM_CAPTURE);
+    $output .= '<div class="paragraph-wrapper">';
+    $output .= '<p class="paragraph">';
+    foreach ($words as $word) {
+      if (trim($word) === '') {
+        $output .= $word;
+      } else {
+        $output .= '<span class="clickable-word">' . htmlspecialchars($word) . '</span>';
       }
-      $output .= '</p>';
-      $output .= '<p class="translation"></p>';
     }
+    $output .= '</p>';
+    $output .= '<p class="translation"></p>';
     $output .= '</div>';
   }
   
-  // Solo mostrar paginación si hay más de una página
-  if (count($pages) > 1) {
-    $output .= '<div id="pagination-controls">
-            <button id="prev-page" class="pagination-btn" disabled>◀ Anterior</button>
-            <span class="page-info"><span id="page-number">1</span> / <span id="total-pages">' . count($pages) . '</span></span>
-            <button id="next-page" class="pagination-btn">Siguiente ▶</button>
-    </div>';
-  }
+  $output .= '</div>'; // Fin dynamic-content-viewport
+
+  // Controles de paginación (JS los activará y actualizará el total de páginas)
+  $output .= '<div id="pagination-controls" style="display: none;">
+          <button id="prev-page" class="pagination-btn" disabled>◀ Anterior</button>
+          <span class="page-info"><span id="page-number">1</span> / <span id="total-pages">1</span></span>
+          <button id="next-page" class="pagination-btn">Siguiente ▶</button>
+  </div>';
 
   $output .= '</div>';
 

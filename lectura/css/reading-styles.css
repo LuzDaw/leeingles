@@ -94,21 +94,43 @@
 
 .page {
     margin-bottom: 20px;
-}
-#pages-container{
-    padding: 2%;
+    display: none; /* Por defecto ocultas, JS las mostrará */
 }
 
-/* Los estilos de .clickable-word están en common-styles.css */
+.page.active {
+    display: block;
+}
 
+#pages-container {
+    padding: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+    min-height: 60vh;
+    display: flex;
+    flex-direction: column;
+}
 
+/* Estructura para paginación dinámica */
+.dynamic-pagination #dynamic-content-viewport {
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+}
+
+.paragraph-wrapper {
+    margin-bottom: 1.5rem;
+    page-break-inside: avoid;
+    break-inside: avoid;
+}
 
 .paragraph {
     padding: 8px;
     border: 2px solid transparent;
     border-radius: 8px;
     transition: all 0.3s ease;
- 
+    margin: 0;
+    line-height: 1.6;
+    font-size: 1.1rem;
 }
 
 .currently-reading {
@@ -117,11 +139,42 @@
 }
 
 #pagination-controls {
-    margin-top: 20px;
+    margin-top: 30px;
+    padding: 20px 0;
     text-align: center;
-    max-width: var(--max-width);
-    margin-left: auto;
-    margin-right: auto;
+    border-top: 1px solid #f1f5f9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+.pagination-btn {
+    background: #457B9D;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.pagination-btn:disabled {
+    background: #e5e7eb;
+    color: #94a3b8;
+    cursor: not-allowed;
+}
+
+.pagination-btn:not(:disabled):hover {
+    background: #1D3557;
+    transform: translateY(-1px);
+}
+
+.page-info {
+    font-weight: 600;
+    color: #457B9D;
+    font-size: 1.1rem;
 }
 
 /* Estilos para pantalla completa */
