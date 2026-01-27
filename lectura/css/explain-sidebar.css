@@ -3,7 +3,7 @@
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f5f5f5;
+    background-color: var(--background-color);
     overflow-x: hidden;
 }
 
@@ -12,8 +12,8 @@ body {
     position: fixed;
     top: 130px; /* Posicionar arriba de todo */
     right: 0; /* Pegado al lado derecho */
-    background: linear-gradient(135deg, #A8DADC 0%, #457B9D 100%);
-    color: white;
+    background: linear-gradient(135deg, var(--success-light) 0%, var(--success-color) 100%);
+    color: #ffffff;
     border: none;
     padding: 8px 12px;
     border-radius: 10px 0 0 10px; /* Bordes redondeados solo en el lado izquierdo */
@@ -25,7 +25,7 @@ body {
     gap: 0; /* Sin gap ya que solo hay un icono */
     font-size: 16px; /* Icono más grande */
     transition: all 0.3s ease;
-    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+    box-shadow: 0 2px 8px var(--shadow-md);
     z-index: 1000;
     opacity: 0;
     visibility: hidden;
@@ -43,13 +43,13 @@ body {
 
 .explain-floating-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+    box-shadow: 0 4px 12px var(--shadow-md);
     text-decoration: none;
     color: white;
 }
 
 .explain-floating-btn.active {
-    background: linear-gradient(135deg, #F97316, #FB923C);
+    background: linear-gradient(135deg, var(--accent-color), var(--accent-hover));
     display: none;
 }
 
@@ -60,8 +60,8 @@ body {
 
 /* Header */
 .app-header {
-    background-color: #2c3e50;
-    color: white;
+    background-color: var(--primary-color);
+    color: #ffffff;
     padding: 15px 20px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
@@ -94,7 +94,7 @@ body {
 .profile-icon {
     width: 32px;
     height: 32px;
-    background-color: #3498db;
+    background-color: var(--secondary-color);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -110,13 +110,13 @@ body {
 .action-menu {
     cursor: pointer;
     font-size: 20px;
-    color: #bdc3c7;
+    color: var(--text-muted);
 }
 
 /* Botón Explain */
 .explain-btn {
-    background: linear-gradient(135deg, #3B82F6, #60A5FA);
-    color: white;
+    background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+    color: #ffffff;
     border: none;
     padding: 10px 20px;
     border-radius: 25px;
@@ -132,13 +132,13 @@ body {
 
 .explain-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+    box-shadow: 0 4px 12px var(--shadow-md);
     text-decoration: none;
     color: white;
 }
 
 .explain-btn.active {
-    background: linear-gradient(135deg, #F97316, #FB923C);
+    background: linear-gradient(135deg, var(--accent-color), var(--accent-hover));
 }
 
 .explain-icon {
@@ -148,7 +148,7 @@ body {
 .other-actions {
     display: flex;
     gap: 15px;
-    color: #bdc3c7;
+    color: var(--text-muted);
     font-size: 14px;
 }
 
@@ -158,7 +158,7 @@ body {
 }
 
 .other-actions span:hover {
-    color: white;
+    color: #ffffff;
 }
 
 /* Contenido principal */
@@ -170,14 +170,14 @@ body {
 }
 
 .content-area {
-    background: white;
+    background: #ffffff;
     border-radius: 12px;
     padding: 30px;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
 
 .text-content h2 {
-    color: #2c3e50;
+    color: var(--text-color);
     margin-bottom: 20px;
     font-size: 24px;
 }
@@ -185,12 +185,12 @@ body {
 .text-content p {
     margin-bottom: 15px;
     line-height: 1.6;
-    color: #34495e;
+    color: var(--text-muted);
 }
 
 .highlighted-word {
-    background-color: #3B82F6;
-    color: white;
+    background-color: var(--secondary-color);
+    color: #ffffff;
     padding: 2px 6px;
     border-radius: 4px;
     cursor: pointer;
@@ -198,7 +198,7 @@ body {
 }
 
 .highlighted-word:hover {
-    background-color: #60A5FA;
+    background-color: var(--primary-color);
 }
 
 .subjects-list {
@@ -208,19 +208,19 @@ body {
 
 .subjects-list li {
     margin-bottom: 8px;
-    color: #34495e;
+    color: var(--text-muted);
 }
 
 .progress-section {
     margin-top: 30px;
     padding-top: 20px;
-    border-top: 1px solid #ecf0f1;
+    border-top: 1px solid var(--success-light);
 }
 
 .progress-bar {
     width: 100%;
     height: 8px;
-    background-color: #ecf0f1;
+    background-color: var(--success-light);
     border-radius: 4px;
     overflow: hidden;
     margin-bottom: 10px;
@@ -228,13 +228,13 @@ body {
 
 .progress-fill {
     height: 100%;
-    background: linear-gradient(90deg, #3B82F6, #60A5FA);
+    background: linear-gradient(90deg, var(--secondary-color), var(--primary-color));
     transition: width 0.3s ease;
 }
 
 .progress-text {
     font-weight: 600;
-    color: #2c3e50;
+    color: var(--text-color);
     margin-right: 15px;
 }
 
@@ -248,12 +248,12 @@ body {
 
 
 .play-btn {
-    background: #3B82F6;
-    color: white;
+    background: var(--secondary-color);
+    color: #ffffff;
 }
 
 .play-btn:hover {
-    background: #60A5FA;
+    background: var(--primary-color);
 }
 
 /* Sidebar de explicaciones */
@@ -263,7 +263,7 @@ body {
     right: -400px;
     width: 400px;
     height: 100vh;
-    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    background: linear-gradient(135deg, var(--background-color), #e9ecef);
     box-shadow: -2px 0 10px rgba(0,0,0,0.1);
     transition: right 0.3s ease;
     z-index: 1000;
@@ -275,8 +275,8 @@ body {
 }
 
 .sidebar-header {
-    background: linear-gradient(135deg, #2c3e50, #34495e);
-    color: white;
+    background: linear-gradient(135deg, var(--primary-color), var(--success-dark));
+    color: #ffffff;
     padding: 20px 25px;
     position: relative;
 }
@@ -321,7 +321,7 @@ body {
 }
 
 .word-translation {
-    color: #bdc3c7;
+    color: var(--text-muted);
     font-size: 16px;
 }
 
@@ -333,7 +333,7 @@ body {
 
 .pronounce-btn {
     background: #e3f2fd24;
-    color: #1976D2;
+    color: var(--secondary-color);
     padding: 4px 8px;
     border-radius: 4px;
     cursor: pointer;
@@ -342,11 +342,11 @@ body {
 
 .pronounce-btn:hover {
     background: #BBDEFB;
-    color: #1565C0;
+    color: var(--primary-color);
 }
 
 .edit-word-btn {
-    background: #3498db;
+    background: var(--secondary-color);
     border: none;
     color: white;
     padding: 8px 16px;
@@ -357,7 +357,7 @@ body {
 }
 
 .edit-word-btn:hover {
-    background: #2980b9;
+    background: var(--primary-color);
 }
 
 /* Contenido del sidebar */
@@ -381,13 +381,13 @@ body {
 }
 
 .section-header h3 {
-    color: #2c3e50;
+    color: var(--text-color);
     font-size: 18px;
     font-weight: 600;
 }
 
 .explanation-text p {
-    color: #34495e;
+    color: var(--text-muted);
     line-height: 1.6;
     margin-bottom: 12px;
     font-size: 14px;
@@ -452,7 +452,7 @@ body {
 .explain-section {
   margin-bottom: 15px;
   padding: 0 10px 8px 10px;
-  border-bottom: 1px solid #e0e7ef;
+  border-bottom: 1px solid var(--success-light);
 }
 .explain-section:last-child {
   border-bottom: none;
@@ -460,12 +460,12 @@ body {
 .section-title {
   font-size: 0.95em;
   font-weight: 600;
-  color: #1a237e;
+  color: var(--primary-color);
   margin-bottom: 4px;
 }
 .section-content {
   font-size: 0.95em;
-  color: #222;
+  color: var(--text-color);
   line-height: 1.5;
   margin-left: 0;
   word-wrap: break-word;
@@ -478,7 +478,7 @@ body {
 }
 .synonym-tag, .antonym-tag {
   background: #e3f2fd;
-  color: #1976d2;
+  color: var(--secondary-color);
   border-radius: 10px;
   padding: 2px 8px;
   font-size: 0.9em;
@@ -495,20 +495,20 @@ body {
   gap: 5px;
 }
 .ejemplo-item {
-  background: #f5f7fa;
+  background: var(--background-color);
   border-radius: 5px;
   padding: 4px 8px;
   font-size: 0.9em;
-  color: #333;
+  color: var(--text-color);
   margin-bottom: 2px;
-  border-left: 2px solid #1976d2;
+  border-left: 2px solid var(--secondary-color);
 }
 .ejemplo-es {
   font-weight: 500;
-  color: #1976d2;
+  color: var(--secondary-color);
 }
 .ejemplo-en {
-  color: #757575;
+  color: var(--text-muted);
   font-style: italic;
   margin-left: 4px;
 }
@@ -517,7 +517,7 @@ body {
   font-size: 0.9em;
 }
 .pronunciation {
-  color: #ff9800;
+  color: var(--accent-color);
   font-weight: 500;
   margin-left: 6px;
 }
@@ -538,22 +538,22 @@ body {
 .sinonimo-item {
     margin-bottom: 8px;
     padding: 8px 12px;
-    background: #f8f9fa;
+    background: var(--background-color);
     border-radius: 6px;
-    border-left: 3px solid #007bff;
+    border-left: 3px solid var(--secondary-color);
 }
 
 .sinonimo-en {
     display: inline;
     font-weight: 500;
-    color: #333;
+    color: var(--text-color);
     margin-right: 8px;
 }
 
 .sinonimo-es {
     display: inline;
     font-size: 0.9em;
-    color: #666;
+    color: var(--text-muted);
     font-style: italic;
 }
 
@@ -565,21 +565,21 @@ body {
 .antonimo-item {
     margin-bottom: 8px;
     padding: 8px 12px;
-    background: #f8f9fa;
+    background: var(--background-color);
     border-radius: 6px;
-    border-left: 3px solid #dc3545;
+    border-left: 3px solid var(--error-color);
 }
 
 .antonimo-en {
     display: inline;
     font-weight: 500;
-    color: #333;
+    color: var(--text-color);
     margin-right: 8px;
 }
 
 .antonimo-es {
     display: inline;
     font-size: 0.9em;
-    color: #666;
+    color: var(--text-muted);
     font-style: italic;
 }

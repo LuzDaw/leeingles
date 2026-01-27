@@ -3,7 +3,7 @@
 /* Ocultar botones de pestañas en dispositivos pequeños por defecto */
 @media (max-width: 768px) {
   .tab-navigation.tab-nav-container {
-            background: #ffffff00;
+            background: transparent;
         position: relative;
         padding: 0px 29px 0px 0px;
         display: flex;
@@ -15,7 +15,7 @@
 
   /* Botón hamburguesa para abrir/cerrar el menú (creado por JavaScript) */
   .tab-navigation.tab-nav-container .mobile-tab-menu-toggle {
-          background: #ff8a00;
+          background: var(--accent-color);
         color: #ffffff;
         cursor: pointer;
         font-weight: 500;
@@ -29,8 +29,8 @@
   }
 
   .tab-navigation.tab-nav-container .mobile-tab-menu-toggle:hover {
-    background: #dae5f0;
-    color: #03072b;
+    background: var(--accent-hover);
+    color: #ffffff;
   }
 
   /* Contenedor para los botones de pestañas que se extiende hacia abajo */
@@ -78,11 +78,11 @@
   .tab-navigation.tab-nav-container .tab-buttons-container .tab-btn {
     display: block;
     width: 100%;
-    background: #c2d3e4;
+    background: var(--success-light);
     border: none !important;
     padding: 0.75rem 1.25rem;
     font-weight: 500;
-    color: #6b7280;
+    color: var(--text-muted);
     cursor: pointer;
     transition: all 0.2s ease;
     text-align: left;
@@ -92,13 +92,13 @@
   }
 
   .tab-navigation.tab-nav-container .tab-buttons-container .tab-btn:hover {
-    background: #dae5f0;
-    color: #03072b;
+    background: var(--background-color);
+    color: var(--text-color);
   }
 
   .tab-navigation.tab-nav-container .tab-buttons-container .tab-btn.active {
-    background: #457b9d;
-    color: white;
+    background: var(--primary-color);
+    color: #ffffff;
     font-weight: 600;
   }
 
@@ -251,12 +251,12 @@
     color: white;
 }
 #login-btn {
-    background: #ff8a00;
-    color: white;
+    background: var(--accent-color);
+    color: #ffffff;
 }
 #login-btn:hover {
-    background: #3B82F6;
-    color: white;
+    background: var(--secondary-color);
+    color: #ffffff;
 }
 
 #home-link{

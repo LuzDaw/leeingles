@@ -6,8 +6,23 @@
 
 require_once __DIR__ . '/../actions/email_handler.php';
 
+// Paleta básica de colores para emails, alineada con css/color-theme.css
+$EMAIL_COLORS = [
+    'background'  => '#F5F7FA', // var(--background-color)
+    'cardBorder'  => '#E8F1F5', // var(--success-light)
+    'primary'     => '#1E3A8A', // var(--primary-color)
+    'secondary'   => '#3B82F6', // var(--secondary-color)
+    'accent'      => '#FF8A00', // var(--accent-color)
+    'text'        => '#111827', // var(--text-color)
+    'textMuted'   => '#6B7280', // var(--text-muted)
+    'divider'     => '#E5E7EB',
+];
+
 /**
  * Envía un email con un diseño profesional y personalizable.
+ *
+ * Nota: los clientes de correo no soportan variables CSS, por eso aquí usamos
+ * valores fijos pero basados en la misma paleta que color-theme.css.
  * 
  * @param string $destinatarioEmail Email del usuario
  * @param string $destinatarioNombre Nombre del usuario
@@ -19,26 +34,27 @@ require_once __DIR__ . '/../actions/email_handler.php';
  * @return array Resultado del envío ['success' => true/false, ...]
  */
 function enviarEmailPlantillaBase($destinatarioEmail, $destinatarioNombre, $subject, $titulo, $mensaje, $botonTexto = 'Ir a la App', $botonUrl = 'https://leeingles.com') {
-    
+    global $EMAIL_COLORS;
+
     $body = "
 <html>
 <head>
     <meta charset='UTF-8'>
 </head>
-<body style='font-family: Arial, sans-serif; background-color: #f4f4f9; padding: 20px; margin: 0;'>
-    <div style='background-color: #ffffff; padding: 30px; border-radius: 12px; max-width: 600px; margin: 0 auto; box-shadow: 0 4px 10px rgba(0,0,0,0.05); border: 1px solid #eef;'>
+<body style='font-family: Arial, sans-serif; background-color: {$EMAIL_COLORS['background']}; padding: 20px; margin: 0;'>
+    <div style='background-color: #ffffff; padding: 30px; border-radius: 12px; max-width: 600px; margin: 0 auto; box-shadow: 0 4px 10px rgba(0,0,0,0.05); border: 1px solid {$EMAIL_COLORS['cardBorder']};'>
         
         <!-- Header / Logo -->
         <div style='text-align: center; margin-bottom: 25px;'>
             <div style='display: inline-block; vertical-align: middle;'>
                 <img src='cid:logo_idoneoweb' alt='LeeIngles Logo' width='60' style='display:inline-block; vertical-align: middle; max-width:100%; height:auto;'>
-                <span style='color: #1e40af; font-size: 28px; font-weight: bold; vertical-align: middle; margin-left: 10px; font-family: Arial, sans-serif;'>LeeInglés</span>
+                <span style='color: {$EMAIL_COLORS['primary']}; font-size: 28px; font-weight: bold; vertical-align: middle; margin-left: 10px; font-family: Arial, sans-serif;'>LeeInglés</span>
             </div>
         </div>
 
         <!-- Contenido -->
-        <div style='color: #334155; line-height: 1.6;'>
-            <h2 style='color: #1e293b; border-bottom: 2px solid #f1f5f9; padding-bottom: 10px;'>$titulo</h2>
+        <div style='color: {$EMAIL_COLORS['text']}; line-height: 1.6;'>
+            <h2 style='color: {$EMAIL_COLORS['text']}; border-bottom: 2px solid {$EMAIL_COLORS['divider']}; padding-bottom: 10px;'>$titulo</h2>
             <p>Hola <strong>$destinatarioNombre</strong>,</p>
             <div style='margin: 20px 0;'>
                 $mensaje
@@ -47,13 +63,13 @@ function enviarEmailPlantillaBase($destinatarioEmail, $destinatarioNombre, $subj
 
         <!-- Botón de Acción -->
         <div style='text-align: center; margin: 35px 0;'>
-            <a href='$botonUrl' style='background-color: #2564eb8b; color: #ffffff; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; display: inline-block; font-size: 16px; box-shadow: 0 4px 6px rgba(37, 99, 235, 0.2);'>
+            <a href='$botonUrl' style='background-color: {$EMAIL_COLORS['secondary']}; color: #ffffff; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; display: inline-block; font-size: 16px; box-shadow: 0 4px 6px rgba(37, 99, 235, 0.2);'>
                 $botonTexto
             </a>
         </div>
 
         <!-- Footer -->
-        <div style='margin-top: 40px; padding-top: 20px; border-top: 1px solid #f1f5f9; text-align: center; color: #94a3b8; font-size: 12px;'>
+        <div style='margin-top: 40px; padding-top: 20px; border-top: 1px solid {$EMAIL_COLORS['divider']}; text-align: center; color: {$EMAIL_COLORS['textMuted']}; font-size: 12px;'>
             <p>Has recibido este correo porque eres usuario de LeeIngles.com</p>
             <p>&copy; " . date('Y') . " LeeIngles - Aprende inglés leyendo lo que te gusta.</p>
         </div>

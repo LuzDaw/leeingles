@@ -96,7 +96,7 @@
 /* Palabras clickeables */
 .clickable-word {
         cursor: pointer;
-    color: #457B9D;
+    color: var(--success-color);
     border-radius: var(--border-radius-sm);
     transition: all 0.2s ease;
     font-weight: 500;
@@ -330,11 +330,11 @@
 .title-english {
     font-size: 1.1em;
     font-weight: 600;
-    color: #1e293b;
+    color: var(--text-color);
 }
 
 .title-spanish {
-    color: #eaa827;
+    color: var(--accent-color);
     font-size: 0.9em;
     margin-left: 8px;
     font-weight: 500;
@@ -527,7 +527,7 @@
 }
 
 .sentence-controls .nav-btn {
-    color: #334866;
+    color: var(--success-color);
 }
 
 .tab-content-wrapper .nav-btn.primary {
@@ -536,12 +536,12 @@
 
 /* Overrides para Landing Page */
 .sticky-nav .nav-btn {
-    color: #333;
+    color: var(--text-color);
 }
 
 .sticky-nav .nav-btn:hover {
-    background: #ff7f50;
-    color: white;
+    background: var(--accent-color);
+    color: #ffffff;
 }
 
 /* Botón primario (Legacy support) */
@@ -656,8 +656,8 @@
 
 /* === FOOTER COMÚN === */
 .footer {
-    background: #333;
-    color: white;
+    background: var(--text-color);
+    color: #ffffff;
     padding: 60px 20px 30px;
 }
 
@@ -671,7 +671,7 @@
 
 .footer-section h3 {
     margin-bottom: 20px;
-    color: #ff7f50;
+    color: var(--accent-color);
 }
 
 .footer-section ul {
@@ -684,21 +684,21 @@
 }
 
 .footer-section ul li a {
-    color: #ccc;
+    color: var(--text-muted);
     text-decoration: none;
     transition: color 0.3s ease;
 }
 
 .footer-section ul li a:hover {
-    color: #ff7f50;
+    color: var(--accent-color);
 }
 
 .footer-bottom {
     text-align: center;
     margin-top: 40px;
     padding-top: 20px;
-    border-top: 1px solid #555;
-    color: #999;
+    border-top: 1px solid rgba(15, 23, 42, 0.3);
+    color: var(--text-muted);
 }
 
 .footer-main {

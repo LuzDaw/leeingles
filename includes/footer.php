@@ -5,7 +5,7 @@ $is_reading_mode = isset($_GET['text_id']) || isset($_GET['public_text_id']);
 
 <?php if (!$is_reading_mode): ?>
   <!-- Footer Completo (Oculto en modo lectura) -->
-  <footer class="footer">
+<footer class="footer <?php echo (isset($_GET['text_id']) || isset($_GET['public_text_id'])) ? 'hidden' : ''; ?>">
     <div class="footer-container">
       <div class="footer-section">
         <h3>🌟LeeInglés</h3>
@@ -42,8 +42,8 @@ $is_reading_mode = isset($_GET['text_id']) || isset($_GET['public_text_id']);
   </footer>
 <?php endif; ?>
 
-<!-- Footer simple (Siempre visible) -->
-<footer class="footer-main">
+<!-- Footer simple (Oculto en modo lectura) -->
+<footer class="footer-main <?php echo $is_reading_mode ? 'hidden' : ''; ?>">
   <p>
     © <span id="year-footer"></span> LeeInglés - Aprende inglés leyendo y entendiendolo | 📧 info@leeingles.com
   </p>

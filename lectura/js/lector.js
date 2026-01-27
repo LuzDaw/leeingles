@@ -173,9 +173,13 @@ function initLector() {
         const totalPages = window.virtualPages.length;
         const controls = document.getElementById('pagination-controls');
         if (controls) {
-            controls.style.display = totalPages > 1 ? 'flex' : 'none';
+            controls.style.display = 'flex'; // Mostrar siempre para que el botón Play sea visible
             const totalPagesSpan = document.getElementById('total-pages');
             if (totalPagesSpan) totalPagesSpan.textContent = totalPages;
+            
+            // Ocultar botones de navegación si solo hay una página
+            if (prevBtn) prevBtn.style.visibility = totalPages > 1 ? 'visible' : 'hidden';
+            if (nextBtn) nextBtn.style.visibility = totalPages > 1 ? 'visible' : 'hidden';
         }
 
         // Asegurar que la página actual es válida tras repaginar
