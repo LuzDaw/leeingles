@@ -141,9 +141,9 @@ function initLector() {
         window.virtualPages = [];
         
         // Altura disponible: Altura de la ventana menos encabezado y controles (aprox)
-        const headerHeight = document.querySelector('.encabezado-lectura')?.offsetHeight || 60;
-        const controlsHeight = document.getElementById('pagination-controls')?.offsetHeight || 80;
-        const availableHeight = window.innerHeight - headerHeight - controlsHeight - 40;
+        const headerHeight = document.querySelector('.encabezado-lectura')?.offsetHeight || 0;
+        const controlsHeight = 40; // Altura mínima para los iconos flotantes
+        const availableHeight = window.innerHeight - headerHeight - controlsHeight;
 
         let currentPageWrappers = [];
         let currentHeight = 0;
