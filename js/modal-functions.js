@@ -318,10 +318,14 @@ EventUtils.addOptionalListener('login-form', 'submit', async (e) => {
             if (loginErrorElement) {
                 if (data.pendingVerification && data.email) {
                     loginErrorElement.innerHTML = `
-                        <div style="text-align: center;">
-                            <p>Tu cuenta está pendiente de activación.</p>
-                            <p style="font-size: 0.85em; margin: 5px 0;">Revisa tu email: <strong>${data.email}</strong></p>
-                            <a href="mailto:${data.email}" class="auth-btn" style="display: inline-block; margin-top: 10px; text-decoration: none; background: #2563eb; padding: 5px 15px; font-size: 0.8em;">✉️ Abrir correo</a>
+                        <div style="text-align: center; font-family: sans-serif;">
+                            <p style="color: #3B82F6; font-weight: bold; margin-bottom: 10px;">Cuenta pendiente de activación</p>
+                            <p style="color: #1f2937; margin-bottom: 5px;">Por favor, verifica tu email para continuar.</p>
+                            <p style="font-size: 0.85em; color: #4b5563; margin: 5px 0;">Email: <strong>${data.email}</strong></p>
+                            <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 10px;">
+                                <a href="mailto:${data.email}" style="display: inline-block; text-decoration: none; background: #2563eb; color: white; padding: 8px 20px; border-radius: 6px; font-size: 0.85em; font-weight: 600;">✉️ Abrir correo</a>
+                                <button type="button" onclick="resendVerificationEmail('${data.email}')" style="display: inline-block; background: #64748b; color: white; padding: 8px 20px; border-radius: 6px; font-size: 0.85em; font-weight: 600; border: none; cursor: pointer;">🔄 Enviar email de nuevo</button>
+                            </div>
                         </div>
                     `;
                     loginErrorElement.classList.add('show', 'info');
@@ -363,6 +367,49 @@ function showUploadFormWithLogin() {
         showUploadForm();
     }
 }
+
+// Función para reenviar email de verificación
+window.resendVerificationEmail = async function(email) {
+    try {
+        window.showLoadingRedirectModal('Enviando email...', 'Por favor, espera...');
+        
+        const formData = new FormData();
+        formData.append('email', email);
+        
+        const data = await HTTPUtils.postFormData('logueo_seguridad/ajax_resend_verification.php', formData);
+        
+        const loadingModal = DOMUtils.getElement('loading-redirect-modal');
+        if (loadingModal) loadingModal.classList.remove('show');
+
+        if (data.success) {
+            window.showLoadingRedirectModal(
+                '✓ Email enviado',
+                'Revisa tu bandeja de entrada para activar tu cuenta.',
+                '',
+                3000
+            );
+            
+            // Opcional: actualizar el mensaje de error para indicar que se ha reenviado
+            const loginErrorElement = DOMUtils.getElement('login-error');
+            if (loginErrorElement) {
+                loginErrorElement.innerHTML = `
+                    <div style="text-align: center; font-family: sans-serif;">
+                        <p style="color: #059669; font-weight: bold; margin-bottom: 10px;">✓ ¡Email reenviado con éxito!</p>
+                        <p style="color: #1f2937; margin-bottom: 5px;">Hemos enviado un nuevo enlace de activación.</p>
+                        <p style="font-size: 0.85em; color: #4b5563; margin: 5px 0;">Revisa de nuevo: <strong>${email}</strong></p>
+                        <a href="mailto:${email}" style="display: inline-block; margin-top: 10px; text-decoration: none; background: #2563eb; color: white; padding: 8px 20px; border-radius: 6px; font-size: 0.85em; font-weight: 600;">✉️ Abrir correo</a>
+                    </div>
+                `;
+            }
+        } else {
+            MessageUtils.showError('login-error', data.error || 'Error al reenviar el email');
+        }
+    } catch (error) {
+        const loadingModal = DOMUtils.getElement('loading-redirect-modal');
+        if (loadingModal) loadingModal.classList.remove('show');
+        MessageUtils.showError('login-error', 'Error del servidor al reenviar el email');
+    }
+};
 
 /**
  * Muestra un modal de carga con un spinner y un mensaje, y redirige después de un tiempo.

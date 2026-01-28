@@ -99,12 +99,13 @@
 
 #pages-container {
     /* padding: 20px 20px 60px 20px; Espacio para los controles fijos */
-   max-width: 95%;
-    padding: 12px;
+ max-width: 100%;
+    padding: 20px 20px 0px 20px;
     margin: 0 auto;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    background: #ff8a0024;
     box-sizing: border-box;
 }
 
