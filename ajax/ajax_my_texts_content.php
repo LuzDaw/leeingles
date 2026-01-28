@@ -189,19 +189,71 @@ $total_found = count($own_texts) + count($public_read_rows);
     .meta-public { width: 70px; text-align: right; }
     .reading-status-label { color: #3B82F6; font-weight: bold; }
     .status-public-tag { font-size: 0.65em; padding: 2px 6px; background: #eff6ff; color: #2563eb; border: 1px solid #dbeafe; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; }
-    @media (max-width: 850px) { .text-meta-container { display: none; } }
+    
+    /* Ajustes para el encabezado con 3 elementos */
+    .tab-header-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+    }
+    .tab-header-container > * {
+        flex: 1;
+    }
+    .tab-header-container h3 {
+        text-align: left;
+        white-space: nowrap;
+    }
+    .tab-header-container #publicTextsDropdown {
+        display: flex;
+        justify-content: center;
+    }
+    .tab-header-container .bulk-actions {
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    @media (max-width: 850px) { 
+        .text-meta-container { display: none; } 
+    }
+
+    @media (max-width: 768px) {
+        .tab-header-container {
+            flex-direction: column;
+            gap: 15px;
+            text-align: center;
+            padding: 15px;
+        }
+        .tab-header-container > * {
+            flex: none;
+            width: 100%;
+        }
+        .tab-header-container h3 {
+            text-align: center;
+        }
+        .tab-header-container #publicTextsDropdown,
+        .tab-header-container .bulk-actions {
+            justify-content: center;
+        }
+        .tab-header-container .nav-btn {
+            width: 100%;
+        }
+    }
 </style>
 
 <div class="tab-content-wrapper">
     <div class="tab-header-container">
         <h3>📋 Mi Biblioteca</h3>
-    </div>
-    <div id="messages-container"></div>
-
-    <div class="bulk-actions-container">
-        <div style="color: #64748b; font-weight: 500;">
-            <span style="color: #3b82f6; font-weight: 600;"><?php echo $total_found ?></span> textos encontrados
+        
+        <!-- Centro: Textos Públicos -->
+        <div class="dropdown" id="publicTextsDropdown" style="position: relative; background:#ff8a00; box-shadow: 0 2px 4px rgba(0,0,0,0.1); border-radius: 8px;">
+            <button class="nav-btn" id="publicTextsBtn" onclick="togglePublicTextsDropdown(event)">Textos públicos ▼</button>
+            <div class="dropdown-content" id="publicCategoriesContent">
+                <div style="padding: 10px; color: #6b7280;">Cargando categorías...</div>
+            </div>
         </div>
+
+        <!-- Derecha: Acciones en lote -->
         <div class="bulk-actions" style="display: flex; gap: 12px; align-items: center;">
             <div class="dropdown">
                 <button class="nav-btn" id="dropdownBtn" onclick="toggleDropdown()">Acciones en lote ▼</button>
@@ -212,11 +264,12 @@ $total_found = count($own_texts) + count($public_read_rows);
                 </div>
             </div>
         </div>
-        <div class="dropdown" id="publicTextsDropdown" style="position: relative; margin-top: 16px; background:#ff8a00; box-shadow: 0 2px 4px rgba(0,0,0,0.1); border-radius: 8px;">
-            <button class="nav-btn" id="publicTextsBtn" onclick="togglePublicTextsDropdown(event)">Textos públicos ▼</button>
-            <div class="dropdown-content" id="publicCategoriesContent">
-                <div style="padding: 10px; color: #6b7280;">Cargando categorías...</div>
-            </div>
+    </div>
+    <div id="messages-container"></div>
+
+    <div class="bulk-actions-container">
+        <div style="color: #64748b; font-weight: 500;">
+            <span style="color: #3b82f6; font-weight: 600;"><?php echo $total_found ?></span> textos encontrados
         </div>
     </div>
 
