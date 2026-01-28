@@ -301,9 +301,12 @@ function render_text_clickable($text, $title = '', $title_translation = '')
 
   // Controles de paginación (JS los activará y actualizará el total de páginas)
   $output .= '<div id="pagination-controls" style="display: none;">
-          <button id="prev-page" class="pagination-btn" disabled>◀</button>
-          <button onclick="window.toggleFloatingPlayPause()" id="floating-btn" class="play-btn" title="Iniciar lectura">▶️</button>
-          <span class="page-info"><span id="page-number">1</span> / <span id="total-pages">1</span></span>
+  <button id="prev-page" class="pagination-btn" disabled>◀</button>
+  <div class="center-controls">
+      <button onclick="window.toggleFloatingPlayPause()" id="floating-btn" class="play-btn" title="Iniciar lectura">▶️</button>
+      <button id="speed-btn" class="pagination-btn" title="Velocidad">🐢</button>
+      <span class="page-info"><span id="page-number">1</span> / <span id="total-pages">1</span></span>
+          </div>
           <button id="next-page" class="pagination-btn">▶</button>
   </div>';
 
