@@ -47,34 +47,11 @@ class ExplainSidebar {
             }
         });
         
-        // Event listeners para palabras destacadas
-        document.addEventListener('click', this.onWordClick.bind(this));
-        
         // Cerrar con ESC
         document.addEventListener('keydown', this.onKeyDown.bind(this));
         
         // Mostrar botón flotante cuando hay texto
         this.showFloatingButton();
-    }
-    
-    onWordClick(event) {
-        const highlightedWord = event.target.closest('.highlighted-word');
-        const clickableWord = event.target.closest('.clickable-word');
-        const wordHighlighted = event.target.closest('.word-highlighted');
-        
-        if (highlightedWord) {
-            if (window.pauseReading) window.pauseReading('word-click');
-            const word = highlightedWord.getAttribute('data-word') || highlightedWord.textContent.trim();
-            this.showExplanation(word, highlightedWord);
-        } else if (clickableWord) {
-            if (window.pauseReading) window.pauseReading('word-click');
-            const word = clickableWord.textContent.trim();
-            this.showExplanation(word, clickableWord);
-        } else if (wordHighlighted) {
-            if (window.pauseReading) window.pauseReading('word-click');
-            const word = wordHighlighted.textContent.trim();
-            this.showExplanation(word, wordHighlighted);
-        }
     }
     
     onKeyDown(event) {
