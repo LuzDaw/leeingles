@@ -263,11 +263,6 @@ function render_text_clickable($text, $title = '', $title_translation = '')
                     <div class="submenu-item">
                         <button onclick="readCurrentParagraphTwice(); event.stopPropagation();" class="submenu-button double-read">🔊 Leer dos veces</button>
                     </div>
-                    <div class="speed-control">
-                        <label>Velocidad:</label>
-                        <input type="range" id="rate" min="0.5" max="0.9" value="0.9" step="0.1" />
-                        <span id="rate-value">100%</span>
-                    </div>
                 </div>
             </div>
 </div>';
@@ -304,7 +299,16 @@ function render_text_clickable($text, $title = '', $title_translation = '')
   <button id="prev-page" class="pagination-btn" disabled>◀</button>
   <div class="center-controls">
       <button onclick="window.toggleFloatingPlayPause()" id="floating-btn" class="play-btn" title="Iniciar lectura">▶️</button>
-      <button id="speed-btn" class="pagination-btn" title="Velocidad">🐢</button>
+      <div class="speed-container">
+          <button id="speed-btn" class="pagination-btn" title="Velocidad">🐢</button>
+          <div id="speed-selector" class="speed-selector-popup" style="display: none;">
+              <div class="speed-selector-inner">
+                  <span id="rate-value">100%</span>
+                  <input type="range" id="rate" min="0.5" max="0.9" value="0.9" step="0.1" />
+                  <label>Velocidad</label>
+              </div>
+          </div>
+      </div>
       <span class="page-info"><span id="page-number">1</span> / <span id="total-pages">1</span></span>
           </div>
           <button id="next-page" class="pagination-btn">▶</button>

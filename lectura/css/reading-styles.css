@@ -167,6 +167,54 @@ box-shadow: none;
      flex: 1;
  }
 
+ .speed-container {
+    position: relative;
+    display: inline-block;
+}
+
+.speed-selector-popup {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: white;
+    border: 1px solid #e5e7eb;
+    padding: 15px 10px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    z-index: 1001;
+    margin-bottom: 10px;
+}
+
+.speed-selector-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.speed-selector-inner span {
+    font-weight: 600;
+    color: var(--success-color);
+    font-size: 14px;
+}
+
+.speed-selector-inner label {
+    font-size: 11px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.speed-selector-inner input[type="range"] {
+    writing-mode: bt-lr; /* Para navegadores antiguos */
+    -webkit-appearance: slider-vertical; /* Para Chrome/Safari */
+    width: 8px;
+    height: 100px;
+    padding: 0 5px;
+    cursor: pointer;
+}
+
  .pagination-btn, .play-btn {
     background: none !important;
     color: var(--success-color) !important;

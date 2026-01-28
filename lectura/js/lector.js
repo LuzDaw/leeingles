@@ -197,6 +197,26 @@ function initLector() {
         pageNumber = document.getElementById("page-number");
         totalPagesSpan = document.getElementById("total-pages");
 
+        // Control de visibilidad del selector de velocidad
+        const speedBtn = document.getElementById('speed-btn');
+        const speedSelector = document.getElementById('speed-selector');
+        if (speedBtn && speedSelector && !speedBtn.hasAttribute('data-listener-toggle')) {
+            speedBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const isVisible = speedSelector.style.display === 'block';
+                speedSelector.style.display = isVisible ? 'none' : 'block';
+            });
+            
+            // Cerrar al hacer clic fuera
+            document.addEventListener('click', (e) => {
+                if (!speedSelector.contains(e.target) && e.target !== speedBtn) {
+                    speedSelector.style.display = 'none';
+                }
+            });
+            
+            speedBtn.setAttribute('data-listener-toggle', 'true');
+        }
+
         if (prevBtn && !prevBtn.hasAttribute('data-listener')) {
             prevBtn.addEventListener("click", () => {
                 if (window.currentPage > 0) {
