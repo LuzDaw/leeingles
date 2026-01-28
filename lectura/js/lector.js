@@ -7,10 +7,11 @@ function initLector() {
     if (typeof window.currentIndex === 'undefined') window.currentIndex = 0;
     if (typeof window.currentPage === 'undefined') window.currentPage = 0;
     if (typeof window.autoReading === 'undefined') window.autoReading = false;
+    if (typeof window.isCurrentlyReading === 'undefined') window.isCurrentlyReading = false;
+    if (typeof window.lastReadParagraphIndex === 'undefined') window.lastReadParagraphIndex = 0;
+    if (typeof window.lastReadPageIndex === 'undefined') window.lastReadPageIndex = 0;
     
-    let currentIndex = window.currentIndex;
-    let currentPage = window.currentPage;
-    let autoReading = window.autoReading;
+    // ELIMINADAS variables locales que causaban sombras y desincronización
     window.useResponsiveVoiceForParagraphs = false;
     
     // Variables para el tiempo de lectura
@@ -250,7 +251,7 @@ function initLector() {
         
         assignWordClickHandlers();
 
-        if (window.autoReading || autoReading) {
+        if (window.autoReading) {
             if (window.speechSynthesis) window.speechSynthesis.cancel();
             
             const continueAutoReading = () => {
@@ -260,7 +261,7 @@ function initLector() {
                     window._resumeIndexPending = null;
                 }
                 window.currentIndex = nextIdx;
-                currentIndex = window.currentIndex;
+                
                 setTimeout(() => {
                     readAndTranslate(nextIdx).catch(() => {});
                 }, 300);
@@ -350,11 +351,17 @@ function initLector() {
         // Actualizar índices globales para persistencia
         window.currentIndex = index;
         window.lastReadParagraphIndex = index;
-        if (typeof window.lastReadPageIndex !== 'undefined') {
-            window.lastReadPageIndex = window.currentPage;
+        window.lastReadPageIndex = window.currentPage;
+
+        // Incrementar ID de sesión para invalidar cualquier proceso anterior
+        activeSpeakSessionId = ++speakSessionId;
+        window.activeSpeakSessionId = activeSpeakSessionId;
+        
+        // Guardar progreso en cada párrafo para asegurar persistencia total
+        if (typeof onPageReadByTTS === 'function') {
+            onPageReadByTTS(window.currentPage);
         }
 
-        activeSpeakSessionId = ++speakSessionId;
         cancelAllTTS();
         if (index < 0) return;
         
@@ -385,11 +392,11 @@ function initLector() {
         const timeoutSessionId = activeSpeakSessionId;
         try { if (window.ReadingControl && window.ReadingControl.safetyTimeout) { clearTimeout(window.ReadingControl.safetyTimeout); } } catch(e) {}
         let safetyTimeout = setTimeout(() => {
-            if (timeoutSessionId !== activeSpeakSessionId || !window.autoReading || !autoReading || currentReadingIndex !== index) return;
+            if (timeoutSessionId !== activeSpeakSessionId || !window.autoReading || currentReadingIndex !== index) return;
             if (!onEndHandled && isReadingInProgress) {
                 onEndHandled = true;
                 isReadingInProgress = false;
-                if (window.autoReading || autoReading) {
+                if (window.autoReading) {
                     readAndTranslate(index + 1).catch(() => {});
                 }
             }
@@ -423,11 +430,6 @@ function initLector() {
         const rate = rateInput ? parseFloat(rateInput.value) : 1;
         const box = translationBoxes[index];
         
-        if (typeof window.lastReadParagraphIndex !== 'undefined') {
-            window.lastReadParagraphIndex = index;
-            window.lastReadPageIndex = currentPage;
-        }
-
         document.querySelectorAll('.paragraph').forEach(p => p.classList.remove('currently-reading'));
         paragraphs[index].classList.add('currently-reading');
 
@@ -479,7 +481,7 @@ function initLector() {
                             await speakAndMaybeRepeat(startWordBoundary);
                             return;
                         }
-                        if (autoReading) {
+                        if (window.autoReading) {
                             if (index + 1 >= paragraphs.length) {
                                 onPageReadByTTS(window.currentPage);
                                 if (window.currentPage < window.virtualPages.length - 1) {
@@ -489,7 +491,7 @@ function initLector() {
                                     window._resumeIndexPending = 0;
                                     updatePageDisplay();
                                 } else {
-                                    autoReading = false;
+                                    window.autoReading = false;
                                     window.cleanupReadingStates();
                                     if (typeof updateFloatingButton === 'function') updateFloatingButton();
                                     if (window.userLoggedIn && typeof window.showLoadingRedirectModal === 'function') {
@@ -714,41 +716,64 @@ function initLector() {
         window._hoverPaused = false;
     };
 
+    let wordClickTimer = null;
     function assignWordClickHandlers() {
         document.querySelectorAll('.clickable-word').forEach(span => {
             span.classList.add('word-clickable');
             if (!span.hasAttribute('tabindex')) span.setAttribute('tabindex', '0');
             span.removeEventListener('click', handleWordClick);
             span.addEventListener('click', handleWordClick);
-            span.addEventListener('mouseenter', handleWordEnter);
-            span.addEventListener('mouseleave', handleWordLeave);
         });
     }
 
-    function handleWordEnter(event) {
-        const sidebarOpen = !!(document.getElementById('explainSidebar')?.classList.contains('open'));
-        if (sidebarOpen) return;
-        const el = event.currentTarget;
-        const word = el.textContent?.trim();
+    function handleWordClick(event) {
+        event.preventDefault();
+        const el = this;
+        const word = el.textContent.trim();
         if (!word) return;
 
-        // Cancelar cualquier temporizador previo para evitar marcado agresivo
-        if (window._hoverTimeout) clearTimeout(window._hoverTimeout);
+        if (wordClickTimer) {
+            // DOBLE CLIC: Abrir explainSidebar
+            clearTimeout(wordClickTimer);
+            wordClickTimer = null;
+            handleWordDoubleClick(el, word);
+        } else {
+            // CLIC SIMPLE: Pausa + Traducción temporal + Reanudación
+            wordClickTimer = setTimeout(() => {
+                wordClickTimer = null;
+                handleWordSingleClick(el, word);
+            }, 250);
+        }
+    }
 
-        window._hoverTimeout = setTimeout(() => {
-            if (window.pauseReading && !window._hoverPaused && (window.isCurrentlyReading || window.autoReading)) {
-                window.pauseReading('word-hover');
-                window._hoverPaused = true;
-            }
-            
-            // Limpiar cualquier resaltado previo antes de marcar la nueva
-            clearWordHighlight();
-            highlightWord(el, word);
-            
-            if (el.dataset.translation) {
-                showHoverTooltip(el, word, el.dataset.translation);
-                return;
-            }
+    function handleWordSingleClick(el, word) {
+        // Pausar lectura si está activa
+        const wasReading = window.isCurrentlyReading || window.autoReading;
+        if (wasReading) {
+            window.pauseReading('word-click');
+            window._clickPaused = true;
+        }
+
+        clearWordHighlight();
+        highlightWord(el, word);
+
+        const showTranslation = (tr) => {
+            showHoverTooltip(el, word, tr);
+            // Programar desaparición y reanudación
+            if (window._tooltipTimeout) clearTimeout(window._tooltipTimeout);
+            window._tooltipTimeout = setTimeout(() => {
+                hideHoverTooltip();
+                clearWordHighlight();
+                if (window._clickPaused) {
+                    window.resumeReading({ reason: 'word-click' });
+                    window._clickPaused = false;
+                }
+            }, 3000);
+        };
+
+        if (el.dataset.translation) {
+            showTranslation(el.dataset.translation);
+        } else {
             fetch('traduciones/translate.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -758,67 +783,23 @@ function initLector() {
             .then(data => {
                 const tr = data?.translation || 'Sin traducción';
                 el.dataset.translation = tr;
-                // Solo mostrar si el ratón sigue sobre el elemento
-                if (el.matches(':hover')) {
-                    showHoverTooltip(el, word, tr);
-                }
+                showTranslation(tr);
                 if (typeof saveTranslatedWord === 'function') {
                     saveTranslatedWord(word, tr, findSentenceContainingWord(el, word));
                 }
             });
-        }, 300); // Aumentado ligeramente a 300ms para mayor consistencia
-    }
-
-    function handleWordLeave() {
-        // Cancelar temporizador pendiente inmediatamente
-        if (window._hoverTimeout) {
-            clearTimeout(window._hoverTimeout);
-            window._hoverTimeout = null;
-        }
-        
-        // Limpiar visualmente de inmediato (siempre, independientemente del sidebar)
-        hideHoverTooltip();
-        clearWordHighlight();
-        
-        // Si el sidebar está abierto, NO reanudamos la lectura (comportamiento deseado)
-        const sidebarOpen = !!(document.getElementById('explainSidebar')?.classList.contains('open'));
-        if (sidebarOpen) return;
-        
-        // Reanudar lectura si estaba pausada por hover y el sidebar está cerrado
-        if (window._hoverPaused) {
-            // Usar la lógica de reanudación unificada
-            if (typeof window.resumeReading === 'function') {
-                window.resumeReading({ reason: 'word-hover', force: false });
-            } else if (typeof window.resumeSpeech === 'function') {
-                window.resumeSpeech();
-            }
-            window._hoverPaused = false;
         }
     }
 
-    function showHoverTooltip(element, word, translation) {
-        hideHoverTooltip();
-        const tooltip = document.createElement('div');
-        tooltip.className = 'simple-tooltip hover';
-        tooltip.innerHTML = `<strong>${word}</strong> → ${translation}`;
-        tooltip.style.cssText = `position: absolute; background: rgba(0,0,0,0.8); color: white; padding: 8px 12px; border-radius: 6px; z-index: 999999; pointer-events: none;`;
-        document.body.appendChild(tooltip);
-        const rect = element.getBoundingClientRect();
-        tooltip.style.top = (rect.bottom + window.scrollY + 5) + 'px';
-        tooltip.style.left = (rect.left + window.scrollX) + 'px';
-    }
+    function handleWordDoubleClick(el, word) {
+        // Si había una pausa por clic simple, cancelarla para que el sidebar tome el control
+        if (window._tooltipTimeout) clearTimeout(window._tooltipTimeout);
+        window._clickPaused = false;
 
-    function hideHoverTooltip() {
-        document.querySelector('.simple-tooltip.hover')?.remove();
-    }
-
-    function handleWordClick(event) {
-        event.preventDefault();
-        const word = this.textContent.trim();
-        if (!word) return;
         clearWordHighlight();
-        highlightWord(this, word);
-        if (window.explainSidebar?.showExplanation) window.explainSidebar.showExplanation(word, this);
+        highlightWord(el, word);
+        if (window.explainSidebar?.showExplanation) window.explainSidebar.showExplanation(word, el);
+        
         fetch('traduciones/translate.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -827,7 +808,7 @@ function initLector() {
         .then(res => res.json())
         .then(data => {
             if (data.translation && typeof saveTranslatedWord === 'function') {
-                saveTranslatedWord(word, data.translation, findSentenceContainingWord(this, word));
+                saveTranslatedWord(word, data.translation, findSentenceContainingWord(el, word));
             }
         });
     }
@@ -851,6 +832,22 @@ function initLector() {
     function clearWordHighlight() {
         document.querySelector('.word-highlighted')?.classList.remove('word-highlighted');
         window.currentHighlightedWord = null;
+    }
+
+    function showHoverTooltip(element, word, translation) {
+        hideHoverTooltip();
+        const tooltip = document.createElement('div');
+        tooltip.className = 'simple-tooltip hover';
+        tooltip.innerHTML = `<strong>${word}</strong> → ${translation}`;
+        tooltip.style.cssText = `position: absolute; background: rgba(0,0,0,0.8); color: white; padding: 8px 12px; border-radius: 6px; z-index: 999999; pointer-events: none;`;
+        document.body.appendChild(tooltip);
+        const rect = element.getBoundingClientRect();
+        tooltip.style.top = (rect.bottom + window.scrollY + 5) + 'px';
+        tooltip.style.left = (rect.left + window.scrollX) + 'px';
+    }
+
+    function hideHoverTooltip() {
+        document.querySelector('.simple-tooltip.hover')?.remove();
     }
 
     window.initializeReadingStates = function() {
@@ -953,18 +950,26 @@ function initLector() {
 
     window.pauseReading = function(reason = '') {
         window.isCurrentlyPaused = true;
-        isCurrentlyReading = false;
+        // Solo cambiar el estado visual si NO es una pausa temporal por clic o hover
+        if (reason !== 'word-click' && reason !== 'word-hover') {
+            window.isCurrentlyReading = false;
+            window.autoReading = false;
+            isCurrentlyReading = false;
+            autoReading = false;
+        }
         isReadingInProgress = false;
-        autoReading = false;
         onEndHandled = false;
         if (window.speechSynthesis) window.speechSynthesis.pause();
         cancelAllTTS();
         // Limpiar timeout de seguridad al pausar para evitar retrasos
         try { if (window.ReadingControl && window.ReadingControl.safetyTimeout) { clearTimeout(window.ReadingControl.safetyTimeout); window.ReadingControl.safetyTimeout = null; } } catch(e) {}
+        if (typeof window.updateFloatingButton === 'function') window.updateFloatingButton();
     };
 
     window.resumeReading = function(options = {}) {
         window.isCurrentlyPaused = false;
+        window.isCurrentlyReading = true;
+        window.autoReading = true;
         isReadingInProgress = false;
         onEndHandled = false;
         isCurrentlyReading = true;
@@ -977,22 +982,46 @@ function initLector() {
             const resumeIdx = (typeof window.lastReadParagraphIndex !== 'undefined') ? window.lastReadParagraphIndex : 0;
             readAndTranslate(resumeIdx);
         }
+        if (typeof window.updateFloatingButton === 'function') window.updateFloatingButton();
     };
 
     window.stopReading = function() {
-        document.querySelector('.encabezado-lectura')?.classList.remove('hidden');
-        // Repaginar para ajustar el texto al espacio con encabezado visible
-        if (typeof window.paginateDynamically === 'function') {
-            window.paginateDynamically();
-        }
+        // 1. DESACTIVAR ESTADOS INMEDIATAMENTE (Antes de cualquier otra operación)
         window.autoReading = false;
-        autoReading = false;
-        cancelAllTTS();
-        isReadingInProgress = false;
-        onEndHandled = false;
         window.isCurrentlyReading = false;
         window.isCurrentlyPaused = false;
         isCurrentlyReading = false;
+        isReadingInProgress = false;
+        onEndHandled = false;
+
+        // 2. INVALIDAR SESIÓN DE HABLA
+        speakSessionId++;
+        activeSpeakSessionId = speakSessionId;
+        window.activeSpeakSessionId = activeSpeakSessionId;
+
+        // 3. CANCELAR TTS INMEDIATAMENTE
+        cancelAllTTS();
+
+        // 4. LIMPIAR TEMPORIZADORES DE INTERACCIÓN
+        if (window._tooltipTimeout) {
+            clearTimeout(window._tooltipTimeout);
+            window._tooltipTimeout = null;
+        }
+        if (wordClickTimer) {
+            clearTimeout(wordClickTimer);
+            wordClickTimer = null;
+        }
+        window._clickPaused = false;
+        window._hoverPaused = false;
+        hideHoverTooltip();
+        clearWordHighlight();
+
+        // 5. UI Y PAGINACIÓN (Esto puede disparar eventos, por eso los estados ya deben estar en false)
+        document.querySelector('.encabezado-lectura')?.classList.remove('hidden');
+        if (typeof window.paginateDynamically === 'function') {
+            window.paginateDynamically();
+        }
+        
         if (readingLastSaveTime) saveReadingTime(Math.floor((Date.now() - readingLastSaveTime) / 1000));
         readingLastSaveTime = null;
         if (readingUpdateInterval) clearInterval(readingUpdateInterval);
@@ -1140,6 +1169,10 @@ function initLector() {
             if (!container || !container.contains(e.target)) return;
             const interactive = ['.clickable-word', 'button', 'a', 'input', 'select', 'textarea', '.tab-navigation', '#floating-menu', '.explain-sidebar', '.simple-tooltip'];
             for (const s of interactive) if (e.target.closest(s)) return;
+            
+            // Solo toggle si NO estamos pinchando en el botón flotante (que ya tiene su propio listener)
+            if (e.target.closest('#floating-btn')) return;
+            
             if (typeof window.toggleFloatingPlayPause === 'function') window.toggleFloatingPlayPause();
         });
         window._clickToggleInitialized = true;

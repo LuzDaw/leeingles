@@ -3,7 +3,7 @@
 :root {
     /* Colores principales - Paleta unificada: Naranja, Azul, Negro */
    /* === SISTEMA DE COLOR UNIFICADO === */
---primary-color: #1E3A8A;        /* Azul principal */
+--primary-color: #2f4a6f;        /* Azul principal */
 --secondary-color: #3B82F6;      /* Azul activo */
 --accent-color: #ff8a00;         /* Naranja CTA */
 --accent-hover: #e67e00;

@@ -94,7 +94,12 @@ window.updateFloatingButton = function() {
 
 // Botón flotante: alterna entre iniciar y detener (sin pausa intermedia)
 let _playPauseLock = false;
-window.toggleFloatingPlayPause = function() {
+window.toggleFloatingPlayPause = function(event) {
+    // Evitar que el clic se propague a otros listeners (como el de document en lector.js)
+    if (event && typeof event.stopPropagation === 'function') {
+        event.stopPropagation();
+    }
+
     if (_playPauseLock) {
         return;
     }
@@ -107,15 +112,18 @@ window.toggleFloatingPlayPause = function() {
         return;
     }
 
-    if (window.isCurrentlyReading) {
+    // Verificación robusta del estado real
+    const isActuallySpeaking = window.speechSynthesis && window.speechSynthesis.speaking;
+    const shouldStop = window.isCurrentlyReading || isActuallySpeaking;
+
+    if (shouldStop) {
         // Detener completamente
         if (typeof window.stopReading === 'function') {
             window.stopReading();
-        } else if (window.speechSynthesis) {
-            try {
-                window.speechSynthesis.cancel();
-            } catch (e) {
-            }
+        } else {
+            window.isCurrentlyReading = false;
+            window.autoReading = false;
+            if (window.speechSynthesis) window.speechSynthesis.cancel();
         }
         btn.textContent = '▶️';
         btn.title = 'Iniciar lectura';
@@ -123,6 +131,9 @@ window.toggleFloatingPlayPause = function() {
         // Iniciar lectura
         if (typeof window.startReading === 'function') {
             window.startReading();
+        } else {
+            window.isCurrentlyReading = true;
+            window.autoReading = true;
         }
         btn.textContent = '⏹️';
         btn.title = 'Detener lectura';
@@ -232,7 +243,19 @@ window.syncButtonWithReadingState = function() {
     const floatingBtn = document.getElementById('floating-btn');
     if (!floatingBtn) return;
 
+    // Si la lectura está desactivada explícitamente, forzamos el botón a Play
+    if (window.autoReading === false && window.isCurrentlyReading === false) {
+        if (floatingBtn.textContent === '⏹️') {
+            floatingBtn.textContent = '▶️';
+            floatingBtn.title = 'Iniciar lectura';
+        }
+        return;
+    }
+
     const isActuallySpeaking = window.speechSynthesis && window.speechSynthesis.speaking;
+    
+    // Si hay una pausa temporal por clic, NO sincronizamos para evitar que el botón cambie a Play
+    if (window._clickPaused || window._hoverPaused) return;
 
     // Si está hablando pero el botón muestra play, corregirlo a detener
     if (isActuallySpeaking && floatingBtn.textContent === '▶️') {
@@ -242,7 +265,8 @@ window.syncButtonWithReadingState = function() {
         window.isCurrentlyPaused = false;
     }
     // Si no está hablando pero el botón muestra detener, corregirlo a iniciar
-    else if (!isActuallySpeaking && floatingBtn.textContent === '⏹️') {
+    // Solo si NO estamos en autoReading (que podría estar entre párrafos)
+    else if (!isActuallySpeaking && floatingBtn.textContent === '⏹️' && !window.autoReading) {
         floatingBtn.textContent = '▶️';
         floatingBtn.title = 'Iniciar lectura';
         window.isCurrentlyReading = false;

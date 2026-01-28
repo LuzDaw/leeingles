@@ -2,7 +2,7 @@
 
 .landing-container {
     min-height: 50vh;
-        background: linear-gradient(135deg, var(--accent-color) 0%, var(--secondary-color) 100%);
+        background:#ff8a0003;
     color: #ffffff;
 }
 
