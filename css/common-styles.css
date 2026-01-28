@@ -449,21 +449,24 @@
 
 /* Base para botones de navegación y acciones */
 .nav-btn {
-    display: inline-flex;
+       display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
-    padding: 8px 16px;
-    border-radius: var(--border-radius-md);
+    padding: 4px 4px;
     font-weight: 500;
     font-size: 14px;
     text-decoration: none;
     cursor: pointer;
     transition: all 0.2s ease;
     border: none;
-    background: transparent;
-    color: var(--text-color);
+    background: #3B82F6;
     line-height: 1.2;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding: 6px;
+        color: white;
+    
 }
 
 .nav-btn:hover {

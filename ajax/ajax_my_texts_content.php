@@ -246,7 +246,7 @@ $total_found = count($own_texts) + count($public_read_rows);
         <h3>📋 Mi Biblioteca</h3>
         
         <!-- Centro: Textos Públicos -->
-        <div class="dropdown" id="publicTextsDropdown" style="position: relative; background:#ff8a00; box-shadow: 0 2px 4px rgba(0,0,0,0.1); border-radius: 8px;">
+        <div class="dropdown" id="publicTextsDropdown" >
             <button class="nav-btn" id="publicTextsBtn" onclick="togglePublicTextsDropdown(event)">Textos públicos ▼</button>
             <div class="dropdown-content" id="publicCategoriesContent">
                 <div style="padding: 10px; color: #6b7280;">Cargando categorías...</div>
@@ -256,7 +256,7 @@ $total_found = count($own_texts) + count($public_read_rows);
         <!-- Derecha: Acciones en lote -->
         <div class="bulk-actions" style="display: flex; gap: 12px; align-items: center;">
             <div class="dropdown">
-                <button class="nav-btn" id="dropdownBtn" onclick="toggleDropdown()">Acciones en lote ▼</button>
+                <button class="nav-btn" id="dropdownBtn" onclick="toggleDropdown(event)">Acciones en lote ▼</button>
                 <div class="dropdown-content" id="dropdownContent">
                     <button type="button" onclick="selectAllTexts()">✓ Marcar todos</button>
                     <button type="button" onclick="unselectAllTexts()">✗ Desmarcar todos</button>

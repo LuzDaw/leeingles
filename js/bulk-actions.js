@@ -2,8 +2,10 @@
  * Funciones para acciones en lote (Bulk Actions) en index.php
  */
 
-window.toggleDropdown = function() {
-    const dropdown = document.querySelector('.dropdown');
+window.toggleDropdown = function(event) {
+    if (event) event.stopPropagation();
+    // Buscar el contenedor .dropdown más cercano al elemento pulsado
+    const dropdown = event ? event.target.closest('.dropdown') : document.querySelector('.dropdown');
     if (dropdown) {
         dropdown.classList.toggle("show");
     }
@@ -203,9 +205,12 @@ window.performBulkActionWords = function(action) {
 
 window.initializeTabEvents = function() {
     document.addEventListener('click', function(event) {
-        const dropdown = document.querySelector('.dropdown');
-        if (dropdown && !dropdown.contains(event.target)) {
-            dropdown.classList.remove('show');
-        }
+        // Cerrar todos los dropdowns si se hace clic fuera de ellos
+        const dropdowns = document.querySelectorAll('.dropdown');
+        dropdowns.forEach(dropdown => {
+            if (!dropdown.contains(event.target)) {
+                dropdown.classList.remove('show');
+            }
+        });
     });
 };
