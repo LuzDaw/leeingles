@@ -6,6 +6,7 @@
 class ExplainSidebar {
     constructor() {
         this.isOpen = false;
+        this.wasReadingBeforeOpen = false;
         this.currentWord = '';
         this.sidebar = null;
         this.overlay = null;
@@ -70,6 +71,8 @@ class ExplainSidebar {
     
     openSidebar() {
         this.isOpen = true;
+        // Guardar si estaba leyendo antes de abrir
+        this.wasReadingBeforeOpen = !!(window.isCurrentlyReading || window.autoReading);
         this.sidebar.classList.add('open');
         this.overlay.classList.add('active');
         if (this.explainBtn) {
@@ -125,8 +128,11 @@ class ExplainSidebar {
                 window.ReadingPauseReasons.delete('word-hover');
             }
         } catch(e) {}
-        if (window.resumeReading) window.resumeReading({ reason: 'explain', force: true });
-        
+        // Solo reanudar si estaba leyendo antes de abrir el sidebar
+        if (this.wasReadingBeforeOpen && window.resumeReading) {
+            window.resumeReading({ reason: 'explain', force: true });
+        }
+        this.wasReadingBeforeOpen = false;
     }
     
     async showExplanation(word, element = null) {
