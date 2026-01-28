@@ -386,7 +386,8 @@ window.resendVerificationEmail = async function(email) {
                 '✓ Email enviado',
                 'Revisa tu bandeja de entrada para activar tu cuenta.',
                 '',
-                3000
+                3000,
+                true // Ocultar spinner
             );
             
             // Opcional: actualizar el mensaje de error para indicar que se ha reenviado
@@ -417,8 +418,9 @@ window.resendVerificationEmail = async function(email) {
  * @param {string} subMessage - El mensaje secundario (ej. "Redirigiendo...").
  * @param {string} redirectUrl - La URL a la que se redirigirá después del delay.
  * @param {number} delay - El tiempo en milisegundos antes de la redirección.
+ * @param {boolean} hideSpinner - Si se debe ocultar el spinner de carga.
  */
-window.showLoadingRedirectModal = function(mainMessage, subMessage, redirectUrl, delay = 2000) {
+window.showLoadingRedirectModal = function(mainMessage, subMessage, redirectUrl, delay = 2000, hideSpinner = false) {
     let modal = DOMUtils.getElement('loading-redirect-modal');
     if (!modal) {
         modal = document.createElement('div');
@@ -434,8 +436,20 @@ window.showLoadingRedirectModal = function(mainMessage, subMessage, redirectUrl,
         document.body.appendChild(modal);
     }
 
+    // Limpiar timeout previo si existe para evitar cierres o redirecciones prematuras
+    if (modal.timeoutId) {
+        clearTimeout(modal.timeoutId);
+        modal.timeoutId = null;
+    }
+
     const mainMessageElement = modal.querySelector('.loading-redirect-main-message');
     const subMessageElement = modal.querySelector('.loading-redirect-sub-message');
+    const spinnerElement = modal.querySelector('.loading-redirect-spinner');
+
+    // Mostrar u ocultar el spinner
+    if (spinnerElement) {
+        spinnerElement.style.display = hideSpinner ? 'none' : 'block';
+    }
 
     // Actualizar el texto de los elementos del modal
     if (mainMessageElement) {
@@ -446,15 +460,21 @@ window.showLoadingRedirectModal = function(mainMessage, subMessage, redirectUrl,
         subMessageElement.innerHTML = subMessage; // Usar innerHTML directamente
     }
 
-    // Asegurarse de que el modal esté oculto antes de mostrarlo para reiniciar la transición
-    modal.classList.remove('show');
-    // Forzar un reflow para asegurar que la eliminación de la clase 'show' se aplique antes de volver a añadirla
-    void modal.offsetWidth; 
-    modal.classList.add('show'); // Mostrar el modal con la transición de opacidad
+    // Asegurarse de que el modal esté visible
+    if (!modal.classList.contains('show')) {
+        void modal.offsetWidth; 
+        modal.classList.add('show');
+    }
 
-    if (redirectUrl) { // Solo redirigir si se proporciona una URL
-        setTimeout(() => {
+    if (redirectUrl) { 
+        // Si hay URL, redirigir tras el delay
+        modal.timeoutId = setTimeout(() => {
             window.location.href = redirectUrl;
+        }, delay);
+    } else if (hideSpinner) {
+        // Si ocultamos el spinner y no hay redirección, es un mensaje de éxito final, cerramos tras el delay
+        modal.timeoutId = setTimeout(() => {
+            modal.classList.remove('show');
         }, delay);
     }
 };
