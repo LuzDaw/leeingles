@@ -190,6 +190,24 @@ $total_found = count($own_texts) + count($public_read_rows);
     .reading-status-label { color: #3B82F6; font-weight: bold; }
     .status-public-tag { font-size: 0.65em; padding: 2px 6px; background: #eff6ff; color: #2563eb; border: 1px solid #dbeafe; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; }
     
+    .library-title-clickable {
+        cursor: pointer;
+        transition: all 0.2s ease;
+        user-select: none;
+        display: inline-flex;
+        align-items: center;
+        padding: 5px 10px;
+        margin: -5px -10px;
+        border-radius: 8px;
+    }
+    .library-title-clickable:hover {
+        background-color: #f1f5f9;
+        color: #3b82f6;
+    }
+    .library-title-clickable:active {
+        transform: scale(0.98);
+    }
+
     /* Ajustes para el encabezado con 3 elementos */
     .tab-header-container {
         display: flex;
@@ -243,7 +261,7 @@ $total_found = count($own_texts) + count($public_read_rows);
 
 <div class="tab-content-wrapper">
     <div class="tab-header-container">
-        <h3>📋 Mi Biblioteca</h3>
+        <h3 class="library-title-clickable" onclick="loadTabContent('my-texts')" title="Volver a mi biblioteca">📋 Mi Biblioteca</h3>
         
         <!-- Centro: Textos Públicos -->
         <div class="dropdown" id="publicTextsDropdown" >

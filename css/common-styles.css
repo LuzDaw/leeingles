@@ -96,7 +96,7 @@
 /* Palabras clickeables */
 .clickable-word {
         cursor: pointer;
-    color: var(--success-color);
+    color: #000000;
     border-radius: var(--border-radius-sm);
     transition: all 0.2s ease;
     font-weight: 500;
@@ -352,7 +352,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-   
+    padding: 22px;
     margin-top: -2px;
 }
 
@@ -449,11 +449,12 @@
 
 /* Base para botones de navegación y acciones */
 .nav-btn {
-       display: inline-flex;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
-    padding: 4px 4px;
+    padding: 8px 16px;
+    border-radius: var(--border-radius-md);
     font-weight: 500;
     font-size: 14px;
     text-decoration: none;
@@ -461,16 +462,15 @@
     transition: all 0.2s ease;
     border: none;
     background: #3B82F6;
+    color: white;
     line-height: 1.2;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    padding: 6px;
-        color: white;
-    
 }
 
 .nav-btn:hover {
     transform: translateY(-1px);
+     background: var(--primary-color);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
 }
 
 /* Variaciones de botones */

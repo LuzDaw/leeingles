@@ -105,7 +105,6 @@
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    background: #ff8a0024;
     box-sizing: border-box;
 }
 
@@ -146,11 +145,10 @@
     left: 50%;
     transform: translateX(-50%);
     width: 100%;
-    max-width: 800px;
-    padding: 10px 0;
+    max-width: 1200px;
     text-align: center;
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     gap: 20px;
     background: none;
