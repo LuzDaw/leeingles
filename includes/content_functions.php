@@ -309,7 +309,7 @@ function render_text_clickable($text, $title = '', $title_translation = '')
               </div>
           </div>
       </div>
-      <span class="page-info"><span id="page-number">1</span> / <span id="total-pages">1</span></span>
+      <span class="page-info"><span id="page-number">1</span>/<span id="total-pages">1</span></span>
           </div>
           <button id="next-page" class="pagination-btn">▶</button>
   </div>';

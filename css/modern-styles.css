@@ -87,14 +87,13 @@
 
 /* Traducciones automáticas */
 .translation {
-      background: linear-gradient(135deg, #EFF6FF 0%, #dbeafea6 100%);
-    border-left: 4px solid #0061ff38;
+    border-left:4px solid #ff8a00;
     padding: 0rem 8px 0rem;
     margin: 0.25rem 0 0.75rem 0;
     border-radius: var(--radius-md) var(--radius-md) 0;
     min-height: 30px;
     font-weight: 500;
-    color: #eaa827;
+    color: #c6791e;;
 }
 
 
@@ -109,6 +108,7 @@
     font-weight: 500;
     cursor: pointer;
     transition: all 0.2s ease;
+    font-size: 30px;
 }
 
 #pagination-controls button:hover:not(:disabled) {
@@ -245,7 +245,7 @@
 
 /* Estados especiales */
 .current-reading {
-    background: linear-gradient(135deg, #ff6f0074 0%, #FDE68A 100%);
+    background:  #e4831597;
     border: 2px solid var(--accent-color);
     border-radius: var(--radius-md);
     padding: 0.5rem;
@@ -254,10 +254,10 @@
 
 /* Palabra seleccionada/marcada */
 .word-highlighted {
-    background: linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%) !important;
+    background:  #e48315aa !important;
     color: var(--primary-dark) !important;
     border-radius: var(--radius-sm);
-    padding: 2px 4px;
+    padding: 1px 2px;
     box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
 }
 

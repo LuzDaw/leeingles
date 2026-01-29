@@ -111,9 +111,17 @@ function initLector() {
             
             function handleSliderMouseMove(e) {
                 const rect = rateInput.getBoundingClientRect();
-                const clickX = e.clientX - rect.left;
-                const width = rect.width;
-                const percentage = Math.max(0, Math.min(1, clickX / width));
+                const isVertical = rect.height > rect.width;
+                let percentage;
+                
+                if (isVertical) {
+                    const clickY = e.clientY - rect.top;
+                    percentage = 1 - Math.max(0, Math.min(1, clickY / rect.height));
+                } else {
+                    const clickX = e.clientX - rect.left;
+                    percentage = Math.max(0, Math.min(1, clickX / rect.width));
+                }
+                
                 const min = parseFloat(rateInput.min);
                 const max = parseFloat(rateInput.max);
                 const newValue = min + (percentage * (max - min));

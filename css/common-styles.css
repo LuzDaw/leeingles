@@ -103,13 +103,16 @@
 }
 
 .clickable-word:hover {
-    background: var(--success-light);
+    background:rgba(125, 123, 117, 0.234);
     color: var(--success-dark);
 }
 
 .clickable-word:focus {
     outline: 2px solid var(--primary-color);
     outline-offset: 2px;
+}
+.word-highlighted{
+    background: #e0e0e0;
 }
 
 /* === DROPDOWNS COMUNES === */
