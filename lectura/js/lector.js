@@ -1193,6 +1193,10 @@ function initLector() {
     if (!window._clickToggleInitialized) {
         document.addEventListener('click', function(e) {
             if (!window.userLoggedIn) return;
+
+            // Desactivar clic en pantalla para play/pause en dispositivos pequeños (< 768px)
+            if (window.innerWidth < 768) return;
+
             const container = document.getElementById('pages-container');
             if (!container || !container.contains(e.target)) return;
             const interactive = ['.clickable-word', 'button', 'a', 'input', 'select', 'textarea', '.tab-navigation', '#floating-menu', '.explain-sidebar', '.simple-tooltip'];
