@@ -424,6 +424,7 @@
         flex-direction: column;
         align-items: flex-start;
         font-size: 1em;
+        padding-left: 5%;
     }
 
     .title-english {
@@ -432,7 +433,7 @@
     }
 
     .title-spanish {
-        font-size: 0.9em;
+        font-size: 1.1em;
         margin-left: 0;
     }
 
@@ -443,7 +444,8 @@
         display: grid;
         grid-template-columns: repeat(4, 1fr); /* Cuatro columnas de igual ancho */
         width: 100%;
-        gap: 5px;
+        justify-content: space-around;
+     
         align-items: center;
         font-size: 0.85em;
         color: #64748b;

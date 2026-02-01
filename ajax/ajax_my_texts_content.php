@@ -124,7 +124,7 @@ function renderTextItem($row, $user_id, $is_public_list = false) {
                     <div style="display: flex; flex-direction: column; align-items: center;">
                         <span class="reading-status-label">Leído <?= $read_count ?> <?= $read_count == 1 ? 'vez' : 'veces' ?></span>
                         <?php if ($last_read_date): ?>
-                            <span style="font-size: 0.75em; color: #94a3b8; margin-top: 2px;"><?= date('d/m/Y', strtotime($last_read_date)) ?></span>
+                            <span style="font-size: 1em; color: #94a3b8; margin-top: 2px;"><?= date('d/m/Y', strtotime($last_read_date)) ?></span>
                         <?php endif; ?>
                     </div>
                 <?php else: ?>
@@ -213,7 +213,7 @@ $total_found = count($own_texts) + count($public_read_rows);
         display: flex;
         justify-content: space-between;
         align-items: center;
-        gap: 20px;
+        gap: 20%;
     }
     .tab-header-container > * {
         flex: 1;
