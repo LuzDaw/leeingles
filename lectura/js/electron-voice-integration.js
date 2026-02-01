@@ -60,11 +60,11 @@
 
         // Cargar ResponsiveVoice desde CDN
         return new Promise((resolve) => {
-            loadScript(`https://code.responsivevoice.org/responsivevoice.js?key=${_apiKey}`, () => {
+            // loadScript(`https://code.responsivevoice.org/responsivevoice.js?key=${_apiKey}`, () => {
                 _responsiveVoiceLoaded = true;
                 setupVoiceFunctions();
                 resolve();
-            });
+            // });
         });
     }
 
