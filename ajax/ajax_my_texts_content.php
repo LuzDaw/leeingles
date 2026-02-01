@@ -231,35 +231,12 @@ $total_found = count($own_texts) + count($public_read_rows);
         justify-content: flex-end;
     }
 
-    @media (max-width: 850px) { 
-        .text-meta-container { display: none; } 
-    }
-
-    @media (max-width: 768px) {
-        .tab-header-container {
-            flex-direction: column;
-            gap: 15px;
-            text-align: center;
-            padding: 15px;
-        }
-        .tab-header-container > * {
-            flex: none;
-            width: 100%;
-        }
-        .tab-header-container h3 {
-            text-align: center;
-        }
-        .tab-header-container #publicTextsDropdown,
-        .tab-header-container .bulk-actions {
-            justify-content: center;
-        }
-        .tab-header-container .nav-btn {
-            width: 100%;
-        }
-    }
+  s
 </style>
 
 <div class="tab-content-wrapper">
+<div class="tab-content-wrapper2">
+
     <div class="tab-header-container">
         <h3 class="library-title-clickable" onclick="loadTabContent('my-texts')" title="Volver a mi biblioteca">📋 Mi Biblioteca</h3>
         
@@ -270,8 +247,19 @@ $total_found = count($own_texts) + count($public_read_rows);
                 <div style="padding: 10px; color: #6b7280;">Cargando categorías...</div>
             </div>
         </div>
+        </div>
 
-        <!-- Derecha: Acciones en lote -->
+
+       
+    <div id="messages-container"></div>
+
+    </div>
+    <div id="dos">
+    <div class="bulk-actions-container">
+        <div style="color: #64748b; font-weight: 500;">
+            <span style="color: #3b82f6; font-weight: 600;"><?php echo $total_found ?></span> textos encontrados
+        </div>
+         <!-- Derecha: Acciones en lote -->
         <div class="bulk-actions" style="display: flex; gap: 12px; align-items: center;">
             <div class="dropdown">
                 <button class="nav-btn" id="dropdownBtn" onclick="toggleDropdown(event)">Acciones en lote ▼</button>
@@ -283,12 +271,6 @@ $total_found = count($own_texts) + count($public_read_rows);
             </div>
         </div>
     </div>
-    <div id="messages-container"></div>
-
-    <div class="bulk-actions-container">
-        <div style="color: #64748b; font-weight: 500;">
-            <span style="color: #3b82f6; font-weight: 600;"><?php echo $total_found ?></span> textos encontrados
-        </div>
     </div>
 
     <form id="bulkForm">

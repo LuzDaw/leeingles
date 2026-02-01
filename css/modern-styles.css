@@ -87,7 +87,7 @@
 
 /* Traducciones automáticas */
 .translation {
-    border-left:4px solid #ff8a00;
+    border-left:1px solid #ff8a00;
     padding: 0rem 8px 0rem;
     margin: 0.25rem 0 0.75rem 0;
     border-radius: var(--radius-md) var(--radius-md) 0;

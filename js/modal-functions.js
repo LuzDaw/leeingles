@@ -354,7 +354,7 @@ EventUtils.addOptionalListener('login-form', 'submit', async (e) => {
 
 // Funciones de acceso que requieren login
 function requireLogin(action) {
-    if (typeof isLoggedIn !== 'undefined' && !isLoggedIn) {
+    if (typeof window.userLoggedIn === 'undefined' || !window.userLoggedIn) {
         actionAfterLogin = action;
         showLoginModal();
         return false;

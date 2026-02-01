@@ -70,7 +70,7 @@ extract(get_index_page_data($conn));
 
 
       <div class="nav-right" id="nav-menu">
-        <a href="/" id="home-link" class="nav-btn">🏠 Inicio</a>
+        <!-- <a href="/" id="home-link" class="nav-btn">🏠 Inicio</a> -->
         <?php if (isset($_SESSION['user_id'])): ?>
           <div class="user-dropdown">
             <button class="user-dropdown-btn">
@@ -87,7 +87,7 @@ extract(get_index_page_data($conn));
         <?php else: ?>
           <a href="#caracteristicas" class="nav-btn">📚 Características</a>
           <button onclick="showUploadFormWithLogin()" class="nav-btn primary">⬆ Subir texto</button>
-          <button id="login-btn" class="nav-btn">Iniciar sesión / Registro</button>
+          <button id="login-btn" class="nav-btn">Cuenta</button>
         <?php endif; ?>
       </div>
 

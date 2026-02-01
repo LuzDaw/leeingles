@@ -151,7 +151,8 @@ function initLector() {
         
         // Altura disponible: Altura de la ventana menos encabezado y controles (aprox)
         const headerHeight = document.querySelector('.encabezado-lectura')?.offsetHeight || 0;
-        const controlsHeight = 40; // Altura mínima para los iconos flotantes
+        const paginationControls = document.getElementById('pagination-controls'); // Renombrar para evitar conflicto
+        const controlsHeight = paginationControls ? paginationControls.offsetHeight : 0; // Medir la altura real de los controles
         const availableHeight = window.innerHeight - headerHeight - controlsHeight;
 
         let currentPageWrappers = [];
@@ -180,9 +181,8 @@ function initLector() {
         }
 
         const totalPages = window.virtualPages.length;
-        const controls = document.getElementById('pagination-controls');
-        if (controls) {
-            controls.style.display = 'flex'; // Mostrar siempre para que el botón Play sea visible
+        if (paginationControls) { // Usar la variable renombrada
+            paginationControls.style.display = 'flex'; // Mostrar siempre para que el botón Play sea visible
             const totalPagesSpan = document.getElementById('total-pages');
             if (totalPagesSpan) totalPagesSpan.textContent = totalPages;
             
@@ -278,6 +278,20 @@ function initLector() {
         if (nextBtn) nextBtn.disabled = currentPageIdx === window.virtualPages.length - 1;
         
         assignWordClickHandlers();
+
+        // Scroll to the current paragraph if it's not fully visible, considering fixed header and controls
+        if (currentWrappers && currentWrappers[window.currentIndex]) {
+            const paragraphElement = currentWrappers[window.currentIndex];
+            const headerHeight = document.querySelector('.encabezado-lectura')?.offsetHeight || 0;
+            const controlsHeight = document.getElementById('pagination-controls')?.offsetHeight || 0;
+            const rect = paragraphElement.getBoundingClientRect();
+
+            if (rect.top < headerHeight || rect.bottom > window.innerHeight - controlsHeight) {
+                paragraphElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                // Adjust scroll position to account for fixed header
+                window.scrollBy(0, -headerHeight);
+            }
+        }
 
         if (window.autoReading) {
             if (window.speechSynthesis) window.speechSynthesis.cancel();
@@ -473,9 +487,15 @@ function initLector() {
             }
         }
 
-        const rect = paragraphs[index].getBoundingClientRect();
-        if (rect.top < 50 || rect.bottom > window.innerHeight - 50) {
-            paragraphs[index].scrollIntoView({ behavior: 'smooth', block: 'start' });
+        const paragraphElement = paragraphs[index];
+        const headerHeight = document.querySelector('.encabezado-lectura')?.offsetHeight || 0;
+        const controlsHeight = document.getElementById('pagination-controls')?.offsetHeight || 0;
+        const rect = paragraphElement.getBoundingClientRect();
+
+        if (rect.top < headerHeight || rect.bottom > window.innerHeight - controlsHeight) {
+            paragraphElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            // Adjust scroll position to account for fixed header
+            window.scrollBy(0, -headerHeight);
         }
 
         cancelAllTTS();
