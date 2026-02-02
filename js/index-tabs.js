@@ -233,7 +233,7 @@ function handleTabAreaClick(event) {
                     // Crear el botón hamburguesa
                     menuToggle = document.createElement('button');
                     menuToggle.className = 'mobile-tab-menu-toggle';
-                    menuToggle.innerHTML = '☰';
+                    menuToggle.innerHTML = '';
                     menuToggle.setAttribute('aria-label', 'Abrir menú de pestañas');
                     
                     // Crear contenedor para los botones
@@ -258,7 +258,7 @@ function handleTabAreaClick(event) {
                     menuToggle.addEventListener('click', function(e) {
                         e.stopPropagation();
                         tabNav.classList.toggle('menu-open');
-                        menuToggle.innerHTML = tabNav.classList.contains('menu-open') ? '✕' : '☰';
+                        menuToggle.innerHTML = tabNav.classList.contains('menu-open') ? '✕' : '';
                         menuToggle.setAttribute('aria-label', tabNav.classList.contains('menu-open') ? 'Cerrar menú de pestañas' : 'Abrir menú de pestañas');
                     });
 
@@ -269,7 +269,7 @@ function handleTabAreaClick(event) {
                             setTimeout(function() {
                                 tabNav.classList.remove('menu-open');
                                 if (menuToggle) {
-                                    menuToggle.innerHTML = '☰';
+                                    menuToggle.innerHTML = '';
                                     menuToggle.setAttribute('aria-label', 'Abrir menú de pestañas');
                                 }
                             }, 100);
@@ -283,7 +283,7 @@ function handleTabAreaClick(event) {
                             e.target !== menuToggle) {
                             tabNav.classList.remove('menu-open');
                             if (menuToggle) {
-                                menuToggle.innerHTML = '☰';
+                                menuToggle.innerHTML = '';
                                 menuToggle.setAttribute('aria-label', 'Abrir menú de pestañas');
                             }
                         }

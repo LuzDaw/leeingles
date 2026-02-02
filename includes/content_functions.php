@@ -239,7 +239,7 @@ function render_text_clickable($text, $title = '', $title_translation = '')
   }
 
   $output = '<div class="encabezado-lectura">
-            <button class="btn-volver" onclick="window.cambiarPestana(\'textos\')" aria-label="Volver a Mis Textos">←</button>
+            <button class="btn-volver" onclick="window.cambiarPestana(\'textos\')" aria-label="Volver a Mis Textos">◀</button>
             <div class="titulos-lectura-contenedor">
                 <h1 class="titulo-lectura">' . htmlspecialchars($title) . '</h1>
                 <h1 class="titulo-lectura-traduccion">' . htmlspecialchars($title_translation) . '</h1>

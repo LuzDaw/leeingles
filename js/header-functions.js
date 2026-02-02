@@ -33,12 +33,31 @@ function showHeader() {
 
 // Función para toggle del menú móvil
 function toggleMobileMenu() {
-    const navMenu = document.getElementById('nav-menu');
-    const toggle = document.getElementById('mobile-toggle');
-    
-    if (navMenu && toggle) {
-        navMenu.classList.toggle('active');
-        toggle.textContent = navMenu.classList.contains('active') ? '✕' : '☰';
+    const navMenu = document.getElementById('nav-menu'); // This is the .nav-right container
+    const mobileToggle = document.getElementById('mobile-toggle');
+    const userDropdown = document.querySelector('.user-dropdown'); // The container for the user dropdown
+
+    if (!mobileToggle) return;
+
+    // Check if the user is logged in (based on the global variable set in index.php)
+    if (window.userLoggedIn) {
+        if (userDropdown) {
+            // Ensure navMenu is active so userDropdown can be positioned correctly within it
+            if (navMenu && !navMenu.classList.contains('active')) {
+                navMenu.classList.add('active');
+            }
+            userDropdown.classList.toggle('active'); // Toggle active class on the user dropdown
+            const iconSpan = mobileToggle.querySelector('.material-icons');
+            if (iconSpan) {
+                iconSpan.textContent = userDropdown.classList.contains('active') ? 'close' : 'account_circle';
+            }
+        }
+    } else {
+        // If not logged in, behave as before (toggle main nav menu)
+        if (navMenu) {
+            navMenu.classList.toggle('active');
+            mobileToggle.textContent = navMenu.classList.contains('active') ? '✕' : '☰';
+        }
     }
 }
 

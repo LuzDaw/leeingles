@@ -4,7 +4,7 @@
     align-items: center;
     justify-content: space-between;
     padding: 8px 20px;
-    background: #ffffff;
+    background:rgb(0 0 0 / 2%);
     border-bottom: 1px solid #e5e7eb;
     position: sticky;
     top: 0;
@@ -23,7 +23,7 @@
     border: none;
     font-size: 22px;
     cursor: pointer;
-    color: var(--success-color);
+    color: #ff8a00;
     padding: 4px 8px;
     border-radius: 50%;
     transition: background 0.2s;

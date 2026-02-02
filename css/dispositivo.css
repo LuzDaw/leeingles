@@ -5,28 +5,30 @@
   .tab-navigation.tab-nav-container {
     background: transparent;
     position: relative;
-    padding: 0px 29px 0px 0px;
+    padding: 0px 94px 2px 0px;
     display: flex;
     align-items: center;
     justify-content: flex-start;
     min-height: 15px;
-    width: 35%;
-    margin-top: 0.5%;
+    width: 52%;
+    margin-top: -0.5%;
   }
 
   /* Botón hamburguesa para abrir/cerrar el menú (creado por JavaScript) */
    .tab-navigation.tab-nav-container .mobile-tab-menu-toggle {
-       font-size: 0;
-        background: #2f4a6f;
+      font-size: 0;
         border: none;
-        /* border-radius: 0px 12px 0px 0px; */
         position: relative;
         width: 100%;
+        border-radius: 1px 0px 16px 16px;
+                border-bottom: 4px solid #ff8a00;
+        border-top: 4px solid #ff8a00;
+        background:#2f4a6f ;
     
     }
 
     .tab-navigation.tab-nav-container .mobile-tab-menu-toggle::before {
-        content: "Pestañas";
+        content: "Menú";
         font-size: 14px;
         font-weight: 600;
         color: #ffffff;
@@ -38,7 +40,7 @@
     }
 
   .tab-navigation.tab-nav-container .mobile-tab-menu-toggle:hover {
-    background: #2f4a6f;
+    background: #3b82f6;
     color: #ffffff;
   }
 
@@ -127,10 +129,10 @@
         flex-direction: row;
         gap: 86px;
         text-align: center;
-        width: 95%;
+        width: 85%;
         flex: 0 0 70%;
-        margin-left: auto;
         padding: 0px;
+        margin: auto;
         }
         .tab-content-wrapper2 > * {
             padding: 0px;
@@ -218,11 +220,13 @@
     transition: all 0.3s ease;
     z-index: 999;
   }
+
+ 
   /* BOTÓN 2: "Textos públicos" */
     .tab-header-container > .dropdown > #publicTextsBtn {
         width: 100%;
         text-align: right;
-        padding: 0px;
+                padding: 5px;
     }
 
 
@@ -253,14 +257,32 @@
     width: 100%;
   }
 
+  /* Ocultar el botón principal del dropdown de usuario (saludo y flecha) cuando el menú está activo en móvil */
+  .user-dropdown.active .user-dropdown-btn .user-greeting,
+  .user-dropdown.active .user-dropdown-btn .dropdown-arrow {
+    display: none;
+  }
+
+  /* Ajustar el user-dropdown-menu para que esté oculto por defecto y se muestre con la clase 'active' */
   .user-dropdown-menu {
-    position: static;
-    opacity: 1;
-    visibility: visible;
-    transform: none;
+    display: none; /* Ocultar por defecto */
+    position: static; /* Mantener static para que no se superponga al contenido */
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px); /* Pequeña animación al aparecer */
+    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
     margin-top: 0.5rem;
     box-shadow: none;
     border: 1px solid #e5e7eb;
+  }
+
+  /* Mostrar el menú desplegable cuando el user-dropdown tenga la clase 'active' */
+  .user-dropdown.active .user-dropdown-menu {
+    display: flex; /* Usar flex para que los items se apilen */
+    flex-direction: column;
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
   }
   .logo-img {
     width: 50px;
@@ -480,4 +502,8 @@
     .meta-public {
         display: none; /* Oculta la etiqueta "Público" en la vista móvil si no es necesaria */
     }
+    .user-dropdown-btn{
+      display: none;
+
+ }
 }

@@ -211,13 +211,13 @@ $total_found = count($own_texts) + count($public_read_rows);
     /* Ajustes para el encabezado con 3 elementos */
     .tab-header-container {
         display: flex;
-        justify-content: space-between;
+        justify-content: center;
         align-items: center;
         gap: 20%;
     }
-    .tab-header-container > * {
+    /* .tab-header-container > * {
         flex: 1;
-    }
+    } */
     .tab-header-container h3 {
         text-align: left;
         white-space: nowrap;

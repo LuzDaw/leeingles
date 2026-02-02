@@ -91,7 +91,13 @@ extract(get_index_page_data($conn));
         <?php endif; ?>
       </div>
 
-      <button class="mobile-menu-toggle" id="mobile-toggle">☰</button>
+      <button class="mobile-menu-toggle" id="mobile-toggle">
+        <?php if (isset($_SESSION['user_id'])): ?>
+          <span class="material-icons">account_circle</span>
+        <?php else: ?>
+          ☰
+        <?php endif; ?>
+      </button>
     </div>
   </header>
   <?php endif; ?>
