@@ -78,7 +78,7 @@ extract(get_index_page_data($conn));
               <span class="dropdown-arrow">▼</span>
             </button>
             <div class="user-dropdown-menu">
-              <a href="#" class="dropdown-item" onclick="loadTabContent('account'); toggleMobileMenu(); return false;">
+              <a href="#" class="dropdown-item" onclick="loadTabContent('account'); toggleMobileMenu(); ">
                 <span class="dropdown-icon">👤</span>
                 Mi cuenta
               </a>
