@@ -132,7 +132,12 @@ foreach ($words as $word) {
 <?php endif; ?>
 
 <?php if (empty($words_by_text)): ?>
-    <div style="text-align:center; color:#888; font-size:18px; margin:40px 0;">No tienes palabras guardadas aún.</div>
+    <div style="text-align: center; padding: 40px 20px; color: #6b7280;">
+                        <div style="font-size: 3.5rem; margin-bottom: 15px; opacity: 0.5;">📚</div>
+                        <h3 style="margin-bottom: 10px; color: #374151;">No hay pañabras en tu lista</h3>
+                        <p style="margin-bottom: 25px;">¡Comienza seleccionandolas en tus textos o explora los textos públicos!</p>
+        <button class="lload-texts-button" onclick="window.loadTabContent('my-texts')">Ir Textos</button>
+    </div>
 <?php else: ?>
     <form method="post" id="words-list-form">
         <?php foreach ($words_by_text as $text_title => $words): ?>

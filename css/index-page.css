@@ -184,6 +184,10 @@ label {
     text-align: center;
     padding: 20px 0;
 }
+.lload-texts-button{ 
+    display: none;
+   
+}
 
 /* Modales (Estilos base en common-styles.css) */
 

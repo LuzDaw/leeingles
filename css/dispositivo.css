@@ -510,6 +510,23 @@ padding-top: 4%;
     }
     .user-dropdown-btn{
       display: none;
-
  }
+ .lload-texts-button{ 
+   display: block;
+        padding: 10px 55px;
+        background-color: var(--accent-hover);
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin: 13% auto 0px auto;
+        width: 100%;
+        justify-content: center;
+        margin: 4px 0;
+    
+}
+.lload-texts-button:hover {
+    background: var(--accent-hover);
+    box-shadow: var(--shadow-sm);
+}
 }
