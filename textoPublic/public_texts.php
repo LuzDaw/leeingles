@@ -18,12 +18,12 @@ if ($has_category) {
 
 // Cargar textos públicos
 if ($has_category) {
-    $stmt = $conn->prepare("SELECT id, title, title_translation FROM texts WHERE is_public = 1 AND category_id = ?");
+    $stmt = $conn->prepare("SELECT id, title, title_translation, content FROM texts WHERE is_public = 1 AND category_id = ?");
     $stmt->bind_param("i", $category_id);
     $stmt->execute();
     $result = $stmt->get_result();
 } else {
-    $stmt = $conn->prepare("SELECT id, title, title_translation FROM texts WHERE is_public = 1");
+    $stmt = $conn->prepare("SELECT id, title, title_translation, content FROM texts WHERE is_public = 1");
     $stmt->execute();
     $result = $stmt->get_result();
 }
@@ -36,7 +36,8 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == '1') {
             $texts[] = [
                 'id' => $row['id'],
                 'title' => $row['title'],
-                'title_translation' => $row['title_translation']
+                'title_translation' => $row['title_translation'],
+                'word_count' => str_word_count(strip_tags($row['content']))
             ];
         }
         $result->close();

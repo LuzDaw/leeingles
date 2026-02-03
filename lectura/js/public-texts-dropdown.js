@@ -39,17 +39,10 @@ function loadPublicTextsByCategory(catId, catName) {
             const numSpan = document.querySelector('.bulk-actions-container span');
             if (numSpan) numSpan.textContent = data.texts.length;
             if (Array.isArray(data.texts) && data.texts.length > 0) {
-                // Para cada texto, obtener el número de palabras por AJAX
-                const wordCounts = await Promise.all(data.texts.map(txt =>
-                    fetch(`textoPublic/get_text_content.php?id=${txt.id}`)
-                        .then(res => res.json())
-                        .then(obj => obj && obj.content ? countWordsInText(obj.content) : '?')
-                        .catch(() => '?')
-                ));
                 let html = '<h3 style="color:#374151; margin-bottom:10px;">Textos públicos de <span style="color:#3b82f6;">' + data.category + '</span></h3>';
                 html += '<ul class="text-list">';
                 
-                data.texts.forEach((txt, i) => {
+                data.texts.forEach(txt => {
                     html += '<li class="text-item">';
                     html += '<a href="index.php?public_text_id=' + txt.id + '" class="text-title">';
                     html += '<span class="title-english">' + txt.title + '</span>';
@@ -61,7 +54,7 @@ function loadPublicTextsByCategory(catId, catName) {
                     }
                     
                     html += '</a>';
-                    html += '<span class="text-date">' + wordCounts[i] + ' palabras</span>';
+                    html += '<span class="text-date">' + txt.word_count + ' palabras</span>';
                     html += '</li>';
                 });
                 
@@ -90,17 +83,10 @@ function loadAllPublicTexts() {
             const numSpan = document.querySelector('.bulk-actions-container span');
             if (numSpan) numSpan.textContent = data.texts.length;
             if (Array.isArray(data.texts) && data.texts.length > 0) {
-                // Para cada texto, obtener el número de palabras por AJAX
-                const wordCounts = await Promise.all(data.texts.map(txt =>
-                    fetch(`textoPublic/get_text_content.php?id=${txt.id}`)
-                        .then(res => res.json())
-                        .then(obj => obj && obj.content ? countWordsInText(obj.content) : '?')
-                        .catch(() => '?')
-                ));
                 let html = '<h3 style="color:#374151; margin-bottom:10px;">Todos los textos públicos</h3>';
                 html += '<ul class="text-list">';
                 
-                data.texts.forEach((txt, i) => {
+                data.texts.forEach(txt => {
                     html += '<li class="text-item">';
                     html += '<a href="index.php?public_text_id=' + txt.id + '" class="text-title">';
                     html += '<span class="title-english">' + txt.title + '</span>';
@@ -112,7 +98,7 @@ function loadAllPublicTexts() {
                     }
                     
                     html += '</a>';
-                    html += '<span class="text-date">' + wordCounts[i] + ' palabras</span>';
+                    html += '<span class="text-date">' + txt.word_count + ' palabras</span>';
                     html += '</li>';
                 });
                 
@@ -125,9 +111,4 @@ function loadAllPublicTexts() {
         .catch(() => {
             form.innerHTML = `<div style='padding:20px; text-align:center; color:#ff8a00;'>Error al cargar los textos públicos.</div>`;
         });
-}
-
-// Función local para contar palabras en un texto
-function countWordsInText(text) {
-    return TextUtils.countWords(text);
 }
