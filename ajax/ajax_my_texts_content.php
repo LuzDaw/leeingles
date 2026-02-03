@@ -213,7 +213,7 @@ $total_found = count($own_texts) + count($public_read_rows);
         display: flex;
         justify-content: center;
         align-items: center;
-        gap: 20%;
+        gap: 32%;
     }
     /* .tab-header-container > * {
         flex: 1;

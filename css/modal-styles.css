@@ -139,11 +139,11 @@
 }
 
 .auth-view input { 
-    width: 100%; 
+    width: 100%;
     padding: 0.75rem;
-    box-sizing: border-box; 
-    border: 2px solid #e5e7eb; 
-    border-radius: 8px; 
+    box-sizing: border-box;
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
     font-size: 1rem;
     transition: all 0.2s ease;
     background: #fff;

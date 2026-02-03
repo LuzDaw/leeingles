@@ -117,7 +117,7 @@ if (isset($_GET['token'])) {
 $conn->close();
 ?>
 <div class="reset-container">
-    <h2>Restablecer Contraseña</h2>
+    <h2 id="retatablecer">Restablecer Contraseña</h2>
 
     <?php if ($message): ?>
         <div class="message <?php echo $message_type; ?>">
@@ -182,7 +182,7 @@ $conn->close();
                         
                         if (data.success) {
                             newMessageDiv.classList.add('success');
-                            newMessageDiv.style.color = '#155724';
+                            newMessageDiv.style.color = '#e48415e5';
                             newMessageDiv.style.background = '#d4edda';
                             newMessageDiv.style.padding = '10px';
                             newMessageDiv.style.borderRadius = '4px';
@@ -196,7 +196,7 @@ $conn->close();
                             }, 2000);
                         } else {
                             newMessageDiv.classList.add('error');
-                            newMessageDiv.style.color = '#721c24';
+                            newMessageDiv.style.color = '#e48415e5';
                             newMessageDiv.style.background = '#f8d7da';
                             newMessageDiv.style.padding = '10px';
                             newMessageDiv.style.borderRadius = '4px';
@@ -209,7 +209,7 @@ $conn->close();
                         const container = document.querySelector('.reset-container');
                         const newMessageDiv = document.createElement('div');
                         newMessageDiv.classList.add('message', 'error');
-                        newMessageDiv.style.color = '#721c24';
+                        newMessageDiv.style.color = '#e48415e5';
                         newMessageDiv.style.background = '#f8d7da';
                         newMessageDiv.style.padding = '10px';
                         newMessageDiv.style.borderRadius = '4px';

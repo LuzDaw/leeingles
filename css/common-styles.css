@@ -229,15 +229,24 @@
     font-weight: 600;
     color: var(--text-muted);
 }
+.reset-container{
+    padding: 14px;
+
+}
 
 .modal-input-field {
-    width: 100%;
-    padding: 12px;
-    border-radius: var(--border-radius-md);
-    font-size: var(--font-md);
-    border: 2px solid var(--border-color);
+  width: 100%;
+    padding: 0.75rem;
     box-sizing: border-box;
-    margin-bottom: 16px;
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+    background: #fff;
+}
+#retatablecer {
+    padding-bottom: 24px;
+    color: #3b82f6;
 }
 
 .modal-submit-btn {
@@ -506,6 +515,20 @@
     font-weight: 400;
     padding: 0.5rem 1rem;
     font-size: 0.9rem;
+}
+button#dropdownBtn {
+    all: revert;
+    display: inline-flex;
+    align-items: center;
+    padding: 10px 9px;
+    font-size: 12px;
+        color: #64748b;
+    font-weight: 500;
+    background-color: #faebd700;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
 }
 
 .user-dropdown-btn{

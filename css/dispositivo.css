@@ -131,7 +131,7 @@
         text-align: center;
         width: 85%;
         flex: 0 0 70%;
-        padding: 0px;
+        padding: 15px 0px 5px 0px;
         margin: auto;
         }
         .tab-content-wrapper2 > * {
@@ -151,7 +151,7 @@
        /* BOTÓN 1: "Mi Biblioteca" */
     .tab-header-container > .library-title-clickable {
         width: 35%;
-        text-align: left;padding-left: 6%;
+        text-align: left;
     }
 
     
@@ -221,12 +221,17 @@
     z-index: 999;
   }
 
+  #bulkForm{
+padding-top: 4%;
+  }
+
  
   /* BOTÓN 2: "Textos públicos" */
     .tab-header-container > .dropdown > #publicTextsBtn {
         width: 100%;
         text-align: right;
-                padding: 5px;
+                     padding: 3px;
+                     min-width:152px ;
     }
 
 
@@ -246,7 +251,7 @@
     padding: 0rem 1rem;
     transition: 0.3s;
     gap: 0rem;
-    padding: 12px;
+   
   }
 
   .mobile-menu-toggle {
@@ -278,11 +283,12 @@
 
   /* Mostrar el menú desplegable cuando el user-dropdown tenga la clase 'active' */
   .user-dropdown.active .user-dropdown-menu {
-    display: flex; /* Usar flex para que los items se apilen */
-    flex-direction: column;
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
+   display: flex;
+        flex-direction: row-reverse;
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+        padding-left: 16%;
   }
   .logo-img {
     width: 50px;

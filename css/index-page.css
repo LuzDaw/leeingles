@@ -188,7 +188,7 @@ label {
 /* Modales (Estilos base en common-styles.css) */
 
 .login-modal-container {
-   width: 350px;
+   width: 45%;
     padding: 12px;
     color: var(--success-color);
 }
