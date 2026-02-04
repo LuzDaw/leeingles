@@ -2,6 +2,10 @@
 let rateInput = null;
 let rateValue = null;
 
+/**
+ * Inicializa el lector de texto, configurando variables globales,
+ * manejadores de eventos y la lógica de paginación y lectura automática.
+ */
 function initLector() {
     // Hacer estas variables globales para asegurar consistencia entre funciones
     if (typeof window.currentIndex === 'undefined') window.currentIndex = 0;
@@ -21,6 +25,9 @@ function initLector() {
     let isCurrentlyReading = false;
 
     // Helper para cancelar cualquier proveedor de TTS activo
+    /**
+     * Cancela cualquier proceso de síntesis de voz activo de todos los proveedores conocidos.
+     */
     function cancelAllTTS() {
         try { if (typeof window.detenerLecturaResponsiveVoice === 'function') window.detenerLecturaResponsiveVoice(); } catch (e) {}
         try { if (window.speechSynthesis) window.speechSynthesis.cancel(); } catch (e) {}
@@ -28,6 +35,13 @@ function initLector() {
     }
 
     // Función centralizada para guardar tiempo de lectura
+    /**
+     * Guarda el tiempo de lectura acumulado para un texto específico.
+     *
+     * Envía una petición AJAX a `save_reading_time.php` para registrar la duración.
+     *
+     * @param {number} duration - La duración de la lectura en segundos.
+     */
     function saveReadingTime(duration) {
         let textId = document.querySelector('#text.reading-area')?.getAttribute('data-text-id') || 
                      document.querySelector('.reading-area')?.getAttribute('data-text-id') ||
@@ -51,6 +65,10 @@ function initLector() {
     }
 
     // Función para actualizar tiempo en tiempo real
+    /**
+     * Actualiza el tiempo de lectura en tiempo real, guardando la duración
+     * cada 30 segundos si la lectura está activa.
+     */
     function updateReadingTimeRealTime() {
         if (readingLastSaveTime && isCurrentlyReading) {
             const currentTime = Date.now();
@@ -78,6 +96,12 @@ function initLector() {
         initializeRateControl();
     }
     
+    /**
+     * Inicializa los controles de velocidad de lectura (slider y display de porcentaje).
+     *
+     * Configura los event listeners para el slider de velocidad, permitiendo ajustar
+     * la velocidad de lectura y mostrando el valor en porcentaje.
+     */
     function initializeRateControl() {
         if (rateInput && rateValue) {
             const initialValue = parseFloat(rateInput.value);
@@ -109,6 +133,11 @@ function initLector() {
                 rateInput.setAttribute('data-listener', 'true');
             }
             
+                    /**
+             * Maneja el movimiento del ratón sobre el slider de velocidad para actualizar su valor.
+             *
+             * @param {MouseEvent} e - El objeto de evento del ratón.
+             */
             function handleSliderMouseMove(e) {
                 const rect = rateInput.getBoundingClientRect();
                 const isVertical = rect.height > rect.width;
@@ -138,6 +167,14 @@ function initLector() {
     let prevBtn, nextBtn, pageNumber, totalPagesSpan;
     window.virtualPages = [];
 
+    /**
+     * Realiza la paginación dinámica del contenido del texto.
+     *
+     * Divide el texto en "páginas" virtuales basándose en la altura disponible de la ventana,
+     * ajustando el contenido para que quepa sin desbordarse.
+     *
+     * @global {Array<Array<HTMLElement>>} window.virtualPages - Almacena los wrappers de párrafo para cada página virtual.
+     */
     window.paginateDynamically = function() {
         const container = document.getElementById('pages-container');
         const viewport = document.getElementById('dynamic-content-viewport');
@@ -199,6 +236,12 @@ function initLector() {
         updatePageDisplay();
     };
 
+    /**
+     * Inicializa los controles de paginación (botones de anterior/siguiente, número de página)
+     * y el control de visibilidad del selector de velocidad.
+     *
+     * Configura los event listeners para la navegación entre páginas y la repaginación al redimensionar la ventana.
+     */
     window.initializePaginationControls = function() {
         prevBtn = document.getElementById("prev-page");
         nextBtn = document.getElementById("next-page");
@@ -260,6 +303,13 @@ function initLector() {
         window.paginateDynamically();
     };
 
+    /**
+     * Actualiza la visualización de la página actual.
+     *
+     * Oculta todos los párrafos y muestra solo los que pertenecen a la página actual.
+     * Actualiza los botones de navegación y el número de página.
+     * Si la lectura automática está activa, inicia la lectura del primer párrafo de la página.
+     */
     function updatePageDisplay() {
         if (!window.virtualPages || !window.virtualPages.length) return;
         const currentPageIdx = window.currentPage || 0;
@@ -330,6 +380,11 @@ function initLector() {
         updateReadingProgressBar();
     }
 
+    /**
+     * Actualiza la barra de progreso de lectura y el porcentaje mostrado.
+     *
+     * Calcula el progreso basándose en las palabras de las páginas ya leídas.
+     */
     function updateReadingProgressBar() {
         let pagesContainer = document.getElementById('pages-container');
         if (!pagesContainer) return;
@@ -366,6 +421,13 @@ function initLector() {
         updatePageDisplay();
     }, 100);
 
+    /**
+     * Alterna el modo de lectura doble (leer cada párrafo dos veces).
+     *
+     * Actualiza el estado del botón correspondiente en el menú flotante.
+     *
+     * @global {boolean} window.doubleReadingMode - Indica si el modo de lectura doble está activo.
+     */
     window.doubleReadingMode = false;
     window.readCurrentParagraphTwice = function() {
         window.doubleReadingMode = !window.doubleReadingMode;
@@ -382,6 +444,15 @@ function initLector() {
     let speakSessionId = 0;
     let activeSpeakSessionId = 0;
     
+    /**
+     * Lee un párrafo y, opcionalmente, lo traduce.
+     *
+     * Esta es la función central de lectura automática. Gestiona la síntesis de voz,
+     * la traducción de párrafos, el avance entre párrafos y páginas, y el modo de lectura doble.
+     *
+     * @param {number} index - El índice del párrafo a leer en la página actual.
+     * @param {number} [startWord=0] - El índice de la palabra desde la que empezar a leer dentro del párrafo.
+     */
     async function readAndTranslate(index, startWord = 0) {
         if (isReadingInProgress && currentReadingIndex !== index) {
             isReadingInProgress = false;
@@ -501,6 +572,14 @@ function initLector() {
         cancelAllTTS();
 
         let repeatCount = 0;
+        /**
+         * Función interna para manejar la síntesis de voz y la repetición en modo de lectura doble.
+         *
+         * Utiliza `SpeechSynthesisUtterance` para leer el texto, gestiona los eventos `onend` y `onerror`,
+         * y controla la lógica de repetición y avance al siguiente párrafo.
+         *
+         * @param {number} [startWordBoundary=0] - El índice de la palabra desde la que empezar a hablar.
+         */
         async function speakAndMaybeRepeat(startWordBoundary = 0) {
             let speakText = text;
             let words = text.split(/\s+/);
@@ -633,6 +712,14 @@ function initLector() {
         }
     }
 
+    /**
+     * Avanza al siguiente párrafo o página de forma segura en caso de error o finalización de la lectura.
+     *
+     * @param {number} currentIndex - El índice del párrafo actual.
+     * @param {number} currentPageIdx - El índice de la página actual.
+     * @param {Array<HTMLElement>} paragraphs - Un array de elementos de párrafo de la página actual.
+     * @param {number} totalPages - El número total de páginas virtuales.
+     */
     function advanceToNextParagraphSafely(currentIndex, currentPageIdx, paragraphs, totalPages) {
         const nextIndex = currentIndex + 1;
         if (nextIndex < paragraphs.length) {
@@ -656,6 +743,13 @@ function initLector() {
         }
     }
 
+    /**
+     * Incrementa el contador de uso de traducciones para un texto dado.
+     *
+     * Realiza una petición AJAX a `traduciones/ajax_increment_usage.php`.
+     *
+     * @param {string} text - El texto por el que se incrementará el uso.
+     */
     window.incrementUsageOnly = async function(text) {
         if (!text || window.translationLimitReached) return;
         try {
@@ -672,6 +766,16 @@ function initLector() {
         } catch (e) {}
     };
 
+    /**
+     * Traduce un párrafo y guarda la traducción en la base de datos.
+     *
+     * Utiliza el sistema de traducción híbrido y, si la traducción es exitosa,
+     * la guarda en el caché de traducciones y en la base de datos.
+     *
+     * @param {string} text - El texto del párrafo a traducir.
+     * @param {HTMLElement} box - El elemento DOM donde se mostrará la traducción.
+     * @param {string} textId - El ID del texto al que pertenece el párrafo.
+     */
     function translateAndSaveParagraph(text, box, textId) {
         if (window.translationLimitReached) { box.innerText = ''; return; }
         if (window.contentTranslationsCache && window.contentTranslationsCache[text]) {
@@ -718,6 +822,14 @@ function initLector() {
         });
     }
     
+    /**
+     * Traduce un párrafo sin guardarlo en la base de datos.
+     *
+     * Utiliza el sistema de traducción híbrido y muestra la traducción en el elemento DOM.
+     *
+     * @param {string} text - El texto del párrafo a traducir.
+     * @param {HTMLElement} box - El elemento DOM donde se mostrará la traducción.
+     */
     function translateParagraphOnly(text, box) {
         if (window.translationLimitReached) { box.innerText = ''; return; }
         const isActiveReading = window.autoReading ? '1' : '0';
@@ -734,6 +846,12 @@ function initLector() {
         .catch(() => {});
     }
 
+    /**
+     * Guarda la traducción completa de todo el contenido de un texto.
+     *
+     * Concatena todos los párrafos del texto actual, los traduce y guarda
+     * la traducción resultante en la base de datos.
+     */
     window.saveCompleteContentTranslation = async function() {
         const textId = document.querySelector('#pages-container')?.dataset?.textId;
         if (!textId) return;
@@ -758,6 +876,9 @@ function initLector() {
         } catch (error) {}
     };
 
+    /**
+     * Limpia el estado de hover, ocultando cualquier tooltip y eliminando razones de pausa relacionadas.
+     */
     window.clearHoverState = function() {
         if (typeof hideHoverTooltip === 'function') hideHoverTooltip();
         if (window.ReadingPauseReasons) window.ReadingPauseReasons.delete('word-hover');
@@ -765,6 +886,11 @@ function initLector() {
     };
 
     let wordClickTimer = null;
+    /**
+     * Asigna los manejadores de eventos de clic a todas las palabras clickeables.
+     *
+     * Elimina los listeners previos para evitar duplicados y añade el manejador `handleWordClick`.
+     */
     function assignWordClickHandlers() {
         document.querySelectorAll('.clickable-word').forEach(span => {
             span.classList.add('word-clickable');
@@ -774,6 +900,14 @@ function initLector() {
         });
     }
 
+    /**
+     * Maneja el evento de clic en una palabra clickeable.
+     *
+     * Detecta si es un clic simple o doble. Un clic simple pausa la lectura y muestra
+     * una traducción temporal. Un doble clic abre el sidebar de explicaciones.
+     *
+     * @param {Event} event - El objeto de evento del clic.
+     */
     function handleWordClick(event) {
         event.preventDefault();
         const el = this;
@@ -794,6 +928,15 @@ function initLector() {
         }
     }
 
+    /**
+     * Maneja un clic simple en una palabra.
+     *
+     * Pausa la lectura (si está activa), resalta la palabra, muestra un tooltip
+     * con su traducción y programa la reanudación de la lectura.
+     *
+     * @param {HTMLElement} el - El elemento DOM de la palabra clickeada.
+     * @param {string} word - La palabra clickeada.
+     */
     function handleWordSingleClick(el, word) {
         // Pausar lectura si está activa
         const wasReading = window.isCurrentlyReading || window.autoReading;
@@ -839,6 +982,15 @@ function initLector() {
         }
     }
 
+    /**
+     * Maneja un doble clic en una palabra.
+     *
+     * Cancela cualquier pausa por clic simple, resalta la palabra y abre el sidebar
+     * de explicaciones para mostrar información detallada de la palabra.
+     *
+     * @param {HTMLElement} el - El elemento DOM de la palabra clickeada.
+     * @param {string} word - La palabra clickeada.
+     */
     function handleWordDoubleClick(el, word) {
         // Si había una pausa por clic simple, cancelarla para que el sidebar tome el control
         if (window._tooltipTimeout) clearTimeout(window._tooltipTimeout);
@@ -861,6 +1013,13 @@ function initLector() {
         });
     }
 
+    /**
+     * Encuentra la oración que contiene una palabra específica dentro de un párrafo.
+     *
+     * @param {HTMLElement} element - El elemento DOM de la palabra.
+     * @param {string} word - La palabra a buscar.
+     * @returns {string} La oración que contiene la palabra, o la palabra misma si no se encuentra una oración.
+     */
     function findSentenceContainingWord(element, word) {
         let paragraph = element.closest('p') || element.closest('.paragraph');
         if (paragraph) {
@@ -872,16 +1031,33 @@ function initLector() {
         return word + '.';
     }
 
+    /**
+     * Resalta visualmente una palabra en el texto.
+     *
+     * Añade la clase 'word-highlighted' al elemento y almacena la palabra destacada globalmente.
+     *
+     * @param {HTMLElement} element - El elemento DOM de la palabra a resaltar.
+     */
     function highlightWord(element) {
         window.currentHighlightedWord = { element, word: element.textContent.trim() };
         element.classList.add('word-highlighted');
     }
 
+    /**
+     * Elimina el resaltado de cualquier palabra previamente destacada.
+     */
     function clearWordHighlight() {
         document.querySelector('.word-highlighted')?.classList.remove('word-highlighted');
         window.currentHighlightedWord = null;
     }
 
+    /**
+     * Muestra un tooltip simple con la palabra y su traducción al pasar el ratón.
+     *
+     * @param {HTMLElement} element - El elemento DOM sobre el que se muestra el tooltip.
+     * @param {string} word - La palabra original.
+     * @param {string} translation - La traducción de la palabra.
+     */
     function showHoverTooltip(element, word, translation) {
         hideHoverTooltip();
         const tooltip = document.createElement('div');
@@ -894,10 +1070,18 @@ function initLector() {
         tooltip.style.left = (rect.left + window.scrollX) + 'px';
     }
 
+    /**
+     * Oculta cualquier tooltip de hover visible.
+     */
     function hideHoverTooltip() {
         document.querySelector('.simple-tooltip.hover')?.remove();
     }
 
+    /**
+     * Inicializa o reinicia los estados de lectura globales.
+     *
+     * Establece todas las banderas de lectura a `false` y limpia cualquier intervalo de actualización.
+     */
     window.initializeReadingStates = function() {
         window.isCurrentlyReading = false;
         window.isCurrentlyPaused = false;
@@ -908,6 +1092,12 @@ function initLector() {
         if (typeof window.updateFloatingButton === 'function') window.updateFloatingButton();
     };
     
+    /**
+     * Limpia y restablece todos los estados de lectura al finalizar o detener la lectura.
+     *
+     * Guarda el tiempo de lectura restante, restablece las banderas de lectura,
+     * limpia intervalos y muestra el encabezado.
+     */
     window.cleanupReadingStates = function() {
         if (readingLastSaveTime) saveReadingTime(Math.floor((Date.now() - readingLastSaveTime) / 1000));
         window.isCurrentlyReading = false;
@@ -920,6 +1110,12 @@ function initLector() {
         if (typeof window.updateFloatingButton === 'function') window.updateFloatingButton();
     };
     
+    /**
+     * Inicia la lectura automática del texto.
+     *
+     * Oculta el encabezado, repagina dinámicamente, verifica los límites de traducción,
+     * inicializa los estados de lectura y comienza a leer desde el último punto guardado.
+     */
     window.startReading = async function() {
         document.querySelector('.encabezado-lectura')?.classList.add('hidden');
         // Repaginar inmediatamente para aprovechar el espacio del encabezado oculto
@@ -959,6 +1155,12 @@ function initLector() {
         if (typeof window.updateFloatingButton === 'function') window.updateFloatingButton();
     };
 
+    /**
+     * Pausa la síntesis de voz.
+     *
+     * Muestra el encabezado, repagina el contenido, establece el estado de pausa
+     * y guarda el tiempo de lectura acumulado.
+     */
     window.pauseSpeech = function() {
         document.querySelector('.encabezado-lectura')?.classList.remove('hidden');
         // Repaginar para ajustar el texto al espacio con encabezado visible
@@ -975,6 +1177,12 @@ function initLector() {
         if (typeof window.updateFloatingButton === 'function') window.updateFloatingButton();
     };
 
+    /**
+     * Reanuda la síntesis de voz.
+     *
+     * Oculta el encabezado, restablece el estado de lectura y reanuda la lectura
+     * desde el último punto.
+     */
     window.resumeSpeech = function() {
         document.querySelector('.encabezado-lectura')?.classList.add('hidden');
         // Si no estaba pausado, iniciar normalmente (que ya maneja el índice guardado)
@@ -996,6 +1204,11 @@ function initLector() {
         if (typeof window.updateFloatingButton === 'function') window.updateFloatingButton();
     };
 
+    /**
+     * Pausa la lectura, deteniendo la síntesis de voz y actualizando los estados.
+     *
+     * @param {string} [reason=''] - La razón por la que se pausa la lectura (ej. 'word-click', 'explain').
+     */
     window.pauseReading = function(reason = '') {
         window.isCurrentlyPaused = true;
         // Solo cambiar el estado visual si NO es una pausa temporal por clic o hover
@@ -1014,6 +1227,14 @@ function initLector() {
         if (typeof window.updateFloatingButton === 'function') window.updateFloatingButton();
     };
 
+    /**
+     * Reanuda la lectura desde el punto donde se pausó.
+     *
+     * Restablece los estados de lectura y reanuda la síntesis de voz o inicia la lectura
+     * desde el último párrafo si no estaba pausada por `speechSynthesis`.
+     *
+     * @param {object} [options={}] - Opciones para la reanudación (ej. `reason`, `force`).
+     */
     window.resumeReading = function(options = {}) {
         window.isCurrentlyPaused = false;
         window.isCurrentlyReading = true;
@@ -1033,6 +1254,12 @@ function initLector() {
         if (typeof window.updateFloatingButton === 'function') window.updateFloatingButton();
     };
 
+    /**
+     * Detiene completamente la lectura.
+     *
+     * Restablece todos los estados de lectura, cancela la síntesis de voz,
+     * limpia temporizadores y restablece la interfaz de usuario.
+     */
     window.stopReading = function() {
         // 1. DESACTIVAR ESTADOS INMEDIATAMENTE (Antes de cualquier otra operación)
         window.autoReading = false;
@@ -1077,6 +1304,11 @@ function initLector() {
         if (typeof window.updateFloatingButton === 'function') window.updateFloatingButton();
     };
 
+    /**
+     * Habilita la paginación en modo de pantalla completa (limitando el número de párrafos visibles).
+     *
+     * Añade una etiqueta `<style>` al `<head>` para aplicar estilos CSS que limitan la visibilidad de los párrafos.
+     */
     window.enableFullscreenPagination = function() {
         const style = document.createElement('style');
         style.id = 'fullscreen-pagination-style';
@@ -1084,6 +1316,11 @@ function initLector() {
         document.head.appendChild(style);
     };
     
+    /**
+     * Deshabilita la paginación en modo de pantalla completa.
+     *
+     * Elimina la etiqueta `<style>` que se añadió para limitar la visibilidad de los párrafos.
+     */
     window.disableFullscreenPagination = function() {
         document.getElementById('fullscreen-pagination-style')?.remove();
     };
@@ -1101,6 +1338,12 @@ function initLector() {
     document.addEventListener('fullscreenchange', handleFSChange);
     document.addEventListener('webkitfullscreenchange', handleFSChange);
 
+    /**
+     * Muestra todas las traducciones de los párrafos del texto.
+     *
+     * Verifica los límites de traducción, obtiene las traducciones (primero del caché/BD, luego de la API)
+     * y las muestra en los elementos de traducción correspondientes.
+     */
     window.showAllTranslations = async function() {
         if (window.translationLimitReached) { window.LimitModal?.show(null, true); return; }
         const btn = document.getElementById('show-all-translations-btn');
@@ -1146,6 +1389,11 @@ function initLector() {
         if (btn) { btn.disabled = false; btn.textContent = '🗑️ Quitar traducciones'; btn.onclick = (e) => { e.stopPropagation(); window.removeAllTranslations(); }; }
     };
 
+    /**
+     * Elimina todas las traducciones mostradas en los párrafos del texto.
+     *
+     * Restablece el texto de los elementos de traducción y el estado del botón "Mostrar todas las traducciones".
+     */
     window.removeAllTranslations = function() {
         document.querySelectorAll('.translation').forEach(div => { div.innerText = ''; div.className = 'translation'; });
         const btn = document.getElementById('show-all-translations-btn');
@@ -1153,6 +1401,12 @@ function initLector() {
     };
 
     window.readPages = [];
+    /**
+     * Carga el progreso de lectura guardado para el texto actual.
+     *
+     * Obtiene las páginas leídas y el porcentaje de progreso desde `ajax_progress_content.php`
+     * y actualiza la barra de progreso.
+     */
     function loadReadingProgress() {
         const textId = document.querySelector('.reading-area')?.getAttribute('data-text-id');
         if (!textId) return;
@@ -1165,6 +1419,14 @@ function initLector() {
             }).catch(() => {});
     }
 
+    /**
+     * Guarda el progreso de lectura actual del usuario.
+     *
+     * Envía el porcentaje de lectura y las páginas leídas a `ajax_progress_content.php`.
+     *
+     * @param {number} percent - El porcentaje de lectura completado.
+     * @param {number} [finish=0] - Indica si la lectura se ha completado (1) o no (0).
+     */
     function saveReadingProgress(percent, finish = 0) {
         const textId = document.querySelector('.reading-area')?.getAttribute('data-text-id') || 
                        document.querySelector('#pages-container')?.getAttribute('data-text-id');
@@ -1186,6 +1448,14 @@ function initLector() {
         .catch(err => console.error('Error guardando progreso:', err));
     }
 
+    /**
+     * Registra que una página ha sido leída por el sistema TTS.
+     *
+     * Añade el índice de la página al array `window.readPages` si no está ya presente
+     * y actualiza la barra de progreso. Si todas las páginas han sido leídas, guarda el progreso como 100%.
+     *
+     * @param {number} pageIdx - El índice de la página que ha sido leída.
+     */
     function onPageReadByTTS(pageIdx) {
         if (!window.readPages.includes(pageIdx)) {
             window.readPages.push(pageIdx);

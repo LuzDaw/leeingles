@@ -4,7 +4,18 @@
  * Sigue el mismo patrón que title_functions.php para saved_words
  */
 
-// Función para guardar traducción de contenido
+/**
+ * Guarda una traducción de contenido para un texto específico.
+ *
+ * Si ya existen traducciones para el texto, la nueva traducción se añade
+ * al final de un array JSON. Si es la primera traducción, se inicializa
+ * el campo `content_translation` con la nueva traducción.
+ *
+ * @param int $text_id El ID del texto al que se asocia la traducción.
+ * @param string $content El fragmento de contenido original que se está traduciendo.
+ * @param string $translation La traducción del fragmento de contenido.
+ * @return array Un array asociativo con 'success' (booleano) y 'message' o 'error'.
+ */
 function saveContentTranslation($text_id, $content, $translation) {
     global $conn;
     
@@ -61,7 +72,15 @@ function saveContentTranslation($text_id, $content, $translation) {
     }
 }
 
-// Función para obtener traducción de contenido
+/**
+ * Obtiene las traducciones de contenido para un texto específico.
+ *
+ * Intenta decodificar el campo `content_translation` como JSON. Si es un JSON válido,
+ * devuelve un array de traducciones. Si no es JSON (formato antiguo), devuelve el texto plano.
+ *
+ * @param int $text_id El ID del texto del que se quieren obtener las traducciones.
+ * @return array|string|null Un array de traducciones, el texto plano de la traducción antigua, o null si no hay traducción o el texto no existe.
+ */
 function getContentTranslation($text_id) {
     global $conn;
     
@@ -98,7 +117,15 @@ function getContentTranslation($text_id) {
     }
 }
 
-// Función para obtener todos los textos con sus traducciones de contenido
+/**
+ * Obtiene una lista de textos con sus traducciones de contenido.
+ *
+ * Permite filtrar por ID de usuario y limitar el número de resultados.
+ *
+ * @param int|null $user_id (Opcional) El ID del usuario para filtrar los textos. Si es null, se obtienen todos los textos.
+ * @param int|null $limit (Opcional) El número máximo de textos a devolver.
+ * @return array Un array de objetos de texto, cada uno incluyendo su contenido y traducción.
+ */
 function getTextsWithContentTranslations($user_id = null, $limit = null) {
     global $conn;
     
@@ -142,7 +169,14 @@ function getTextsWithContentTranslations($user_id = null, $limit = null) {
     }
 }
 
-// Función para verificar si un contenido necesita traducción
+/**
+ * Verifica si un texto específico necesita una traducción de contenido.
+ *
+ * Retorna `true` si el campo `content_translation` del texto está vacío o es null.
+ *
+ * @param int $text_id El ID del texto a verificar.
+ * @return bool `true` si el texto necesita traducción, `false` en caso contrario o si el texto no existe.
+ */
 function needsContentTranslation($text_id) {
     global $conn;
     
@@ -167,7 +201,15 @@ function needsContentTranslation($text_id) {
     }
 }
 
-// Función para obtener estadísticas de traducciones de contenido
+/**
+ * Obtiene estadísticas sobre las traducciones de contenido.
+ *
+ * Incluye el número total de textos, el número de contenidos traducidos
+ * y el porcentaje de contenidos traducidos. Puede filtrar por ID de usuario.
+ *
+ * @param int|null $user_id (Opcional) El ID del usuario para filtrar las estadísticas.
+ * @return array Un array asociativo con 'total_texts', 'translated_contents' y 'translation_percentage'.
+ */
 function getContentTranslationStats($user_id = null) {
     global $conn;
     
@@ -322,8 +364,14 @@ function render_text_clickable($text, $title = '', $title_translation = '')
 }
 
 /**
- * Prepara los datos necesarios para la página de inicio (index.php)
- * Centraliza la lógica que antes estaba en el cuerpo de index.php
+ * Prepara los datos necesarios para la página de inicio (index.php).
+ *
+ * Centraliza la lógica para obtener datos de textos públicos, textos de usuario,
+ * estadísticas de progreso y categorías, dependiendo del estado de la sesión (invitado o logueado)
+ * y los parámetros GET.
+ *
+ * @param mysqli $conn Objeto de conexión a la base de datos.
+ * @return array Un array asociativo con todos los datos necesarios para renderizar la página de inicio.
  */
 function get_index_page_data($conn) {
     $is_guest = !isset($_SESSION['user_id']);

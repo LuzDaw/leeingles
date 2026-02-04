@@ -18,7 +18,9 @@ $conn->close();
 
 <div id="practice-container">
     <div class="tab-header-container">
-        <h3>🎯 Practicar Vocabulario</h3>
+        <h3 style="
+    padding-bottom: 3%;
+">🎯 Practicar Vocabulario</h3>
     </div>
     <div id="practice-content">
         <div style="text-align: center; padding: 40px; color: #6b7280;">

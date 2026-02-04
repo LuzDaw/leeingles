@@ -32,8 +32,12 @@ function setupPasswordVisibilityToggle(passwordInputId, toggleIconId) {
 }
 
 // Exportar la función para que pueda ser utilizada en otros módulos si es necesario
+// Exportar la función para que pueda ser utilizada en otros módulos si es necesario
+// (Comentado para evitar errores en entornos no-Node.js si no es estrictamente necesario)
+/*
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = {
         setupPasswordVisibilityToggle: setupPasswordVisibilityToggle
     };
 }
+*/

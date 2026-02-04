@@ -96,6 +96,18 @@ if ($_POST && isset($_POST['action']) && isset($_POST['selected_texts'])) {
 /**
  * Función para renderizar un item de la lista de textos
  */
+/**
+ * Renderiza un elemento de la lista de textos (propio o público).
+ *
+ * Esta función genera el HTML para mostrar un texto en la biblioteca del usuario,
+ * incluyendo su título, traducción del título, número de palabras, estado de lectura
+ * y si es un texto público.
+ *
+ * @param array $row Un array asociativo con los datos del texto.
+ * @param int $user_id El ID del usuario actual.
+ * @param bool $is_public_list Indica si el texto se está renderizando en una lista de textos públicos.
+ * @return void La función imprime directamente el HTML.
+ */
 function renderTextItem($row, $user_id, $is_public_list = false) {
     $num_words = str_word_count(strip_tags($row['content'] ?? ''));
     $read_count = isset($row['read_count']) ? intval($row['read_count']) : 0;
@@ -285,11 +297,11 @@ $total_found = count($own_texts) + count($public_read_rows);
         </ul>
 
         <?php if ($total_found == 0): ?>
-            <div style="text-align: center; padding: 60px 20px; color: #6b7280;">
-                <div style="font-size: 4rem; margin-bottom: 20px; opacity: 0.5;">📚</div>
+            <div style="text-align: center; padding: 0px 20px; color: #6b7280;">
+                <div id="pract">📚</div>
                 <h3 style="margin-bottom: 10px; color: #374151;">No hay textos en tu lista</h3>
                 <p style="margin-bottom: 30px;">¡Comienza subiendo un texto o explora los públicos!</p>
-                <button type="button" onclick="loadTabContent('upload')" class="nav-btn primary" style="padding: 15px 40px;">⬆ Subir mi primer texto</button>
+                <button type="button" onclick="loadTabContent('upload')" class="nav-btn primary" style="padding: 15px 40px; margin-bottom: 6%; ">⬆ Subir mi primer texto</button>
             </div>
         <?php endif; ?>
     </form>

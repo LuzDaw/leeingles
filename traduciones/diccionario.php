@@ -8,10 +8,26 @@
 $claveDiccionario = '7ef8642e-2065-40f6-b130-cdd73f703124';
 $claveTesauro = '54c025db-bc08-45cc-b120-c388644d418c';
 
+/**
+ * Obtiene información detallada de una palabra utilizando las APIs de Merriam-Webster (Diccionario y Tesauro).
+ *
+ * Esta función consulta las APIs para obtener la categoría gramatical, definición, ejemplos,
+ * sinónimos, antónimos, pronunciación y un enlace de audio para la palabra dada.
+ * Incluye un mecanismo de limpieza para los ejemplos y un fallback si no se encuentra información.
+ *
+ * @param string $palabra La palabra en inglés de la que se desea obtener información.
+ * @return array Un array asociativo con la información de la palabra (categoría, definición, ejemplos, etc.).
+ */
 function obtenerInfoPalabra($palabra) {
     global $claveDiccionario, $claveTesauro;
     
     // Función para limpiar ejemplos de Merriam-Webster
+    /**
+     * Limpia el texto de ejemplos de Merriam-Webster, eliminando etiquetas específicas de la API.
+     *
+     * @param string $texto El texto del ejemplo a limpiar.
+     * @return string El texto del ejemplo limpio.
+     */
     function limpiarEjemploMerriamWebster($texto) {
         // Eliminar etiquetas específicas de Merriam-Webster
         $texto = preg_replace('/\{wi\}(.*?)\{\/wi\}/', '$1', $texto); // Palabras importantes

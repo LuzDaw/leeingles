@@ -132,7 +132,8 @@ foreach ($words as $word) {
 <?php endif; ?>
 
 <?php if (empty($words_by_text)): ?>
-    <div style="text-align: center; padding: 40px 20px; color: #6b7280;">
+    <div style="text-align: center; padding: 0px 20px;  background: #60a5fa1c; color: #6b7280; padding-bottom: 7%;
+    padding-top: 3%;">
                         <div style="font-size: 3.5rem; margin-bottom: 15px; opacity: 0.5;">📚</div>
                         <h3 style="margin-bottom: 10px; color: #374151;">No hay pañabras en tu lista</h3>
                         <p style="margin-bottom: 25px;">¡Comienza seleccionandolas en tus textos o explora los textos públicos!</p>

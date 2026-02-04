@@ -70,7 +70,6 @@ extract(get_index_page_data($conn));
 
 
       <div class="nav-right" id="nav-menu">
-        <!-- <a href="/" id="home-link" class="nav-btn">🏠 Inicio</a> -->
         <?php if (isset($_SESSION['user_id'])): ?>
           <div class="user-dropdown">
             <button class="user-dropdown-btn">
@@ -197,24 +196,6 @@ extract(get_index_page_data($conn));
             </section>
           </div>
 
-          <!-- Sección de espacios publicitarios -->
-          <!-- <section class="advertising-section">
-            <div class="ad-container">
-              <div class="ad-space">
-                <strong>Espacio Publicitario 1</strong><br>
-                Anuncio Destacado
-              </div>
-              <div class="ad-space">
-                <strong>Espacio Publicitario 2</strong><br>
-                Anuncio Destacado
-              </div>
-              <div class="ad-space">
-                <strong>Espacio Publicitario 3</strong><br>
-                Anuncio Destacado
-              </div>
-            </div>
-          </section> -->
-
           <!-- Sección de características -->
           <section class="features-section" id="caracteristicas">
             <div class="features-container">
@@ -296,58 +277,6 @@ extract(get_index_page_data($conn));
             </div>
           </section>
 
-          <!-- Sección de precios -->
-          <!-- <section class="pricing-section" id="precios">
-            <div class="pricing-container">
-              <h2 class="pricing-title">Elige tu plan de aprendizaje</h2>
-              <p class="pricing-subtitle">Comienza gratis y actualiza cuando estés listo para desbloquear funciones avanzadas y acelerar tu progreso.</p>
-
-              <div class="pricing-grid">
-                <div class="pricing-card">
-                  <h3 class="pricing-plan">Gratis</h3>
-                  <div class="pricing-price">$0</div>
-                  <div class="pricing-period">para siempre</div>
-                  <ul class="pricing-features">
-                    <li>5 lecciones por día</li>
-                    <li>Seguimiento básico de progreso</li>
-                    <li>Acceso a la comunidad</li>
-                    <li>1 idioma</li>
-                  </ul>
-                  <button class="pricing-button" onclick="document.getElementById('login-btn').click()">Comenzar</button>
-                </div>
-
-                <div class="pricing-card featured">
-                  <div class="pricing-badge">Más Popular</div>
-                  <h3 class="pricing-plan">Pro</h3>
-                  <div class="pricing-price">$9.99</div>
-                  <div class="pricing-period">por mes</div>
-                  <ul class="pricing-features">
-                    <li>Lecciones ilimitadas</li>
-                    <li>Análisis avanzados</li>
-                    <li>Modo sin conexión</li>
-                    <li>Todos los idiomas</li>
-                    <li>Soporte prioritario</li>
-                  </ul>
-                  <button class="pricing-button">Iniciar Prueba Gratuita</button>
-                </div>
-
-                <div class="pricing-card">
-                  <h3 class="pricing-plan">Equipos</h3>
-                  <div class="pricing-price">$19.99</div>
-                  <div class="pricing-period">por usuarios/mes</div>
-                  <ul class="pricing-features">
-                    <li>Todo en Pro</li>
-                    <li>Gestión de equipos</li>
-                    <li>Contenido personalizado</li>
-                    <li>Soporte dedicado</li>
-                    <li>Análisis de uso</li>
-                  </ul>
-                  <button class="pricing-button">Contactar Ventas</button>
-                </div>
-              </div>
-            </div>
-          </section> -->
-
         <?php else: ?>
           <!-- Dashboard de usuario logueado -->
           <div class="user-dashboard">
@@ -379,7 +308,6 @@ extract(get_index_page_data($conn));
                 </button>
               <?php endif; ?>
               <div class="flex-1"></div>
-              <!-- <button onclick="exitTabs()" class="exit-tab-btn" title="Salir de las pestañas">☰</button> -->
             </div>
 
             <!-- Contenedor dinámico para pestañas -->
@@ -550,11 +478,6 @@ extract(get_index_page_data($conn));
         </div>
       </div>
     </div>
-
-    <!-- Botón flotante de explicar -->
-    <!-- <button class="explain-floating-btn" id="explainFloatingBtn">
-      <span class="explain-icon">?</span>
-    </button> -->
 
     <!-- Overlay para cerrar sidebar -->
     <div class="sidebar-overlay" id="sidebarOverlay"></div>

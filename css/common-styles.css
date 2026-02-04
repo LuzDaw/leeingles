@@ -361,15 +361,17 @@
 /* === HEADER COMÚN === */
 
 .tab-header-container {
-    display: flex;
-    justify-content: space-between;
+   display: flex;
+    justify-content: normal;
     align-items: center;
-    padding: 22px;
-    margin-top: -2px;
+    padding: 4px 12px 22px 55px;
 }
 
 .tab-header-container h3 {
     margin: 0;
+}
+#practice-container{
+        padding: 3%;
 }
 
 /* Controles de header */

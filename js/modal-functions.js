@@ -4,7 +4,9 @@
 // Variables globales para modal
 let actionAfterLogin = null;
 
-// Función para mostrar modal de login
+/**
+ * Muestra el modal de autenticación y activa la vista de inicio de sesión.
+ */
 window.showLoginModal = function() {
     const modal = DOMUtils.getElement('authModal');
     if (modal) {
@@ -13,7 +15,14 @@ window.showLoginModal = function() {
     }
 }
 
-// Función para cambiar entre Login y Registro
+/**
+ * Cambia la vista activa dentro del modal de autenticación (entre login y registro).
+ *
+ * Oculta todas las vistas de autenticación, muestra la vista especificada y
+ * actualiza el estado activo de las pestañas correspondientes.
+ *
+ * @param {string} viewId - El ID de la vista a mostrar (ej. 'loginView', 'registerView').
+ */
 window.switchAuthView = function(viewId) {
     document.querySelectorAll('.auth-view').forEach(v => v.style.display = 'none');
     document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
@@ -40,7 +49,9 @@ EventUtils.addOptionalListener('authBackdrop', 'click', () => {
     DOMUtils.getElement('authModal').classList.remove('show');
 });
 
-// Funciones para modal de registro
+/**
+ * Muestra el modal de autenticación y activa la vista de registro.
+ */
 window.showRegisterModal = function() {
     const modal = DOMUtils.getElement('authModal');
     if (modal) {
@@ -49,7 +60,12 @@ window.showRegisterModal = function() {
     }
 }
 
-// Funciones para modal de "Olvidé mi Contraseña"
+/**
+ * Muestra el modal para restablecer la contraseña.
+ *
+ * Oculta el modal de autenticación si está visible y muestra el modal
+ * de "Olvidé mi Contraseña", limpiando cualquier mensaje previo.
+ */
 window.showForgotPasswordModal = function() {
     const authModal = DOMUtils.getElement('authModal');
     if (authModal) authModal.classList.remove('show');
@@ -59,7 +75,14 @@ window.showForgotPasswordModal = function() {
     DOMUtils.updateText('forgot-password-messages', '');
 }
 
-// Funciones para modal de restablecer contraseña
+/**
+ * Muestra el modal para restablecer la contraseña, cargando el formulario dinámicamente.
+ *
+ * Oculta otros modales de autenticación y carga el contenido de `restablecer_contrasena.php`
+ * en el modal, ejecutando los scripts necesarios.
+ *
+ * @param {string} token - El token de restablecimiento de contraseña.
+ */
 window.showResetPasswordModal = async function(token) {
     const authModal = DOMUtils.getElement('authModal');
     if (authModal) authModal.classList.remove('show');
@@ -352,7 +375,14 @@ EventUtils.addOptionalListener('login-form', 'submit', async (e) => {
     }
 });
 
-// Funciones de acceso que requieren login
+/**
+ * Verifica si el usuario está logueado y, si no lo está, muestra el modal de login.
+ *
+ * Almacena la acción pendiente para ejecutarla después de un login exitoso.
+ *
+ * @param {string} action - La acción que se intentó realizar y que requiere autenticación.
+ * @returns {boolean} `true` si el usuario está logueado, `false` si se mostró el modal de login.
+ */
 function requireLogin(action) {
     if (typeof window.userLoggedIn === 'undefined' || !window.userLoggedIn) {
         actionAfterLogin = action;
@@ -362,13 +392,25 @@ function requireLogin(action) {
     return true;
 }
 
+/**
+ * Muestra el formulario de subida de texto, requiriendo que el usuario esté logueado.
+ *
+ * Si el usuario no está logueado, se le pedirá que inicie sesión primero.
+ */
 function showUploadFormWithLogin() {
     if (requireLogin('showUploadForm')) {
         showUploadForm();
     }
 }
 
-// Función para reenviar email de verificación
+/**
+ * Reenvía el email de verificación de cuenta a una dirección de correo específica.
+ *
+ * Muestra un modal de carga mientras se procesa la solicitud y luego un mensaje
+ * de éxito o error.
+ *
+ * @param {string} email - La dirección de correo electrónico a la que reenviar el email de verificación.
+ */
 window.resendVerificationEmail = async function(email) {
     try {
         window.showLoadingRedirectModal('Enviando email...', 'Por favor, espera...');
@@ -413,12 +455,14 @@ window.resendVerificationEmail = async function(email) {
 };
 
 /**
- * Muestra un modal de carga con un spinner y un mensaje, y redirige después de un tiempo.
+ * Muestra un modal de carga con un spinner y mensajes personalizables,
+ * con la opción de redirigir a una URL después de un retraso.
+ *
  * @param {string} mainMessage - El mensaje principal a mostrar en el modal (ej. "Lectura finalizada").
  * @param {string} subMessage - El mensaje secundario (ej. "Redirigiendo...").
- * @param {string} redirectUrl - La URL a la que se redirigirá después del delay.
- * @param {number} delay - El tiempo en milisegundos antes de la redirección.
- * @param {boolean} hideSpinner - Si se debe ocultar el spinner de carga.
+ * @param {string} [redirectUrl=''] - La URL a la que se redirigirá después del `delay`. Si está vacío, no hay redirección automática.
+ * @param {number} [delay=2000] - El tiempo en milisegundos antes de la redirección o el cierre del modal.
+ * @param {boolean} [hideSpinner=false] - Si es `true`, el spinner de carga se ocultará.
  */
 window.showLoadingRedirectModal = function(mainMessage, subMessage, redirectUrl, delay = 2000, hideSpinner = false) {
     let modal = DOMUtils.getElement('loading-redirect-modal');

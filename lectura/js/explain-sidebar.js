@@ -3,20 +3,42 @@
  * Similar a la imagen de referencia - despliega sidebar desde la derecha
  */
 
+/**
+ * @file Implementa el sistema de sidebar para mostrar explicaciones de palabras.
+ * @class ExplainSidebar
+ * @description Gestiona la apertura, cierre y contenido del sidebar de explicaciones,
+ *              incluyendo la obtención de datos del diccionario y la traducción de ejemplos.
+ */
 class ExplainSidebar {
+    /**
+     * Crea una instancia de ExplainSidebar.
+     * Inicializa las propiedades del estado y los elementos del DOM, y configura los eventos.
+     */
     constructor() {
+        /** @property {boolean} isOpen - Indica si el sidebar está abierto. */
         this.isOpen = false;
+        /** @property {boolean} wasReadingBeforeOpen - Indica si la lectura estaba activa antes de abrir el sidebar. */
         this.wasReadingBeforeOpen = false;
+        /** @property {string} currentWord - La palabra actualmente seleccionada y explicada. */
         this.currentWord = '';
+        /** @property {HTMLElement|null} sidebar - El elemento DOM del sidebar. */
         this.sidebar = null;
+        /** @property {HTMLElement|null} overlay - El elemento DOM del overlay que cubre el contenido principal. */
         this.overlay = null;
+        /** @property {HTMLElement|null} explainBtn - El botón para abrir/cerrar el sidebar (si existe). */
         this.explainBtn = null;
+        /** @property {HTMLElement|null} closeBtn - El botón para cerrar el sidebar. */
         this.closeBtn = null;
+        /** @property {HTMLElement|null} floatingBtn - El botón flotante para mostrar la explicación de la palabra destacada. */
         this.floatingBtn = null;
         
         this.init();
     }
     
+    /**
+     * Inicializa el sidebar, obteniendo referencias a los elementos del DOM
+     * y configurando los event listeners necesarios.
+     */
     init() {
         // Obtener elementos
         this.sidebar = document.getElementById('explainSidebar');
@@ -55,12 +77,19 @@ class ExplainSidebar {
         this.showFloatingButton();
     }
     
+    /**
+     * Maneja el evento `keydown` para cerrar el sidebar con la tecla 'Escape'.
+     * @param {KeyboardEvent} event - El objeto de evento del teclado.
+     */
     onKeyDown(event) {
         if (event.key === 'Escape' && this.isOpen) {
             this.closeSidebar();
         }
     }
     
+    /**
+     * Alterna la visibilidad del sidebar (lo abre si está cerrado, lo cierra si está abierto).
+     */
     toggleSidebar() {
         if (this.isOpen) {
             this.closeSidebar();
@@ -69,6 +98,12 @@ class ExplainSidebar {
         }
     }
     
+    /**
+     * Abre el sidebar de explicaciones.
+     *
+     * Guarda el estado de lectura actual, añade clases CSS para mostrar el sidebar y el overlay,
+     * y pausa la lectura si estaba activa.
+     */
     openSidebar() {
         this.isOpen = true;
         // Guardar si estaba leyendo antes de abrir
@@ -97,6 +132,12 @@ class ExplainSidebar {
         
     }
     
+    /**
+     * Cierra el sidebar de explicaciones.
+     *
+     * Elimina las clases CSS para ocultar el sidebar y el overlay, limpia cualquier
+     * palabra destacada y reanuda la lectura si estaba activa antes de abrir el sidebar.
+     */
     closeSidebar() {
         this.isOpen = false;
         this.sidebar.classList.remove('open');
@@ -135,6 +176,16 @@ class ExplainSidebar {
         this.wasReadingBeforeOpen = false;
     }
     
+    /**
+     * Muestra la explicación detallada de una palabra en el sidebar.
+     *
+     * Abre el sidebar si está cerrado, actualiza la visualización de la palabra,
+     * muestra un estado de carga, obtiene los datos del diccionario (incluyendo traducción
+     * de la definición) y actualiza el contenido del sidebar.
+     *
+     * @param {string} word - La palabra en inglés a explicar.
+     * @param {HTMLElement|null} [element=null] - El elemento DOM de la palabra clickeada (opcional).
+     */
     async showExplanation(word, element = null) {
         this.currentWord = word;
         
@@ -174,6 +225,11 @@ class ExplainSidebar {
         }
     }
     
+    /**
+     * Muestra el botón flotante de explicación si hay contenido de texto en la página.
+     *
+     * El botón se hace visible con un pequeño retraso.
+     */
     showFloatingButton() {
         // Mostrar botón flotante si hay texto en la página
         const textContainer = document.querySelector('.reading-area, #text');
@@ -194,7 +250,11 @@ class ExplainSidebar {
         }
     }
     
-    // Función para mostrar explicación de la palabra destacada
+    /**
+     * Muestra la explicación de la palabra que está actualmente destacada en el lector.
+     *
+     * Si no hay una palabra destacada, abre el sidebar con un mensaje de error.
+     */
     showHighlightedWordExplanation() {
         if (window.currentHighlightedWord) {
             const { element, word } = window.currentHighlightedWord;
@@ -207,12 +267,21 @@ class ExplainSidebar {
         }
     }
     
+    /**
+     * Oculta el botón flotante de explicación.
+     */
     hideFloatingButton() {
         if (this.floatingBtn) {
             this.floatingBtn.classList.remove('show');
         }
     }
     
+    /**
+     * Actualiza la visualización de la palabra y su traducción en el encabezado del sidebar.
+     *
+     * @param {string} word - La palabra en inglés a mostrar.
+     * @param {string|null} [translation=null] - La traducción de la palabra. Si es null, se intenta obtener una traducción básica.
+     */
     updateWordDisplay(word, translation = null) {
         const selectedWordElement = document.getElementById('selectedWord');
         const translationElement = document.getElementById('wordTranslation');
@@ -231,6 +300,12 @@ class ExplainSidebar {
         }
     }
     
+    /**
+     * Obtiene la traducción de una palabra utilizando el sistema de traducción híbrido.
+     *
+     * @param {string} word - La palabra a traducir.
+     * @returns {Promise<string>} Una promesa que se resuelve con la traducción de la palabra.
+     */
     async getWordTranslation(word) {
         try {
             const response = await fetch('traduciones/translate.php', {
@@ -255,11 +330,20 @@ class ExplainSidebar {
     
 
     
+    /**
+     * Proporciona una traducción básica de fallback para una palabra.
+     *
+     * @param {string} word - La palabra a traducir.
+     * @returns {string} La traducción básica (actualmente un placeholder).
+     */
     getTranslation(word) {
         // Traducciones básicas eliminadas para favorecer el sistema de BD/API
         return 'traducción';
     }
     
+    /**
+     * Muestra un mensaje de carga en el área de explicación del sidebar.
+     */
     showLoading() {
         const explanationText = document.getElementById('explanationText');
         
@@ -268,6 +352,15 @@ class ExplainSidebar {
         }
     }
     
+    /**
+     * Obtiene los datos del diccionario para una palabra específica.
+     *
+     * Realiza una solicitud a `traduciones/diccionario.php` para obtener información detallada.
+     * En caso de error o falta de definición, devuelve datos de fallback.
+     *
+     * @param {string} word - La palabra a buscar en el diccionario.
+     * @returns {Promise<object>} Una promesa que se resuelve con los datos procesados de la palabra.
+     */
     async fetchWordData(word) {
         try {
             // Usar el nuevo sistema de diccionario Merriam-Webster
@@ -287,6 +380,12 @@ class ExplainSidebar {
         }
     }
     
+    /**
+     * Procesa la respuesta de la API del diccionario y la formatea para su uso en el sidebar.
+     *
+     * @param {object} data - Los datos brutos recibidos de la API del diccionario.
+     * @returns {object} Un objeto formateado con la información de la palabra.
+     */
     parseApiResponse(data) {
         const result = {
             word: data.word || '',
@@ -325,6 +424,14 @@ class ExplainSidebar {
         return result;
     }
     
+    /**
+     * Devuelve un objeto de datos vacío para una palabra.
+     *
+     * Esta función se usa como fallback cuando no se pueden obtener datos reales de la API.
+     *
+     * @param {string} word - La palabra para la que se devuelven los datos mock.
+     * @returns {object} Un objeto con propiedades vacías.
+     */
     getMockData(word) {
         // NO MÁS DATOS MOCK - SOLO DATOS REALES DE LA API
         return {
@@ -338,6 +445,15 @@ class ExplainSidebar {
         };
     }
     
+    /**
+     * Actualiza el contenido principal del sidebar con la información de la palabra.
+     *
+     * Genera el HTML para mostrar la definición, pronunciación, categoría, sinónimos,
+     * antónimos y ejemplos, y los inserta en el sidebar. También inicia la traducción
+     * asíncrona de sinónimos, antónimos y ejemplos.
+     *
+     * @param {object} data - Un objeto con la información procesada de la palabra.
+     */
     async updateSidebarContent(data) {
         const explanationText = document.getElementById('explanationText');
         
@@ -440,6 +556,11 @@ class ExplainSidebar {
         explanationText.innerHTML = explanationHTML;
     }
     
+    /**
+     * Muestra un mensaje de error en el área de explicación del sidebar.
+     *
+     * @param {string} word - La palabra para la que no se pudo obtener la explicación.
+     */
     showError(word) {
         const explanationText = document.getElementById('explanationText');
         
@@ -448,7 +569,14 @@ class ExplainSidebar {
         }
     }
     
-    // Función para traducir ejemplos usando el sistema híbrido
+    /**
+     * Traduce una lista de ejemplos utilizando el sistema de traducción híbrido.
+     *
+     * Actualiza los elementos HTML correspondientes con las traducciones obtenidas.
+     *
+     * @param {Array<string>} examples - Un array de cadenas de texto que representan los ejemplos a traducir.
+     * @returns {Promise<void>} Una promesa que se resuelve cuando todas las traducciones han sido procesadas.
+     */
     async translateExamples(examples) {
         const promises = examples.map(async (example, index) => {
             try {
@@ -481,7 +609,14 @@ class ExplainSidebar {
         await Promise.all(promises);
     }
     
-    // Función para traducir sinónimos usando el sistema híbrido
+    /**
+     * Traduce una lista de sinónimos utilizando el sistema de traducción híbrido.
+     *
+     * Actualiza los elementos HTML correspondientes con las traducciones obtenidas.
+     *
+     * @param {Array<string>} synonyms - Un array de cadenas de texto que representan los sinónimos a traducir.
+     * @returns {Promise<void>} Una promesa que se resuelve cuando todas las traducciones han sido procesadas.
+     */
     async translateSynonyms(synonyms) {
         const promises = synonyms.map(async (synonym, index) => {
             try {
@@ -514,7 +649,14 @@ class ExplainSidebar {
         await Promise.all(promises);
     }
 
-    // Función para traducir antónimos usando el sistema híbrido
+    /**
+     * Traduce una lista de antónimos utilizando el sistema de traducción híbrido.
+     *
+     * Actualiza los elementos HTML correspondientes con las traducciones obtenidas.
+     *
+     * @param {Array<string>} antonyms - Un array de cadenas de texto que representan los antónimos a traducir.
+     * @returns {Promise<void>} Una promesa que se resuelve cuando todas las traducciones han sido procesadas.
+     */
     async translateAntonyms(antonyms) {
         const promises = antonyms.map(async (antonym, index) => {
             try {
@@ -547,6 +689,12 @@ class ExplainSidebar {
         await Promise.all(promises);
     }
     
+    /**
+     * Pronuncia la palabra actualmente seleccionada utilizando la API de SpeechSynthesis.
+     *
+     * Cancela cualquier pronunciación anterior y reproduce la palabra con una velocidad ligeramente más lenta.
+     * Proporciona un feedback visual sutil en el botón de pronunciación.
+     */
     pronounceWord() {
         if (!this.currentWord) {
             return;

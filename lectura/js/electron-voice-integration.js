@@ -21,7 +21,14 @@
     let _scriptLoaded = false;
     let _initializationPromise = null;
     
-    // Función para cargar scripts dinámicamente
+    /**
+     * Carga un script JavaScript dinámicamente en el documento.
+     *
+     * Evita cargar el mismo script varias veces.
+     *
+     * @param {string} src - La URL del script a cargar.
+     * @param {function} [callback] - Función a ejecutar una vez que el script se haya cargado.
+     */
     function loadScript(src, callback) {
         // Evitar cargar el mismo script múltiples veces
         if (_scriptLoaded) {
@@ -41,13 +48,24 @@
         document.head.appendChild(script);
     }
 
-    // Función para verificar si estamos en Electron
+    /**
+     * Detecta si la aplicación se está ejecutando en un entorno Electron.
+     *
+     * @returns {boolean} `true` si se detecta Electron, `false` en caso contrario.
+     */
     function detectElectron() {
         _isElectron = window.electronAPI !== undefined;
         return _isElectron;
     }
 
-    // Función principal de inicialización
+    /**
+     * Inicializa el sistema de voz ResponsiveVoice.
+     *
+     * Detecta el entorno (web o Electron) y carga ResponsiveVoice si aún no está cargado.
+     * Luego, configura las funciones de voz globales.
+     *
+     * @returns {Promise<void>} Una promesa que se resuelve cuando ResponsiveVoice está inicializado.
+     */
     function initializeResponsiveVoice() {
         detectElectron();
 
@@ -68,9 +86,21 @@
         });
     }
 
-    // Configurar funciones de voz globales
+    /**
+     * Configura las funciones de voz globales (`window.leerTextoConResponsiveVoice`, etc.).
+     *
+     * Estas funciones actúan como una interfaz unificada para interactuar con ResponsiveVoice,
+     * proporcionando métodos para leer, detener, pausar, reanudar y obtener información de voz.
+     */
     function setupVoiceFunctions() {
-        // Función principal para leer texto
+        /**
+         * Lee un texto utilizando ResponsiveVoice.
+         *
+         * @param {string} texto - El texto a leer.
+         * @param {number} [velocidad=1.0] - La velocidad de lectura (0.5 a 1.5).
+         * @param {object} [callbacks={}] - Objeto con funciones de callback para eventos de voz (onstart, onend, onpause, onresume, onerror).
+         * @returns {boolean} `true` si la lectura se inició, `false` si ResponsiveVoice no está disponible.
+         */
         window.leerTextoConResponsiveVoice = function(texto, velocidad = 1.0, callbacks = {}) {
             if (typeof responsiveVoice !== 'undefined' && _responsiveVoiceLoaded) {
                 const config = {
@@ -98,7 +128,11 @@
             }
         };
 
-        // Función para detener la lectura
+        /**
+         * Detiene cualquier lectura de ResponsiveVoice en curso.
+         *
+         * @returns {boolean} `true` si la lectura se detuvo, `false` si ResponsiveVoice no está disponible.
+         */
         window.detenerLecturaResponsiveVoice = function() {
             if (typeof responsiveVoice !== 'undefined' && _responsiveVoiceLoaded) {
                 responsiveVoice.cancel();
@@ -107,7 +141,11 @@
             return false;
         };
 
-        // Función para verificar si está leyendo
+        /**
+         * Verifica si ResponsiveVoice está reproduciendo audio actualmente.
+         *
+         * @returns {boolean} `true` si está leyendo, `false` en caso contrario.
+         */
         window.estaLeyendoResponsiveVoice = function() {
             if (typeof responsiveVoice !== 'undefined' && _responsiveVoiceLoaded) {
                 return responsiveVoice.isPlaying();
@@ -115,7 +153,11 @@
             return false;
         };
 
-        // Función para pausar
+        /**
+         * Pausa la lectura de ResponsiveVoice.
+         *
+         * @returns {boolean} `true` si la lectura se pausó, `false` si ResponsiveVoice no está disponible.
+         */
         window.pausarLecturaResponsiveVoice = function() {
             if (typeof responsiveVoice !== 'undefined' && _responsiveVoiceLoaded) {
                 responsiveVoice.pause();
@@ -124,7 +166,11 @@
             return false;
         };
 
-        // Función para reanudar
+        /**
+         * Reanuda la lectura de ResponsiveVoice si está pausada.
+         *
+         * @returns {boolean} `true` si la lectura se reanudó, `false` si ResponsiveVoice no está disponible.
+         */
         window.reanudarLecturaResponsiveVoice = function() {
             if (typeof responsiveVoice !== 'undefined' && _responsiveVoiceLoaded) {
                 responsiveVoice.resume();
@@ -133,13 +179,22 @@
             return false;
         };
 
-        // Función para cambiar velocidad
+        /**
+         * Cambia la velocidad de lectura de ResponsiveVoice.
+         *
+         * @param {number} nuevaVelocidad - La nueva velocidad de lectura.
+         * @returns {boolean} Siempre `true` por ahora, ya que la implementación de cambio en caliente puede variar.
+         */
         window.cambiarVelocidadResponsiveVoice = function(nuevaVelocidad) {
             // Implementación futura si es necesario ajustar en caliente
             return true;
         };
 
-        // Función para obtener voces disponibles
+        /**
+         * Obtiene la lista de voces disponibles en ResponsiveVoice.
+         *
+         * @returns {Array<object>} Un array de objetos de voz, o un array vacío si ResponsiveVoice no está disponible.
+         */
         window.obtenerVocesDisponibles = function() {
             if (typeof responsiveVoice !== 'undefined' && _responsiveVoiceLoaded) {
                 return responsiveVoice.getVoices();
@@ -148,7 +203,14 @@
         };
     }
 
-    // Función para verificar el estado del sistema
+    /**
+     * Verifica y devuelve el estado actual del sistema de voz.
+     *
+     * Proporciona información sobre el entorno (Electron/Web), la disponibilidad de ResponsiveVoice,
+     * si el script se ha cargado y si las funciones globales de voz están configuradas.
+     *
+     * @returns {object} Un objeto con el estado detallado del sistema de voz.
+     */
     window.verificarEstadoVoz = function() {
         const estado = {
             entorno: _isElectron ? "Electron" : "Web",
@@ -167,7 +229,13 @@
         return estado;
     };
 
-    // Función para obtener una promesa de inicialización
+    /**
+     * Devuelve una promesa que se resuelve cuando el sistema de voz está completamente inicializado.
+     *
+     * Asegura que la inicialización solo se intente una vez.
+     *
+     * @returns {Promise<void>} Una promesa que se resuelve cuando el sistema de voz está listo.
+     */
     window.getVoiceSystemReady = function() {
         if (!_initializationPromise) {
             _initializationPromise = initializeResponsiveVoice();
@@ -175,7 +243,11 @@
         return _initializationPromise;
     };
 
-    // Inicializar cuando el DOM esté listo, solo si el usuario está logueado
+    /**
+     * Inicializa ResponsiveVoice condicionalmente si el usuario está logueado.
+     *
+     * Se ejecuta cuando el DOM está listo.
+     */
     function conditionalInitialize() {
         if (window.userLoggedIn) {
             initializeResponsiveVoice();

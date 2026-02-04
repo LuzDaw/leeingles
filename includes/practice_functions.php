@@ -4,7 +4,21 @@
  * Elimina duplicación entre archivos de práctica
  */
 
-// Función para guardar progreso de práctica
+/**
+ * Guarda el progreso de práctica de un usuario.
+ *
+ * Registra el rendimiento del usuario en un modo de práctica específico,
+ * incluyendo el número total de palabras, respuestas correctas e incorrectas,
+ * y calcula la precisión.
+ *
+ * @param int $user_id El ID del usuario.
+ * @param string $mode El modo de práctica (e.g., 'selection', 'writing', 'sentences').
+ * @param int $total_words El número total de palabras involucradas en la práctica.
+ * @param int $correct_answers El número de respuestas correctas.
+ * @param int $incorrect_answers El número de respuestas incorrectas.
+ * @param int|null $text_id (Opcional) El ID del texto si la práctica está asociada a un texto específico.
+ * @return array Un array asociativo con 'success' (booleano), 'message' o 'error', y 'accuracy'.
+ */
 function savePracticeProgress($user_id, $mode, $total_words, $correct_answers, $incorrect_answers, $text_id = null) {
     global $conn;
     
@@ -33,7 +47,14 @@ function savePracticeProgress($user_id, $mode, $total_words, $correct_answers, $
     }
 }
 
-// Función para guardar tiempo de práctica
+/**
+ * Guarda el tiempo dedicado por un usuario a un modo de práctica específico.
+ *
+ * @param int $user_id El ID del usuario.
+ * @param string $mode El modo de práctica.
+ * @param int $duration La duración de la sesión de práctica en segundos.
+ * @return array Un array asociativo con 'success' (booleano) y 'message' o 'error'.
+ */
 function savePracticeTime($user_id, $mode, $duration) {
     global $conn;
     
@@ -53,7 +74,16 @@ function savePracticeTime($user_id, $mode, $duration) {
     }
 }
 
-// Función para obtener estadísticas de práctica
+/**
+ * Obtiene las estadísticas de práctica de un usuario.
+ *
+ * Calcula y devuelve el número de palabras practicadas y la precisión media
+ * para cada modo de práctica (selección, escritura, oraciones), así como
+ * el total de ejercicios realizados.
+ *
+ * @param int $user_id El ID del usuario.
+ * @return array Un array asociativo con las estadísticas de práctica por modo y el total de ejercicios.
+ */
 function getPracticeStats($user_id) {
     global $conn;
     
@@ -85,7 +115,15 @@ function getPracticeStats($user_id) {
     return $stats;
 }
 
-// Función para obtener progreso de lectura
+/**
+ * Obtiene el progreso general de lectura de un usuario.
+ *
+ * Incluye estadísticas sobre palabras guardadas, textos leídos recientemente,
+ * y el progreso en los diferentes modos de práctica.
+ *
+ * @param int $user_id El ID del usuario.
+ * @return array Un array asociativo con el progreso de lectura del usuario.
+ */
 function getReadingProgress($user_id) {
     global $conn;
     
@@ -134,4 +172,4 @@ function getReadingProgress($user_id) {
     
     return $progress;
 }
-?> 
+?>

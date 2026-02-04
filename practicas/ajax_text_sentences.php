@@ -85,6 +85,16 @@ foreach ($sentences as $sentence) {
     ];
 }
 
+/**
+ * Traduce un texto utilizando la API de Google Translate.
+ *
+ * Esta función realiza una solicitud a la API de Google Translate para obtener
+ * la traducción de un texto del inglés al español. Incluye un timeout reducido
+ * para la solicitud HTTP. En caso de fallo, devuelve el texto original con un prefijo.
+ *
+ * @param string $text El texto a traducir.
+ * @return string La traducción del texto o un mensaje de fallback si la traducción falla.
+ */
 function translateUsingExistingSystem($text) {
     // Incluir directamente la lógica de translate.php (más eficiente)
     $from = 'en';

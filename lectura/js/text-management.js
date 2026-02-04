@@ -4,7 +4,14 @@
 
 // Variables globales (AppState centralizado en global-state.js)
 
-// Guardar palabra traducida
+/**
+ * Guarda una palabra traducida en la base de datos del usuario.
+ *
+ * @param {string} word - La palabra original en inglés.
+ * @param {string} translation - La traducción de la palabra.
+ * @param {string} [sentence=''] - La oración de contexto donde se encontró la palabra.
+ * @returns {Promise<boolean>} Una promesa que se resuelve a `true` si la palabra se guardó correctamente, `false` en caso contrario.
+ */
 window.saveTranslatedWord = async function(word, translation, sentence = '') {
     try {
         let textId = window.AppState && window.AppState.currentTextId;
@@ -37,7 +44,11 @@ window.saveTranslatedWord = async function(word, translation, sentence = '') {
     }
 };
 
-// Mostrar botón flotante
+/**
+ * Muestra los botones flotantes de menú y de reproducción/pausa.
+ *
+ * Aplica estilos para hacer visibles los elementos con una transición suave.
+ */
 window.showFloatingButton = function() {
     const floatingMenu = document.getElementById('floating-menu');
     if (floatingMenu) {
@@ -63,7 +74,11 @@ window.showFloatingButton = function() {
     }
 }
 
-// Ocultar botón flotante
+/**
+ * Oculta los botones flotantes de menú y de reproducción/pausa.
+ *
+ * Establece el estilo `display: 'none'` para ocultar los elementos.
+ */
 window.hideFloatingButton = function() {
     const floatingMenu = document.getElementById('floating-menu');
     if (floatingMenu) {
@@ -77,7 +92,10 @@ window.hideFloatingButton = function() {
     }
 }
 
-// Actualizar botón flotante
+/**
+ * Actualiza el texto y el título del botón flotante de reproducción/pausa
+ * basándose en el estado actual de la lectura (leyendo, pausado, detenido).
+ */
 window.updateFloatingButton = function() {
     const floatingBtn = document.getElementById('floating-btn');
     if (!floatingBtn) return;
@@ -91,7 +109,11 @@ window.updateFloatingButton = function() {
     }
 }
 
-// Continuar desde el último párrafo
+/**
+ * Intenta continuar la lectura desde el último párrafo leído.
+ *
+ * Si la función `startReadingFromParagraph` está disponible, la invoca con los índices guardados.
+ */
 window.continueFromLastParagraph = function() {
     if (typeof window.startReadingFromParagraph === 'function') {
         window.startReadingFromParagraph(window.lastReadParagraphIndex, window.lastReadPageIndex);
@@ -100,7 +122,12 @@ window.continueFromLastParagraph = function() {
     }
 }
 
-// Cargar textos públicos
+/**
+ * Carga los textos públicos en el contenedor `public-texts-container`.
+ *
+ * Realiza una petición AJAX a `index.php` con el parámetro `show_public_texts=1`
+ * y actualiza el contenido del contenedor.
+ */
 function loadPublicTexts() {
     fetch('index.php?show_public_texts=1')
         .then(response => response.text())
@@ -155,12 +182,26 @@ document.getElementById('back-to-list')?.addEventListener('click', function() {
 // Exportar funciones principales
 window.loadPublicTexts = loadPublicTexts;
 
-// Devuelve el número de palabras de un texto dado
+/**
+ * Cuenta el número de palabras en un texto dado.
+ *
+ * Utiliza la utilidad `TextUtils.countWords`.
+ *
+ * @param {string} text - El texto a analizar.
+ * @returns {number} El número de palabras en el texto.
+ */
 window.countWordsInText = function(text) {
     return TextUtils.countWords(text);
 };
 
-// Devuelve el número de letras (caracteres alfabéticos) de un texto dado
+/**
+ * Cuenta el número de caracteres alfabéticos (letras) en un texto dado.
+ *
+ * Utiliza la utilidad `TextUtils.countLetters`.
+ *
+ * @param {string} text - El texto a analizar.
+ * @returns {number} El número de letras en el texto.
+ */
 window.countLettersInText = function(text) {
     return TextUtils.countLetters(text);
 };

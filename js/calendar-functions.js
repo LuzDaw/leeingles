@@ -6,7 +6,13 @@ let currentYear = new Date().getFullYear();
 let updateInterval;
 
 /**
- * Carga los datos de actividad desde el servidor
+ * Carga los datos de actividad (lectura y práctica) del usuario para un mes y año específicos desde el servidor.
+ *
+ * Realiza una petición AJAX a `ajax_calendar_data.php` para obtener la información.
+ * Incluye un mecanismo de timeout para la petición.
+ *
+ * @param {number} [month=currentMonth] - El mes para el que se cargarán los datos (1-12).
+ * @param {number} [year=currentYear] - El año para el que se cargarán los datos.
  */
 function loadCalendarData(month = currentMonth, year = currentYear) {
     const basePath = (window.location.pathname || '').replace(/[^\/]+$/, '');
@@ -34,7 +40,15 @@ function loadCalendarData(month = currentMonth, year = currentYear) {
 }
 
 /**
- * Actualiza los elementos visuales del calendario
+ * Actualiza la interfaz de usuario del calendario con los datos recibidos del servidor.
+ *
+ * Actualiza el nombre del mes y año, así como las estadísticas globales de actividad.
+ * Luego, llama a `updateCalendarDays` para renderizar los días individuales.
+ *
+ * @param {object} data - Un objeto que contiene los datos del calendario y las estadísticas.
+ * @param {string} data.month_name - El nombre del mes y año formateado.
+ * @param {object} data.stats - Estadísticas de actividad del mes.
+ * @param {Array<object>} data.calendar_data - Datos de actividad por día.
  */
 function updateCalendarDisplay(data) {
     const monthElement = document.querySelector('.current-month');
@@ -53,7 +67,13 @@ function updateCalendarDisplay(data) {
 }
 
 /**
- * Renderiza los días en la cuadrícula del calendario
+ * Renderiza los días individuales en la cuadrícula del calendario.
+ *
+ * Calcula los días vacíos al inicio del mes y luego itera sobre cada día
+ * para mostrar su número, tiempo de actividad y un tooltip detallado.
+ *
+ * @param {Array<object>} calendarData - Un array de objetos, donde cada objeto representa un día
+ *                                        y contiene su fecha, segundos de actividad, etc.
  */
 function updateCalendarDays(calendarData) {
     const calendarGrid = document.querySelector('.calendar-grid');
@@ -117,11 +137,20 @@ function updateCalendarDays(calendarData) {
     calendarGrid.innerHTML = newHTML;
 }
 
+/**
+ * Comprueba si una fecha dada es el día actual.
+ *
+ * @param {string} dateString - La fecha en formato 'YYYY-MM-DD'.
+ * @returns {boolean} `true` si la fecha es hoy, `false` en caso contrario.
+ */
 function isCurrentDay(dateString) {
     const today = new Date().toISOString().split('T')[0];
     return dateString === today;
 }
 
+/**
+ * Cambia el calendario al mes anterior y recarga los datos.
+ */
 function previousMonth() {
     currentMonth--;
     if (currentMonth < 1) {
@@ -131,6 +160,9 @@ function previousMonth() {
     loadCalendarData(currentMonth, currentYear);
 }
 
+/**
+ * Cambia el calendario al mes siguiente y recarga los datos.
+ */
 function nextMonth() {
     currentMonth++;
     if (currentMonth > 12) {
@@ -140,22 +172,38 @@ function nextMonth() {
     loadCalendarData(currentMonth, currentYear);
 }
 
+/**
+ * Inicia la actualización en tiempo real de los datos del calendario.
+ *
+ * Configura un intervalo para recargar los datos del calendario cada 10 segundos.
+ */
 function startRealTimeUpdates() {
     updateInterval = setInterval(() => {
         loadCalendarData(currentMonth, currentYear);
     }, 10000);
 }
 
+/**
+ * Detiene la actualización en tiempo real de los datos del calendario.
+ *
+ * Limpia el intervalo establecido por `startRealTimeUpdates`.
+ */
 function stopRealTimeUpdates() {
     if (updateInterval) {
         clearInterval(updateInterval);
     }
 }
 
+/**
+ * Fuerza una actualización inmediata de los datos del calendario.
+ */
 function updateCalendarNow() {
     loadCalendarData(currentMonth, currentYear);
 }
 
+/**
+ * Inicializa el calendario al cargar los datos del mes actual y comenzar las actualizaciones en tiempo real.
+ */
 function initializeCalendar() {
     loadCalendarData();
     startRealTimeUpdates();

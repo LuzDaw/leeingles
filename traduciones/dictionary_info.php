@@ -24,6 +24,14 @@ if ($word === '') {
 }
 
 // Función para obtener información de Free Dictionary API
+/**
+ * Obtiene información de una palabra utilizando la Free Dictionary API.
+ *
+ * Realiza una solicitud HTTP a la API y devuelve los datos decodificados si la respuesta es válida.
+ *
+ * @param string $word La palabra a buscar.
+ * @return array|false Los datos del diccionario si la solicitud es exitosa y los datos son válidos, o `false` en caso contrario.
+ */
 function getFreeDictionaryInfo($word) {
     $url = "https://api.dictionaryapi.dev/api/v2/entries/en/" . urlencode($word);
     
@@ -51,6 +59,14 @@ function getFreeDictionaryInfo($word) {
 }
 
 // Función para obtener información de WordsAPI (fallback)
+/**
+ * Obtiene información de una palabra utilizando WordsAPI (API de respaldo).
+ *
+ * Realiza una solicitud HTTP a WordsAPI y devuelve los datos decodificados si la respuesta es válida.
+ *
+ * @param string $word La palabra a buscar.
+ * @return array|false Los datos del diccionario si la solicitud es exitosa y los datos son válidos, o `false` en caso contrario.
+ */
 function getWordsAPIInfo($word) {
     $url = "https://wordsapiv1.p.rapidapi.com/words/" . urlencode($word);
     
@@ -78,6 +94,15 @@ function getWordsAPIInfo($word) {
 }
 
 // Función para procesar datos de Free Dictionary API
+/**
+ * Procesa y formatea los datos obtenidos de la Free Dictionary API.
+ *
+ * Extrae la palabra, definición, información gramatical, ejemplos, sinónimos y antónimos
+ * de la estructura de respuesta de la API.
+ *
+ * @param array $data Los datos brutos de la Free Dictionary API.
+ * @return array Un array asociativo con la información procesada de la palabra.
+ */
 function processFreeDictionaryData($data) {
     $result = [
         'word' => $data[0]['word'] ?? '',
@@ -132,6 +157,15 @@ function processFreeDictionaryData($data) {
 }
 
 // Función para procesar datos de WordsAPI
+/**
+ * Procesa y formatea los datos obtenidos de WordsAPI.
+ *
+ * Extrae la palabra, definición, información gramatical, ejemplos, sinónimos y antónimos
+ * de la estructura de respuesta de la API.
+ *
+ * @param array $data Los datos brutos de WordsAPI.
+ * @return array Un array asociativo con la información procesada de la palabra.
+ */
 function processWordsAPIData($data) {
     $result = [
         'word' => $data['word'] ?? '',

@@ -51,6 +51,16 @@ if (isset($_SESSION['user_id'])) {
 session_write_close();
 
 // Función simplificada para detectar idioma
+/**
+ * Detecta el idioma de un texto basándose en la presencia de caracteres especiales del español.
+ *
+ * Si el texto contiene caracteres como 'áéíóúñÁÉÍÓÚÑüÜ', se asume que es español.
+ * De lo contrario, se asume que es inglés.
+ *
+ * @param string $text El texto cuyo idioma se desea detectar.
+ * @return array Un array asociativo con 'source' (idioma detectado), 'target' (idioma objetivo para traducción),
+ *               'deepl_target' (idioma objetivo para DeepL) y 'google_target' (idioma objetivo para Google Translate).
+ */
 function detectLanguage($text) {
     // Si contiene caracteres especiales del español, asumir español
     if (preg_match('/[áéíóúñÁÉÍÓÚÑüÜ]/u', $text)) {
@@ -62,6 +72,16 @@ function detectLanguage($text) {
 }
 
 // Función para traducir con DeepL (optimizada)
+/**
+ * Traduce un texto utilizando la API de DeepL.
+ *
+ * Realiza una solicitud POST a la API de DeepL con un timeout corto.
+ *
+ * @param string $text El texto a traducir.
+ * @param string $target_lang El idioma objetivo para la traducción (código de idioma DeepL, ej. 'ES', 'EN').
+ * @param string $api_key La clave de API de DeepL.
+ * @return string|false La traducción del texto si es exitosa, o `false` en caso de error.
+ */
 function translateWithDeepL($text, $target_lang, $api_key) {
     $deepl_url = 'https://api-free.deepl.com/v2/translate';
     $params = [
@@ -94,6 +114,16 @@ function translateWithDeepL($text, $target_lang, $api_key) {
 }
 
 // Función para traducir con Google Translate (optimizada)
+/**
+ * Traduce un texto utilizando la API de Google Translate.
+ *
+ * Realiza una solicitud HTTP a la API de Google Translate con un timeout corto.
+ *
+ * @param string $text El texto a traducir.
+ * @param string $source_lang El idioma de origen del texto (código de idioma, ej. 'en', 'es').
+ * @param string $target_lang El idioma objetivo para la traducción (código de idioma, ej. 'es', 'en').
+ * @return string|false La traducción del texto si es exitosa, o `false` en caso de error.
+ */
 function translateWithGoogle($text, $source_lang, $target_lang) {
     $url = "https://translate.googleapis.com/translate_a/single?client=gtx&sl=$source_lang&tl=$target_lang&dt=t&q=" . urlencode($text);
     

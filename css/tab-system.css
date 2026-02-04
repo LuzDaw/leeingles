@@ -68,7 +68,7 @@
 
 /* Contenido de pestañas sin márgenes externos */
 .tab-content-wrapper {
-  padding: 20px 40px;
+  padding: 20px 26px;
   position: relative;
   overflow: visible;
 }
@@ -85,6 +85,9 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+#bulkForm{
+    background: #60a5fa1c;
 }
 
 .bulk-actions-container {

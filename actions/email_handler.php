@@ -7,6 +7,19 @@ require_once '../logueo_seguridad/PHPMailer/src/Exception.php';
 require_once '../logueo_seguridad/PHPMailer/src/PHPMailer.php';
 require_once '../logueo_seguridad/PHPMailer/src/SMTP.php';
 
+/**
+ * Envía un correo electrónico utilizando PHPMailer.
+ *
+ * Esta función configura y envía un correo electrónico a un destinatario específico
+ * utilizando la configuración SMTP predefinida para leeingles.com.
+ * Incluye manejo de errores y la opción de incrustar un logo.
+ *
+ * @param string $toEmail La dirección de correo electrónico del destinatario.
+ * @param string $toName El nombre del destinatario.
+ * @param string $subject El asunto del correo electrónico.
+ * @param string $body El cuerpo del correo electrónico (puede contener HTML).
+ * @return array Un array asociativo con 'success' (booleano) y 'message' o 'error'.
+ */
 function sendEmail($toEmail, $toName, $subject, $body) {
     try {
         $mail = new PHPMailer(true);

@@ -131,7 +131,7 @@ if (isset($_GET['text_id']) || isset($_POST['text_id'])) {
 
 <div class="tab-content-wrapper">
     <div class="tab-header-container">
-        <h3>📊 Mi Progreso</h3>
+        <h3 id="progreso">📊 Mi Progreso</h3>
     </div>
     <!-- Grid de Estadísticas Principales -->
     <div class="stats-grid">

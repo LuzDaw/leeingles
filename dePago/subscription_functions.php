@@ -6,7 +6,12 @@
 
 if (!function_exists('getSubscriptionData')) {
     /**
-     * Obtiene los datos básicos de suscripción del usuario desde la base de datos
+     * Obtiene los datos básicos de suscripción de un usuario desde la base de datos.
+     *
+     * Recupera la fecha de registro, el tipo de usuario y la última conexión del usuario.
+     *
+     * @param int $user_id El ID del usuario.
+     * @return array|null Un array asociativo con 'fecha_registro', 'tipo_usuario' y 'ultima_conexion', o null si el usuario no se encuentra.
      */
     function getSubscriptionData($user_id) {
         global $conn;
@@ -29,8 +34,14 @@ if (!function_exists('getSubscriptionData')) {
 
 if (!function_exists('getUserSubscriptionStatus')) {
     /**
-     * Calcula el estado actual del usuario basado en el tiempo transcurrido desde su registro
-     * Retorna un array con el tipo de usuario, días transcurridos y el mes relativo de uso.
+     * Calcula el estado actual de la suscripción de un usuario.
+     *
+     * Determina si el usuario está en un período de prueba, limitado o tiene un plan premium activo,
+     * basándose en la fecha de registro, la última conexión y los datos de suscripción.
+     *
+     * @param int $user_id El ID del usuario.
+     * @return array|null Un array asociativo con el estado de la suscripción, días transcurridos,
+     *                    mes de uso, fechas de reinicio y otros detalles relevantes, o null si el usuario no se encuentra.
      */
     function getUserSubscriptionStatus($user_id) {
         global $conn;
@@ -107,8 +118,14 @@ if (!function_exists('getUserSubscriptionStatus')) {
 
 if (!function_exists('initUserSubscription')) {
     /**
-     * Función para inicializar la ficha de suscripción de un nuevo usuario.
-     * Se puede llamar justo después de crear el usuario en la tabla 'users'.
+     * Inicializa la ficha de suscripción de un nuevo usuario.
+     *
+     * Esta función se puede llamar después de crear un nuevo usuario. Actualmente,
+     * la base de datos maneja los valores por defecto, pero esta función está
+     * preparada para futuras inicializaciones (ej. registros en `uso_traducciones` o emails de bienvenida).
+     *
+     * @param int $user_id El ID del nuevo usuario.
+     * @return bool Siempre devuelve true por ahora.
      */
     function initUserSubscription($user_id) {
         global $conn;
@@ -123,8 +140,13 @@ if (!function_exists('initUserSubscription')) {
 
 if (!function_exists('getWeeklyUsage')) {
     /**
-     * Obtiene el conteo de palabras traducidas en la semana actual.
-     * Si no existe el registro, lo crea.
+     * Obtiene el conteo de palabras traducidas por un usuario en la semana ISO actual.
+     *
+     * Si no existe un registro semanal para el usuario, la semana y el año actuales,
+     * intenta buscar un registro mensual (sistema antiguo) o crea un nuevo registro semanal con contador a 0.
+     *
+     * @param int $user_id El ID del usuario.
+     * @return int El número de palabras traducidas en la semana actual.
      */
     function getWeeklyUsage($user_id) {
         global $conn;
@@ -178,7 +200,14 @@ if (!function_exists('getWeeklyUsage')) {
 
 if (!function_exists('incrementTranslationUsage')) {
     /**
-     * Cuenta las palabras de un texto e incrementa el contador semanal.
+     * Cuenta las palabras de un texto e incrementa el contador de uso semanal del usuario.
+     *
+     * Limpia el texto de etiquetas HTML antes de contar las palabras.
+     * Asegura que el registro semanal de uso exista antes de intentar incrementarlo.
+     *
+     * @param int $user_id El ID del usuario.
+     * @param string $text El texto cuyo número de palabras se va a contar.
+     * @return bool `true` si el contador se incrementó correctamente, `false` en caso contrario.
      */
     function incrementTranslationUsage($user_id, $text) {
         global $conn;
@@ -204,7 +233,13 @@ if (!function_exists('incrementTranslationUsage')) {
 
 if (!function_exists('getInactiveLimitedUsers')) {
     /**
-     * Obtiene la lista de usuarios con estado 'limitado' que llevan más de 14 días sin conectarse.
+     * Obtiene una lista de usuarios con estado 'limitado' o 'EnPrueba' que han estado inactivos.
+     *
+     * Un usuario se considera inactivo si su `ultima_conexion` es anterior a `$days` días,
+     * o si `ultima_conexion` es NULL y `fecha_registro` es anterior a `$days` días.
+     *
+     * @param int $days (Opcional) El número de días de inactividad para considerar a un usuario inactivo. Por defecto es 14.
+     * @return array Un array de objetos de usuario inactivos.
      */
     function getInactiveLimitedUsers($days = 14) {
         global $conn;
@@ -238,9 +273,16 @@ if (!function_exists('getInactiveLimitedUsers')) {
 
 if (!function_exists('checkTranslationLimit')) {
     /**
-     * Verifica si el usuario puede realizar más traducciones.
-     * Límite: 300 palabras semanales para usuarios 'limitado' fuera del mes gratuito.
-     * Se permite un margen de cortesía de 50 palabras (total 350) si la lectura ya está en curso.
+     * Verifica si un usuario puede realizar más traducciones basándose en su plan y uso semanal.
+     *
+     * Los usuarios 'limitado' tienen un límite semanal de 300 palabras. Se aplica un margen
+     * de cortesía de 50 palabras adicionales si el usuario ya está en una sesión de lectura activa.
+     * Los usuarios premium o en período de prueba no tienen límite.
+     *
+     * @param int $user_id El ID del usuario.
+     * @param bool $is_active_reading (Opcional) Indica si el usuario está actualmente en una sesión de lectura activa. Por defecto es false.
+     * @return array Un array asociativo con 'can_translate' (booleano), 'limit_reached' (booleano),
+     *               'usage', 'limit', 'grace_limit', 'reason', 'next_reset' y 'status'.
      */
     function checkTranslationLimit($user_id, $is_active_reading = false) {
         $status = getUserSubscriptionStatus($user_id);
@@ -286,7 +328,13 @@ if (!function_exists('checkTranslationLimit')) {
 
 if (!function_exists('debugUpdateRegistrationDate')) {
     /**
-     * FUNCIÓN DE PRUEBA: Permite cambiar la fecha de registro de un usuario.
+     * FUNCIÓN DE DEPURACIÓN: Permite cambiar la fecha de registro de un usuario.
+     *
+     * Útil para pruebas de lógica de suscripción y períodos de prueba.
+     *
+     * @param int $user_id El ID del usuario.
+     * @param string $new_date La nueva fecha de registro en formato 'YYYY-MM-DD HH:MM:SS'.
+     * @return bool `true` si la actualización fue exitosa, `false` en caso contrario.
      */
     function debugUpdateRegistrationDate($user_id, $new_date) {
         global $conn;
@@ -301,7 +349,13 @@ if (!function_exists('debugUpdateRegistrationDate')) {
 
 if (!function_exists('debugAddUsage')) {
     /**
-     * FUNCIÓN DE PRUEBA: Añade uso artificial al contador semanal.
+     * FUNCIÓN DE DEPURACIÓN: Añade uso artificial al contador semanal de traducciones de un usuario.
+     *
+     * Útil para pruebas de límites de traducción.
+     *
+     * @param int $user_id El ID del usuario.
+     * @param int $words El número de palabras a añadir al contador.
+     * @return bool `true` si la actualización fue exitosa, `false` en caso contrario.
      */
     function debugAddUsage($user_id, $words) {
         global $conn;
@@ -320,7 +374,13 @@ if (!function_exists('debugAddUsage')) {
 
 if (!function_exists('debugUpdateLastConnection')) {
     /**
-     * FUNCIÓN DE PRUEBA: Permite cambiar la fecha de última conexión de un usuario.
+     * FUNCIÓN DE DEPURACIÓN: Permite cambiar la fecha de última conexión de un usuario.
+     *
+     * Útil para pruebas de lógica de inactividad.
+     *
+     * @param int $user_id El ID del usuario.
+     * @param string $new_date La nueva fecha de última conexión en formato 'YYYY-MM-DD HH:MM:SS'.
+     * @return bool `true` si la actualización fue exitosa, `false` en caso contrario.
      */
     function debugUpdateLastConnection($user_id, $new_date) {
         global $conn;

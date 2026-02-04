@@ -119,7 +119,13 @@ try {
 }
 
 /**
- * Formatea segundos en una cadena legible (ej: 1h 20m o 45 min)
+ * Formatea un número de segundos en una cadena de tiempo legible.
+ *
+ * Convierte los segundos en un formato de "Xh Ym" (horas y minutos) o "Y min" (solo minutos)
+ * si el tiempo es menor a una hora.
+ *
+ * @param int $seconds El número de segundos a formatear.
+ * @return string La cadena de tiempo formateada.
  */
 function formatReadingTime($seconds) {
     if ($seconds == 0) {

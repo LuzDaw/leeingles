@@ -4,7 +4,16 @@
  * Sigue el mismo patrón que word_functions.php para saved_words
  */
 
-// Función para guardar traducción de título
+/**
+ * Guarda o actualiza la traducción de un título para un texto específico.
+ *
+ * Si ya existe una traducción para el título, se actualiza. De lo contrario, se inserta.
+ *
+ * @param int $text_id El ID del texto al que se asocia la traducción del título.
+ * @param string $title El título original del texto (no se usa directamente en la actualización, pero es parte de la firma).
+ * @param string $translation La traducción del título.
+ * @return array Un array asociativo con 'success' (booleano) y 'message' o 'error'.
+ */
 function saveTitleTranslation($text_id, $title, $translation) {
     global $conn;
     
@@ -38,7 +47,12 @@ function saveTitleTranslation($text_id, $title, $translation) {
     }
 }
 
-// Función para obtener traducción de título
+/**
+ * Obtiene la traducción del título para un texto específico.
+ *
+ * @param int $text_id El ID del texto del que se quiere obtener la traducción del título.
+ * @return string|null La traducción del título si existe, o null en caso contrario.
+ */
 function getTitleTranslation($text_id) {
     global $conn;
     
@@ -62,7 +76,15 @@ function getTitleTranslation($text_id) {
     }
 }
 
-// Función para obtener todos los textos con sus traducciones
+/**
+ * Obtiene una lista de textos con sus títulos y traducciones de títulos.
+ *
+ * Permite filtrar por ID de usuario y limitar el número de resultados.
+ *
+ * @param int|null $user_id (Opcional) El ID del usuario para filtrar los textos. Si es null, se obtienen todos los textos.
+ * @param int|null $limit (Opcional) El número máximo de textos a devolver.
+ * @return array Un array de objetos de texto, cada uno incluyendo su título y traducción de título.
+ */
 function getTextsWithTranslations($user_id = null, $limit = null) {
     global $conn;
     
@@ -106,7 +128,14 @@ function getTextsWithTranslations($user_id = null, $limit = null) {
     }
 }
 
-// Función para verificar si un título necesita traducción
+/**
+ * Verifica si el título de un texto específico necesita una traducción.
+ *
+ * Retorna `true` si el campo `title_translation` del texto está vacío o es null.
+ *
+ * @param int $text_id El ID del texto a verificar.
+ * @return bool `true` si el título necesita traducción, `false` en caso contrario o si el texto no existe.
+ */
 function needsTitleTranslation($text_id) {
     global $conn;
     
@@ -131,7 +160,15 @@ function needsTitleTranslation($text_id) {
     }
 }
 
-// Función para obtener estadísticas de traducciones de títulos
+/**
+ * Obtiene estadísticas sobre las traducciones de títulos.
+ *
+ * Incluye el número total de textos, el número de títulos traducidos
+ * y el porcentaje de títulos traducidos. Puede filtrar por ID de usuario.
+ *
+ * @param int|null $user_id (Opcional) El ID del usuario para filtrar las estadísticas.
+ * @return array Un array asociativo con 'total_texts', 'translated_titles' y 'translation_percentage'.
+ */
 function getTitleTranslationStats($user_id = null) {
     global $conn;
     
@@ -167,4 +204,4 @@ function getTitleTranslationStats($user_id = null) {
         return ['total_texts' => 0, 'translated_titles' => 0, 'translation_percentage' => 0];
     }
 }
-?> 
+?>

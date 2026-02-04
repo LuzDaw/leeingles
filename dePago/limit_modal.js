@@ -3,14 +3,24 @@
  * Ubicación: dePago/limit_modal.js
  */
 
+/**
+ * @file Lógica para el modal de límite de traducciones.
+ * @namespace LimitModal
+ */
 const LimitModal = {
+    /** @property {string} modalId - El ID del elemento del modal principal. */
     modalId: 'limit-modal',
+    /** @property {string} resetDateId - El ID del elemento donde se muestra la fecha de reinicio del límite. */
     resetDateId: 'limit-reset-date',
+    /** @property {string} closeBtnId - El ID del botón principal para cerrar el modal. */
     closeBtnId: 'close-limit-modal',
+    /** @property {string} closeXId - El ID del botón 'X' para cerrar el modal. */
     closeXId: 'close-limit-modal-x',
 
     /**
-     * Inicializa los eventos del modal
+     * Inicializa los eventos y manejadores del modal de límite de traducciones.
+     * Configura los listeners para los botones de cierre y el clic fuera del modal.
+     * Al cerrar, marca el límite como aceptado y, si es posible, inicia la lectura.
      */
     init: function() {
         const closeBtn = document.getElementById(this.closeBtnId);
@@ -36,9 +46,14 @@ const LimitModal = {
     },
 
     /**
-     * Muestra el modal con la fecha de reinicio
-     * @param {string} nextReset - Fecha formateada del próximo reinicio
-     * @param {boolean} force - Si es true, ignora el control de sesión
+     * Muestra el modal de límite de traducciones.
+     *
+     * Controla si el modal ya se ha mostrado en la sesión actual para evitar repeticiones,
+     * a menos que se fuerce su aparición (ej. por agotamiento del margen de cortesía).
+     * Formatea la fecha de reinicio y pausa la lectura si está activa.
+     *
+     * @param {string} nextReset - La fecha y hora del próximo reinicio del límite, en formato 'YYYY-MM-DD H:i:s'.
+     * @param {boolean} [force=false] - Si es `true`, el modal se mostrará incluso si ya se ha visto en la sesión.
      */
     show: function(nextReset, force = false) {
         // Control de sesión: solo mostrar una vez por sesión a menos que se fuerce (Play o margen agotado)
@@ -73,7 +88,7 @@ const LimitModal = {
     },
 
     /**
-     * Oculta el modal
+     * Oculta el modal de límite de traducciones.
      */
     hide: function() {
         const modal = document.getElementById(this.modalId);
@@ -83,9 +98,17 @@ const LimitModal = {
     },
 
     /**
-     * Verifica si la respuesta de una API indica que se ha alcanzado el límite
-     * @param {Object} data - Respuesta JSON de la API
-     * @returns {boolean} True si se alcanzó el límite
+     * Verifica si la respuesta de una API indica que se ha alcanzado el límite de traducciones.
+     *
+     * Si el límite se ha alcanzado, establece una bandera global y muestra el modal.
+     * Forzará la aparición del modal si el uso supera el margen de cortesía.
+     *
+     * @param {object} data - El objeto de respuesta JSON de la API que contiene información sobre el límite.
+     * @param {boolean} data.limit_reached - Indica si el límite ha sido alcanzado.
+     * @param {number} data.usage - El uso actual de traducciones.
+     * @param {number} data.grace_limit - El límite con margen de cortesía.
+     * @param {string} data.next_reset - La fecha del próximo reinicio del límite.
+     * @returns {boolean} `true` si se alcanzó el límite y el modal fue mostrado, `false` en caso contrario.
      */
     checkResponse: function(data) {
         if (data && data.limit_reached) {

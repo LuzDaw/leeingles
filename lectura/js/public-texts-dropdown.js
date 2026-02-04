@@ -1,4 +1,12 @@
 // Cargar categorías de textos públicos al abrir el dropdown
+/**
+ * Alterna la visibilidad del menú desplegable de textos públicos y carga las categorías si es necesario.
+ *
+ * Realiza una petición AJAX a `textoPublic/categories.php` para obtener las categorías
+ * y las renderiza en el contenido del desplegable.
+ *
+ * @param {Event} e - El objeto de evento del clic.
+ */
 function togglePublicTextsDropdown(e) {
     e.stopPropagation();
     const dropdown = document.getElementById('publicTextsDropdown');
@@ -28,6 +36,15 @@ window.addEventListener('click', function(e) {
     if (dropdown) dropdown.classList.remove('show');
 });
 // Función placeholder para cargar textos públicos por categoría
+/**
+ * Carga y muestra los textos públicos de una categoría específica.
+ *
+ * Realiza una petición AJAX a `textoPublic/public_texts.php` filtrando por categoría
+ * y renderiza la lista de textos en el formulario principal.
+ *
+ * @param {number} catId - El ID de la categoría a cargar.
+ * @param {string} catName - El nombre de la categoría (para mostrar en la interfaz).
+ */
 function loadPublicTextsByCategory(catId, catName) {
     const form = document.getElementById('bulkForm');
     if (!form) return;
@@ -72,6 +89,12 @@ function loadPublicTextsByCategory(catId, catName) {
 
 
 // Función para cargar todos los textos públicos
+/**
+ * Carga y muestra todos los textos públicos disponibles.
+ *
+ * Realiza una petición AJAX a `textoPublic/public_texts.php` sin filtrar por categoría
+ * y renderiza la lista de textos en el formulario principal.
+ */
 function loadAllPublicTexts() {
     const form = document.getElementById('bulkForm');
     if (!form) return;

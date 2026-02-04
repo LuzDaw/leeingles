@@ -2,12 +2,29 @@
  * Sistema de pestañas dinámicas para index.php
  */
 
-// Alias para compatibilidad
+/**
+ * Alias para la función `loadTabContent`, manteniendo compatibilidad con llamadas antiguas.
+ * Si la pestaña es 'textos', la convierte a 'my-texts'.
+ *
+ * @param {string} tab - El nombre de la pestaña a cargar.
+ */
 window.cambiarPestana = function(tab) {
     if (tab === 'textos') tab = 'my-texts';
     window.loadTabContent(tab);
 };
 
+/**
+ * Carga el contenido de una pestaña específica en el dashboard del usuario.
+ *
+ * Si el usuario no está logueado o no hay un contenedor de pestañas, redirige a la página principal
+ * con los parámetros de la pestaña. De lo contrario, realiza una petición AJAX para cargar el contenido
+ * dinámicamente, actualiza el estado visual de los botones de pestaña y ejecuta scripts incrustados.
+ * También maneja el desplazamiento a un objetivo específico y la traducción de contextos de palabras guardadas.
+ *
+ * @param {string} tab - El identificador de la pestaña a cargar (ej. 'progress', 'my-texts').
+ * @param {boolean} [isPaymentSuccess=false] - Indica si la carga se debe a un éxito de pago.
+ * @param {string|null} [scrollTarget=null] - Un ID de elemento al que desplazar la vista después de cargar el contenido.
+ */
 window.loadTabContent = function(tab, isPaymentSuccess = false, scrollTarget = null) {
     const tabContent = document.getElementById('tab-content');
     
@@ -139,7 +156,12 @@ window.loadTabContent = function(tab, isPaymentSuccess = false, scrollTarget = n
     });
 };
 
-// Función para salir de las pestañas y mostrar el header
+/**
+ * Sale del modo de pestañas y restaura la vista principal de la aplicación.
+ *
+ * Muestra el encabezado y el menú flotante, y redirige a la página de inicio
+ * si la URL actual contiene parámetros de pestaña.
+ */
 window.exitTabs = function() {
     // Mostrar header
     if (typeof window.showHeader === 'function') {
@@ -155,7 +177,13 @@ window.exitTabs = function() {
     }
 };
 
-// Función para detectar clics fuera de las pestañas y mostrar header
+/**
+ * Configura la detección de clics en el documento para controlar la visibilidad del encabezado
+ * cuando el usuario está en el modo de pestañas.
+ *
+ * Si el encabezado está oculto y el clic no se realiza en un elemento interactivo
+ * (enlaces, botones, inputs, etc.), el encabezado se muestra.
+ */
 window.setupTabClickDetection = function() {
     // Remover listener anterior si existe
     document.removeEventListener('click', handleTabAreaClick);
@@ -163,6 +191,14 @@ window.setupTabClickDetection = function() {
     document.addEventListener('click', handleTabAreaClick);
 };
 
+/**
+ * Manejador de eventos para detectar clics fuera de las áreas interactivas de las pestañas.
+ *
+ * Si el encabezado está oculto y el clic no se realiza en un elemento que debería
+ * mantener el encabezado oculto (como botones o enlaces), entonces muestra el encabezado.
+ *
+ * @param {Event} event - El objeto de evento del clic.
+ */
 function handleTabAreaClick(event) {
     const header = document.getElementById('main-header');
     
@@ -195,7 +231,14 @@ function handleTabAreaClick(event) {
     }
 }
 
-// Toggle del menú móvil de pestañas
+/**
+ * Módulo para gestionar el menú móvil de pestañas.
+ *
+ * Este IIFE (Immediately Invoked Function Expression) se encarga de la lógica
+ * para transformar la navegación de pestañas en un menú hamburguesa en pantallas pequeñas
+ * y restaurarla en pantallas grandes. Incluye la creación dinámica de elementos,
+ * el manejo de eventos de clic y el ajuste en cambios de tamaño de ventana.
+ */
 (function() {
     let closeMenuHandler = null;
     
@@ -205,6 +248,14 @@ function handleTabAreaClick(event) {
             let menuToggle = null;
             let buttonsContainer = null;
 
+            /**
+             * Configura el menú móvil de pestañas basándose en el ancho de la ventana.
+             *
+             * Si el ancho es <= 768px, crea un botón de alternancia (hamburguesa) y un contenedor
+             * para los botones de las pestañas, moviendo los botones existentes a este contenedor.
+             * Configura los listeners para abrir/cerrar el menú.
+             * Si el ancho es > 768px, revierte los cambios y restaura la disposición original.
+             */
             function setupMobileMenu() {
                 // Limpiar listener anterior si existe
                 if (closeMenuHandler) {

@@ -19,19 +19,20 @@ $EMAIL_COLORS = [
 ];
 
 /**
- * Envía un email con un diseño profesional y personalizable.
+ * Envía un email con un diseño profesional y personalizable utilizando una plantilla base.
  *
- * Nota: los clientes de correo no soportan variables CSS, por eso aquí usamos
- * valores fijos pero basados en la misma paleta que color-theme.css.
- * 
- * @param string $destinatarioEmail Email del usuario
- * @param string $destinatarioNombre Nombre del usuario
- * @param string $subject Asunto del correo
- * @param string $titulo Título grande dentro del email (H2)
- * @param string $mensaje Cuerpo del mensaje (soporta HTML básico)
- * @param string $botonTexto Texto del botón de acción
- * @param string $botonUrl URL a la que apunta el botón
- * @return array Resultado del envío ['success' => true/false, ...]
+ * Esta función construye el cuerpo HTML de un correo electrónico con un diseño predefinido,
+ * incluyendo un encabezado con logo, un título, un mensaje personalizable y un botón de acción.
+ * Luego, utiliza la función `sendEmail` para enviar el correo.
+ *
+ * @param string $destinatarioEmail La dirección de correo electrónico del destinatario.
+ * @param string $destinatarioNombre El nombre del destinatario.
+ * @param string $subject El asunto del correo electrónico.
+ * @param string $titulo El título principal que se mostrará dentro del cuerpo del email.
+ * @param string $mensaje El contenido principal del mensaje (puede contener HTML básico).
+ * @param string $botonTexto (Opcional) El texto que se mostrará en el botón de acción. Por defecto es 'Ir a la App'.
+ * @param string $botonUrl (Opcional) La URL a la que dirigirá el botón de acción. Por defecto es 'https://leeingles.com'.
+ * @return array El resultado del envío del correo, devuelto por `sendEmail`.
  */
 function enviarEmailPlantillaBase($destinatarioEmail, $destinatarioNombre, $subject, $titulo, $mensaje, $botonTexto = 'Ir a la App', $botonUrl = 'https://leeingles.com') {
     global $EMAIL_COLORS;
@@ -82,7 +83,14 @@ function enviarEmailPlantillaBase($destinatarioEmail, $destinatarioNombre, $subj
 }
 
 /**
- * Ejemplo de función específica reutilizando la base: Recordatorio de Inactividad
+ * Envía un correo electrónico de recordatorio de inactividad a un usuario.
+ *
+ * Utiliza la plantilla base de email para enviar un mensaje personalizado
+ * animando al usuario a volver a la aplicación para continuar practicando inglés.
+ *
+ * @param string $email La dirección de correo electrónico del usuario inactivo.
+ * @param string $nombre El nombre del usuario inactivo.
+ * @return array El resultado del envío del correo, devuelto por `enviarEmailPlantillaBase`.
  */
 function enviarRecordatorioInactividad($email, $nombre) {
     $asunto = "¡Te echamos de menos en LeeIngles!";

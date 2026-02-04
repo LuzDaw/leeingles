@@ -4,7 +4,20 @@
  * Elimina duplicación entre save_word.php y save_translated_word.php
  */
 
-// Función para guardar palabra traducida
+/**
+ * Guarda una palabra traducida para un usuario.
+ *
+ * Si la palabra ya existe para el usuario y el texto (o sin texto),
+ * se actualiza la traducción, el contexto y la fecha de creación.
+ * De lo contrario, se inserta como una nueva palabra guardada.
+ *
+ * @param int $user_id El ID del usuario.
+ * @param string $word La palabra original en inglés.
+ * @param string $translation La traducción de la palabra.
+ * @param string $context (Opcional) El contexto en el que se guardó la palabra.
+ * @param int|null $text_id (Opcional) El ID del texto del que proviene la palabra.
+ * @return array Un array asociativo con 'success' (booleano) y 'message' o 'error'.
+ */
 function saveTranslatedWord($user_id, $word, $translation, $context = '', $text_id = null) {
     global $conn;
     
@@ -38,7 +51,17 @@ function saveTranslatedWord($user_id, $word, $translation, $context = '', $text_
     }
 }
 
-// Función para obtener palabras guardadas del usuario
+/**
+ * Obtiene las palabras guardadas por un usuario.
+ *
+ * Permite filtrar las palabras por un texto específico y limitar el número de resultados.
+ * Incluye el título del texto asociado si existe.
+ *
+ * @param int $user_id El ID del usuario.
+ * @param int|null $text_id (Opcional) El ID del texto para filtrar las palabras.
+ * @param int|null $limit (Opcional) El número máximo de palabras a devolver.
+ * @return array Un array de objetos de palabras guardadas.
+ */
 function getSavedWords($user_id, $text_id = null, $limit = null) {
     global $conn;
     
@@ -69,7 +92,15 @@ function getSavedWords($user_id, $text_id = null, $limit = null) {
     return $words;
 }
 
-// Función para contar palabras guardadas del usuario
+/**
+ * Cuenta el número de palabras guardadas por un usuario.
+ *
+ * Puede contar todas las palabras guardadas o solo las asociadas a un texto específico.
+ *
+ * @param int $user_id El ID del usuario.
+ * @param int|null $text_id (Opcional) El ID del texto para contar palabras específicas.
+ * @return int El número total de palabras guardadas o el número de palabras para un texto específico.
+ */
 function countSavedWords($user_id, $text_id = null) {
     global $conn;
     
@@ -89,7 +120,15 @@ function countSavedWords($user_id, $text_id = null) {
     return $text_id ? $count['word_count'] : $count['total_words'];
 }
 
-// Función para obtener estadísticas de palabras por fecha
+/**
+ * Obtiene estadísticas de palabras guardadas por fecha para un usuario.
+ *
+ * Devuelve el número de palabras guardadas por día durante un período especificado.
+ *
+ * @param int $user_id El ID del usuario.
+ * @param int $days (Opcional) El número de días hacia atrás para obtener las estadísticas. Por defecto es 7.
+ * @return array Un array de objetos, cada uno con la fecha y el recuento de palabras guardadas.
+ */
 function getWordStatsByDate($user_id, $days = 7) {
     global $conn;
     
@@ -107,7 +146,13 @@ function getWordStatsByDate($user_id, $days = 7) {
     return $stats;
 }
 
-// Función para obtener palabras aleatorias para práctica
+/**
+ * Obtiene un conjunto de palabras aleatorias guardadas por un usuario para fines de práctica.
+ *
+ * @param int $user_id El ID del usuario.
+ * @param int $limit (Opcional) El número máximo de palabras aleatorias a devolver. Por defecto es 10.
+ * @return array Un array de objetos de palabras, cada uno con la palabra, su traducción y contexto.
+ */
 function getRandomWordsForPractice($user_id, $limit = 10) {
     global $conn;
     
@@ -124,4 +169,4 @@ function getRandomWordsForPractice($user_id, $limit = 10) {
     $stmt->close();
     return $words;
 }
-?> 
+?>

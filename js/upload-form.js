@@ -3,7 +3,12 @@
  * Nota: La lógica principal ahora reside en ajax_upload_content.php
  */
 
-// Función para mostrar el formulario de subida (ahora redirige a la pestaña correspondiente)
+/**
+ * Muestra el formulario de subida de texto.
+ *
+ * Si la función `loadTabContent` está disponible (es decir, el usuario está en el dashboard),
+ * carga la pestaña 'upload'. De lo contrario, redirige a `index.php` con el parámetro `show_upload=1`.
+ */
 function showUploadForm() {
     if (typeof loadTabContent === 'function') {
         loadTabContent('upload');
@@ -12,7 +17,12 @@ function showUploadForm() {
     }
 }
 
-// Función para ocultar el formulario de subida (obsoleta, mantenida por compatibilidad)
+/**
+ * Oculta el formulario de subida de texto.
+ *
+ * Esta función está obsoleta en el flujo actual de pestañas, pero se mantiene por compatibilidad.
+ * Si `loadTabContent` está disponible, carga la pestaña 'my-texts'. De lo contrario, redirige a `index.php`.
+ */
 function hideUploadForm() {
     if (typeof loadTabContent === 'function') {
         loadTabContent('my-texts');

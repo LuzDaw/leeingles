@@ -7,10 +7,33 @@ require_once __DIR__ . '/../recordatorio/email_templates.php';
 // Determinar la URL base (se usa para generar links en los emails)
 $base_url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://" . $_SERVER['HTTP_HOST'];
 
+/**
+ * Envía un correo electrónico utilizando la función `sendEmail` del gestor de emails.
+ *
+ * Esta función actúa como un wrapper para la función de envío de emails principal,
+ * asegurando que todos los emails de seguridad pasen por el mismo sistema.
+ *
+ * @param string $destinatarioEmail La dirección de correo electrónico del destinatario.
+ * @param string $destinatarioNombre El nombre del destinatario.
+ * @param string $subject El asunto del correo electrónico.
+ * @param string $body El cuerpo del correo electrónico (puede contener HTML).
+ * @return array El resultado de la función `sendEmail`.
+ */
 function enviarEmailConPHPMailer($destinatarioEmail, $destinatarioNombre, $subject, $body) {
     return sendEmail($destinatarioEmail, $destinatarioNombre, $subject, $body);
 }
 
+/**
+ * Envía un correo electrónico de verificación de cuenta al usuario.
+ *
+ * Genera un enlace de verificación utilizando el token proporcionado y la URL base,
+ * y luego envía un email con una plantilla predefinida.
+ *
+ * @param string $destinatarioEmail La dirección de correo electrónico del destinatario.
+ * @param string $destinatarioNombre El nombre del destinatario.
+ * @param string $token El token de verificación único para el usuario.
+ * @return array El resultado de la función `enviarEmailPlantillaBase`.
+ */
 function enviarEmailVerificacion($destinatarioEmail, $destinatarioNombre, $token) {
     global $base_url;
     
@@ -24,6 +47,17 @@ function enviarEmailVerificacion($destinatarioEmail, $destinatarioNombre, $token
     return enviarEmailPlantillaBase($destinatarioEmail, $destinatarioNombre, $subject, $titulo, $mensaje, "Activar mi cuenta", $verificationLink);
 }
 
+/**
+ * Envía un correo electrónico para restablecer la contraseña del usuario.
+ *
+ * Genera un enlace de restablecimiento de contraseña utilizando el token y la URL base,
+ * y luego envía un email con una plantilla predefinida.
+ *
+ * @param string $destinatarioEmail La dirección de correo electrónico del destinatario.
+ * @param string $destinatarioNombre El nombre del destinatario.
+ * @param string $token El token de restablecimiento de contraseña único.
+ * @return array El resultado de la función `enviarEmailPlantillaBase`.
+ */
 function enviarEmailRestablecerContrasena($destinatarioEmail, $destinatarioNombre, $token) {
     global $base_url;
     

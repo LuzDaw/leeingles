@@ -23,11 +23,14 @@ label {
 }
 
 #upload-form-container {
-  background: #fff;
+  background: #d2e1f5;
   border-radius: 12px;
   box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-  padding: 24px;
   margin-bottom: 24px;
+}
+#subir{
+      margin: auto;
+    color: #374151;  
 }
 
 .progress-dashboard {

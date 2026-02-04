@@ -127,7 +127,7 @@ $conn->close();
 </style>
 
 <div class="tab-header-container">
-    <h3>⬆ Subir Texto</h3>
+    <h3 id="subir">⬆ Subir Texto</h3>
 </div>
 
 <div id="upload-messages"></div>

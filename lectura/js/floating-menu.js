@@ -11,7 +11,12 @@ window.addEventListener('beforeunload', function() {
     }
 });
 
-// Función para ocultar/mostrar traducciones simultáneas
+/**
+ * Alterna la visibilidad de las traducciones simultáneas en el área de lectura.
+ *
+ * Añade o elimina la clase 'hide-translations' del contenedor principal de páginas
+ * y actualiza el texto del botón de alternancia.
+ */
 window.toggleTranslations = function() {
     const container = document.getElementById('pages-container');
     const button = document.getElementById('toggle-translations-btn');
@@ -34,7 +39,11 @@ window.toggleTranslations = function() {
     }
 }
 
-// Función para mostrar/ocultar menú flotante
+/**
+ * Alterna la visibilidad del menú flotante de herramientas de lectura.
+ *
+ * Controla la opacidad, transformación y eventos de puntero del submenú.
+ */
 let menuOpen = false;
 window.toggleFloatingMenu = function() {
     const submenu = document.getElementById('submenu');
@@ -55,7 +64,12 @@ window.toggleFloatingMenu = function() {
     }
 };
 
-// Función para cerrar el menú
+/**
+ * Cierra el menú flotante de herramientas de lectura.
+ *
+ * Establece la opacidad a 0, aplica una transformación para ocultarlo
+ * y desactiva los eventos de puntero.
+ */
 function closeMenu() {
     const submenu = document.getElementById('submenu');
     if (submenu) {
@@ -66,7 +80,12 @@ function closeMenu() {
     }
 }
 
-// Función para abrir el menú
+/**
+ * Abre el menú flotante de herramientas de lectura.
+ *
+ * Establece la opacidad a 1, elimina la transformación para mostrarlo
+ * y activa los eventos de puntero.
+ */
 function openMenu() {
     const submenu = document.getElementById('submenu');
     if (submenu) {
@@ -77,7 +96,10 @@ function openMenu() {
     }
 }
 
-// Función para actualizar el botón flotante - modo Start/Stop
+/**
+ * Actualiza el texto y el título del botón flotante de reproducción/pausa
+ * basándose en el estado actual de la lectura.
+ */
 window.updateFloatingButton = function() {
     const floatingBtn = document.getElementById('floating-btn');
     if (!floatingBtn) return;
@@ -92,7 +114,14 @@ window.updateFloatingButton = function() {
     }
 }
 
-// Botón flotante: alterna entre iniciar y detener (sin pausa intermedia)
+/**
+ * Alterna el estado de reproducción/pausa de la lectura automática.
+ *
+ * Detiene la lectura si está activa o la inicia si está detenida.
+ * Incluye un bloqueo para evitar clics múltiples rápidos.
+ *
+ * @param {Event} event - El objeto de evento del clic.
+ */
 let _playPauseLock = false;
 window.toggleFloatingPlayPause = function(event) {
     // Evitar que el clic se propague a otros listeners (como el de document en lector.js)
@@ -140,7 +169,12 @@ window.toggleFloatingPlayPause = function(event) {
     }
 }
 
-// Función para continuar desde el último párrafo leído
+/**
+ * Intenta continuar la lectura desde el último párrafo leído.
+ *
+ * Desplaza la vista a la página y párrafo correctos y, si la función
+ * `startReadingFromIndex` está disponible, la invoca.
+ */
 window.continueFromLastParagraph = function() {
     if (window.lastReadParagraphIndex > 0) {
         const pages = document.querySelectorAll('.page');
@@ -226,7 +260,11 @@ document.addEventListener('DOMContentLoaded', function() {
     }, 600);
 });
 
-// Función para cerrar completamente el menú flotante y submenú
+/**
+ * Cierra completamente el menú flotante de herramientas y su submenú.
+ *
+ * Oculta el botón flotante y cierra el submenú si está abierto.
+ */
 window.closeFloatingMenu = function() {
     // Ocultar el menú flotante
     const floatingMenu = document.getElementById('floating-menu');
@@ -238,7 +276,13 @@ window.closeFloatingMenu = function() {
     menuOpen = false;
 };
 
-// Función para sincronizar estado del botón con lectura real
+/**
+ * Sincroniza el estado visual del botón flotante de reproducción/pausa
+ * con el estado real de la lectura de voz.
+ *
+ * Ajusta el texto y el título del botón para reflejar si la lectura está activa,
+ * pausada o detenida, evitando cambios si hay una pausa temporal por interacción del usuario.
+ */
 window.syncButtonWithReadingState = function() {
     const floatingBtn = document.getElementById('floating-btn');
     if (!floatingBtn) return;

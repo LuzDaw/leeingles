@@ -3,6 +3,11 @@
 // ============================================
 
 // Función global para configurar voz en inglés offline
+/**
+ * Configura el idioma de un objeto `SpeechSynthesisUtterance` a inglés de EE. UU.
+ *
+ * @param {SpeechSynthesisUtterance} utterance - El objeto de voz a configurar.
+ */
 window.configureEnglishVoice = function(utterance) {
     utterance.lang = 'en-US';
 };
@@ -25,6 +30,14 @@ window.practiceStartTime = null;
 window.practiceLastSaveTime = null;
 window.practiceUpdateInterval = null;
 
+/**
+ * Guarda el tiempo de práctica acumulado en la base de datos.
+ *
+ * Envía una petición AJAX a `practicas/save_practice_time.php`.
+ *
+ * @param {number} seconds - La duración de la práctica en segundos.
+ * @param {boolean} [isFinal=false] - Indica si es el guardado final de la sesión de práctica.
+ */
 window.savePracticeTime = function(seconds, isFinal = false) {
     if (seconds <= 0) return;
     const mode = window.practiceCurrentMode || 'selection';
@@ -37,6 +50,11 @@ window.savePracticeTime = function(seconds, isFinal = false) {
     }).catch(err => console.error("Error guardando tiempo de práctica:", err));
 };
 
+/**
+ * Inicia el temporizador de práctica.
+ *
+ * Configura un intervalo para guardar el tiempo de práctica cada 30 segundos.
+ */
 window.startPracticeTimer = function() {
     window.stopPracticeTimer();
     window.practiceStartTime = Date.now();
@@ -52,6 +70,9 @@ window.startPracticeTimer = function() {
     }, 30000);
 };
 
+/**
+ * Detiene el temporizador de práctica y guarda el tiempo restante.
+ */
 window.stopPracticeTimer = function() {
     if (window.practiceUpdateInterval) {
         clearInterval(window.practiceUpdateInterval);
@@ -66,10 +87,19 @@ window.stopPracticeTimer = function() {
 };
 
 // Cargar modo práctica
+/**
+ * Carga el modo de práctica, mostrando el selector de modos.
+ */
 window.loadPracticeMode = async function() {
     showPracticeModeSelector();
 }
 
+/**
+ * Muestra el selector de modos de práctica y la interfaz inicial del ejercicio.
+ *
+ * Renderiza los botones para elegir entre selección múltiple, escribir palabra y escribir frases,
+ * así como la barra de progreso y las estadísticas.
+ */
 function showPracticeModeSelector() {
     const practiceHTML = `
         <div class="mode-selector">
@@ -91,6 +121,13 @@ function showPracticeModeSelector() {
     loadSentencePractice();
 }
 
+/**
+ * Establece el modo de práctica actual y recarga la pregunta de práctica.
+ *
+ * Actualiza el estado visual de los botones de modo y las etiquetas de estadísticas.
+ *
+ * @param {string} mode - El modo de práctica a establecer ('selection', 'writing', 'sentences').
+ */
 window.setPracticeMode = function(mode) {
     window.practiceAlwaysShowTranslation = false;
     window.practiceCurrentMode = mode;
@@ -106,6 +143,13 @@ window.setPracticeMode = function(mode) {
     loadSentencePractice();
 }
 
+/**
+ * Carga y muestra una nueva pregunta de práctica.
+ *
+ * Selecciona una palabra aleatoria de las palabras restantes, construye la interfaz
+ * del ejercicio según el modo de práctica (selección o escritura), y configura
+ * los manejadores de eventos.
+ */
 window.loadPracticeQuestion = function() {
     // El header ahora se mantiene visible en las pestañas de práctica
     
@@ -210,10 +254,25 @@ window.loadPracticeQuestion = function() {
     updatePracticeStats();
 }
 
+/**
+ * Normaliza una palabra eliminando signos de puntuación y convirtiéndola a minúsculas.
+ *
+ * @param {string} word - La palabra a normalizar.
+ * @returns {string} La palabra normalizada.
+ */
 function normalizeWord(word) {
     return word.toLowerCase().replace(/[.,!?;:'"`~@#$%^&*()_+\-=\[\]{}|\\;:"'<>?\/]/g, '');
 }
 
+/**
+ * Genera una pista "inteligente" para el modo de escritura.
+ *
+ * Devuelve la parte correcta de la palabra hasta el primer error, más un carácter adicional.
+ *
+ * @param {string} userText - El texto introducido por el usuario.
+ * @param {string} correctWord - La palabra correcta.
+ * @returns {string} La pista generada.
+ */
 function getSmartHint(userText, correctWord) {
     let correctLength = 0;
     for (let i = 0; i < userText.length && i < correctWord.length; i++) {
@@ -223,6 +282,14 @@ function getSmartHint(userText, correctWord) {
     return correctLength < correctWord.length ? correctWord.substring(0, correctLength + 1) : correctWord;
 }
 
+/**
+ * Verifica la entrada del usuario en el modo de escritura de palabras.
+ *
+ * Compara la entrada del usuario con la palabra correcta, gestiona los errores
+ * y muestra pistas si el usuario comete demasiados errores.
+ *
+ * @param {string} correctWord - La palabra correcta esperada.
+ */
 window.checkWordInput = function(correctWord) {
     const input = document.querySelector('[data-practice-input="true"]');
     const wordHint = document.getElementById('word-hint');
@@ -263,6 +330,14 @@ window.checkWordInput = function(correctWord) {
     }
 };
 
+/**
+ * Muestra feedback de éxito cuando una palabra se responde correctamente.
+ *
+ * Incrementa el contador de respuestas correctas, reproduce un sonido de éxito,
+ * actualiza la interfaz y programa la carga de la siguiente pregunta.
+ *
+ * @param {HTMLElement} inputElement - El elemento de entrada donde se introdujo la respuesta.
+ */
 function showWordSuccessFeedback(inputElement) {
     const currentWord = window.practiceRemainingWords[window.practiceCurrentWordIndex];
     window.practiceCorrectAnswers++;
@@ -291,6 +366,14 @@ function showWordSuccessFeedback(inputElement) {
     }
 }
 
+/**
+ * Genera los datos de una oración de práctica a partir de una palabra.
+ *
+ * Crea una oración en inglés con un hueco para la palabra y busca su traducción y contexto.
+ *
+ * @param {string} word - La palabra para la que se generará la oración de práctica.
+ * @returns {object} Un objeto con la oración en inglés (con hueco), traducción, palabra original, etc.
+ */
 function generatePracticeSentence(word) {
     const practiceWord = window.practiceWords.find(w => w.word === word);
     const context = practiceWord ? practiceWord.context : `The ${word} is important.`;
@@ -307,6 +390,13 @@ function generatePracticeSentence(word) {
     };
 }
 
+/**
+ * Convierte un texto en una serie de palabras clickeables, con un hueco para la práctica.
+ *
+ * @param {string} text - El texto a procesar.
+ * @param {string|null} [highlightWord=null] - Una palabra opcional a resaltar.
+ * @returns {string} El HTML del texto con palabras envueltas en `<span>` clickeables.
+ */
 function makeWordsClickable(text, highlightWord = null) {
     const words = text.match(/\w+|[.,!?;:()"'-]+|\s+/g);
     if (!words) return text;
@@ -317,6 +407,12 @@ function makeWordsClickable(text, highlightWord = null) {
     }).join('');
 }
 
+/**
+ * Traduce una oración de práctica al español y la muestra.
+ *
+ * @param {string} originalSentence - La oración original en inglés.
+ * @param {string} [wordTranslation] - La traducción de la palabra clave dentro de la oración (opcional).
+ */
 function translatePracticeSentence(originalSentence, wordTranslation) {
     fetch('/traduciones/translate.php', {
         method: 'POST',
@@ -333,6 +429,15 @@ function translatePracticeSentence(originalSentence, wordTranslation) {
     });
 }
 
+/**
+ * Genera palabras distractoras para el modo de selección múltiple.
+ *
+ * Selecciona palabras aleatorias de la lista de palabras de práctica del usuario
+ * y, si es necesario, añade palabras comunes como relleno.
+ *
+ * @param {string} correctWord - La palabra correcta para la pregunta.
+ * @returns {Array<string>} Un array de palabras distractoras.
+ */
 function generatePracticeDistractors(correctWord) {
     const allWords = window.practiceWords.filter(w => w.word !== correctWord).map(w => w.word);
     const common = ['house', 'book', 'time', 'water', 'good', 'work', 'think', 'know', 'want', 'say'];
@@ -344,6 +449,9 @@ function generatePracticeDistractors(correctWord) {
     return distractors;
 }
 
+/**
+ * Reproduce un sonido de éxito (un tono agudo).
+ */
 function playSuccessSound() {
     try {
         const ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -356,6 +464,9 @@ function playSuccessSound() {
     } catch (e) {}
 }
 
+/**
+ * Reproduce un sonido de error (un tono grave).
+ */
 function playErrorSound() {
     try {
         const ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -368,6 +479,15 @@ function playErrorSound() {
     } catch (e) {}
 }
 
+/**
+ * Maneja la selección de una opción en el modo de selección múltiple.
+ *
+ * Verifica si la opción seleccionada es correcta, actualiza las estadísticas,
+ * reproduce sonidos de feedback y programa la carga de la siguiente pregunta.
+ *
+ * @param {string} selected - La palabra seleccionada por el usuario.
+ * @param {string} correct - La palabra correcta.
+ */
 window.selectPracticeOption = function(selected, correct) {
     if (window.practiceAnswered) return;
     window.practiceAnswered = true;
@@ -411,6 +531,14 @@ window.selectPracticeOption = function(selected, correct) {
     }
 }
 
+/**
+ * Verifica la respuesta del usuario en el modo de escritura de palabras (al pulsar Enter).
+ *
+ * Compara la entrada del usuario con la palabra correcta, actualiza las estadísticas
+ * y avanza a la siguiente pregunta si la respuesta es correcta.
+ *
+ * @param {string} correct - La palabra correcta esperada.
+ */
 window.checkPracticeWriteAnswer = function(correct) {
     if (window.practiceAnswered) return;
     const input = document.querySelector('[data-practice-input="true"]');
@@ -453,6 +581,11 @@ window.checkPracticeWriteAnswer = function(correct) {
     }
 }
 
+/**
+ * Muestra la traducción al español de la oración de práctica actual.
+ *
+ * Si la traducción aún no se ha cargado, la obtiene y la muestra.
+ */
 window.showPracticeTranslation = function() {
     const div = document.getElementById('spanish-translation');
     if (!div || !window.practiceCurrentSentenceData) return;
@@ -464,6 +597,9 @@ window.showPracticeTranslation = function() {
     if (btn) btn.style.display = 'none';
 };
 
+/**
+ * Muestra la traducción al español de la oración de práctica después de que el usuario ha respondido.
+ */
 function showTranslationAfterAnswer() {
     const div = document.getElementById('spanish-translation');
     if (div) {
@@ -472,6 +608,9 @@ function showTranslationAfterAnswer() {
     }
 }
 
+/**
+ * Avanza a la siguiente pregunta de práctica o muestra los resultados si no quedan más preguntas.
+ */
 window.nextPracticeQuestion = function() {
     if (window.practiceAutoNextTimer) {
         clearTimeout(window.practiceAutoNextTimer);
@@ -481,6 +620,12 @@ window.nextPracticeQuestion = function() {
     else loadPracticeQuestion();
 }
 
+/**
+ * Actualiza las estadísticas de práctica mostradas en la interfaz de usuario.
+ *
+ * Calcula y muestra el número de preguntas actuales, totales, correctas e incorrectas,
+ * y actualiza la barra de progreso.
+ */
 function updatePracticeStats() {
     const total = window.practiceWords.length;
     const correct = window.practiceCorrectAnswers;
@@ -511,6 +656,12 @@ function updatePracticeStats() {
     }
 }
 
+/**
+ * Muestra los resultados finales del ejercicio de práctica.
+ *
+ * Guarda el progreso de la práctica, detiene el temporizador y renderiza
+ * un mensaje de finalización con opciones para navegar.
+ */
 function showPracticeResults() {
     savePracticeProgress(window.practiceCurrentMode, window.practiceWords.length, window.practiceCorrectAnswers, window.practiceIncorrectAnswers);
     window.stopPracticeTimer();
@@ -528,6 +679,11 @@ function showPracticeResults() {
     `;
 }
 
+/**
+ * Reinicia el ejercicio de práctica actual.
+ *
+ * Restablece las palabras restantes, contadores de respuestas y carga una nueva pregunta.
+ */
 window.restartPracticeExercise = function() {
     window.practiceRemainingWords = [...window.practiceWords].sort(() => Math.random() - 0.5);
     window.practiceCurrentQuestionIndex = 0;
@@ -538,6 +694,14 @@ window.restartPracticeExercise = function() {
     loadPracticeQuestion();
 }
 
+/**
+ * Muestra una pista para la palabra correcta.
+ *
+ * La pista puede aparecer en el hueco de la frase, en el campo de entrada (modo escritura)
+ * y en el botón de pista.
+ *
+ * @param {string} word - La palabra correcta para la que se mostrará la pista.
+ */
 window.showPracticeHint = function(word) {
     const hint = word.substring(0, 2);
     
@@ -575,6 +739,12 @@ window.showPracticeHint = function(word) {
 window.currentSentences = [];
 window.currentSentenceIndex = 0;
 
+/**
+ * Carga los textos del usuario para seleccionar uno para la práctica de oraciones.
+ *
+ * Realiza una petición AJAX para obtener los textos del usuario y, si existen,
+ * muestra un selector de textos. Si no hay textos, muestra un mensaje de estado vacío.
+ */
 async function loadSentencePractice() {
     const container = document.getElementById('practice-exercise-card');
     try {
@@ -587,7 +757,7 @@ async function loadSentencePractice() {
             // Mostrar estado vacío si no hay textos
             if (container) {
                 container.innerHTML = `
-                    <div style="text-align: center; padding: 40px 20px; color: #6b7280;">
+                    <div style="text-align: center; padding: 0px 20px; color: #6b7280;">
                         <div style="font-size: 3.5rem; margin-bottom: 15px; opacity: 0.5;">📚</div>
                         <h3 style="margin-bottom: 10px; color: #374151;">No hay textos en tu lista</h3>
                         <p style="margin-bottom: 25px;">¡Comienza subiendo un texto o explora los públicos!</p>
@@ -602,7 +772,7 @@ async function loadSentencePractice() {
         console.error(e);
         if (container) {
             container.innerHTML = `
-                <div style="text-align: center; padding: 40px 20px; color: #6b7280;">
+                <div style="text-align: center; padding: 40px 20px;background: #60a5fa1c; color: #6b7280;">
                     <div style="font-size: 3.5rem; margin-bottom: 15px; opacity: 0.5;">📚</div>
                     <h3 style="margin-bottom: 10px; color: #374151;">No hay textos en tu lista</h3>
                     <p style="margin-bottom: 25px;">¡Comienza subiendo un texto o explora los públicos!</p>
@@ -615,6 +785,14 @@ async function loadSentencePractice() {
     }
 }
 
+/**
+ * Muestra un selector de textos personalizados para iniciar la práctica.
+ *
+ * Renderiza una lista desplegable con los títulos de los textos del usuario
+ * y el número de palabras guardadas en cada uno.
+ *
+ * @param {Array<object>} texts - Un array de objetos de texto del usuario.
+ */
 function showTextSelector(texts) {
     let items = texts.map(t => {
         const translation = t.title_translation ? `<span class="title-translation-dropdown"> — ${t.title_translation}</span>` : '';
@@ -644,11 +822,23 @@ function showTextSelector(texts) {
     `;
 }
 
+/**
+ * Alterna la visibilidad del menú desplegable de selección de textos.
+ */
 window.toggleCustomSelect = function() {
     const options = document.getElementById('custom-select-options');
     options.classList.toggle('show');
 };
 
+/**
+ * Selecciona un texto para la práctica y actualiza la interfaz.
+ *
+ * Almacena el ID del texto seleccionado, actualiza la etiqueta del selector
+ * y luego inicia la práctica de oraciones.
+ *
+ * @param {Event} event - El objeto de evento del clic.
+ * @param {number} id - El ID del texto seleccionado.
+ */
 window.selectPracticeText = function(event, id) {
     const input = document.getElementById('text-selector');
     input.value = id;
@@ -674,6 +864,12 @@ document.addEventListener('click', function(e) {
     }
 });
 
+/**
+ * Inicia la práctica de oraciones para el texto seleccionado.
+ *
+ * Carga las palabras guardadas asociadas al texto, inicializa los contadores
+ * y comienza el temporizador de práctica.
+ */
 window.startSentencePractice = async function() {
     const id = document.getElementById('text-selector').value;
     if (!id) return;
@@ -696,6 +892,12 @@ window.startSentencePractice = async function() {
     }
 }
 
+/**
+ * Carga y muestra una nueva pregunta en el modo de práctica de oraciones.
+ *
+ * Selecciona una oración de las oraciones actuales, construye la interfaz
+ * del ejercicio y configura el input de dictado forzado.
+ */
 function loadSentenceQuestion() {
     if (window.currentSentenceIndex >= window.currentSentences.length) { showSentenceResults(); return; }
     const s = window.currentSentences[window.currentSentenceIndex];
@@ -738,6 +940,12 @@ function loadSentenceQuestion() {
     updatePracticeStats();
 }
 
+/**
+ * Muestra la oración original en inglés en el modo de práctica de oraciones.
+ *
+ * @global {object} window.currentSentences - El array de oraciones de práctica.
+ * @global {number} window.currentSentenceIndex - El índice de la oración actual.
+ */
 window.showEnglishSentence = function() {
     const ref = document.getElementById('english-reference');
     const s = window.currentSentences[window.currentSentenceIndex];
@@ -748,11 +956,20 @@ window.showEnglishSentence = function() {
     }
 }
 
+/**
+ * Avanza a la siguiente pregunta en el modo de práctica de oraciones.
+ */
 window.nextSentenceQuestion = function() {
     window.currentSentenceIndex++;
     loadSentenceQuestion();
 }
 
+/**
+ * Muestra los resultados finales del ejercicio de práctica de oraciones.
+ *
+ * Guarda el progreso de la práctica, detiene el temporizador y renderiza
+ * un mensaje de finalización.
+ */
 function showSentenceResults() {
     savePracticeProgress('sentences', window.currentSentences.length, window.practiceCorrectAnswers, window.practiceIncorrectAnswers);
     window.stopPracticeTimer();
@@ -764,11 +981,25 @@ function showSentenceResults() {
     `;
 }
 
+/**
+ * Maneja el evento de clic en una palabra dentro de un ejercicio de práctica.
+ *
+ * Muestra un tooltip con la traducción de la palabra.
+ *
+ * @param {Event} event - El objeto de evento del clic.
+ */
 function handlePracticeWordClick(event) {
     event.preventDefault(); event.stopPropagation();
     translateAndShowTooltip(this, this.textContent.trim());
 }
 
+/**
+ * Muestra un tooltip con la traducción de una palabra en el contexto de la práctica.
+ *
+ * @param {HTMLElement} element - El elemento DOM de la palabra.
+ * @param {string} word - La palabra original.
+ * @param {string} translation - La traducción de la palabra.
+ */
 function showPracticeTooltip(element, word, translation) {
     const existing = document.querySelector('.practice-tooltip');
     if (existing) existing.remove();
@@ -783,12 +1014,23 @@ function showPracticeTooltip(element, word, translation) {
     setTimeout(() => tooltip.remove(), 3000);
 }
 
+/**
+ * Asigna los manejadores de eventos de clic a todas las palabras de práctica clickeables.
+ */
 function assignPracticeWordClickHandlers() {
     document.querySelectorAll('.practice-word').forEach(span => {
         span.onclick = handlePracticeWordClick;
     });
 }
 
+/**
+ * Inicializa el campo de entrada para el dictado forzado en el modo de práctica de oraciones.
+ *
+ * Configura los listeners de teclado para guiar al usuario a escribir la oración correcta
+ * carácter por carácter, proporcionando feedback visual y pistas.
+ *
+ * @param {string} correctText - La oración correcta que el usuario debe escribir.
+ */
 window.initForcedDictationInput = function(correctText) {
     const input = document.getElementById('sentence-input');
     const wordHint = document.getElementById('word-hint');
@@ -846,6 +1088,14 @@ window.initForcedDictationInput = function(correctText) {
     });
 };
 
+/**
+ * Maneja la finalización exitosa de una oración en el modo de dictado forzado.
+ *
+ * Incrementa el contador de respuestas correctas, reproduce un sonido de éxito,
+ * deshabilita el input y muestra un botón para la siguiente pregunta.
+ *
+ * @param {HTMLInputElement} input - El elemento de entrada de la oración.
+ */
 function handleSentenceCompletion(input) {
     window.practiceCorrectAnswers++;
     playSuccessSound();
@@ -862,12 +1112,29 @@ function handleSentenceCompletion(input) {
     updatePracticeStats();
 }
 
+/**
+ * Renderiza una oración de práctica en el elemento `english-sentence`.
+ *
+ * @param {string} sentence - La oración a renderizar.
+ * @param {string} highlightWord - La palabra a resaltar dentro de la oración.
+ */
 function renderPracticeSentence(sentence, highlightWord) {
     const div = document.getElementById('english-sentence');
     if (div) div.innerHTML = makeWordsClickable(sentence, highlightWord);
     assignPracticeWordClickHandlers();
 }
 
+/**
+ * Guarda el progreso de un ejercicio de práctica en la base de datos.
+ *
+ * Envía el modo de práctica, el total de palabras, las respuestas correctas e incorrectas
+ * a `practicas/save_practice_progress.php`.
+ *
+ * @param {string} mode - El modo de práctica (ej. 'selection', 'writing', 'sentences').
+ * @param {number} total - El número total de palabras/oraciones en el ejercicio.
+ * @param {number} correct - El número de respuestas correctas.
+ * @param {number} incorrect - El número de respuestas incorrectas.
+ */
 function savePracticeProgress(mode, total, correct, incorrect) {
     const fd = new FormData();
     fd.append('mode', mode); fd.append('total_words', total);
@@ -875,43 +1142,8 @@ function savePracticeProgress(mode, total, correct, incorrect) {
     fetch('practicas/save_practice_progress.php', { method: 'POST', body: fd });
 }
 
-function setupVoiceEvents() {
-    const speedMap = [0.5, 0.75, 1];
-    document.addEventListener('click', async function(e) {
-        if (e.target.closest && e.target.closest('#speak-sentence-btn')) {
-            e.stopPropagation();
-            const slider = document.getElementById('speak-speed-slider');
-            const text = window.practiceCurrentSentenceData.original_en || window.practiceCurrentSentenceData.en.replace(/____+/g, window.practiceCurrentSentenceData.word || '');
-            const speed = slider ? (speedMap[parseInt(slider.value)] || 1) : 1;
-            
-            if (window.speechSynthesis && window.speechSynthesis.speaking) window.speechSynthesis.cancel();
-            const utter = new SpeechSynthesisUtterance(text);
-            utter.lang = 'en-US';
-            utter.rate = speed;
-            window.speechSynthesis.speak(utter);
-        }
-    });
-
-    const btn = document.getElementById('speak-sentence-btn');
-    const slider = document.getElementById('speak-speed-slider');
-    const labels = document.getElementById('speak-speed-labels');
-    if (btn && slider && labels) {
-        btn.onmouseenter = () => { slider.style.display = 'block'; labels.style.display = 'block'; };
-        const hide = () => { slider.style.display = 'none'; labels.style.display = 'none'; };
-        btn.onmouseleave = (e) => { if (e.relatedTarget !== slider) hide(); };
-        slider.onmouseleave = hide;
-    }
-}
-
-// Manejador centralizado para la tecla Enter
-document.addEventListener('keydown', function(e) {
-    if (e.key === 'Enter') {
-        const nextBtn = document.querySelector('.next-btn:not([style*="display: none"]), #practice-next-btn');
-        if (nextBtn && (nextBtn.offsetWidth > 0 || nextBtn.offsetHeight > 0)) {
-            e.preventDefault(); e.stopPropagation();
-            nextBtn.click();
-        }
-    }
-});
-
-window.addEventListener('beforeunload', () => window.stopPracticeTimer());
+/**
+ * Configura los eventos de voz para la práctica de oraciones.
+ *
+ * Permite al usuario escuchar la oración en inglés y ajustar la velocidad de reproducción.
+ */
