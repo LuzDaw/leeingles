@@ -529,4 +529,24 @@ padding-top: 4%;
     background: var(--accent-hover);
     box-shadow: var(--shadow-sm);
 }
+.mode-selector {
+    display: flex;
+    gap:12px;
+    margin-bottom: 20px;
+    flex-wrap: nowrap;
+    align-content: center;
+    justify-content: center;
+}
+
+.mode-btn {
+    padding: 8px 2px;
+    font-size: 14px;
+        max-width: 32%;
+            min-width: 50px;
+}
+#practice-container .tab-header-container {
+   padding: 3% 0px 25px 0px;
+    justify-content: center;
+    padding-left: 4%;
+}
 }
