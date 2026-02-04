@@ -1147,3 +1147,66 @@ function savePracticeProgress(mode, total, correct, incorrect) {
  *
  * Permite al usuario escuchar la oración en inglés y ajustar la velocidad de reproducción.
  */
+function setupVoiceEvents() {
+    const speakBtn = document.getElementById('speak-sentence-btn');
+    const speedSlider = document.getElementById('speak-speed-slider');
+    const speedLabels = document.getElementById('speak-speed-labels');
+    let currentUtterance = null;
+
+    if (speakBtn) {
+        speakBtn.onclick = function(e) {
+            e.stopPropagation();
+            if (currentUtterance && speechSynthesis.speaking) {
+                speechSynthesis.cancel();
+                currentUtterance = null;
+                speakBtn.textContent = '🔊';
+                speedSlider.style.display = 'none';
+                speedLabels.style.display = 'none';
+                return;
+            }
+
+            const sentenceSpan = document.getElementById('english-sentence');
+            if (!sentenceSpan) return;
+            const textToSpeak = sentenceSpan.textContent.replace(/____/g, window.practiceCurrentSentenceData.word || '');
+
+            currentUtterance = new SpeechSynthesisUtterance(textToSpeak);
+            window.configureEnglishVoice(currentUtterance);
+            currentUtterance.rate = parseFloat(speedSlider.value) || 1;
+
+            currentUtterance.onstart = () => {
+                speakBtn.textContent = '◼️';
+                speedSlider.style.display = 'block';
+                speedLabels.style.display = 'flex';
+            };
+            currentUtterance.onend = () => {
+                speakBtn.textContent = '🔊';
+                speedSlider.style.display = 'none';
+                speedLabels.style.display = 'none';
+                currentUtterance = null;
+            };
+            currentUtterance.onerror = (event) => {
+                console.error('SpeechSynthesisUtterance.onerror', event);
+                speakBtn.textContent = '🔊';
+                speedSlider.style.display = 'none';
+                speedLabels.style.display = 'none';
+                currentUtterance = null;
+            };
+
+            speechSynthesis.speak(currentUtterance);
+        };
+    }
+
+    if (speedSlider) {
+        speedSlider.oninput = function() {
+            if (currentUtterance) {
+                currentUtterance.rate = parseFloat(this.value);
+                // No es posible cambiar la velocidad de una utterance en curso,
+                // así que la cancelamos y la volvemos a iniciar con la nueva velocidad.
+                if (speechSynthesis.speaking) {
+                    speechSynthesis.cancel();
+                    speechSynthesis.speak(currentUtterance);
+                }
+            }
+        };
+    }
+}
