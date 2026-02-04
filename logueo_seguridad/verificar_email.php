@@ -2,6 +2,7 @@
 // logueo_seguridad/verificar_email.php
 require_once '../db/connection.php';
 
+
 header('Content-Type: text/html; charset=utf-8'); // Asegurar que la respuesta sea HTML
 
 if (isset($_GET['token'])) {
