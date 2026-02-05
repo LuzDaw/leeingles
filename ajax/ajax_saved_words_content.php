@@ -163,7 +163,7 @@ foreach ($words as $word) {
         <input type="checkbox" name="selected_words[]" value="<?= htmlspecialchars($word['word']) . '|' . (int)($word['text_id'] ?? 0) ?>" class="text-checkbox" onchange="updateBulkActionsWords()">
         <span class="word-text"><?= htmlspecialchars($word['word']) ?></span>
         <span class="word-translation"><?= htmlspecialchars($word['translation']) ?></span>
-        <span class="word-icon">🔊</span>
+        <span class="word-icon" onclick="speakWord('<?= htmlspecialchars($word['word']) ?>')">🔊</span>
     </div>
 </li>
                     <?php endforeach; ?>

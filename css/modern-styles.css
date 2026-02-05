@@ -359,7 +359,7 @@
   margin-right: 0; /* Eliminar margen existente */
   min-width: 12px;
     min-height: 12px;
-    
+
 }
 
 .word-text {
@@ -383,22 +383,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
+      cursor: pointer;
 }
 
-.word-icon {
-  grid-area: icon-area; /* Posicionar en la cuarta columna */
-  font-size: 1.2rem;
-  color: #6b7280; /* Color de ejemplo para el icono */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.word-icon {
-  grid-area: icon-area; /* Posicionar en la cuarta columna */
-  font-size: 1.2rem;
-  color: #6b7280; /* Color de ejemplo para el icono */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}

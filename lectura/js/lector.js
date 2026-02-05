@@ -1544,3 +1544,17 @@ function initLector() {
 }
 
 window.initLector = initLector;
+
+// Función para hablar una palabra individual, reutilizando configureEnglishVoice
+window.speakWord = function(wordText) {
+    if (!wordText) return;
+    const utterance = new SpeechSynthesisUtterance(wordText);
+    // Asegurarse de que configureEnglishVoice esté disponible globalmente
+    if (typeof window.configureEnglishVoice === 'function') {
+        window.configureEnglishVoice(utterance);
+    } else {
+        // Fallback si configureEnglishVoice no está disponible (ej. en un contexto diferente)
+        utterance.lang = 'en-US';
+    }
+    speechSynthesis.speak(utterance);
+};

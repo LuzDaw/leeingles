@@ -408,8 +408,8 @@ class ExplainSidebar {
         result.grammatical_info = data.categoria || '';
         result.synonyms = data.sinonimos || [];
         result.antonyms = data.antonimos || [];
-        result.examples = data.ejemplos || [];
-        result.examples_es = data.ejemplos_es || [];
+        result.examples = (data.ejemplos || []).slice(0, 2); // Limitar a 2 ejemplos
+        result.examples_es = (data.ejemplos_es || []).slice(0, 2); // Limitar a 2 ejemplos
         result.pronunciacion = data.pronunciacion || '';
         result.audio = data.audio || '';
         
