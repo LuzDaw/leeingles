@@ -503,6 +503,7 @@ class ExplainSidebar {
             explanationHTML += data.synonyms.map((s, i) => {
                 return `<div class='sinonimo-item' data-sinonimo="${s}" data-index="${i}">
                     <span class='sinonimo-en'>${s}</span>
+                    <button class="audio-btn small-audio-btn" onclick="window.explainSidebar.pronounceWord('${s}')" title="Reproducir sinónimo">🔊</button>
                     <span class='sinonimo-es' id="sinonimo-es-${i}">Traduciendo...</span>
                 </div>`;
             }).join('');
@@ -518,6 +519,7 @@ class ExplainSidebar {
             explanationHTML += data.antonyms.map((a, i) => {
                 return `<div class='antonimo-item' data-antonimo="${a}" data-index="${i}">
                     <span class='antonimo-en'>${a}</span>
+                    <button class="audio-btn small-audio-btn" onclick="window.explainSidebar.pronounceWord('${a}')" title="Reproducir antónimo">🔊</button>
                     <span class='antonimo-es' id="antonimo-es-${i}">Traduciendo...</span>
                 </div>`;
             }).join('');
@@ -694,9 +696,11 @@ class ExplainSidebar {
      *
      * Cancela cualquier pronunciación anterior y reproduce la palabra con una velocidad ligeramente más lenta.
      * Proporciona un feedback visual sutil en el botón de pronunciación.
+     * @param {string|null} [wordToPronounce=null] - La palabra específica a pronunciar. Si es null, usa this.currentWord.
      */
-    pronounceWord() {
-        if (!this.currentWord) {
+    pronounceWord(wordToPronounce = null) {
+        const word = wordToPronounce || this.currentWord;
+        if (!word) {
             return;
         }
         
@@ -706,20 +710,22 @@ class ExplainSidebar {
         }
         
         // Crear utterance para la palabra (basado en lector.js)
-        const utterance = new SpeechSynthesisUtterance(this.currentWord);
+        const utterance = new SpeechSynthesisUtterance(word);
         utterance.lang = 'en-US';
         utterance.rate = 0.8; // Velocidad ligeramente más lenta para claridad
         
         // Reproducir la pronunciación
         window.speechSynthesis.speak(utterance);
         
-        // Feedback visual sutil
-        const pronounceBtn = document.querySelector('.pronounce-btn');
-        if (pronounceBtn) {
-            pronounceBtn.style.transform = 'scale(0.9)';
-            setTimeout(() => {
-                pronounceBtn.style.transform = 'scale(1)';
-            }, 150);
+        // Feedback visual sutil (solo si es la palabra principal del sidebar)
+        if (!wordToPronounce) {
+            const pronounceBtn = document.querySelector('.pronounce-btn');
+            if (pronounceBtn) {
+                pronounceBtn.style.transform = 'scale(0.9)';
+                setTimeout(() => {
+                    pronounceBtn.style.transform = 'scale(1)';
+                }, 150);
+            }
         }
     }
 }
