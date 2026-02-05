@@ -1022,13 +1022,53 @@ function initLector() {
      */
     function findSentenceContainingWord(element, word) {
         let paragraph = element.closest('p') || element.closest('.paragraph');
-        if (paragraph) {
-            const sentences = paragraph.textContent.split(/[.!?]+/).filter(s => s.trim().length > 0);
-            for (let s of sentences) {
-                if (s.toLowerCase().includes(word.toLowerCase())) return s.trim() + '.';
+        if (!paragraph) return word + '.';
+
+        const paragraphText = paragraph.textContent;
+        const lowerCaseParagraphText = paragraphText.toLowerCase();
+        const lowerCaseWord = word.toLowerCase();
+
+        let wordIndex = lowerCaseParagraphText.indexOf(lowerCaseWord);
+        if (wordIndex === -1) return word + '.'; // Si la palabra no se encuentra, devolver solo la palabra.
+
+        // Buscar el inicio de la frase
+        let sentenceStartIndex = -1;
+        // Busca . ! ? seguido de espacio y mayúscula, o el inicio del párrafo
+        const sentenceStartRegex = /(?<=[.!?])\s*([A-ZÁÉÍÓÚÜÑ])/g;
+        let match;
+        while ((match = sentenceStartRegex.exec(paragraphText)) !== null) {
+            if (match.index + match[0].length <= wordIndex) {
+                sentenceStartIndex = match.index + match[0].length - match[1].length; // Ajustar para no incluir la mayúscula
+            } else {
+                break;
             }
         }
-        return word + '.';
+        if (sentenceStartIndex === -1) {
+            sentenceStartIndex = 0; // Si no se encuentra un inicio de frase, asumir el inicio del párrafo
+        }
+
+        // Buscar el final de la frase
+        let sentenceEndIndex = paragraphText.length;
+        // Busca . ! ? seguido de espacio o fin de cadena
+        const sentenceEndRegex = /[.!?](?=\s|$)/g;
+        while ((match = sentenceEndRegex.exec(paragraphText)) !== null) {
+            if (match.index >= wordIndex + word.length) {
+                sentenceEndIndex = match.index + match[0].length;
+                break;
+            }
+        }
+
+        let sentence = paragraphText.substring(sentenceStartIndex, sentenceEndIndex).trim();
+
+        // Si la frase extraída es muy corta o no contiene la palabra, intentar una aproximación más simple
+        if (sentence.length < word.length || !sentence.toLowerCase().includes(lowerCaseWord)) {
+            const sentences = paragraphText.split(/(?<=[.!?])\s+/).filter(s => s.trim().length > 0);
+            for (let s of sentences) {
+                if (s.toLowerCase().includes(lowerCaseWord)) return s.trim();
+            }
+        }
+
+        return sentence;
     }
 
     /**

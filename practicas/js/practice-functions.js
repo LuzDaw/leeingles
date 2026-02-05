@@ -760,7 +760,7 @@ async function loadSentencePractice() {
                     <div style="text-align: center; padding: 0px 20px; color: #6b7280;">
                         <div style="font-size: 3.5rem; margin-bottom: 15px; opacity: 0.5;">📚</div>
                         <h3 style="margin-bottom: 10px; color: #374151;">No hay textos en tu lista</h3>
-                        <p style="margin-bottom: 25px;">¡Comienza subiendo un texto o explora los públicos!</p>
+                        <p style="margin-bottom: 25px;">¡Para comenzar a leer tienes que subir tu primer texto o explora los textos públicos!</p>
                         <button type="button" onclick="loadTabContent('upload')" class="nav-btn primary" style="padding: 12px 30px;">
                             ⬆ Carga tu primer texto
                         </button>
@@ -775,7 +775,7 @@ async function loadSentencePractice() {
                 <div style="text-align: center; padding: 40px 20px;background: #60a5fa1c; color: #6b7280;">
                     <div style="font-size: 3.5rem; margin-bottom: 15px; opacity: 0.5;">📚</div>
                     <h3 style="margin-bottom: 10px; color: #374151;">No hay textos en tu lista</h3>
-                    <p style="margin-bottom: 25px;">¡Comienza subiendo un texto o explora los públicos!</p>
+                    <p style="margin-bottom: 25px;">¡Para comenzar a leer tienes que subir tu primer texto o explora los textos públicos!</p>
                     <button type="button" onclick="loadTabContent('upload')" class="nav-btn primary" style="padding: 12px 30px;">
                         ⬆ Carga tu primer texto
                     </button>

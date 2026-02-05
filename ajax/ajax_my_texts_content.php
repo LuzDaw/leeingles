@@ -299,8 +299,9 @@ $total_found = count($own_texts) + count($public_read_rows);
         <?php if ($total_found == 0): ?>
             <div style="text-align: center; padding: 0px 20px; color: #6b7280;">
                 <div id="pract">📚</div>
-                <h3 style="margin-bottom: 10px; color: #374151;">No hay textos en tu lista</h3>
-                <p style="margin-bottom: 30px;">¡Comienza subiendo un texto o explora los públicos!</p>
+                <h3 style="margin-bottom: 24px; color: #374151;">No hay textos en tu lista</h3>
+                <p style="margin-bottom: 12px;">¡Para comenzar a leer sube tu primer texto o</p>
+                <p style="margin-bottom: 40px;">explora los textos públicos!</p>
                 <button type="button" onclick="loadTabContent('upload')" class="nav-btn primary" style="padding: 15px 40px; margin-bottom: 6%; ">⬆ Subir mi primer texto</button>
             </div>
         <?php endif; ?>

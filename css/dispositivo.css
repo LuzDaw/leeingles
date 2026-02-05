@@ -599,6 +599,10 @@ padding-top: 4%;
         box-sizing: border-box;
         padding: 0px;
     }
+
+    #practice-container {
+     padding: 0%; 
+}
 }
 
 

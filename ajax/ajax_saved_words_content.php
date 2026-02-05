@@ -135,8 +135,14 @@ foreach ($words as $word) {
     <div style="text-align: center; padding: 0px 20px;  background: #60a5fa1c; color: #6b7280; padding-bottom: 7%;
     padding-top: 3%;">
                         <div style="font-size: 3.5rem; margin-bottom: 15px; opacity: 0.5;">📚</div>
-                        <h3 style="margin-bottom: 10px; color: #374151;">No hay pañabras en tu lista</h3>
-                        <p style="margin-bottom: 25px;">¡Comienza seleccionandolas en tus textos o explora los textos públicos!</p>
+                        <h3 style="margin-bottom: 10px; color: #374151;">No hay palabras en tu lista</h3>
+                       
+            <p style="margin-bottom: 12px;">
+  ¡Empieza guardando palabras mientras lees!</p>
+
+<p style="margin-bottom: 40px;">  Al seleccionar una palabra del texto se guardará para crear las prácticas  <p>
+
+
         <button class="lload-texts-button" onclick="window.loadTabContent('my-texts')">Ir Textos</button>
     </div>
 <?php else: ?>
