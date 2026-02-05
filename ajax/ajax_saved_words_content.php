@@ -158,19 +158,14 @@ foreach ($words as $word) {
                 </div>
                 <ul class="text-list1" id="group-<?= md5($text_title) ?>">
                     <?php foreach ($words as $word): ?>
-                        <li class="text-item">
-                            <input type="checkbox" name="selected_words[]" value="<?= htmlspecialchars($word['word']) . '|' . (int)($word['text_id'] ?? 0) ?>" class="text-checkbox" onchange="updateBulkActionsWords()">
-                            <span class="text-title" style="font-size:1rem;">
-                                <?= htmlspecialchars($word['word']) ?>
-                                <span class="word-translation">(<?= htmlspecialchars($word['translation']) ?>)</span>
-                            </span>
-                            <?php if (!empty($word['context'])): ?>
-                                <!--  <span class="word-context" data-context="<?//= htmlspecialchars($word['context']) ?>">"<?//= htmlspecialchars($word['context']) ?>"</span> -->
-                                <!-- <div class="context-translation" style="color:#ca7c20d6; font-size:0.95em; margin-top:2px;"></div> -->
-                            <?php endif; ?>
-                            <!-- <span class="word-date"><?/*= date('d/m/Y', strtotime($word['created_at']))*/ ?></span> -->
-                            
-                        </li>
+                       <li class="text-item2">
+    <div class="word-card">
+        <input type="checkbox" name="selected_words[]" value="<?= htmlspecialchars($word['word']) . '|' . (int)($word['text_id'] ?? 0) ?>" class="text-checkbox" onchange="updateBulkActionsWords()">
+        <span class="word-text"><?= htmlspecialchars($word['word']) ?></span>
+        <span class="word-translation"><?= htmlspecialchars($word['translation']) ?></span>
+        <span class="word-icon">🔊</span>
+    </div>
+</li>
                     <?php endforeach; ?>
                 </ul>
             </div>
@@ -201,6 +196,10 @@ foreach ($words as $word) {
 }
 </style>
 
+<?php
+$stmt->close();
+$conn->close();
+?>
 <?php
 $stmt->close();
 $conn->close();

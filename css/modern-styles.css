@@ -302,3 +302,103 @@
     }
 }
 /* Estilos generales de listas, tarjetas, mensajes y bulk actions que no sean exclusivos de las pestañas. */
+/* Listas de texto (Estilos base en common-styles.css) */
+.text-checkbox {
+  margin-right: 10px;
+}
+.word-translation {
+  color: var(--success-color);
+  font-style: italic;
+  margin-left: 0px;
+}
+.word-context {
+  background: var(--background-color);
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-top: 8px;
+}
+.word-date {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 8px;
+}
+
+/* Listas de texto (Estilos base en common-styles.css) */
+.text-list1 {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0; /* Eliminar el padding predeterminado de ul */
+  list-style: none; /* Eliminar los puntos de lista predeterminados de ul */
+}
+
+.text-item2 {
+  flex: 0 0 25%; /* Cada elemento ocupa el 25% del ancho para 4 columnas */
+  box-sizing: border-box; /* Incluir padding y borde en el ancho y alto total del elemento */
+  padding: 10px; /* Añadir algo de padding alrededor de cada tarjeta de palabra */
+  margin-bottom: 10px; /* Espacio entre filas */
+}
+
+.word-card {
+  display: grid;
+  grid-template-columns: auto 1fr 1fr auto; /* Checkbox, Palabra, Traducción, Icono */
+  grid-template-rows: auto; /* Una sola fila */
+  grid-template-areas: "checkbox-area word-area translation-area icon-area";
+  background: #f9fafb; /* Fondo claro para cada tarjeta de palabra */
+  border: 1px solid #e5e7eb; /* Borde sutil */
+  border-radius: 8px;
+  padding: 10px;
+  height: 100%; /* Asegurar que las tarjetas en una fila tengan la misma altura */
+  align-items: center; /* Centrar verticalmente los elementos en sus celdas */
+  gap: 10px; /* Espacio entre columnas */
+}
+
+.text-checkbox {
+  grid-area: checkbox-area; /* Posicionar en la primera columna */
+  margin-right: 0; /* Eliminar margen existente */
+  min-width: 12px;
+    min-height: 12px;
+    
+}
+
+.word-text {
+  grid-area: word-area; /* Posicionar en la segunda columna */
+  font-size: 1rem;
+  font-weight: 500;
+  color: #1f2937;
+}
+
+.word-translation {
+  grid-area: translation-area; /* Posicionar en la tercera columna */
+  color: #3b82f6;
+  font-style: italic;
+  font-size: 0.9rem;
+}
+
+.word-icon {
+  grid-area: icon-area; /* Posicionar en la cuarta columna */
+  font-size: 1.2rem;
+  color: #6b7280; /* Color de ejemplo para el icono */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.word-icon {
+  grid-area: icon-area; /* Posicionar en la cuarta columna */
+  font-size: 1.2rem;
+  color: #6b7280; /* Color de ejemplo para el icono */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.word-icon {
+  grid-area: icon-area; /* Posicionar en la cuarta columna */
+  font-size: 1.2rem;
+  color: #6b7280; /* Color de ejemplo para el icono */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
