@@ -337,19 +337,19 @@
 .text-item2 {
   flex: 0 0 24%; /* Cada elemento ocupa el 25% del ancho para 4 columnas */
   box-sizing: border-box; /* Incluir padding y borde en el ancho y alto total del elemento */
-  padding: 10px; /* Añadir algo de padding alrededor de cada tarjeta de palabra */
+  padding: 10px 3px; /* Añadir algo de padding alrededor de cada tarjeta de palabra */
   margin-bottom: 10px; /* Espacio entre filas */
 }
 
 .word-card {
   display: grid;
-  grid-template-columns: auto 1fr 1fr auto; /* Checkbox, Palabra, Traducción, Icono */
+  /* Checkbox, Palabra, Traducción, Icono */
   grid-template-rows: auto; /* Una sola fila */
   grid-template-areas: "checkbox-area word-area translation-area icon-area";
   background: #f9fafb; /* Fondo claro para cada tarjeta de palabra */
   border: 1px solid #e5e7eb; /* Borde sutil */
   border-radius: 8px;
-  padding: 10px;
+  padding: 8px 1px;
   height: 100%; /* Asegurar que las tarjetas en una fila tengan la misma altura */
   align-items: center; /* Centrar verticalmente los elementos en sus celdas */
   gap: 0px; /* Espacio entre columnas */

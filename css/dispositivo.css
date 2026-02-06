@@ -603,7 +603,19 @@ padding-top: 4%;
     #practice-container {
      padding: 0%; 
 }
+
 }
 
+#palabrasm{
+  display: none;
+}
 
+@media (max-width: 768px) {
 
+#palabras{
+  display: none;
+}
+#palabrasm{
+  display: block;
+}
+}

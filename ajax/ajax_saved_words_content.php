@@ -102,10 +102,15 @@ foreach ($words as $word) {
         <h3>📚 Mis Palabras</h3>
     </div>
     <div class="bulk-actions-container">
-        <div style="color: #64748b; font-weight: 500;">
+        <div id="palabras" style="color: #64748b; font-weight: 500;">
             <span style="color: #3b82f6; font-weight: 600;">
                 <?php echo isset($words) ? count($words) : 0; ?>
             </span> palabras guardadas
+        </div>
+        <div id="palabrasm" style="color: #64748b; font-weight: 500;">
+            <span style="color: #3b82f6; font-weight: 600;">
+                <?php echo isset($words) ? count($words) : 0; ?>
+            </span> Palabras
         </div>
         <div class="bulk-actions">
             <div class="dropdown">
