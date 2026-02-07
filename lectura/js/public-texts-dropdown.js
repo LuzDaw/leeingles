@@ -115,7 +115,7 @@ function loadAllPublicTexts() {
                     html += '<span class="title-english">' + txt.title + '</span>';
                     
                     if (txt.title_translation) {
-                        html += '<span class="title-spanish" style="color:#eaa827; font-size:0.9em; margin-left:8px; font-weight:500;">• ' + txt.title_translation + '</span>';
+                        html += '<span class="title-spanish" style="color:#eaa827; font-size:0.9em; margin-left:8px; font-weight:500;"> ' + txt.title_translation + '</span>';
                     } else {
                         html += '<span class="title-spanish" style="color:#6b7280; font-size:0.9em; margin-left:8px;"></span>';
                     }

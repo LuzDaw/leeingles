@@ -102,9 +102,7 @@
 }
 
 /* Listas y tarjetas (Estilos base en common-styles.css) */
-.text-checkbox {
-  margin-right: 10px;
-}
+
 
 .text-date {
   color: var(--text-muted);

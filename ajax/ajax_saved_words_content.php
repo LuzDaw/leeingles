@@ -154,9 +154,11 @@ foreach ($words as $word) {
     <form method="post" id="words-list-form">
         <?php foreach ($words_by_text as $text_title => $words): ?>
             <div class="card" style="margin-bottom: 30px;">
-                <div class="card-header" style="display:flex;align-items:center;gap:10px;">
+                
+            <div class="card-header" style="display:flex;align-items:center;gap:10px;background: #ff8a008f;    padding: 1% 3%;
+    margin-bottom: 3%;">
                     <input type="checkbox" class="text-checkbox" onclick="toggleGroup(this, 'group-<?= md5($text_title) ?>')">
-                    <span class="text-title" style="font-size:1.2rem; font-weight:600; color:#1B263B;">
+                    <span class="text-title" style="font-size:1.1rem; font-weight:600; color:#1B263B;">
                         <?= htmlspecialchars($text_title) ?>
                         <span style="font-size:0.9em; color:#64748b; font-weight:400; margin-left:8px;">(<?= count($words) ?>)</span>
                     </span>
