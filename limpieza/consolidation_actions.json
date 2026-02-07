@@ -1,0 +1,22 @@
+{
+    "generated_at": "2026-02-07T10:33:43+01:00",
+    "actions": [
+        {
+            "file": "C:\\xampp\\htdocs\\leeingles\\ajax\\load_user_texts.php",
+            "status": "replaced_with_require",
+            "canonical": "C:\\xampp\\htdocs\\leeingles\\ajax\\get_user_texts.php",
+            "backup": "C:\\xampp\\htdocs\\leeingles\\ajax\\load_user_texts.php.bak"
+        },
+        {
+            "file": "C:\\xampp\\htdocs\\leeingles\\git\\SISTEMA_PESTA\u00c3\u0091AS.md",
+            "status": "skipped",
+            "reason": "non_php"
+        },
+        {
+            "file": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\register.php",
+            "status": "replaced_with_require",
+            "canonical": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\login.php",
+            "backup": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\register.php.bak"
+        }
+    ]
+}

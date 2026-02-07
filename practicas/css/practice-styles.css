@@ -1,0 +1,890 @@
+/* ============================================
+   ESTILOS PARA PRÁCTICA Y EJERCICIOS
+   ============================================ */
+
+/* Instrucciones de ejercicio */
+.practice-instruction {
+    text-align: center;
+    font-weight: bold;
+    color: var(--text-color);
+    margin-bottom: 31px;
+}
+
+.write-input {
+    color: var(--text-color);
+}
+
+#text-selector {
+    color: var(--text-color);
+    background-color: #ffffff;
+}
+
+/* Frase del ejercicio */
+.practice-sentence {
+    font-size: 18px;
+    font-weight: 500;
+    text-align: center;
+    margin: 0px 0;
+    padding: 12px;
+    background: rgba(100, 116, 139, 0.08);
+    border-radius: 8px;
+    border-left: 4px solid var(--accent-color);
+    color: var(--text-color);
+    min-height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#publicTextsBtn {
+    color: #ffffff;
+}
+
+/* Botón de ayuda de traducción */
+.translation-help-container {
+    text-align: right;
+    margin: 2px 0;
+}
+
+.translation-help-btn {
+    background: var(--accent-color);
+    color: #ffffff;
+    border: none;
+    padding: 4px 9px;
+    border-radius: 5px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-right: 10px;
+}
+
+.translation-help-btn:hover {
+    background: var(--success-color);
+    color: #ffffff;
+    transform: translateY(-1px);
+}
+
+/* Resaltado del título del texto en las instrucciones */
+.text-title-highlight {
+    color: var(--accent-color);
+    font-weight: bold;
+}
+
+/* ============================================
+   ESTILOS PARA MODO ESCRITURA DE FRASES
+   ============================================ */
+
+.text-selector-container {
+    text-align: center;
+    padding: 20px;
+}
+
+.text-select {
+    width: 100%;
+    max-width: 400px;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid var(--success-light);
+    border-radius: 5px;
+    font-size: 14px;
+    color: var(--text-color) !important;
+    background: #fff !important;
+}
+
+.text-select option {
+    color: var(--text-color) !important;
+    background: #fff !important;
+}
+
+.sentence-practice-container {
+    padding: 20px;
+}
+
+.spanish-sentence {
+    font-size: 18px;
+    font-weight: 500;
+    text-align: center;
+    margin: 8px 0;
+    padding: 5px;
+    background: var(--background-color);
+    border-radius: 8px;
+    border-left: 4px solid var(--accent-color);
+    color: var(--text-color);
+}
+
+.english-sentence {
+    font-size: 16px;
+    font-weight: 500;
+    margin: 0px 0;
+    padding: 5px;
+    background: rgba(28, 93, 183, 0.09);
+    border-radius: 6px;
+    border: 1px solid rgba(249, 115, 22, 0.1);
+    color: var(--accent-color);
+    display: flex;
+    justify-content: center;
+}
+
+.sentence-input {
+       width: 100%;
+    font-size: 18px;
+    font-weight: 500;
+    text-align: center;
+    margin: 8px 0;
+    padding: 5px;
+    background: var(--background-color);
+    border-radius: 8px;
+    border-left: 4px solid var(--accent-color);
+    color: var(--text-color);
+}
+
+/* Contenedor de entrada con pista */
+.input-container {
+    position: relative;
+    margin: 0px 0;
+}
+
+.word-hint {
+   width: 20%;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 0px 8px;
+    font-size: 14px;
+    background: rgb(232 236 241 / 80%);
+    border: 1px solid #e5e7eb;
+    border-top: none;
+    border-radius: 0 0 6px 6px;
+    font-family: monospace;
+    z-index: 10;
+    color: #bda991;
+    text-align: center;
+    margin-top: -11px;
+}
+
+/* Destacar palabra que se está leyendo */
+.reading-highlight {
+    background-color: #9ca3af !important;
+    color: var(--text-color) !important;
+    border-radius: 3px !important;
+}
+
+@keyframes pulseReading {
+    0% {
+        box-shadow: 0 2px 8px rgba(255, 215, 0, 0.4);
+    }
+    50% {
+        box-shadow: 0 4px 16px rgba(255, 215, 0, 0.8);
+    }
+    100% {
+        box-shadow: 0 2px 8px rgba(255, 215, 0, 0.4);
+    }
+}
+
+/* Spinner de carga (Estilos base en common-styles.css) */
+.loading-container .loading-spinner {
+    margin-left: 10px;
+}
+
+.loading-container {
+    text-align: center;
+    padding: 40px;
+    color: var(--text-muted);
+}
+
+.loading-container h3 {
+    color: var(--accent-color);
+    margin-bottom: 20px;
+}
+
+/* Mensaje de éxito (Estilos base en common-styles.css) */
+.success-message .emoji {
+    font-size: 24px;
+    margin-right: 10px;
+}
+
+@keyframes slideInSuccess {
+    0% {
+        opacity: 0;
+        transform: translateY(-20px) scale(0.8);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes slideOutSuccess {
+    0% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-20px) scale(0.8);
+    }
+}
+
+/* Auto-complete visual feedback */
+.sentence-complete {
+    border: 2px solid var(--accent-color) !important;
+    background: #F0FDF4 !important;
+    animation: pulseGreen 0.6s ease-out;
+}
+
+@keyframes pulseGreen {
+    0% {
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(16, 185, 129, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+    }
+}
+
+.sentence-controls {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+/* Traducción española */
+.spanish-translation {
+    border: 1px solid #e5e7eb;
+    transition: all 0.3s ease;
+    font-size: 16px;
+    font-weight: 500;
+    text-align: center;
+    margin: 8px 0;
+    padding: 12px;
+    background: #ebeff5;
+    border-radius: 8px;
+    border-left: 4px solid var(--accent-color);
+    color: var(--secondary-color);
+    min-height: 40px;
+}
+
+.spanish-translation.hidden {
+    display: none;
+}
+
+/* Palabra resaltada */
+.highlighted-word {
+    background: red;
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: #ffffff;
+    font-weight: bold;
+}
+
+.word-highlighted {
+    color: #ffffff !important;
+    border-radius: 4px;
+    padding: 2px 4px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+/* Animación pulse para la pista */
+@keyframes pulse {
+    0% { opacity: 0.8; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.05); }
+    100% { opacity: 0.8; transform: scale(1); }
+}
+
+/* Grid de opciones */
+.practice-options {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+    margin: 0px 0 !important;
+    justify-content: center !important;
+}
+
+/* Controles de práctica */
+.practice-controls {
+    display: flex !important;
+    gap: 10px !important;
+    margin: 15px 0 !important;
+    justify-content: center !important;
+}
+
+/* Botones de opción */
+.option-btn {
+    padding: 6px 12px !important;
+    border: 2px solid #e5e7eb !important;
+    border-radius: 6px !important;
+    background: #ffffff !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+    font-size: 12px !important;
+    font-weight: 500 !important;
+    min-height: 32px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    white-space: nowrap !important;
+    max-width: 120px !important;
+    color: var(--text-color);
+    margin-top: 15px;
+}
+
+/* Estilos específicos para botones de control */
+.hint-btn {
+    background: #f3f4f6 !important;
+    color: var(--text-muted) !important;
+    border-color: #d1d5db !important;
+}
+
+.verify-btn {
+    background: var(--secondary-color) !important;
+    color: #ffffff !important;
+    border-color: var(--secondary-color) !important;
+}
+
+.option-btn:hover {
+    border-color: var(--secondary-color);
+    background: #f0f9ff;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.option-btn:active {
+    transform: translateY(0);
+}
+
+.option-btn.correct {
+    background: var(--secondary-color) !important;
+    color: #ffffff;
+    border-color: var(--secondary-color);
+}
+
+.option-btn.incorrect {
+    background: #ff6e008f !important;
+    color: #ffffff !important;
+}
+
+.option-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* Input de escritura */
+.write-input {
+    width: 100%;
+    padding: 15px;
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    font-size: 16px;
+    margin: 15px 0;
+    transition: border-color 0.2s ease;
+    box-sizing: border-box;
+}
+
+.write-input:focus {
+    outline: none;
+    border-color: var(--secondary-color);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.write-input:disabled {
+    background: #f3f4f6;
+    color: var(--text-muted);
+    cursor: not-allowed;
+}
+
+/* Botones de verificación */
+.check-btn {
+    background: var(--secondary-color);
+    color: #ffffff;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin: 0 5px;
+}
+
+.check-btn:hover {
+    background: var(--primary-color);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.check-btn:active {
+    transform: translateY(0);
+}
+
+.check-btn:disabled {
+    background: var(--text-muted);
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Selector de modo (Estilos base en common-styles.css) */
+
+/* Estadísticas (Estilos base en common-styles.css) */
+.practice-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+    padding: 20px;
+    background: #f8fafc;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    font-weight: 500;
+    margin-top: 4px;
+}
+
+/* Barra de progreso */
+.progress {
+    width: 100%;
+    height: 8px;
+    background: #e5e7eb;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+.progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--secondary-color), var(--primary-color));
+    transition: width 0.3s ease;
+    border-radius: 4px;
+}
+
+/* Tarjeta de ejercicio (Estilos base en common-styles.css) */
+.exercise-card {
+    background: #60a5fa1c;
+    padding: 30px;
+    position: relative;
+}
+
+/* Resultados */
+.practice-results {
+    text-align: center;
+    padding: 40px;
+}
+
+.practice-results h3 {
+    color: var(--text-color);
+    margin-bottom: 20px;
+    font-size: 24px;
+}
+
+.practice-score {
+    font-size: 32px;
+    margin: 20px 0;
+    font-weight: bold;
+    color: var(--secondary-color);
+}
+
+.practice-results p {
+    color: var(--text-muted);
+    margin-bottom: 30px;
+    font-size: 16px;
+}
+
+.nav-btn2 {
+    padding: 12px 24px;
+    border: 1px solid var(--secondary-color);
+    border-radius: var(--border-radius-md);
+    background: white;
+    color: var(--primary-color);
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s;
+    text-decoration: none;
+    font-size: 12px;
+}
+
+.nav-btn2:hover {
+    background: var(--secondary-color);
+    border-color: rgba(255, 255, 255, 0.34);
+    transform: translateY(-1px);
+    color: white;
+    text-decoration: none;
+}
+
+/* Animaciones */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.exercise-card {
+    animation: fadeInUp 0.3s ease;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .practice-options {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+    
+    .practice-stats {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        padding: 15px;
+    }
+    
+    .exercise-card {
+        margin: 10px;
+    }
+    
+    .practice-sentence {
+        font-size: 16px;
+        padding: 12px;
+    }
+}
+
+/* Estilos para selector de texto */
+.text-selector-container {
+    text-align: center;
+    padding: 30px;
+}
+
+.text-selector-container h3 {
+    color: var(--text-color);
+    margin-bottom: 20px;
+    font-size: 1.3rem;
+}
+
+.text-select {
+    width: 100%;
+    max-width: 500px;
+    padding: 12px 16px;
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    font-size: 16px;
+    background: #ffffff;
+    color: var(--text-color);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.text-select:focus {
+    outline: none;
+    border-color: var(--secondary-color);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.text-select:hover {
+    border-color: var(--secondary-color);
+}
+
+/* Estilos para el selector personalizado */
+.custom-select-container {
+    position: relative;
+    width: 100%;
+    max-width: 600px;
+    margin: 20px auto;
+    text-align: left;
+}
+
+.custom-select-trigger {
+    padding: 12px 16px;
+    background: #ffffff;
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s ease;
+    font-size: 16px;
+    color: var(--text-color);
+}
+
+.custom-select-trigger:hover {
+    border-color: var(--secondary-color);
+}
+
+.custom-select-options {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: #ffffff;
+    border: 2px solid var(--secondary-color);
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+    max-height: 300px;
+    overflow-y: auto;
+    z-index: 1000;
+    display: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.custom-select-options.show {
+    display: block;
+}
+
+.custom-select-item {
+    padding: 12px 16px;
+    cursor: pointer;
+    border-bottom: 1px solid #f1f5f9;
+    transition: background 0.2s;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 5px;
+}
+
+.custom-select-item:last-child {
+    border-bottom: none;
+}
+
+.custom-select-item:hover {
+    background: #f0f9ff;
+}
+
+.title-original-dropdown {
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.title-translation-dropdown {
+    color: var(--accent-color); /* Color diferente para la traducción */
+    font-weight: 500;
+}
+
+.word-count-dropdown {
+    color: var(--text-muted);
+    font-size: 0.85em;
+    margin-left: auto;
+}
+
+.custom-select-trigger .arrow {
+    font-size: 12px;
+    color: #9ca3af;
+    transition: transform 0.3s;
+}
+
+.custom-select-options.show + .custom-select-trigger .arrow {
+    transform: rotate(180deg);
+}
+
+.text-selector-info {
+    margin-top: 20px;
+    padding: 15px;
+    background: #f8fafc;
+    border-radius: 8px;
+    border-left: 4px solid var(--secondary-color);
+}
+
+.text-selector-info p {
+    margin: 8px 0;
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.4;
+}
+
+.text-selector-info p strong {
+    color: var(--text-color);
+}
+
+/* Estilos para los grupos de opciones */
+.text-select optgroup {
+    font-weight: bold;
+    color: var(--text-color);
+    background: #f8fafc;
+}
+
+.text-select optgroup[label*="Mis textos"] {
+    color: var(--accent-color);
+}
+
+.text-select optgroup[label*="Textos públicos"] {
+    color: var(--secondary-color);
+}
+
+.loading-container {
+    text-align: center;
+    padding: 40px;
+}
+
+.loading-container h3 {
+    color: var(--secondary-color);
+    margin-bottom: 15px;
+    font-size: 1.3rem;
+}
+
+@media (max-width: 480px) {
+    .practice-stats {
+        grid-template-columns: 1fr;
+    }
+    
+    .text-selector-container {
+        padding: 20px;
+    }
+    
+    .text-select {
+        font-size: 14px;
+        padding: 10px 12px;
+    }
+    
+    .check-btn,
+    .next-btn {
+        width: 100%;
+        margin: 5px 0;
+    }
+}
+
+/* Estilos migrados desde practice.php */
+.practice-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.sentence {
+  font-size: 20px;
+  line-height: 1.6;
+  margin-bottom: 25px;
+  text-align: center;
+  color: var(--text-color);
+}
+
+.blank {
+  display: inline-block;
+  min-width: 80px;
+  border-bottom: 3px solid var(--secondary-color);
+  margin: 0 5px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.option-btn.selected {
+  background: var(--secondary-color);
+  color: #ffffff;
+  border-color: var(--secondary-color);
+}
+
+.feedback {
+  padding: 15px;
+  border-radius: 8px;
+  margin-top: 20px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.feedback.correct {
+  background: #dbeafe;
+  color: #1e40af;
+  border: 2px solid var(--secondary-color);
+}
+
+.feedback.incorrect {
+  background: #dbeafe;
+  color: #1d4ed8;
+  border: 2px solid #60a5fa;
+}
+
+.stats {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+  text-align: center;
+  font-size: 14px;
+  opacity: 0.7;
+}
+
+.stat {
+  background: #f8fafc;
+  padding: 10px;
+  border-radius: 8px;
+  flex: 1;
+  margin: 0 5px;
+}
+
+.no-words {
+    text-align: center;
+    padding: 40px;
+    color: var(--text-muted);
+}
+
+/* ============================================
+   ESTILOS PARA PALABRAS CLICKEABLES EN PRÁCTICA
+   ============================================ */
+
+.practice-word {
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-radius: 3px;
+    padding: 1px 2px;
+}
+
+.practice-word:hover {
+    background-color: #e5e7eb;
+    color: var(--text-color);
+    transform: translateY(-1px);
+}
+
+.practice-word:active {
+    background-color: #d1d5db;
+    transform: translateY(0);
+}
+
+.practice-gap {
+   color: var(--success-color);
+    background-color: #dde1e8;
+    padding: 0px 0px 0px 0px;
+    font-size: 18px;
+}
+
+/* Tooltip específico para práctica */
+.practice-tooltip {
+    animation: fadeInTooltip 0.2s ease-in;
+}
+
+/* Toast de feedback */
+.practice-feedback-toast {
+    position: fixed;
+    top: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: bold;
+    color: #fff;
+    background: var(--accent-color);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    animation: fadeInUp 0.3s ease;
+}
+
+@keyframes fadeInTooltip {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+}

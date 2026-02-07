@@ -1,0 +1,45 @@
+{
+    "generated_at": "2026-02-07T11:46:04+01:00",
+    "threshold": 99,
+    "clusters_count": 1,
+    "suggestions": [
+        {
+            "canonical": "C:\\xampp\\htdocs\\leeingles\\actions\\delete_text.php",
+            "replace_with_require": [
+                "C:\\xampp\\htdocs\\leeingles\\admin\\test_account.php",
+                "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_calendar_data.php",
+                "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_my_texts_content.php",
+                "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_user_texts.php",
+                "C:\\xampp\\htdocs\\leeingles\\ajax\\get_user_email.php",
+                "C:\\xampp\\htdocs\\leeingles\\ajax\\get_user_texts.php",
+                "C:\\xampp\\htdocs\\leeingles\\ajax\\load_user_texts.php",
+                "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_1_ano.php",
+                "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_1_mes.php",
+                "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_6_meses.php",
+                "C:\\xampp\\htdocs\\leeingles\\dePago\\test\\check_db.php",
+                "C:\\xampp\\htdocs\\leeingles\\includes\\content_functions.php",
+                "C:\\xampp\\htdocs\\leeingles\\includes\\footer.php",
+                "C:\\xampp\\htdocs\\leeingles\\includes\\practice_functions.php",
+                "C:\\xampp\\htdocs\\leeingles\\includes\\title_functions.php",
+                "C:\\xampp\\htdocs\\leeingles\\includes\\word_functions.php",
+                "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\get_content_translation.php",
+                "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\save_content_translation.php",
+                "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\save_reading_time.php",
+                "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\ajax_login.php",
+                "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\login.php",
+                "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\logout.php",
+                "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\register.php",
+                "C:\\xampp\\htdocs\\leeingles\\practicas\\ajax_practice_data.php",
+                "C:\\xampp\\htdocs\\leeingles\\practicas\\get_practice_stats.php",
+                "C:\\xampp\\htdocs\\leeingles\\practicas\\practice.php",
+                "C:\\xampp\\htdocs\\leeingles\\practicas\\save_practice_progress.php",
+                "C:\\xampp\\htdocs\\leeingles\\traduciones\\dictionary_info.php",
+                "C:\\xampp\\htdocs\\leeingles\\traduciones\\get_title_translation.php",
+                "C:\\xampp\\htdocs\\leeingles\\traduciones\\save_title_translation.php",
+                "C:\\xampp\\htdocs\\leeingles\\traduciones\\save_translated_word.php",
+                "C:\\xampp\\htdocs\\leeingles\\traduciones\\translate.php"
+            ],
+            "notes": "Crear wrapper con require_once del canonical. Se recomienda revisar backups autom\u00e1ticos antes de aplicar."
+        }
+    ]
+}

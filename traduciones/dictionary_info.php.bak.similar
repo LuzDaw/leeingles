@@ -1,0 +1,240 @@
+<?php
+// =============================
+// SISTEMA HÍBRIDO DE INFORMACIÓN DE DICCIONARIO
+// =============================
+// 1. Intenta Free Dictionary API
+// 2. Si falla, usa otra API de diccionario gratuita
+// 3. Si ambos fallan, devuelve error
+
+header('Content-Type: application/json; charset=utf-8');
+
+// Aceptar solo 'word' como parámetro
+$word = $_POST['word'] ?? null;
+
+if (!$word) {
+    echo json_encode(['error' => 'No se proporcionó ninguna palabra']);
+    exit();
+}
+
+// Limpiar palabra
+$word = trim($word);
+if ($word === '') {
+    echo json_encode(['error' => 'Palabra vacía']);
+    exit();
+}
+
+// Función para obtener información de Free Dictionary API
+/**
+ * Obtiene información de una palabra utilizando la Free Dictionary API.
+ *
+ * Realiza una solicitud HTTP a la API y devuelve los datos decodificados si la respuesta es válida.
+ *
+ * @param string $word La palabra a buscar.
+ * @return array|false Los datos del diccionario si la solicitud es exitosa y los datos son válidos, o `false` en caso contrario.
+ */
+function getFreeDictionaryInfo($word) {
+    $url = "https://api.dictionaryapi.dev/api/v2/entries/en/" . urlencode($word);
+    
+    $context = stream_context_create([
+        'http' => [
+            'timeout' => 5,
+            'user_agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+        ]
+    ]);
+
+    $response = @file_get_contents($url, false, $context);
+    
+    if ($response === false) {
+        return false;
+    }
+    
+    $data = json_decode($response, true);
+    
+    // Verificar si hay datos válidos
+    if (!is_array($data) || empty($data) || !isset($data[0]['meanings'])) {
+        return false;
+    }
+    
+    return $data;
+}
+
+// Función para obtener información de WordsAPI (fallback)
+/**
+ * Obtiene información de una palabra utilizando WordsAPI (API de respaldo).
+ *
+ * Realiza una solicitud HTTP a WordsAPI y devuelve los datos decodificados si la respuesta es válida.
+ *
+ * @param string $word La palabra a buscar.
+ * @return array|false Los datos del diccionario si la solicitud es exitosa y los datos son válidos, o `false` en caso contrario.
+ */
+function getWordsAPIInfo($word) {
+    $url = "https://wordsapiv1.p.rapidapi.com/words/" . urlencode($word);
+    
+    $context = stream_context_create([
+        'http' => [
+            'timeout' => 5,
+            'user_agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+        ]
+    ]);
+
+    $response = @file_get_contents($url, false, $context);
+    
+    if ($response === false) {
+        return false;
+    }
+    
+    $data = json_decode($response, true);
+    
+    // Verificar si hay datos válidos
+    if (!is_array($data) || !isset($data['word'])) {
+        return false;
+    }
+    
+    return $data;
+}
+
+// Función para procesar datos de Free Dictionary API
+/**
+ * Procesa y formatea los datos obtenidos de la Free Dictionary API.
+ *
+ * Extrae la palabra, definición, información gramatical, ejemplos, sinónimos y antónimos
+ * de la estructura de respuesta de la API.
+ *
+ * @param array $data Los datos brutos de la Free Dictionary API.
+ * @return array Un array asociativo con la información procesada de la palabra.
+ */
+function processFreeDictionaryData($data) {
+    $result = [
+        'word' => $data[0]['word'] ?? '',
+        'definition' => '',
+        'definition_es' => '',
+        'grammatical_info' => '',
+        'usage_notes' => '',
+        'synonyms' => [],
+        'synonyms_es' => [],
+        'antonyms' => [],
+        'antonyms_es' => [],
+        'examples' => [],
+        'examples_es' => []
+    ];
+    
+    // Procesar significados
+    if (isset($data[0]['meanings']) && is_array($data[0]['meanings'])) {
+        $meanings = $data[0]['meanings'];
+        
+        // Tomar el primer significado como principal
+        if (!empty($meanings)) {
+            $firstMeaning = $meanings[0];
+            
+            // Definición
+            if (isset($firstMeaning['definitions'][0]['definition'])) {
+                $result['definition'] = $firstMeaning['definitions'][0]['definition'];
+            }
+            
+            // Categoría gramatical
+            if (isset($firstMeaning['partOfSpeech'])) {
+                $result['grammatical_info'] = ucfirst($firstMeaning['partOfSpeech']);
+            }
+            
+            // Ejemplos
+            if (isset($firstMeaning['definitions'][0]['example'])) {
+                $result['examples'][] = $firstMeaning['definitions'][0]['example'];
+            }
+            
+            // Sinónimos
+            if (isset($firstMeaning['synonyms'])) {
+                $result['synonyms'] = array_slice($firstMeaning['synonyms'], 0, 5); // Máximo 5
+            }
+            
+            // Antónimos
+            if (isset($firstMeaning['antonyms'])) {
+                $result['antonyms'] = array_slice($firstMeaning['antonyms'], 0, 5); // Máximo 5
+            }
+        }
+    }
+    
+    return $result;
+}
+
+// Función para procesar datos de WordsAPI
+/**
+ * Procesa y formatea los datos obtenidos de WordsAPI.
+ *
+ * Extrae la palabra, definición, información gramatical, ejemplos, sinónimos y antónimos
+ * de la estructura de respuesta de la API.
+ *
+ * @param array $data Los datos brutos de WordsAPI.
+ * @return array Un array asociativo con la información procesada de la palabra.
+ */
+function processWordsAPIData($data) {
+    $result = [
+        'word' => $data['word'] ?? '',
+        'definition' => '',
+        'definition_es' => '',
+        'grammatical_info' => '',
+        'usage_notes' => '',
+        'synonyms' => [],
+        'synonyms_es' => [],
+        'antonyms' => [],
+        'antonyms_es' => [],
+        'examples' => [],
+        'examples_es' => []
+    ];
+    
+    // Procesar resultados
+    if (isset($data['results']) && is_array($data['results'])) {
+        $firstResult = $data['results'][0];
+        
+        // Definición
+        if (isset($firstResult['definition'])) {
+            $result['definition'] = $firstResult['definition'];
+        }
+        
+        // Categoría gramatical
+        if (isset($firstResult['partOfSpeech'])) {
+            $result['grammatical_info'] = ucfirst($firstResult['partOfSpeech']);
+        }
+        
+        // Ejemplos
+        if (isset($firstResult['examples'])) {
+            $result['examples'] = array_slice($firstResult['examples'], 0, 3); // Máximo 3
+        }
+        
+        // Sinónimos
+        if (isset($firstResult['synonyms'])) {
+            $result['synonyms'] = array_slice($firstResult['synonyms'], 0, 5); // Máximo 5
+        }
+        
+        // Antónimos
+        if (isset($firstResult['antonyms'])) {
+            $result['antonyms'] = array_slice($firstResult['antonyms'], 0, 5); // Máximo 5
+        }
+    }
+    
+    return $result;
+}
+
+// Intentar obtener información de Free Dictionary API primero
+$dictionaryData = getFreeDictionaryInfo($word);
+$source = 'Free Dictionary API';
+
+if ($dictionaryData !== false) {
+    $result = processFreeDictionaryData($dictionaryData);
+} else {
+    // Si Free Dictionary falla, intentar con WordsAPI
+    $dictionaryData = getWordsAPIInfo($word);
+    if ($dictionaryData !== false) {
+        $result = processWordsAPIData($dictionaryData);
+        $source = 'WordsAPI';
+    } else {
+        // Si ambas fallan, devolver error
+        echo json_encode(['error' => 'No se pudo obtener información de diccionario']);
+        exit();
+    }
+}
+
+// Añadir información de la fuente
+$result['source'] = $source;
+
+echo json_encode($result);
+?>

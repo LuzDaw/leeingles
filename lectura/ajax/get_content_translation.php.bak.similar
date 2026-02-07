@@ -1,0 +1,98 @@
+<?php
+session_start();
+require_once '../../db/connection.php';
+require_once '../../includes/content_functions.php';
+require_once '../../dePago/subscription_functions.php';
+
+header('Content-Type: application/json; charset=utf-8');
+
+if (!isset($_SESSION['user_id'])) {
+    echo json_encode(['error' => 'Usuario no autenticado']);
+    exit();
+}
+
+if (!isset($_GET['text_id'])) {
+    echo json_encode(['error' => 'ID de texto requerido']);
+    exit();
+}
+
+$user_id = $_SESSION['user_id'];
+$text_id = intval($_GET['text_id']);
+
+// Verificar límite de suscripción antes de permitir el acceso a la traducción
+$is_active_reading = isset($_GET['active_reading']) && $_GET['active_reading'] === '1';
+$limit_check = checkTranslationLimit($user_id, $is_active_reading);
+
+if (!$limit_check['can_translate']) {
+    echo json_encode([
+        'error' => 'Has alcanzado tu límite semanal de traducciones.',
+        'limit_reached' => true,
+        'next_reset' => $limit_check['next_reset'] ?? null
+    ]);
+    exit();
+}
+
+// Verificar que el texto pertenece al usuario o es público
+try {
+    $stmt = $conn->prepare("SELECT id, title, content FROM texts WHERE id = ? AND (user_id = ? OR is_public = 1)");
+    $stmt->bind_param("ii", $text_id, $user_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    
+    if ($result->num_rows === 0) {
+        echo json_encode(['error' => 'Texto no encontrado o no autorizado']);
+        exit();
+    }
+    
+    $text_data = $result->fetch_assoc();
+    $stmt->close();
+} catch (Exception $e) {
+    echo json_encode(['error' => 'Error verificando autorización']);
+    exit();
+}
+
+// Obtener la traducción del contenido
+$translation = getContentTranslation($text_id);
+
+if ($translation) {
+    // ELIMINADO: Ya no cobramos el texto completo al cargarlo del caché.
+    // El cobro se hará párrafo a párrafo conforme se muestren en el lector.
+    // incrementTranslationUsage($user_id, $text_data['content']);
+
+    // Verificar si es el nuevo formato JSON o el antiguo
+    if (is_array($translation)) {
+        // Nuevo formato JSON - array de traducciones
+        echo json_encode([
+            'success' => true,
+            'text_id' => $text_id,
+            'title' => $text_data['title'],
+            'content' => $text_data['content'],
+            'translation' => $translation,
+            'format' => 'json',
+            'source' => 'database'
+        ]);
+    } else {
+        // Formato antiguo - texto plano
+        echo json_encode([
+            'success' => true,
+            'text_id' => $text_id,
+            'title' => $text_data['title'],
+            'content' => $text_data['content'],
+            'translation' => $translation,
+            'format' => 'plain',
+            'source' => 'database'
+        ]);
+    }
+} else {
+    echo json_encode([
+        'success' => false,
+        'text_id' => $text_id,
+        'title' => $text_data['title'],
+        'content' => $text_data['content'],
+        'translation' => null,
+        'needs_translation' => true
+    ]);
+}
+
+$conn->close();
+?>
