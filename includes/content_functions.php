@@ -340,6 +340,16 @@ function render_text_clickable($text, $title = '', $title_translation = '')
   $output .= '<div id="pagination-controls" style="display: none;">
   <button id="prev-page" class="pagination-btn" disabled>◀</button>
   <div class="center-controls">
+      <div class="font-size-container">
+          <button id="font-size-btn" class="pagination-btn" title="Tamaño de fuente">🅰️</button>
+          <div id="font-size-selector" class="speed-selector-popup" style="display: none;">
+              <div class="speed-selector-inner">
+                  <span id="font-size-value">100%</span>
+                  <input type="range" id="font-size" min="0.8" max="1.5" value="1" step="0.1" />
+                  <label>Tamaño</label>
+              </div>
+          </div>
+      </div>
       <button onclick="window.toggleFloatingPlayPause()" id="floating-btn" class="play-btn" title="Iniciar lectura">▶️</button>
       <div class="speed-container">
           <button id="speed-btn" class="pagination-btn" title="Velocidad">🐢</button>
@@ -351,9 +361,9 @@ function render_text_clickable($text, $title = '', $title_translation = '')
               </div>
           </div>
       </div>
-      <span class="page-info"><span id="page-number">1</span>/<span id="total-pages">1</span></span>
-          </div>
-          <button id="next-page" class="pagination-btn">▶</button>
+  </div>
+  <span class="page-info"><span id="page-number">1</span>/<span id="total-pages">1</span></span>
+  <button id="next-page" class="pagination-btn">▶</button>
   </div>';
 
   $output .= '</div>';

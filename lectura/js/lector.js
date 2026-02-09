@@ -1,6 +1,8 @@
-// Variables globales para el control de velocidad
+// Variables globales para el control de velocidad y tamaño de fuente
 let rateInput = null;
 let rateValue = null;
+let fontSizeInput = null;
+let fontSizeValue = null;
 
 /**
  * Inicializa el lector de texto, configurando variables globales,
@@ -125,17 +127,25 @@ function initLector() {
     // Inicializar elementos con verificación
     rateInput = document.getElementById('rate');
     rateValue = document.getElementById('rate-value');
+    fontSizeInput = document.getElementById('font-size');
+    fontSizeValue = document.getElementById('font-size-value');
     
-    if (!rateInput) {
+    if (!rateInput || !fontSizeInput) {
         setTimeout(() => {
             rateInput = document.getElementById('rate');
             rateValue = document.getElementById('rate-value');
+            fontSizeInput = document.getElementById('font-size');
+            fontSizeValue = document.getElementById('font-size-value');
             if (rateInput && rateValue) {
                 initializeRateControl();
+            }
+            if (fontSizeInput && fontSizeValue) {
+                initializeFontSizeControl();
             }
         }, 1000);
     } else {
         initializeRateControl();
+        initializeFontSizeControl();
     }
     
     /**
@@ -153,12 +163,12 @@ function initLector() {
             if (!rateInput.hasAttribute('data-listener')) {
                 rateInput.addEventListener('mousedown', (e) => {
                     rateInput.setAttribute('data-dragging', 'true');
-                    handleSliderMouseMove(e);
+                    handleSliderMouseMove(e, rateInput, rateValue, (value) => Math.min(100, Math.round(value * 100 + 10)));
                 });
                 
                 rateInput.addEventListener('mousemove', (e) => {
                     if (rateInput.hasAttribute('data-dragging')) {
-                        handleSliderMouseMove(e);
+                        handleSliderMouseMove(e, rateInput, rateValue, (value) => Math.min(100, Math.round(value * 100 + 10)));
                     }
                 });
                 
@@ -174,14 +184,86 @@ function initLector() {
                 
                 rateInput.setAttribute('data-listener', 'true');
             }
-            
-                    /**
-             * Maneja el movimiento del ratón sobre el slider de velocidad para actualizar su valor.
+        }
+    }
+
+    /**
+     * Inicializa los controles de tamaño de fuente (slider y display de porcentaje).
+     *
+     * Configura los event listeners para el slider de tamaño de fuente, permitiendo ajustar
+     * el tamaño de las letras y mostrando el valor en porcentaje.
+     */
+    function initializeFontSizeControl() {
+        if (fontSizeInput && fontSizeValue) {
+            const initialValue = parseFloat(fontSizeInput.value);
+            const percentageDisplay = Math.round(initialValue * 100);
+            fontSizeValue.textContent = percentageDisplay + '%';
+            document.documentElement.style.setProperty('--base-reading-font-size', `${initialValue}rem`);
+            document.documentElement.style.setProperty('--base-translation-font-size', `${initialValue * 0.9}rem`); // Ajustar traducción proporcionalmente
+
+            if (!fontSizeInput.hasAttribute('data-listener')) {
+                fontSizeInput.addEventListener('mousedown', (e) => {
+                    fontSizeInput.setAttribute('data-dragging', 'true');
+                    handleSliderMouseMove(e, fontSizeInput, fontSizeValue, (value) => Math.round(value * 100));
+                });
+                
+                fontSizeInput.addEventListener('mousemove', (e) => {
+                    if (fontSizeInput.hasAttribute('data-dragging')) {
+                        handleSliderMouseMove(e, fontSizeInput, fontSizeValue, (value) => Math.round(value * 100));
+                    }
+                });
+                
+                fontSizeInput.addEventListener('mouseup', () => {
+                    fontSizeInput.removeAttribute('data-dragging');
+                    window.paginateDynamically(); // Repaginar al soltar el slider
+                });
+                
+                fontSizeInput.addEventListener('input', (e) => {
+                    const value = parseFloat(e.target.value);
+                    const percentageDisplay = Math.round(value * 100);
+                    fontSizeValue.textContent = percentageDisplay + '%';
+                    document.documentElement.style.setProperty('--base-reading-font-size', `${value}rem`);
+                    document.documentElement.style.setProperty('--base-translation-font-size', `${value * 0.9}rem`); // Ajustar traducción proporcionalmente
+                    // No repaginar aquí para evitar jankiness, solo al soltar el mouse
+                });
+                
+                fontSizeInput.setAttribute('data-listener', 'true');
+            }
+
+            // Control de visibilidad del selector de tamaño de fuente
+            const fontSizeBtn = document.getElementById('font-size-btn');
+            const fontSizeSelector = document.getElementById('font-size-selector');
+            if (fontSizeBtn && fontSizeSelector && !fontSizeBtn.hasAttribute('data-listener-toggle')) {
+                fontSizeBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const isVisible = fontSizeSelector.style.display === 'block';
+                    fontSizeSelector.style.display = isVisible ? 'none' : 'block';
+                    // Ensure speed selector is closed when font size selector opens
+                    const speedSelector = document.getElementById('speed-selector');
+                    if (speedSelector) speedSelector.style.display = 'none';
+                });
+                
+                // Cerrar al hacer clic fuera
+                document.addEventListener('click', (e) => {
+                    if (!fontSizeSelector.contains(e.target) && e.target !== fontSizeBtn) {
+                        fontSizeSelector.style.display = 'none';
+                    }
+                });
+                
+                fontSizeBtn.setAttribute('data-listener-toggle', 'true');
+            }
+        }
+    }
+            /**
+             * Maneja el movimiento del ratón sobre el slider para actualizar su valor.
              *
              * @param {MouseEvent} e - El objeto de evento del ratón.
+             * @param {HTMLElement} sliderInput - El elemento input[type="range"].
+             * @param {HTMLElement} valueDisplay - El elemento span para mostrar el valor.
+             * @param {Function} displayFormatter - Función para formatear el valor para la visualización.
              */
-            function handleSliderMouseMove(e) {
-                const rect = rateInput.getBoundingClientRect();
+            function handleSliderMouseMove(e, sliderInput, valueDisplay, displayFormatter) {
+                const rect = sliderInput.getBoundingClientRect();
                 const isVertical = rect.height > rect.width;
                 let percentage;
                 
@@ -193,18 +275,20 @@ function initLector() {
                     percentage = Math.max(0, Math.min(1, clickX / rect.width));
                 }
                 
-                const min = parseFloat(rateInput.min);
-                const max = parseFloat(rateInput.max);
+                const min = parseFloat(sliderInput.min);
+                const max = parseFloat(sliderInput.max);
                 const newValue = min + (percentage * (max - min));
-                const step = parseFloat(rateInput.step);
+                const step = parseFloat(sliderInput.step);
                 const roundedValue = Math.round(newValue / step) * step;
                 
-                rateInput.value = roundedValue;
-                const percentageDisplay = Math.min(100, Math.round(roundedValue * 100 + 10));
-                rateValue.textContent = percentageDisplay + '%';
+                sliderInput.value = roundedValue;
+                valueDisplay.textContent = displayFormatter(roundedValue) + '%';
+
+                if (sliderInput.id === 'font-size') {
+                    document.documentElement.style.setProperty('--base-reading-font-size', `${roundedValue}rem`);
+                    document.documentElement.style.setProperty('--base-translation-font-size', `${roundedValue * 0.9}rem`);
+                }
             }
-        }
-    }
 
     let prevBtn, nextBtn, pageNumber, totalPagesSpan;
     window.virtualPages = [];
@@ -298,6 +382,9 @@ function initLector() {
                 e.stopPropagation();
                 const isVisible = speedSelector.style.display === 'block';
                 speedSelector.style.display = isVisible ? 'none' : 'block';
+                // Ensure font size selector is closed when speed selector opens
+                const fontSizeSelector = document.getElementById('font-size-selector');
+                if (fontSizeSelector) fontSizeSelector.style.display = 'none';
             });
             
             // Cerrar al hacer clic fuera
