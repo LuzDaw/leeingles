@@ -4,6 +4,8 @@
  * Elimina duplicación de código en login, register y AJAX
  */
 
+require_once '../db/connection.php'; // Ruta corregida
+
 // ==================== CSRF ====================
 /**
  * Genera y almacena un token CSRF en la sesión del usuario.
@@ -92,7 +94,7 @@ function validateUsername($username) {
 /**
  * Autentica a un usuario.
  *
- * Verifica las credenciales de email y contraseña contra la base de datos.
+ * Verifica las credenciales de email y contraseña contra la db.
  * Si las credenciales son correctas, inicia una sesión, actualiza la última conexión
  * del usuario y opcionalmente configura la sesión para "recordarme".
  * También maneja el estado de verificación pendiente del email.
@@ -115,7 +117,7 @@ function authenticateUser($email, $password, $remember_me = false) {
     
     $stmt = $conn->prepare("SELECT id, username, password, is_admin, estado FROM users WHERE email = ?");
     if ($stmt === false) {
-        return ['success' => false, 'error' => 'Error en la base de datos.'];
+        return ['success' => false, 'error' => 'Error en la db.'];
     }
     
     $stmt->bind_param("s", $email_input);
@@ -172,7 +174,7 @@ function authenticateUser($email, $password, $remember_me = false) {
  *
  * Realiza validaciones de nombre de usuario, email y contraseña.
  * Comprueba si el email ya está registrado. Hashea la contraseña
- * y la almacena en la base de datos. Opcionalmente, puede marcar
+ * y la almacena en la db. Opcionalmente, puede marcar
  * la cuenta como 'pendiente' de verificación de email.
  *
  * @param string $username El nombre de usuario.
@@ -212,7 +214,7 @@ function registerUser($username, $email, $password, $send_verification = false) 
     // Comprobar si el email ya existe
     $stmt_email = $conn->prepare("SELECT id FROM users WHERE email = ?");
     if ($stmt_email === false) {
-        return ['success' => false, 'error' => 'Error en la base de datos al verificar email.'];
+        return ['success' => false, 'error' => 'Error en la db al verificar email.'];
     }
     $stmt_email->bind_param("s", $email);
     $stmt_email->execute();
@@ -229,7 +231,7 @@ function registerUser($username, $email, $password, $send_verification = false) 
     
     $stmt = $conn->prepare("INSERT INTO users (username, email, password, estado) VALUES (?, ?, ?, ?)");
     if ($stmt === false) {
-        return ['success' => false, 'error' => 'Error en la base de datos.'];
+        return ['success' => false, 'error' => 'Error en la db.'];
     }
     
     $stmt->bind_param("ssss", $username, $email, $hashed_password, $estado);

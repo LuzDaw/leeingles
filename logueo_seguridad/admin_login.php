@@ -7,7 +7,7 @@ $errors = [];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($conn->connect_error) {
-        $errors[] = "Error de conexión a la base de datos: " . $conn->connect_error;
+        $errors[] = "Error de conexión a la db: " . $conn->connect_error;
     } else {
         $login = trim($_POST['user'] ?? '');
         $password = $_POST['pass'] ?? '';

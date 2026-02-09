@@ -7,7 +7,7 @@ Aplicación web para aprender inglés leyendo: traducción inmediata al hacer cl
 ```
 traductor/
 ├─ css/                  # Hojas de estilo modulares
-├─ db/                   # Scripts y conexión a base de datos
+├─ db/                   # Scripts y conexión a db
 ├─ docs/                 # Documentación
 ├─ includes/             # Funciones PHP reutilizables (palabras, títulos, contenido, práctica)
 ├─ js/                   # JavaScript modular (lector, práctica, traducciones, UI)

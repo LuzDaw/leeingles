@@ -4,6 +4,7 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
 require_once '../logueo_seguridad/PHPMailer/src/Exception.php';
+require_once __DIR__ . '/../db/connection.php';
 require_once '../logueo_seguridad/PHPMailer/src/PHPMailer.php';
 require_once '../logueo_seguridad/PHPMailer/src/SMTP.php';
 

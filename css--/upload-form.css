@@ -1,0 +1,104 @@
+/* Estilos para el formulario de subida de texto */
+.upload-form-group {
+    margin-bottom: 15px;
+}
+
+.upload-label {
+    display: block;
+    margin-bottom: 16px;
+    font-weight: bold;
+}
+
+.upload-input,
+.upload-textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid var(--success-light);
+    border-radius: 4px;
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+
+.upload-hint {
+    color: var(--text-muted);
+    font-size: 0.95em;
+}
+
+/* Layout principal de la pestaña de subir texto */
+.upload-main-container {
+    display: flex;
+    flex-direction: row;
+    gap: 32px;
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    box-sizing: border-box;
+        padding: 10px 30px;
+    background: #60a5fa0d;
+}
+
+/* Columna izquierda: formulario (50%) */
+.upload-form-container {
+    width: 50%;
+    background: var(--background-color); /* Fondo suave */
+    padding: 0px 28px;
+    border-radius: 10px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+/* Columna derecha: publicidad (50%) */
+.upload-ads-container {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    justify-content: flex-start;
+  /* Padding a la derecha para separar del borde */
+}
+
+/* Bloques de publicidad */
+.ad-block {
+    background: #fff;
+    border: 1.5px dashed var(--success-light);
+    border-radius: 8px;
+    min-height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    box-shadow: 0 1px 6px rgba(0,0,0,0.03);
+}
+
+.ad-block-top {
+    min-height: 120px;
+}
+
+.ad-block-bottom {
+    min-height: 120px;
+}
+
+/* Responsive: en pantallas pequeñas, apilar columnas */
+@media (max-width: 900px) {
+    .upload-main-container {
+        flex-direction: column;
+        gap: 24px;
+    }
+    .upload-form-container,
+    .upload-ads-container {
+        width: 100%;
+        padding: 20px 8px;
+    }
+}
+
+/* Comentarios:
+- .upload-main-container: contenedor principal de la pestaña
+- .upload-form-container: columna izquierda con el formulario
+- .upload-ads-container: columna derecha con los anuncios
+- .ad-block: bloques de publicidad
+*/
+
+/* Estilos específicos del formulario de subir texto que estaban en el HTML. */ 

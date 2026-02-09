@@ -34,6 +34,38 @@ function initLector() {
         try { if (window.eSpeakAPI && window.eSpeakAPI.cancel) window.eSpeakAPI.cancel(); } catch (e) {}
     }
 
+    /**
+     * Scrolls the given element into view if it's out of bounds,
+     * considering fixed header and pagination controls.
+     * @param {HTMLElement} element - The element to scroll into view.
+     */
+    function scrollElementIntoViewIfNeeded(element) {
+        if (!element) return;
+
+        const headerHeight = document.querySelector('.encabezado-lectura')?.offsetHeight || 0;
+        const controlsElement = document.getElementById('pagination-controls');
+        const controlsHeight = controlsElement ? controlsElement.offsetHeight : 0;
+        const rect = element.getBoundingClientRect();
+
+        // Check if the element is out of view at the bottom, considering controls
+        if (rect.bottom > window.innerHeight - controlsHeight) {
+            // Scroll to bring the bottom of the element into view, just above the controls
+            // Use 'auto' for instant scroll
+            element.scrollIntoView({ behavior: 'auto', block: 'end' });
+
+            // Additional adjustment if the element's bottom is still covered by controls
+            const newRect = element.getBoundingClientRect();
+            if (newRect.bottom > window.innerHeight - controlsHeight) {
+                window.scrollBy(0, newRect.bottom - (window.innerHeight - controlsHeight) + 5); // Add a small padding
+            }
+        }
+        // Also check if the element is out of view at the top, considering header
+        else if (rect.top < headerHeight) {
+            element.scrollIntoView({ behavior: 'auto', block: 'start' });
+            window.scrollBy(0, -headerHeight);
+        }
+    }
+
     // Función centralizada para guardar tiempo de lectura
     /**
      * Guarda el tiempo de lectura acumulado para un texto específico.
@@ -767,10 +799,10 @@ function initLector() {
     };
 
     /**
-     * Traduce un párrafo y guarda la traducción en la base de datos.
+     * Traduce un párrafo y guarda la traducción en la db.
      *
      * Utiliza el sistema de traducción híbrido y, si la traducción es exitosa,
-     * la guarda en el caché de traducciones y en la base de datos.
+     * la guarda en el caché de traducciones y en la db.
      *
      * @param {string} text - El texto del párrafo a traducir.
      * @param {HTMLElement} box - El elemento DOM donde se mostrará la traducción.
@@ -808,6 +840,9 @@ function initLector() {
                 if (!window.contentTranslationsCache) window.contentTranslationsCache = {};
                 window.contentTranslationsCache[text] = translationData.translation;
                 
+                // NEW: Scroll the translation box into view if needed
+                scrollElementIntoViewIfNeeded(box);
+
                 setTimeout(() => {
                     const formData = new FormData();
                     formData.append('text_id', textId);
@@ -823,7 +858,7 @@ function initLector() {
     }
     
     /**
-     * Traduce un párrafo sin guardarlo en la base de datos.
+     * Traduce un párrafo sin guardarlo en la db.
      *
      * Utiliza el sistema de traducción híbrido y muestra la traducción en el elemento DOM.
      *
@@ -841,7 +876,11 @@ function initLector() {
         .then(res => res.json())
         .then(data => {
             if (window.LimitModal && window.LimitModal.checkResponse(data)) { box.innerText = ''; return; }
-            if (data.translation) box.innerText = data.translation;
+            if (data.translation) {
+                box.innerText = data.translation;
+                // NEW: Scroll the translation box into view if needed
+                scrollElementIntoViewIfNeeded(box);
+            }
         })
         .catch(() => {});
     }
@@ -850,7 +889,7 @@ function initLector() {
      * Guarda la traducción completa de todo el contenido de un texto.
      *
      * Concatena todos los párrafos del texto actual, los traduce y guarda
-     * la traducción resultante en la base de datos.
+     * la traducción resultante en la db.
      */
     window.saveCompleteContentTranslation = async function() {
         const textId = document.querySelector('#pages-container')?.dataset?.textId;

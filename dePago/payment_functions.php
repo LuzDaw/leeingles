@@ -70,7 +70,7 @@ function activateUserPlan($user_id, $plan, $paypal_id, $method = 'paypal') {
     }
 
     if (!$success_sub) {
-        return ['success' => false, 'message' => 'Error al registrar la suscripción en la base de datos.'];
+        return ['success' => false, 'message' => 'Error al registrar la suscripción en la db.'];
     }
 
     // 2. Actualizar el tipo de usuario en la tabla users

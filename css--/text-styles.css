@@ -1,0 +1,20 @@
+/* Botones de paginación (Estilos base en common-styles.css) */
+
+.page-info {
+    font-size: 16px;
+    color: var(--primary-color);
+    font-weight: 500;
+}
+
+.page {
+    display: none;
+}
+
+.page.active {
+    display: block;
+}
+
+/* Listas de texto (Estilos base en common-styles.css) */
+#tab-content .tab-content-wrapper .tab-content-wrapper2{
+    
+}

@@ -5,7 +5,7 @@
 // Variables globales (AppState centralizado en global-state.js)
 
 /**
- * Guarda una palabra traducida en la base de datos del usuario.
+ * Guarda una palabra traducida en la db del usuario.
  *
  * @param {string} word - La palabra original en inglés.
  * @param {string} translation - La traducción de la palabra.

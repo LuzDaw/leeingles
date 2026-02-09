@@ -9,7 +9,7 @@ if (isset($_GET['token'])) {
     $token_claro = $_GET['token'];
     $token_hash = hash('sha256', $token_claro); // Usar SHA256 para consistencia
 
-    // Buscar el token en la base de datos
+    // Buscar el token en la db
     $stmt = $conn->prepare("SELECT id, id_usuario, expira_en FROM verificaciones_email WHERE token_hash = ? AND tipo = 'email_verification'");
     $stmt->bind_param("s", $token_hash);
     $stmt->execute();

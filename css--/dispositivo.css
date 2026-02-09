@@ -1,0 +1,621 @@
+/* dispositivo.css - Menú colapsable para pestañas en dispositivos pequeños */
+
+/* Ocultar botones de pestañas en dispositivos pequeños por defecto */
+@media (max-width: 768px) {
+  .tab-navigation.tab-nav-container {
+    background: transparent;
+    position: relative;
+    padding: 0px 94px 2px 0px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 15px;
+    width: 52%;
+    margin-top: -0.5%;
+  }
+
+  /* Botón hamburguesa para abrir/cerrar el menú (creado por JavaScript) */
+   .tab-navigation.tab-nav-container .mobile-tab-menu-toggle {
+      font-size: 0;
+        border: none;
+        position: relative;
+        width: 100%;
+        border-radius: 1px 0px 16px 16px;
+                border-bottom: 4px solid #ff8a00;
+        border-top: 4px solid #ff8a00;
+        background:#2f4a6f ;
+    
+    }
+
+    .tab-navigation.tab-nav-container .mobile-tab-menu-toggle::before {
+        content: "Menú";
+        font-size: 14px;
+        font-weight: 600;
+        color: #ffffff;
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+  .tab-navigation.tab-nav-container .mobile-tab-menu-toggle:hover {
+    background: #3b82f6;
+    color: #ffffff;
+  }
+
+  /* Contenedor para los botones de pestañas que se extiende hacia abajo */
+  .tab-navigation.tab-nav-container .tab-buttons-container {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    flex-direction: column;
+    padding: 1rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transform: translateY(-100%);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    z-index: 999;
+    display: flex;
+    gap: 0.5rem;
+    min-width: 355px;
+  }
+
+  /* Cuando el menú está abierto, mostrar el contenedor */
+  .tab-navigation.tab-nav-container.menu-open .tab-buttons-container {
+    transform: translateY(0);
+    opacity: 1;
+    visibility: visible;
+  }
+
+  /* Ocultar todos los botones de pestañas del contenedor original */
+  .tab-navigation.tab-nav-container > .tab-btn {
+    display: none !important;
+  }
+
+  /* Ocultar el flex-1 spacer */
+  .tab-navigation.tab-nav-container .flex-1 {
+    display: none;
+  }
+
+  /* Ocultar el botón de salir en móvil */
+  .tab-navigation.tab-nav-container .exit-tab-btn {
+    display: none;
+  }
+
+  /* Estilos para los botones dentro del contenedor desplegable */
+  .tab-navigation.tab-nav-container .tab-buttons-container .tab-btn {
+    display: block;
+    width: 100%;
+    background: var(--success-light);
+    border: none !important;
+    padding: 0.75rem 1.25rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+    border-radius: 4px;
+    margin: 0;
+    font-size: 16px;
+  }
+
+  .tab-navigation.tab-nav-container .tab-buttons-container .tab-btn:hover {
+    background: var(--background-color);
+    color: var(--text-color);
+  }
+
+  .tab-navigation.tab-nav-container .tab-buttons-container .tab-btn.active {
+    background: var(--primary-color);
+    color: #ffffff;
+    font-weight: 600;
+  }
+
+  /* Ajustar el contenido de las pestañas en móvil */
+  #tab-content {
+    margin-top: 0;
+  }
+}
+
+  @media (max-width: 850px) { 
+        .text-meta-container { display: none; } 
+    }
+
+    @media (max-width: 768px) {
+        .tab-content-wrapper2 {
+        flex-direction: row;
+        gap: 86px;
+        text-align: center;
+        width: 85%;
+        flex: 0 0 70%;
+        padding: 15px 0px 5px 0px;
+        margin: auto;
+        }
+        .tab-content-wrapper2 > * {
+            padding: 0px;
+        }
+        .tab-content-wrapper2 h3 {
+            text-align: center;
+        }
+        .tab-content-wrapper2 #publicTextsDropdown,
+        .tab-content-wrapper2 .bulk-actions {
+            justify-content: center;
+        }
+        .tab-content-wrapper2 .nav-btn {
+            width: 100%;
+        }
+    }
+       /* BOTÓN 1: "Mi Biblioteca" */
+    .tab-header-container > .library-title-clickable {
+        width: 35%;
+        text-align: left;
+    }
+
+    
+/* Para tablets (ajuste intermedio) */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .tab-navigation.tab-nav-container {
+    padding: 11px 19px 0 19px;
+    flex-wrap: wrap;
+  }
+
+  .tab-btn {
+    padding: 0.6rem 1rem;
+    font-size: 14px;
+  }
+}
+
+/* Ocultar el bloque de "Palabras Guardadas" en dispositivos pequeños */
+@media (max-width: 768px) {
+  /* Ocultar el tercer stat-card (Palabras Guardadas) usando nth-child */
+  .stats-grid .stat-card:nth-child(3) {
+    display: none !important;
+  }
+
+  /* Alternativa: ocultar usando selector de atributo onclick */
+  .stats-grid .stat-card[onclick*="saved-words"] {
+    display: none !important;
+  }
+
+  /* Ajustar el grid para que siempre haya 2 bloques por fila */
+  .stats-grid {
+    justify-content: center;
+    gap: 12px 15px !important;
+  }
+
+  .stats-grid .stat-card {
+    /* width: calc(50% - 7.5px) !important; */
+    max-width: calc(50% - 7.5px) !important;
+    min-width: 0 !important;
+  }
+}
+/* Responsive */
+@media (max-width: 768px) {
+  .nav-container {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 0.5rem 0rem;
+    display: flex;
+    justify-content: space-evenly;
+    height: 70px;
+    align-items: center;
+    gap: 0%;
+  }
+
+  .nav-right {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    flex-direction: column;
+    padding: 1rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transform: translateY(-100%);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    z-index: 999;
+  }
+
+  #bulkForm{
+padding-top: 4%;
+  }
+
+ 
+  /* BOTÓN 2: "Textos públicos" */
+    .tab-header-container > .dropdown > #publicTextsBtn {
+        width: 100%;
+        text-align: right;
+                     padding: 3px;
+                     min-width:152px ;
+    }
+
+
+  .nav-right.active {
+    transform: translateY(0);
+    opacity: 1;
+    visibility: visible;
+    position: absolute;
+    top: 100%;
+    left: 0px;
+    right: 0px;
+    flex-direction: column;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 2px 8px;
+    z-index: 999;
+    display: flex;
+    background: white;
+    padding: 0rem 1rem;
+    transition: 0.3s;
+    gap: 0rem;
+   
+  }
+
+  .mobile-menu-toggle {
+    display: block;
+  }
+
+  .user-dropdown {
+    width: 100%;
+  }
+
+  /* Ocultar el botón principal del dropdown de usuario (saludo y flecha) cuando el menú está activo en móvil */
+  .user-dropdown.active .user-dropdown-btn .user-greeting,
+  .user-dropdown.active .user-dropdown-btn .dropdown-arrow {
+    display: none;
+  }
+
+  /* Ajustar el user-dropdown-menu para que esté oculto por defecto y se muestre con la clase 'active' */
+  .user-dropdown-menu {
+    display: none; /* Ocultar por defecto */
+    position: static; /* Mantener static para que no se superponga al contenido */
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px); /* Pequeña animación al aparecer */
+    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
+    margin-top: 0.5rem;
+    box-shadow: none;
+    border: 1px solid #e5e7eb;
+  }
+
+  /* Mostrar el menú desplegable cuando el user-dropdown tenga la clase 'active' */
+  .user-dropdown.active .user-dropdown-menu {
+   display: flex;
+        flex-direction: row-reverse;
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+        padding-left: 16%;
+  }
+  .logo-img {
+    width: 50px;
+        height: 50px;
+  }
+  .brand-text h1 {
+    font-size: 2rem;
+  }
+  .nav-left {
+    gap: 2rem;
+  }
+
+  .nav-btn.minimal,
+  .nav-right .nav-btn {
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: rgb(107, 114, 128);
+    cursor: pointer;
+    margin: 10px;
+    padding: 0.75rem 1.25rem;
+    transition: 0.2s;
+    border-radius: 4px;
+    border-style: solid;
+    border-color: #e5e7eb;
+  }
+  .nav-btn.minimal:hover,
+  .nav-right .nav-btn:hover,
+  .user-dropdown-btn:hover {
+    opacity: 1;
+    background: #3b82f6;
+    color: white;
+  }
+  #login-btn {
+    background: var(--accent-color);
+    color: #ffffff;
+  }
+  #login-btn:hover {
+    background: var(--secondary-color);
+    color: #ffffff;
+  }
+
+  #home-link {
+    display: none;
+  }
+  .auth-modal__panel {
+    max-width: 520px;
+  }
+  .auth-tabs {
+    margin-bottom: 2rem;
+  }
+  .auth-view input {
+    margin-bottom: 1.38rem;
+  }
+  .auth-tab {
+    font-size: 1rem;
+    font-weight: 600;
+  }
+  .auth-view label {
+    font-size: 1.35rem;
+  }
+
+  .auth-modal__app-name {
+    font-size: 2.7rem;
+    margin-bottom: 0.9rem;
+  }
+  .auth-modal__logo {
+    width: 65px;
+    height: 65px;
+  }
+  .auth-close {
+    width: 3rem;
+    height: 3rem;
+    top: 0rem;
+  }
+  .auth-close:hover {
+    background: #f3f4f6;
+    color: #457b9d;
+  }
+  .toggle-password {
+    top: 2.8rem;
+    min-height: 44px;
+    min-width: 44px;
+  }
+  .bulk-actions-container {
+    flex-direction: row;
+    align-items: center;
+  }
+  .titulos-lectura-contenedor {
+    display: none;
+  }
+  #pages-container {
+    max-width: 97%;
+    padding: 25px 12px 0px 12px;
+  }
+
+  .translation {
+    border-radius: 8px 0px 0px 8px;
+    line-height: 1.2;
+    font-size: 1.2rem;
+    min-height: 45px;
+  }
+  .paragraph {
+    font-size: 1.3rem;
+    background: linear-gradient(135deg, #eff6ff 0%, #dbeafea6 100%);
+    background: #faebd700;
+    padding: 0rem 8px 0rem;
+    margin: 0.25rem 0 0.75rem 0;
+    min-height: 30px;
+    font-weight: 400;
+    line-height: 1.5;
+    font-family: "Coming Soon", sans-serif;
+  }
+  .mobile-menu-toggle {
+    background: #f0ffff00;
+    border: 1px;
+    color: #ffffff;
+  }
+  .logo {
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    font-weight: 500;
+  }
+}
+
+@media (max-width: 768px) {
+    .text-item {
+        display: flex;
+        flex-wrap: wrap; /* Permite que los elementos se envuelvan a la siguiente línea */
+        align-items: center; /* Alinea verticalmente los elementos en la línea actual */
+        padding: 12px;
+    }
+
+    /* Contenedor para el icono y el checkbox en la primera columna de la primera fila */
+    .text-item > .text-icon {
+        order: 1; /* Icono primero */
+        font-size: 1.2em;
+        margin-right: 5px; /* Espacio entre icono y checkbox */
+    }
+
+    .text-item > .text-checkbox {
+        order: 2; /* Checkbox al lado del icono */
+        margin-right: 10px; /* Espacio después del checkbox */
+    }
+
+    /* Títulos en la segunda columna de la primera fila */
+    .text-item > .text-main-info {
+        order: 3; /* Títulos después del grupo icono/checkbox */
+        flex-basis: calc(100% - 60px); /* Ocupa el espacio restante en la primera fila (ajustar 60px según el ancho de icono+checkbox+margen) */
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column; /* Apila los títulos verticalmente */
+        align-items: flex-start;
+    }
+
+    .text-title {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        font-size: 1em;
+        padding-left: 5%;
+    }
+
+    .title-english {
+        font-size: 1.1em;
+        margin-bottom: 2px;
+    }
+
+    .title-spanish {
+        font-size: 1.1em;
+        margin-left: 0;
+    }
+
+    /* Segunda fila: contenedor de metadatos con 4 columnas */
+    .text-meta-container {
+        order: 4; /* Fuerza a la segunda fila */
+        flex-basis: 100%; /* Ocupa todo el ancho de la segunda fila */
+        display: grid;
+        grid-template-columns: repeat(4, 1fr); /* Cuatro columnas de igual ancho */
+        width: 100%;
+        justify-content: space-around;
+     
+        align-items: center;
+        font-size: 0.85em;
+        color: #64748b;
+        margin-top: 8px; /* Espacio entre la primera y segunda fila */
+    }
+
+    .meta-col {
+        padding: 0;
+        border-right: none;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        min-width: unset;
+        width: auto;
+    }
+
+    .meta-col:last-child {
+        padding-right: 0;
+    }
+
+    .reading-status-label {
+        font-size: 0.9em;
+    }
+
+    .status-public-tag {
+        font-size: 0.6em;
+        padding: 1px 4px;
+    }
+
+    .meta-public {
+        display: none; /* Oculta la etiqueta "Público" en la vista móvil si no es necesaria */
+    }
+    .user-dropdown-btn{
+      display: none;
+ }
+ .lload-texts-button{ 
+   display: block;
+        padding: 10px 55px;
+        background-color: var(--accent-hover);
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin: 13% auto 0px auto;
+        width: 100%;
+        justify-content: center;
+        margin: 4px 0;
+    
+}
+.lload-texts-button:hover {
+    background: var(--accent-hover);
+    box-shadow: var(--shadow-sm);
+}
+.mode-selector {
+    display: flex;
+    gap:12px;
+    margin-bottom: 20px;
+    flex-wrap: nowrap;
+    align-content: center;
+    justify-content: center;
+}
+
+.mode-btn {
+    padding: 8px 2px;
+    font-size: 14px;
+        max-width: 32%;
+            min-width: 50px;
+}
+#practice-container .tab-header-container {
+   padding: 3% 0px 25px 0px;
+    justify-content: center;
+    padding-left: 4%;
+}
+#pract{
+  font-size: 4rem; 
+  margin-bottom: 0px; 
+  opacity: 0.5;
+}
+#dos{
+  margin-bottom: 0%;
+}
+.upload-main-container{
+
+ 
+    margin: 0 auto;
+    box-sizing: border-box;
+    padding: 12px 0px;
+    background: #60a5fa0d;
+    border-radius: 0px;
+}
+
+.upload-main-container
+ {
+    display: flex;
+    flex-direction: row;
+    gap: 32px;
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    box-sizing: border-box;
+     padding: 0px;
+
+}
+
+#pract{
+  font-size: 4rem; 
+  margin-bottom: 10px; 
+  opacity: 0.5;
+}
+        
+}
+
+@media (max-width: 968px) {
+    .upload-main-container {
+        display: flex;
+        flex-direction: row;
+        gap: 32px;
+        width: 100%;
+        max-width: 1100px;
+        margin: 0 auto;
+        box-sizing: border-box;
+        padding: 0px;
+    }
+
+    #practice-container {
+     padding: 0%; 
+}
+
+}
+
+#palabrasm{
+  display: none;
+}
+
+@media (max-width: 768px) {
+
+#palabras{
+  display: none;
+}
+#palabrasm{
+  display: block;
+}
+}

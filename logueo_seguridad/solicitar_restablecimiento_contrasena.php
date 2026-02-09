@@ -20,7 +20,7 @@ try {
     }
 
     if ($conn->connect_error) {
-        echo json_encode(['success' => false, 'message' => 'Error de conexión a la base de datos. Por favor, inténtalo de nuevo más tarde.']);
+        echo json_encode(['success' => false, 'message' => 'Error de conexión a la db. Por favor, inténtalo de nuevo más tarde.']);
         exit;
     }
 
@@ -32,7 +32,7 @@ try {
         exit;
     }
 
-    // Verificar si el email existe en la base de datos
+    // Verificar si el email existe en la db
     $stmt = $conn->prepare("SELECT id, username, email FROM users WHERE LOWER(email) = LOWER(?)");
     if (!$stmt) {
         throw new Exception("Error en prepare: " . $conn->error);

@@ -6,7 +6,7 @@
 
 if (!function_exists('getSubscriptionData')) {
     /**
-     * Obtiene los datos básicos de suscripción de un usuario desde la base de datos.
+     * Obtiene los datos básicos de suscripción de un usuario desde la db.
      *
      * Recupera la fecha de registro, el tipo de usuario y la última conexión del usuario.
      *
@@ -121,7 +121,7 @@ if (!function_exists('initUserSubscription')) {
      * Inicializa la ficha de suscripción de un nuevo usuario.
      *
      * Esta función se puede llamar después de crear un nuevo usuario. Actualmente,
-     * la base de datos maneja los valores por defecto, pero esta función está
+     * la db maneja los valores por defecto, pero esta función está
      * preparada para futuras inicializaciones (ej. registros en `uso_traducciones` o emails de bienvenida).
      *
      * @param int $user_id El ID del nuevo usuario.
@@ -130,7 +130,7 @@ if (!function_exists('initUserSubscription')) {
     function initUserSubscription($user_id) {
         global $conn;
         
-        // Por ahora, la base de datos ya pone los valores por defecto (fecha_registro y tipo_usuario='EnPrueba').
+        // Por ahora, la db ya pone los valores por defecto (fecha_registro y tipo_usuario='EnPrueba').
         // Esta función queda preparada por si en el futuro queremos insertar un registro inicial 
         // en 'uso_traducciones' o enviar un email de bienvenida específico.
         

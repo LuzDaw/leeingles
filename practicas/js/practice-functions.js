@@ -31,7 +31,7 @@ window.practiceLastSaveTime = null;
 window.practiceUpdateInterval = null;
 
 /**
- * Guarda el tiempo de práctica acumulado en la base de datos.
+ * Guarda el tiempo de práctica acumulado en la db.
  *
  * Envía una petición AJAX a `practicas/save_practice_time.php`.
  *
@@ -1125,7 +1125,7 @@ function renderPracticeSentence(sentence, highlightWord) {
 }
 
 /**
- * Guarda el progreso de un ejercicio de práctica en la base de datos.
+ * Guarda el progreso de un ejercicio de práctica en la db.
  *
  * Envía el modo de práctica, el total de palabras, las respuestas correctas e incorrectas
  * a `practicas/save_practice_progress.php`.

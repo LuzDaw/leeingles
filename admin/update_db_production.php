@@ -1,6 +1,6 @@
 <?php
 /**
- * Script de emergencia para actualizar la base de datos en producción (InfinityFree)
+ * Script de emergencia para actualizar la db en producción (InfinityFree)
  * Añade el plan 'Basico' a los ENUMs de las tablas.
  */
 
@@ -16,7 +16,7 @@ if ($conn->connect_error) {
     die("❌ Error de conexión al servidor remoto: " . $conn->connect_error);
 }
 
-echo "<h2>Iniciando actualización de base de datos en producción...</h2>";
+echo "<h2>Iniciando actualización de db en producción...</h2>";
 
 // 1. Actualizar tabla users (columna tipo_usuario)
 $sql1 = "ALTER TABLE users MODIFY COLUMN tipo_usuario ENUM('EnPrueba', 'limitado', 'Inicio', 'Basico', 'Ahorro', 'Pro') DEFAULT 'EnPrueba'";

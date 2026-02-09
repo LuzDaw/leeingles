@@ -5,6 +5,7 @@
  */
 
 require_once __DIR__ . '/../actions/email_handler.php';
+require_once __DIR__ . '/../db/connection.php';
 
 // Paleta básica de colores para emails, alineada con css/color-theme.css
 $EMAIL_COLORS = [

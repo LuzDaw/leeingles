@@ -4,7 +4,7 @@
  */
 require_once '../db/connection.php';
 
-echo "<h2>Reparando índices de base de datos...</h2>";
+echo "<h2>Reparando índices de db...</h2>";
 
 // 1. Reparar tabla uso_traducciones
 echo "Paso 1: Actualizando tabla uso_traducciones...<br>";

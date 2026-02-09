@@ -95,7 +95,7 @@ try {
                 if ($response && empty($curl_error) && $http_code === 200) {
                     $translation_data = json_decode($response, true);
                     if (isset($translation_data['translation']) && !empty($translation_data['translation'])) {
-                        // Guardar la traducción en la base de datos
+                        // Guardar la traducción en la db
                         $update_stmt = $conn->prepare("UPDATE texts SET title_translation = ? WHERE id = ?");
                         $update_stmt->bind_param("si", $translation_data['translation'], $text_id);
                         $update_stmt->execute();

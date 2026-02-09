@@ -8,7 +8,7 @@ header('Content-Type: application/json');
 $response = ['success' => false, 'message' => ''];
 
 if ($conn->connect_error) {
-    $response['message'] = "Error de conexión a la base de datos: " . $conn->connect_error;
+    $response['message'] = "Error de conexión a la db: " . $conn->connect_error;
     echo json_encode($response);
     exit;
 }

@@ -2,7 +2,7 @@
 
 ## 📋 Resumen General
 
-El sistema de LeerEntender utiliza múltiples APIs para proporcionar funcionalidades de traducción y diccionario. El botón "Explica" muestra información detallada de palabras en tiempo real. Para reducir llamadas innecesarias a las APIs, la primera traducción obtenida se guarda en base de datos y se reutiliza en visitas posteriores.
+El sistema de LeerEntender utiliza múltiples APIs para proporcionar funcionalidades de traducción y diccionario. El botón "Explica" muestra información detallada de palabras en tiempo real. Para reducir llamadas innecesarias a las APIs, la primera traducción obtenida se guarda en db y se reutiliza en visitas posteriores.
 
 ## 🌐 APIs Utilizadas
 

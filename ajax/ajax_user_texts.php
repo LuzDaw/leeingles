@@ -50,7 +50,7 @@ try {
     );
     if (!$stmt) {
         error_log("ajax_user_texts.php - Error preparando statement: " . $conn->error);
-        echo json_encode(['success' => false, 'message' => 'Error de base de datos']);
+        echo json_encode(['success' => false, 'message' => 'Error de db']);
         exit();
     }
     $stmt->bind_param('ii', $user_id, $user_id);

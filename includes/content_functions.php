@@ -370,7 +370,7 @@ function render_text_clickable($text, $title = '', $title_translation = '')
  * estadísticas de progreso y categorías, dependiendo del estado de la sesión (invitado o logueado)
  * y los parámetros GET.
  *
- * @param mysqli $conn Objeto de conexión a la base de datos.
+ * @param mysqli $conn Objeto de conexión a la db.
  * @return array Un array asociativo con todos los datos necesarios para renderizar la página de inicio.
  */
 function get_index_page_data($conn) {
