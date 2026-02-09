@@ -320,7 +320,7 @@ function render_text_clickable($text, $title = '', $title_translation = '')
     if (empty($p_text)) continue;
 
     $words = preg_split('/(\s+)/', $p_text, -1, PREG_SPLIT_DELIM_CAPTURE);
-    $output .= '<div class="paragraph-wrapper">';
+    $output .= '<div class="paragraph-wrapper" >';
     $output .= '<p class="paragraph">';
     foreach ($words as $word) {
       if (trim($word) === '') {
@@ -341,7 +341,9 @@ function render_text_clickable($text, $title = '', $title_translation = '')
   <button id="prev-page" class="pagination-btn" disabled>◀</button>
   <div class="center-controls">
       <div class="font-size-container">
-          <button id="font-size-btn" class="pagination-btn" title="Tamaño de fuente">🅰️</button>
+          <button id="font-size-btn" class="pagination-btn" title="Tamaño de fuente" data-listener-toggle="true" style="
+    font-size: medium;
+">🅰️</button>
           <div id="font-size-selector" class="speed-selector-popup" style="display: none;">
               <div class="speed-selector-inner">
                   <span id="font-size-value">100%</span>
@@ -350,9 +352,12 @@ function render_text_clickable($text, $title = '', $title_translation = '')
               </div>
           </div>
       </div>
-      <button onclick="window.toggleFloatingPlayPause()" id="floating-btn" class="play-btn" title="Iniciar lectura">▶️</button>
+      
+          <button id="speed-btn" class="pagination-btn" title="Velocidad" data-listener-toggle="true" style="
+    padding-bottom: 12px !important;
+">🐢</button>
+          <button onclick="window.toggleFloatingPlayPause()" id="floating-btn" class="play-btn" title="Iniciar lectura">▶️</button>
       <div class="speed-container">
-          <button id="speed-btn" class="pagination-btn" title="Velocidad">🐢</button>
           <div id="speed-selector" class="speed-selector-popup" style="display: none;">
               <div class="speed-selector-inner">
                   <span id="rate-value">100%</span>

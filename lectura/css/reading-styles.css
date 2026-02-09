@@ -124,11 +124,6 @@
     break-inside: avoid;
 }
 
-:root {
-    --base-reading-font-size: 1.3rem;
-    --base-translation-font-size: 1.2rem;
-}
-
 .paragraph {
    background: linear-gradient(135deg, #EFF6FF 0%, #dbeafea6 100%);
    border-left: 4px solid #457b9d00;
@@ -146,9 +141,9 @@
     font-weight: 500;
     color: #c6791e;
 }
-.paragraph-wrapper{
-    font-size: 1.2rem;
-}
+/* .paragraph-wrapper{
+    font-size: 1.2rem !important;;
+} */
 
 .currently-reading {
     background-color: #f0f9ff !important;
@@ -165,7 +160,7 @@ position: fixed;
     text-align: center;
     justify-content: space-between;
     align-items: center;
-    gap: 28px;
+    gap: 0px;
     background: none;
     z-index: 1000;
     border: none;
@@ -175,12 +170,12 @@ position: fixed;
 }
 
  .center-controls {
-     display: flex;
-     justify-content: center;
-     align-items: center;
-     gap: 15px; /* Increased gap for better spacing */
-     flex: 1;
- }
+       display: flex;
+    justify-content: space-between;
+      display: flex;
+    justify-content: center;
+    align-items: flex-end;
+}
 
  .speed-container, .font-size-container {
     position: relative;

@@ -94,14 +94,14 @@ label {
 .flex-1 { flex: 1; }
 
 .fs-0-9 { font-size: 0.9em; }
-.fs-1-1 { font-size: 1.1rem; }
+/* .fs-1-1 { font-size: 1.1rem; } */
 .fs-3rem { font-size: 3rem; }
 
 .color-gray { color: var(--text-muted); }
 .color-dark-gray { color: #374151; }
 .color-blue { color: var(--secondary-color); }
 .color-orange { color: var(--accent-color); }
-.color-green { color: #16a34a; }
+.color-green { color: #e6a50c; }
 .color-red { color: var(--error-color); }
 .color-white { color: #ffffff; }
 

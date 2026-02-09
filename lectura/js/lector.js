@@ -198,10 +198,11 @@ function initLector() {
             const initialValue = parseFloat(fontSizeInput.value);
             const percentageDisplay = Math.round(initialValue * 100);
             fontSizeValue.textContent = percentageDisplay + '%';
-            document.documentElement.style.setProperty('--base-reading-font-size', `${initialValue}rem`);
-            document.documentElement.style.setProperty('--base-translation-font-size', `${initialValue * 0.9}rem`); // Ajustar traducción proporcionalmente
+            document.querySelectorAll('.paragraph-wrapper').forEach(wrapper => {
+                wrapper.style.fontSize = `${initialValue}rem`;
+            });
 
-            if (!fontSizeInput.hasAttribute('data-listener')) {
+            if (!fontSizeInput.hasAttribute('data-listener')) { // Keep this check for the slider itself
                 fontSizeInput.addEventListener('mousedown', (e) => {
                     fontSizeInput.setAttribute('data-dragging', 'true');
                     handleSliderMouseMove(e, fontSizeInput, fontSizeValue, (value) => Math.round(value * 100));
@@ -222,8 +223,9 @@ function initLector() {
                     const value = parseFloat(e.target.value);
                     const percentageDisplay = Math.round(value * 100);
                     fontSizeValue.textContent = percentageDisplay + '%';
-                    document.documentElement.style.setProperty('--base-reading-font-size', `${value}rem`);
-                    document.documentElement.style.setProperty('--base-translation-font-size', `${value * 0.9}rem`); // Ajustar traducción proporcionalmente
+                    document.querySelectorAll('.paragraph-wrapper').forEach(wrapper => {
+                        wrapper.style.fontSize = `${value}rem`;
+                    });
                     // No repaginar aquí para evitar jankiness, solo al soltar el mouse
                 });
                 
@@ -233,25 +235,38 @@ function initLector() {
             // Control de visibilidad del selector de tamaño de fuente
             const fontSizeBtn = document.getElementById('font-size-btn');
             const fontSizeSelector = document.getElementById('font-size-selector');
-            if (fontSizeBtn && fontSizeSelector && !fontSizeBtn.hasAttribute('data-listener-toggle')) {
-                fontSizeBtn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    const isVisible = fontSizeSelector.style.display === 'block';
-                    fontSizeSelector.style.display = isVisible ? 'none' : 'block';
-                    // Ensure speed selector is closed when font size selector opens
-                    const speedSelector = document.getElementById('speed-selector');
-                    if (speedSelector) speedSelector.style.display = 'none';
-                });
-                
-                // Cerrar al hacer clic fuera
-                document.addEventListener('click', (e) => {
-                    if (!fontSizeSelector.contains(e.target) && e.target !== fontSizeBtn) {
-                        fontSizeSelector.style.display = 'none';
-                    }
-                });
-                
-                fontSizeBtn.setAttribute('data-listener-toggle', 'true');
+
+            if (fontSizeBtn && fontSizeSelector) { // Ensure elements exist
+                // Remove existing listener to prevent duplicates if this function is called multiple times
+                fontSizeBtn.removeEventListener('click', handleFontSizeBtnClick);
+                document.removeEventListener('click', handleDocumentClickForFontSize);
+
+                fontSizeBtn.addEventListener('click', handleFontSizeBtnClick);
+                document.addEventListener('click', handleDocumentClickForFontSize);
+            } else {
+                console.warn('initializeFontSizeControl: font-size-btn or font-size-selector not found.');
             }
+        }
+    }
+
+    // Define the event handlers outside to allow removal
+    function handleFontSizeBtnClick(e) {
+        e.stopPropagation();
+        const fontSizeSelector = document.getElementById('font-size-selector');
+        if (fontSizeSelector) {
+            const isVisible = fontSizeSelector.style.display === 'block';
+            fontSizeSelector.style.display = isVisible ? 'none' : 'block';
+            // Ensure speed selector is closed when font size selector opens
+            const speedSelector = document.getElementById('speed-selector');
+            if (speedSelector) speedSelector.style.display = 'none';
+        }
+    }
+
+    function handleDocumentClickForFontSize(e) {
+        const fontSizeBtn = document.getElementById('font-size-btn');
+        const fontSizeSelector = document.getElementById('font-size-selector');
+        if (fontSizeBtn && fontSizeSelector && !fontSizeSelector.contains(e.target) && e.target !== fontSizeBtn) {
+            fontSizeSelector.style.display = 'none';
         }
     }
             /**
@@ -285,8 +300,9 @@ function initLector() {
                 valueDisplay.textContent = displayFormatter(roundedValue) + '%';
 
                 if (sliderInput.id === 'font-size') {
-                    document.documentElement.style.setProperty('--base-reading-font-size', `${roundedValue}rem`);
-                    document.documentElement.style.setProperty('--base-translation-font-size', `${roundedValue * 0.9}rem`);
+                    document.querySelectorAll('.paragraph-wrapper').forEach(wrapper => {
+                        wrapper.style.fontSize = `${roundedValue}rem`;
+                    });
                 }
             }
 
@@ -377,24 +393,15 @@ function initLector() {
         // Control de visibilidad del selector de velocidad
         const speedBtn = document.getElementById('speed-btn');
         const speedSelector = document.getElementById('speed-selector');
-        if (speedBtn && speedSelector && !speedBtn.hasAttribute('data-listener-toggle')) {
-            speedBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                const isVisible = speedSelector.style.display === 'block';
-                speedSelector.style.display = isVisible ? 'none' : 'block';
-                // Ensure font size selector is closed when speed selector opens
-                const fontSizeSelector = document.getElementById('font-size-selector');
-                if (fontSizeSelector) fontSizeSelector.style.display = 'none';
-            });
-            
-            // Cerrar al hacer clic fuera
-            document.addEventListener('click', (e) => {
-                if (!speedSelector.contains(e.target) && e.target !== speedBtn) {
-                    speedSelector.style.display = 'none';
-                }
-            });
-            
-            speedBtn.setAttribute('data-listener-toggle', 'true');
+        if (speedBtn && speedSelector) {
+            // Remove existing listener to prevent duplicates if this function is called multiple times
+            speedBtn.removeEventListener('click', handleSpeedBtnClick);
+            document.removeEventListener('click', handleDocumentClickForSpeed);
+
+            speedBtn.addEventListener('click', handleSpeedBtnClick);
+            document.addEventListener('click', handleDocumentClickForSpeed);
+        } else {
+            console.warn('initializePaginationControls: speed-btn or speed-selector not found.');
         }
 
         if (prevBtn && !prevBtn.hasAttribute('data-listener')) {
@@ -1679,7 +1686,28 @@ function initLector() {
     updatePageDisplay();
 }
 
-window.initLector = initLector;
+    window.initLector = initLector;
+
+    // Define the event handlers for speed control outside to allow removal
+    function handleSpeedBtnClick(e) {
+        e.stopPropagation();
+        const speedSelector = document.getElementById('speed-selector');
+        if (speedSelector) {
+            const isVisible = speedSelector.style.display === 'block';
+            speedSelector.style.display = isVisible ? 'none' : 'block';
+            // Ensure font size selector is closed when speed selector opens
+            const fontSizeSelector = document.getElementById('font-size-selector');
+            if (fontSizeSelector) fontSizeSelector.style.display = 'none';
+        }
+    }
+
+    function handleDocumentClickForSpeed(e) {
+        const speedBtn = document.getElementById('speed-btn');
+        const speedSelector = document.getElementById('speed-selector');
+        if (speedBtn && speedSelector && !speedSelector.contains(e.target) && e.target !== speedBtn) {
+            speedSelector.style.display = 'none';
+        }
+    }
 
 // Función para hablar una palabra individual, reutilizando configureEnglishVoice
 window.speakWord = function(wordText) {

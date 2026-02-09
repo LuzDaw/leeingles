@@ -42,7 +42,7 @@ button, .submenu-button {
 /* Menú flotante optimizado para móvil */
 #floating-menu {
     bottom: var(--spacing-xl);
-        right: 20px;
+        right: 32px;
         position: fixed
 }
 

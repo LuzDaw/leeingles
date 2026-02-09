@@ -387,17 +387,14 @@ padding-top: 4%;
   .translation {
     border-radius: 8px 0px 0px 8px;
     line-height: 1.2;
-    font-size: 1.2rem;
     min-height: 45px;
   }
   .paragraph {
-    font-size: 1.3rem;
     background: linear-gradient(135deg, #eff6ff 0%, #dbeafea6 100%);
     background: #faebd700;
     padding: 0rem 8px 0rem;
     margin: 0.25rem 0 0.75rem 0;
     min-height: 30px;
-    font-weight: 400;
     line-height: 1.5;
     font-family: "Coming Soon", sans-serif;
   }
@@ -584,6 +581,10 @@ padding-top: 4%;
   font-size: 4rem; 
   margin-bottom: 10px; 
   opacity: 0.5;
+}
+#pagination-controls {
+   
+    padding: 0px 1%;
 }
         
 }
