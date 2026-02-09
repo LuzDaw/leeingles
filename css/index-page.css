@@ -94,7 +94,7 @@ label {
 .flex-1 { flex: 1; }
 
 .fs-0-9 { font-size: 0.9em; }
-/* .fs-1-1 { font-size: 1.1rem; } */
+ .fs-1-1 { font-size: 1.1rem; } 
 .fs-3rem { font-size: 3rem; }
 
 .color-gray { color: var(--text-muted); }

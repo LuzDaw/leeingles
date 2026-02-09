@@ -87,7 +87,8 @@
   align-items: center;
 }
 #bulkForm{
-    background: #60a5fa1c;
+        background: #60a5fa1c;
+    padding: 2%;
 }
 
 .bulk-actions-container {
@@ -425,7 +426,7 @@
 }
 .user-dashboard .status-public {
   background-color: #dcfce7;
-  color: #166534;
+  color: #bda116;
   border: 1px solid #bbf7d0;
 }
 .user-dashboard .status-private {

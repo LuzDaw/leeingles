@@ -316,6 +316,14 @@
     cursor: pointer;
     transition: all 0.2s ease;
 }
+.text-item > * { flex: 0 0 auto; }
+
+.text-checkbox { flex-basis: 5%; }
+.text-icon { flex-basis: 5%; }
+.text-main-info { flex-basis: 45%; }
+.text-meta-container { flex-basis: 45%; }
+
+
 
 .text-item:last-child {
     border-bottom: none;

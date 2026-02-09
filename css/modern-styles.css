@@ -346,7 +346,7 @@
 
 .word-text {
   grid-area: word-area; /* Posicionar en la segunda columna */
-  font-size: 1rem;
+  font-size: 1.1rem;
   font-weight: 500;
   color: #1f2937;
 }

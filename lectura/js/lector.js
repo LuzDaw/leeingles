@@ -3,6 +3,7 @@ let rateInput = null;
 let rateValue = null;
 let fontSizeInput = null;
 let fontSizeValue = null;
+const FONT_SIZE_BASE_PERCENTAGE_REM = 1.1; // Define 1.1rem as the new 100% for display purposes
 
 /**
  * Inicializa el lector de texto, configurando variables globales,
@@ -195,8 +196,9 @@ function initLector() {
      */
     function initializeFontSizeControl() {
         if (fontSizeInput && fontSizeValue) {
+            fontSizeInput.value = FONT_SIZE_BASE_PERCENTAGE_REM.toString(); // Establecer el valor por defecto a 1.1
             const initialValue = parseFloat(fontSizeInput.value);
-            const percentageDisplay = Math.round(initialValue * 100);
+            const percentageDisplay = Math.round((initialValue / FONT_SIZE_BASE_PERCENTAGE_REM) * 100); // Calcular el porcentaje basado en 1.1rem como 100%
             fontSizeValue.textContent = percentageDisplay + '%';
             document.querySelectorAll('.paragraph-wrapper').forEach(wrapper => {
                 wrapper.style.fontSize = `${initialValue}rem`;
@@ -205,12 +207,12 @@ function initLector() {
             if (!fontSizeInput.hasAttribute('data-listener')) { // Keep this check for the slider itself
                 fontSizeInput.addEventListener('mousedown', (e) => {
                     fontSizeInput.setAttribute('data-dragging', 'true');
-                    handleSliderMouseMove(e, fontSizeInput, fontSizeValue, (value) => Math.round(value * 100));
+                    handleSliderMouseMove(e, fontSizeInput, fontSizeValue, (value) => Math.round((value / FONT_SIZE_BASE_PERCENTAGE_REM) * 100));
                 });
                 
                 fontSizeInput.addEventListener('mousemove', (e) => {
                     if (fontSizeInput.hasAttribute('data-dragging')) {
-                        handleSliderMouseMove(e, fontSizeInput, fontSizeValue, (value) => Math.round(value * 100));
+                        handleSliderMouseMove(e, fontSizeInput, fontSizeValue, (value) => Math.round((value / FONT_SIZE_BASE_PERCENTAGE_REM) * 100));
                     }
                 });
                 
@@ -221,7 +223,7 @@ function initLector() {
                 
                 fontSizeInput.addEventListener('input', (e) => {
                     const value = parseFloat(e.target.value);
-                    const percentageDisplay = Math.round(value * 100);
+                    const percentageDisplay = Math.round((value / FONT_SIZE_BASE_PERCENTAGE_REM) * 100); // Calcular el porcentaje basado en 1.1rem como 100%
                     fontSizeValue.textContent = percentageDisplay + '%';
                     document.querySelectorAll('.paragraph-wrapper').forEach(wrapper => {
                         wrapper.style.fontSize = `${value}rem`;

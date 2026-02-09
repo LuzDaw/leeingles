@@ -354,11 +354,11 @@ function render_text_clickable($text, $title = '', $title_translation = '')
       </div>
       
           <button id="speed-btn" class="pagination-btn" title="Velocidad" data-listener-toggle="true" style="
-    padding-bottom: 12px !important;
+    padding-bottom: 4px !important;
 ">🐢</button>
-          <button onclick="window.toggleFloatingPlayPause()" id="floating-btn" class="play-btn" title="Iniciar lectura">▶️</button>
+         
       <div class="speed-container">
-          <div id="speed-selector" class="speed-selector-popup" style="display: none;">
+         <div id="speed-selector" class="speed-selector-popup" style="display: none; margin-bottom: 35px;">
               <div class="speed-selector-inner">
                   <span id="rate-value">100%</span>
                   <input type="range" id="rate" min="0.5" max="0.9" value="0.9" step="0.1" />
@@ -367,6 +367,7 @@ function render_text_clickable($text, $title = '', $title_translation = '')
           </div>
       </div>
   </div>
+   <button onclick="window.toggleFloatingPlayPause()" id="floating-btn" class="play-btn" title="Iniciar lectura">▶️</button>
   <span class="page-info"><span id="page-number">1</span>/<span id="total-pages">1</span></span>
   <button id="next-page" class="pagination-btn">▶</button>
   </div>';

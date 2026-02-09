@@ -117,9 +117,11 @@ function renderTextItem($row, $user_id, $is_public_list = false) {
     $link_param = $is_public_list ? "public_text_id" : "text_id";
     ?>
     <li class="text-item">
+
+    
         <input type="checkbox" class="text-checkbox" name="selected_texts[]" value="<?= $row['id'] ?>" onchange="updateBulkActions()">
         <span class="text-icon">📄</span>
-        
+   
         <div class="text-main-info">
             <a href="?<?= $link_param ?>=<?= $row['id'] ?>" class="text-title">
                 <span class="title-english"><?= htmlspecialchars($row['title'] ?? 'Sin título') ?></span>
@@ -131,23 +133,27 @@ function renderTextItem($row, $user_id, $is_public_list = false) {
 
         <div class="text-meta-container">
             <div class="meta-col meta-words"><?= $num_words ?> palabras</div>
+            <div class="meta-col1 meta-words1"><?= $num_words ?> Pal.</div>
             <div class="meta-col meta-status">
                 <?php if ($read_count > 0): ?>
                     <div style="display: flex; flex-direction: column; align-items: center;">
                         <span class="reading-status-label">Leído <?= $read_count ?> <?= $read_count == 1 ? 'vez' : 'veces' ?></span>
                         <?php if ($last_read_date): ?>
-                            <span style="font-size: 1em; color: #94a3b8; margin-top: 2px;"><?= date('d/m/Y', strtotime($last_read_date)) ?></span>
+                            <span id="fecha" style="font-size: 1em; color: #94a3b8; margin-top: 2px;"><?= date('d/m/Y', strtotime($last_read_date)) ?></span>
                         <?php endif; ?>
                     </div>
                 <?php else: ?>
                     <span style="color: #cbd5e1;">-</span>
                 <?php endif; ?>
             </div>
+             <div class="meta-col meta-status1">
+            <span class="reading-status-label">Subido</span>
             <div class="meta-col meta-date"><?= $formatted_date ?></div>
             <div class="meta-col meta-public">
                 <?php if (isset($row['is_public']) && $row['is_public']): ?>
                     <span class="status-public-tag">Público</span>
                 <?php endif; ?>
+            </div>
             </div>
         </div>
     </li>
@@ -192,10 +198,15 @@ $total_found = count($own_texts) + count($public_read_rows);
 ?>
 
 <style>
-    .text-meta-container { display: flex; align-items: center; color: #64748b; font-size: 0.92em; white-space: nowrap; flex-shrink: 0; }
+    .text-meta-container { display: flex;
+    align-items: center;
+    color: #64748b;
+    font-size: 0.92em;
+    flex-shrink: 0;
+    justify-content: space-around; }
     .meta-col { padding: 0 15px; border-right: 1px solid #f1f5f9; text-align: center; }
     .meta-col:last-child { border-right: none; padding-right: 0; }
-    .meta-words { width: 100px; text-align: right; }
+    .meta-words { width: 60px; text-align: right; }
     .meta-status { width: 130px; }
     .meta-date { width: 100px; color: #94a3b8; }
     .meta-public { width: 70px; text-align: right; }
@@ -207,9 +218,6 @@ $total_found = count($own_texts) + count($public_read_rows);
         transition: all 0.2s ease;
         user-select: none;
         display: inline-flex;
-        align-items: center;
-        padding: 5px 10px;
-        margin: -5px -10px;
         border-radius: 8px;
     }
     .library-title-clickable:hover {
