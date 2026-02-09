@@ -47,22 +47,32 @@ function initLector() {
         const controlsHeight = controlsElement ? controlsElement.offsetHeight : 0;
         const rect = element.getBoundingClientRect();
 
-        // Check if the element is out of view at the bottom, considering controls
-        if (rect.bottom > window.innerHeight - controlsHeight) {
-            // Scroll to bring the bottom of the element into view, just above the controls
-            // Use 'auto' for instant scroll
-            element.scrollIntoView({ behavior: 'auto', block: 'end' });
+        const desiredPaddingBottom = 80; // Margen deseado desde la parte inferior (controles)
+        const desiredPaddingTop = 70;    // Margen deseado desde la parte superior (encabezado)
 
-            // Additional adjustment if the element's bottom is still covered by controls
-            const newRect = element.getBoundingClientRect();
-            if (newRect.bottom > window.innerHeight - controlsHeight) {
-                window.scrollBy(0, newRect.bottom - (window.innerHeight - controlsHeight) + 5); // Add a small padding
-            }
+        // Calcular el límite inferior efectivo para la visibilidad
+        const effectiveBottom = window.innerHeight - controlsHeight - desiredPaddingBottom;
+
+        // Calcular el límite superior efectivo para la visibilidad
+        const effectiveTop = headerHeight + desiredPaddingTop;
+
+        // Verificar si el elemento está fuera de la vista por abajo
+        if (rect.bottom > effectiveBottom) {
+            // Calcular cuánto hay que desplazar hacia arriba
+            const scrollAmount = rect.bottom - effectiveBottom;
+            window.scrollBy({
+                top: scrollAmount,
+                behavior: 'auto' // Desplazamiento instantáneo
+            });
         }
-        // Also check if the element is out of view at the top, considering header
-        else if (rect.top < headerHeight) {
-            element.scrollIntoView({ behavior: 'auto', block: 'start' });
-            window.scrollBy(0, -headerHeight);
+        // Verificar si el elemento está fuera de la vista por arriba
+        else if (rect.top < effectiveTop) {
+            // Calcular cuánto hay que desplazar hacia abajo
+            const scrollAmount = rect.top - effectiveTop;
+            window.scrollBy({
+                top: scrollAmount,
+                behavior: 'auto' // Desplazamiento instantáneo
+            });
         }
     }
 
