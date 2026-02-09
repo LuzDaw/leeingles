@@ -89,7 +89,6 @@ button, .submenu-button {
     }
     
     .paragraph {
-        font-size: var(--font-lg);
               padding: 5px 0px 0px 8px;
     }
 }

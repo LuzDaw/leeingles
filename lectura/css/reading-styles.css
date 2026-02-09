@@ -130,7 +130,6 @@
 }
 
 .paragraph {
-   font-size: var(--base-reading-font-size);
    background: linear-gradient(135deg, #EFF6FF 0%, #dbeafea6 100%);
    border-left: 4px solid #457b9d00;
     padding: 0rem 8px 0rem;
@@ -139,7 +138,6 @@
 }
 
 .translation {
-    font-size: var(--base-translation-font-size);
     border-left: 1px solid #ff8a00;
     padding: 0rem 8px 0rem;
     margin: 0.25rem 0 0.75rem 0;
@@ -147,6 +145,9 @@
     min-height: 30px;
     font-weight: 500;
     color: #c6791e;
+}
+.paragraph-wrapper{
+    font-size: 1.2rem;
 }
 
 .currently-reading {
