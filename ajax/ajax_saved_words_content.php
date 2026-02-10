@@ -103,7 +103,7 @@ foreach ($words as $word) {
     justify-content: flex-start;
     align-items: center;
     padding-left: 3%;
-    padding-top: 3%;
+    padding-top: 0%;
 ">
         <h3>📚 Mis Palabras</h3>
     </div>
@@ -165,6 +165,9 @@ foreach ($words as $word) {
                     <input type="checkbox" class="text-checkbox" onclick="toggleGroup(this, 'group-<?= md5($text_title) ?>')">
                     <span class="text-title" style="font-size:1.1rem; font-weight:600; color:#1B263B;">
                         <?= htmlspecialchars($text_title) ?>
+                        <?php if (!empty($words[0]['title_translation'])): ?>
+                            <span style="font-size:0.9em; color:#ff8a00; font-weight:400; margin-left:8px;"> - <?= htmlspecialchars($words[0]['title_translation']) ?></span>
+                        <?php endif; ?>
                         <span style="font-size:0.9em; color:#64748b; font-weight:400; margin-left:8px;">(<?= count($words) ?>)</span>
                     </span>
                 </div>

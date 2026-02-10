@@ -16,14 +16,17 @@
 
   /* Botón hamburguesa para abrir/cerrar el menú (creado por JavaScript) */
    .tab-navigation.tab-nav-container .mobile-tab-menu-toggle {
-      font-size: 0;
+             font-size: 0;
         border: none;
         position: relative;
         width: 100%;
-        border-radius: 1px 0px 16px 16px;
-                border-bottom: 4px solid #ff8a00;
+        border-radius: 1px 0px 16px 0px;
+        border-bottom: 4px solid #ff8a00;
         border-top: 4px solid #ff8a00;
-        background:#2f4a6f ;
+        background: #2f4a6f;
+        margin: 0px;
+        min-height: 30px;
+        min-width: 25px;
     
     }
 
@@ -137,7 +140,7 @@
         .tab-content-wrapper2 h3 {
             text-align: center;
         }
-        .tab-content-wrapper2 #publicTextsDropdown,
+        .tab-content-wrapper2
         .tab-content-wrapper2 .bulk-actions {
             justify-content: center;
         }
@@ -153,11 +156,12 @@
 
     
 /* Para tablets (ajuste intermedio) */
-@media (min-width: 768px) and (max-width: 1024px) {
+@media (min-width: 768px) {
   .tab-navigation.tab-nav-container {
     padding: 11px 19px 0 19px;
     flex-wrap: wrap;
   }
+ 
 
   .tab-btn {
     padding: 0.6rem 1rem;
@@ -229,6 +233,11 @@ padding-top: 4%;
         text-align: right;
                      padding: 3px;
                      min-width: 135px;
+                      margin-right: 20px;
+    }
+    .tab-header-container {
+    gap: 24%  !important;
+    width: 100%;
     }
 
 
@@ -547,6 +556,9 @@ padding-top: 4%;
         max-width: 32%;
             min-width: 50px;
 }
+  
+           
+  
 #practice-container .tab-header-container {
    padding: 3% 0px 25px 0px;
     justify-content: center;

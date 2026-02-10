@@ -126,7 +126,7 @@ function renderTextItem($row, $user_id, $is_public_list = false) {
             <a href="?<?= $link_param ?>=<?= $row['id'] ?>" class="text-title">
                 <span class="title-english"><?= htmlspecialchars($row['title'] ?? 'Sin título') ?></span>
                 <?php if (!empty($row['title_translation'])): ?>
-                    <span class="title-spanish"> <?= htmlspecialchars($row['title_translation']) ?></span>
+                    <span class="title-spanish"> - <?= htmlspecialchars($row['title_translation']) ?></span>
                 <?php endif; ?>
             </a>
         </div>
@@ -249,7 +249,7 @@ $total_found = count($own_texts) + count($public_read_rows);
     }
     .tab-header-container #publicTextsDropdown {
         display: flex;
-        justify-content: center;
+        
     }
     .tab-header-container .bulk-actions {
         display: flex;
