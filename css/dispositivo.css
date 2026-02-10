@@ -376,13 +376,22 @@ padding-top: 4%;
     flex-direction: row;
     align-items: center;
   }
-  .titulos-lectura-contenedor {
+  .progreso-lectura {
     display: none;
   }
   #pages-container {
     max-width: 97%;
     padding: 25px 12px 0px 12px;
   }
+  .titulos-lectura-contenedor
+ {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: baseline;
+    gap: 4px;
+    /* overflow: hidden; */
+}
 
   .translation {
     border-radius: 8px 0px 0px 8px;
@@ -586,6 +595,11 @@ padding-top: 4%;
    
     padding: 0px 1%;
 }
+#submenu {
+    min-width: 320px;
+    max-width: 90vw;
+        font-size: 18px
+}
         
 }
 
@@ -605,7 +619,7 @@ padding-top: 4%;
      padding: 0%; 
 }
 
-}
+
 
 #palabrasm{
   display: none;
@@ -653,6 +667,7 @@ padding-top: 4%;
   #fecha{display: none;}
 
  }
- 
+}
 
 
+   

@@ -60,7 +60,7 @@ button, .submenu-button {
 
 /* Submenu responsive */
 #submenu {
-    min-width: 220px;
+    min-width: 320px;
     max-width: 90vw;
 }
 

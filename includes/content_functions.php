@@ -291,10 +291,13 @@ function render_text_clickable($text, $title = '', $title_translation = '')
                 <span class="porcentaje" aria-live="polite">0%</span>
             </div>
             <div class="menu-herramientas-contenedor">
-                <button onclick="window.toggleFloatingMenu(); event.stopPropagation();" id="menu-btn" title="Herramientas de lectura">🛠️</button>
-                <div id="submenu">
+             <button onclick="window.toggleFloatingMenu(); event.stopPropagation();" id="menu-btn" title="Herramientas de lectura" style="
+    background: #ff8a00;
+    font-size: 24px;
+">⚙</button>
+                <div id="submenu" style=" background: white;">
                     <div class="submenu-item">
-                        <button onclick="showAllTranslations()" id="show-all-translations-btn" class="submenu-button">📖 Mostrar todas las traducciones</button>
+                        <button onclick="showAllTranslations()" id="show-all-translations-btn" class="submenu-button">📖 Mostrar las traducciones</button>
                     </div>
                     <div class="submenu-item">
                         <button onclick="toggleTranslations()" id="toggle-translations-btn" class="submenu-button translations">👁️ Ocultar Traducciones</button>

@@ -31,17 +31,27 @@
     margin-bottom: 10px;
 }
 
-#submenu .submenu-button.fullscreen { background: var(--success-color); color: #ffffff; }
-#submenu .submenu-button.print { background: var(--success-light); color: var(--text-color); }
-#submenu .submenu-button.repeat { background: rgba(255, 165, 0, 0.8); color: var(--text-color); }
+
 
 #submenu .submenu-button {
+       min-height: 100%;
+    min-width: 100%;
+    display: block;
     width: 100%;
-    padding: 8px;
-    border: none;
-    border-radius: 5px;
+    font-weight: 500;
+    color: var(--text-muted);
     cursor: pointer;
-    font-size: 14px;
+    text-align: left;
+    font-size: 16px;
+    background: var(--success-light);
+    padding: 0.75rem 1.25rem;
+    transition: 0.2s;
+    border-radius: 4px;
+    border-width: initial !important;
+    border-style: none !important;
+    border-color: initial !important;
+    border-image: initial !important;
+    margin: auto;
 }
 
 #menu-btn {
@@ -116,32 +126,8 @@
     pointer-events: none;
 }
 
-.submenu-button.translations {
-    background: var(--secondary-color);
-    color: #ffffff;
-}
 
-.submenu-button.fullscreen {
-    background: #06B6D4;
-    color: #ffffff;
-}
 
-.submenu-button.print {
-    background: #8B5CF6;
-    color: #ffffff;
-}
-
-.submenu-button.repeat, .submenu-button.double-read {
-    background: #F59E0B;
-    color: #ffffff;
-    transition: all 0.3s ease;
-}
-
-.submenu-button.double-read.active {
-    background: #ce7221; /* Verde para indicar que está activo */
-    box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
-    transform: translateY(1px);
-}
 
 
 /* Estado para ocultar traducciones */
