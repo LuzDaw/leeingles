@@ -287,7 +287,7 @@
 .card-header {
     padding: var(--spacing-md);
     border-bottom: 1px solid var(--border-light, #f1f5f9);
-    background: var(--background-color);
+  
 }
 
 .card-body {
@@ -367,19 +367,21 @@
 }
 
 /* === HEADER COMÚN === */
-
-.tab-header-container {
-   display: flex;
-    justify-content: normal;
+.tab-header-container{
+    display: flex;
+    justify-content: flex-start;
     align-items: center;
-    padding: 4px 12px 22px 55px;
+    padding-left: 3%;
+    padding-top: 3%;
 }
+
 
 .tab-header-container h3 {
     margin: 0;
+      padding: 9px 9px 0px 9px;
 }
 #practice-container{
-        padding: 3%;
+        padding: 1%;
 }
 
 /* Controles de header */

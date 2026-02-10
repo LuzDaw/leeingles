@@ -26,27 +26,27 @@
 
 /* Layout principal de la pestaña de subir texto */
 .upload-main-container {
-    display: flex;
+   display: flex;
     flex-direction: row;
     gap: 32px;
     width: 100%;
     max-width: 1100px;
     margin: 0 auto;
     box-sizing: border-box;
-        padding: 10px 30px;
-    background: #60a5fa0d;
+    background: #60a5fa1c;
+    padding: 2%;
 }
 
 /* Columna izquierda: formulario (50%) */
 .upload-form-container {
-    width: 50%;
-    background: var(--background-color); /* Fondo suave */
-    padding: 0px 28px;
-    border-radius: 10px;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
-    display: flex;
+   width: 50%;
+    background: var(--background-color);
+    padding: 20px 28px;
     flex-direction: column;
     justify-content: flex-start;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    
 }
 
 /* Columna derecha: publicidad (50%) */

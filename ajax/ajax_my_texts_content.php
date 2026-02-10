@@ -230,14 +230,19 @@ $total_found = count($own_texts) + count($public_read_rows);
 
     /* Ajustes para el encabezado con 3 elementos */
     .tab-header-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 32%;
+            display: flex;
+    justify-content: space-around;
+    align-items: center;
+    gap: 32%;
+    padding-top: 3%;
+    flex-direction: row;
     }
     /* .tab-header-container > * {
         flex: 1;
     } */
+        #palabrasm{
+  display: none;
+}
     .tab-header-container h3 {
         text-align: left;
         white-space: nowrap;
@@ -276,8 +281,11 @@ $total_found = count($own_texts) + count($public_read_rows);
     </div>
     <div id="dos">
     <div class="bulk-actions-container">
-        <div style="color: #64748b; font-weight: 500;">
-            <span style="color: #3b82f6; font-weight: 600;"><?php echo $total_found ?></span> textos encontrados
+        <div id="palabra" style="color: #64748b; font-weight: 500;">
+            <span style="color: #3b82f6; font-weight: 600;"><?php echo $total_found ?></span> Textos encontrados
+        </div>
+        <div id="palabra1" style="color: #64748b; font-weight: 500;">
+            <span style="color: #3b82f6; font-weight: 600;"><?php echo $total_found ?></span> Textos
         </div>
          <!-- Derecha: Acciones en lote -->
         <div class="bulk-actions" style="display: flex; gap: 12px; align-items: center;">

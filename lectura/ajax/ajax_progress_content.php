@@ -131,15 +131,27 @@ if (isset($_GET['text_id']) || isset($_POST['text_id'])) {
 
 <div class="tab-content-wrapper">
     <div class="tab-header-container">
-        <h3 id="progreso">📊 Mi Progreso</h3>
+        <div class="tab-header-container" style="
+    padding-top: 0%;
+">
+        <h3 id="progreso" style="
+    padding: 0px 6px 15px 25px;
+">📊 Mi Progreso</h3>
+    </div>
     </div>
     <!-- Grid de Estadísticas Principales -->
+ <div class="stats-grid1" style="
+    background: #60a5fa1c;
+    padding: 2%;
+">
     <div class="stats-grid">
+       
         <div class="stat-card clickable-stat" onclick="switchToTab('texts')" title="Ver mis textos">
             <div class="stat-icon">📄</div>
             <div class="stat-number"><?= $total_texts ?></div>
             <div class="stat-label">Textos Subidos</div>
         </div>
+      
         
         <div class="stat-card">
             <div class="stat-icon">✅</div>
@@ -214,7 +226,7 @@ if (isset($_GET['text_id']) || isset($_POST['text_id'])) {
             </div>
         </div>
     </div>
-
+</div>
     <script>
     /**
      * Carga las estadísticas detalladas de práctica

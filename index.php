@@ -91,7 +91,7 @@ extract(get_index_page_data($conn));
           </div>
         <?php else: ?>
           <a href="#caracteristicas" class="nav-btn">📚 Características</a>
-          <button onclick="showUploadFormWithLogin()" class="nav-btn primary">⬆ Subir texto</button>
+          <button onclick="showUploadFormWithLogin()" class="nav-btn primary"> Subir texto</button>
           <button id="login-btn" class="nav-btn">Cuenta</button>
         <?php endif; ?>
       </div>

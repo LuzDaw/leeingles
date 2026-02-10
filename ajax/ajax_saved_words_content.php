@@ -98,7 +98,13 @@ foreach ($words as $word) {
 ?>
 
 <div class="tab-content-wrapper">
-    <div class="tab-header-container">
+    <div class="tab-header-container" style="
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding-left: 3%;
+    padding-top: 3%;
+">
         <h3>📚 Mis Palabras</h3>
     </div>
     <div class="bulk-actions-container">
@@ -155,8 +161,7 @@ foreach ($words as $word) {
         <?php foreach ($words_by_text as $text_title => $words): ?>
             <div class="card" style="margin-bottom: 30px;">
                 
-            <div class="card-header" style="display:flex;align-items:center;gap:10px;background: #ff8a008f;    padding: 1% 3%;
-    margin-bottom: 3%;">
+            <div class="card-header" style="display:flex;align-items:center;gap:2px;background: var(--success-light); padding: 1% 0%;margin-bottom: 1%;">
                     <input type="checkbox" class="text-checkbox" onclick="toggleGroup(this, 'group-<?= md5($text_title) ?>')">
                     <span class="text-title" style="font-size:1.1rem; font-weight:600; color:#1B263B;">
                         <?= htmlspecialchars($text_title) ?>

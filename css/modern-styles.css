@@ -69,9 +69,6 @@
 
 
 /* Tarjetas modernas (Estilos base en common-styles.css) */
-.card-header {
-    background: linear-gradient(135deg, #ff8a009e 0%, #ff8a00d6 100%);
-}
 
 /* Texto del lector */
 
@@ -80,7 +77,13 @@
     margin-bottom: 2rem;
     min-height: 50vh;
 }
-
+#palabrasm{
+  display: none;
+}
+#words-list-form{
+    background: #ffffff1c;
+    padding: 2%;
+}
 
 #pagination-controls button {
     background: var(--primary-color);
@@ -308,24 +311,24 @@
 
 /* Listas de texto (Estilos base en common-styles.css) */
 .text-list1 {
-  display: flex;
-  flex-wrap: wrap;
+  /* display: flex; */
+  /* flex-wrap: wrap; */
   padding: 0; /* Eliminar el padding predeterminado de ul */
   list-style: none; /* Eliminar los puntos de lista predeterminados de ul */
-    justify-content: center;
+    /* justify-content: center; */
 }
 
 .text-item2 {
   flex: 0 0 24%; /* Cada elemento ocupa el 25% del ancho para 4 columnas */
   box-sizing: border-box; /* Incluir padding y borde en el ancho y alto total del elemento */
-  padding: 10px 3px; /* Añadir algo de padding alrededor de cada tarjeta de palabra */
+  padding: 3px 2px; /* Añadir algo de padding alrededor de cada tarjeta de palabra */
   margin-bottom: 10px; /* Espacio entre filas */
 }
 
 .word-card {
   display: grid;
   /* Checkbox, Palabra, Traducción, Icono */
-  grid-template-rows: auto; /* Una sola fila */
+  grid-template-columns: 10% 40% 40% 10%; /* Una sola fila */
   grid-template-areas: "checkbox-area word-area translation-area icon-area";
   background: #f9fafb; /* Fondo claro para cada tarjeta de palabra */
   border: 1px solid #e5e7eb; /* Borde sutil */
@@ -335,6 +338,7 @@
   align-items: center; /* Centrar verticalmente los elementos en sus celdas */
   gap: 0px; /* Espacio entre columnas */
 }
+
 
 .text-checkbox {
   grid-area: checkbox-area; /* Posicionar en la primera columna */

@@ -68,9 +68,14 @@
 
 /* Contenido de pestañas sin márgenes externos */
 .tab-content-wrapper {
-  padding: 20px 26px;
   position: relative;
   overflow: visible;
+}
+ #palabra1{
+    display: none;
+   }
+   #dos{
+  margin: 0% 5%;
 }
 
 /* Estilos para elementos internos más limpios */
@@ -100,6 +105,7 @@
   align-items: center;
   position: relative;
   overflow: visible;
+      margin: 0% 5%;
 }
 
 /* Listas y tarjetas (Estilos base en common-styles.css) */
@@ -175,13 +181,11 @@
   
   
   #tab-content {
-    margin: 0 16px 16px 16px;
+    
     border-radius: 0 8px 8px 8px;
   }
   
-  .tab-content-wrapper {
-    padding: 0px 0px;
-  }
+  
   
   .stats-container {
     flex-direction: column;
