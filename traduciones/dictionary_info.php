@@ -10,18 +10,17 @@ header('Content-Type: application/json; charset=utf-8');
 
 // Aceptar solo 'word' como parámetro
 $word = $_POST['word'] ?? null;
-
 if (!$word) {
     echo json_encode(['error' => 'No se proporcionó ninguna palabra']);
     exit();
 }
-
-// Limpiar palabra
 $word = trim($word);
 if ($word === '') {
     echo json_encode(['error' => 'Palabra vacía']);
     exit();
 }
+
+require_once __DIR__ . '/../includes/dictionary_service.php';
 
 // Función para obtener información de Free Dictionary API
 /**
@@ -221,20 +220,16 @@ $source = 'Free Dictionary API';
 if ($dictionaryData !== false) {
     $result = processFreeDictionaryData($dictionaryData);
 } else {
-    // Si Free Dictionary falla, intentar con WordsAPI
     $dictionaryData = getWordsAPIInfo($word);
     if ($dictionaryData !== false) {
         $result = processWordsAPIData($dictionaryData);
         $source = 'WordsAPI';
     } else {
-        // Si ambas fallan, devolver error
         echo json_encode(['error' => 'No se pudo obtener información de diccionario']);
         exit();
     }
 }
 
-// Añadir información de la fuente
 $result['source'] = $source;
-
 echo json_encode($result);
 ?>

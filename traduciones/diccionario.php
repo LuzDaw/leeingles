@@ -5,8 +5,9 @@
 // Obtiene información real: definición, categoría, ejemplos, sinónimos, antónimos, pronunciación
 
 // Claves API de Merriam-Webster
-$claveDiccionario = '7ef8642e-2065-40f6-b130-cdd73f703124';
-$claveTesauro = '54c025db-bc08-45cc-b120-c388644d418c';
+// Leer claves desde entorno si están disponibles
+$claveDiccionario = getenv('MW_DICT_KEY') ? getenv('MW_DICT_KEY') : '7ef8642e-2065-40f6-b130-cdd73f703124';
+$claveTesauro = getenv('MW_THESAURUS_KEY') ? getenv('MW_THESAURUS_KEY') : '54c025db-bc08-45cc-b120-c388644d418c';
 
 /**
  * Obtiene información detallada de una palabra utilizando las APIs de Merriam-Webster (Diccionario y Tesauro).
@@ -21,30 +22,7 @@ $claveTesauro = '54c025db-bc08-45cc-b120-c388644d418c';
 function obtenerInfoPalabra($palabra) {
     global $claveDiccionario, $claveTesauro;
     
-    // Función para limpiar ejemplos de Merriam-Webster
-    /**
-     * Limpia el texto de ejemplos de Merriam-Webster, eliminando etiquetas específicas de la API.
-     *
-     * @param string $texto El texto del ejemplo a limpiar.
-     * @return string El texto del ejemplo limpio.
-     */
-    function limpiarEjemploMerriamWebster($texto) {
-        // Eliminar etiquetas específicas de Merriam-Webster
-        $texto = preg_replace('/\{wi\}(.*?)\{\/wi\}/', '$1', $texto); // Palabras importantes
-        $texto = preg_replace('/\{it\}(.*?)\{\/it\}/', '$1', $texto); // Texto en cursiva
-        $texto = preg_replace('/\{b\}(.*?)\{\/b\}/', '$1', $texto);   // Texto en negrita
-        $texto = preg_replace('/\{sup\}(.*?)\{\/sup\}/', '$1', $texto); // Superíndice
-        $texto = preg_replace('/\{inf\}(.*?)\{\/inf\}/', '$1', $texto); // Subíndice
-        $texto = preg_replace('/\{dx\}(.*?)\{\/dx\}/', '$1', $texto);   // Definición extendida
-        $texto = preg_replace('/\{dxt\}(.*?)\{\/dxt\}/', '$1', $texto); // Texto de definición
-        $texto = preg_replace('/\{ma\}(.*?)\{\/ma\}/', '$1', $texto);   // Meta información
-        
-        // Limpiar espacios extra y caracteres especiales
-        $texto = trim($texto);
-        $texto = preg_replace('/\s+/', ' ', $texto); // Múltiples espacios a uno solo
-        
-        return $texto;
-    }
+    require_once __DIR__ . '/../includes/dictionary_service.php';
     
 
     
