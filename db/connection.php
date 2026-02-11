@@ -2,7 +2,7 @@
 $host = "localhost:3306";
 $user = "root";        // Cambia si tienes otro usuario
 $password = "";        // Cambia si tienes contraseña
-$database = "leeingles";
+$database = "traductor_app";
 $conn = new mysqli($host, $user, $password, $database);
 
 if ($conn->connect_error) {

@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once '../db/connection.php';
+require_once __DIR__ . '/../includes/config.php';
 require_once 'auth_functions.php'; // Para funciones como hashPassword
 
 $message = '';
@@ -129,7 +130,7 @@ $conn->close();
     <?php endif; ?>
 
     <?php if ($show_form && $token_valid): ?>
-    <form id="reset-password-form" action="/logueo_seguridad/restablecer_contrasena.php" method="POST">
+    <form id="reset-password-form" action="<?php echo htmlspecialchars(url('/logueo_seguridad/restablecer_contrasena.php')); ?>" method="POST">
     <input type="hidden" name="token" value="<?php echo htmlspecialchars($token); ?>">
     <div class="form-group">
     <label for="new_password">Nueva Contraseña:</label>
@@ -150,7 +151,7 @@ $conn->close();
     <?php endif; ?>
     </div>
     
-    <script src="/logueo_seguridad/password_visibility.js"></script>
+    <script src="<?php echo htmlspecialchars(asset('logueo_seguridad/password_visibility.js')); ?>"></script>
 <script>
     (function() {
         // Función para inicializar el formulario (se ejecuta inmediatamente al inyectarse)

@@ -25,16 +25,16 @@ function sendEmail($toEmail, $toName, $subject, $body) {
     try {
         $mail = new PHPMailer(true);
         
-        // Configuración SMTP para leeingles.com con TLS
+        // Configuración SMTP (leer de entorno si está disponible, fallback a valores actuales)
         $mail->isSMTP();
-        $mail->Host = 'leeingles.com';
-        $mail->Port = 465;  // Puerto SSL según los datos proporcionados
+        $mail->Host = getenv('SMTP_HOST') ? getenv('SMTP_HOST') : 'leeingles.com';
+        $mail->Port = getenv('SMTP_PORT') ? (int)getenv('SMTP_PORT') : 465;
         $mail->SMTPAuth = true;
-        $mail->Username = 'info@leeingles.com';
-        $mail->Password = 'Holamundo25__';
-        $mail->SMTPSecure = 'ssl';  // Usar SSL según los datos proporcionados
+        $mail->Username = getenv('SMTP_USER') ? getenv('SMTP_USER') : 'info@leeingles.com';
+        $mail->Password = getenv('SMTP_PASS') ? getenv('SMTP_PASS') : 'Holamundo25__';
+        $mail->SMTPSecure = getenv('SMTP_SECURE') ? getenv('SMTP_SECURE') : 'ssl';
         $mail->CharSet = 'UTF-8';
-        $mail->Timeout = 10;  // Timeout de 10 segundos
+        $mail->Timeout = getenv('SMTP_TIMEOUT') ? (int)getenv('SMTP_TIMEOUT') : 10;  // Timeout en segundos
 
         // Opciones SSL/TLS
         $mail->SMTPOptions = array(
@@ -46,7 +46,9 @@ function sendEmail($toEmail, $toName, $subject, $body) {
         );
 
         // Configurar remitente y destinatario
-        $mail->setFrom('info@leeingles.com', 'Leer Inglés');
+        $fromEmail = getenv('SMTP_FROM_EMAIL') ? getenv('SMTP_FROM_EMAIL') : 'info@leeingles.com';
+        $fromName = getenv('SMTP_FROM_NAME') ? getenv('SMTP_FROM_NAME') : 'Leer Inglés';
+        $mail->setFrom($fromEmail, $fromName);
         $mail->addAddress($toEmail, $toName);
         
         // Contenido del email

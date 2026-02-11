@@ -2,11 +2,14 @@
 // logueo_seguridad/utilidades_email.php
 // Utilidades para envío de emails
 
+
+// Cargar configuración central para BASE_URL
+require_once __DIR__ . '/../includes/config.php';
 require_once __DIR__ . '/../recordatorio/email_templates.php';
 require_once __DIR__ . '/../db/connection.php';
 
-// Determinar la URL base (se usa para generar links en los emails)
-$base_url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://" . $_SERVER['HTTP_HOST'];
+// Usar BASE_URL desde includes/config.php
+$base_url = defined('BASE_URL') ? BASE_URL : ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://" . $_SERVER['HTTP_HOST']);
 
 /**
  * Envía un correo electrónico utilizando la función `sendEmail` del gestor de emails.

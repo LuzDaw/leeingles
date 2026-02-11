@@ -414,7 +414,7 @@ function makeWordsClickable(text, highlightWord = null) {
  * @param {string} [wordTranslation] - La traducción de la palabra clave dentro de la oración (opcional).
  */
 function translatePracticeSentence(originalSentence, wordTranslation) {
-    fetch('/traduciones/translate.php', {
+    fetch(window.APP.BASE_URL + '/traduciones/translate.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: 'word=' + encodeURIComponent(originalSentence)

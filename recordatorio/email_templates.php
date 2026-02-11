@@ -4,6 +4,8 @@
  * Sistema de plantillas de email reutilizables para LeeIngles
  */
 
+// Cargar configuración global y dependencias
+require_once __DIR__ . '/../includes/config.php';
 require_once __DIR__ . '/../actions/email_handler.php';
 require_once __DIR__ . '/../db/connection.php';
 
@@ -35,8 +37,12 @@ $EMAIL_COLORS = [
  * @param string $botonUrl (Opcional) La URL a la que dirigirá el botón de acción. Por defecto es 'https://leeingles.com'.
  * @return array El resultado del envío del correo, devuelto por `sendEmail`.
  */
-function enviarEmailPlantillaBase($destinatarioEmail, $destinatarioNombre, $subject, $titulo, $mensaje, $botonTexto = 'Ir a la App', $botonUrl = 'https://leeingles.com') {
+function enviarEmailPlantillaBase($destinatarioEmail, $destinatarioNombre, $subject, $titulo, $mensaje, $botonTexto = 'Ir a la App', $botonUrl = null) {
     global $EMAIL_COLORS;
+
+    if (empty($botonUrl)) {
+        $botonUrl = defined('BASE_URL') ? BASE_URL : 'https://leeingles.com';
+    }
 
     $body = "
 <html>
@@ -99,7 +105,7 @@ function enviarRecordatorioInactividad($email, $nombre) {
     $mensaje = "Hemos notado que llevas unos días sin entrar a la aplicación. <br><br>
                 Recuerda que la constancia es la clave para dominar un nuevo idioma. Tenemos nuevos textos esperándote para que sigas mejorando tu vocabulario.";
     $botonTexto = "Continuar aprendiendo";
-    $botonUrl = "https://leeingles.com/";
+    $botonUrl = defined('BASE_URL') ? BASE_URL . '/' : 'https://leeingles.com/';
 
     return enviarEmailPlantillaBase($email, $nombre, $asunto, $titulo, $mensaje, $botonTexto, $botonUrl);
 }

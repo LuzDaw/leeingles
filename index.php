@@ -1,5 +1,6 @@
 <?php
 session_start();
+require_once 'includes/config.php';
 require_once 'db/connection.php';
 require_once 'includes/content_functions.php';
 
@@ -42,6 +43,9 @@ extract(get_index_page_data($conn));
   <link rel="icon" href="img/aprender_ingles.gif" type="image/gif">
   <link href="https://fonts.googleapis.com/css2?family=Gruppo&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <?php // Inyectar configuración de rutas para JS (window.APP) ?>
+    <?php inject_app_config_js(); ?>
 
     <!-- Sistema de voz ResponsiveVoice unificado -->
     <script>

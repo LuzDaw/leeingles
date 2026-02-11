@@ -770,7 +770,7 @@ $stmt->close();
             confirmBtn.disabled = true;
             confirmBtn.textContent = 'Eliminando...';
 
-            fetch('/logueo_seguridad/ajax_delete_account.php', {
+            fetch(window.APP.BASE_URL + '/logueo_seguridad/ajax_delete_account.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
