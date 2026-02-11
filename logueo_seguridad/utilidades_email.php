@@ -7,6 +7,7 @@
 require_once __DIR__ . '/../includes/config.php';
 require_once __DIR__ . '/../recordatorio/email_templates.php';
 require_once __DIR__ . '/../db/connection.php';
+require_once __DIR__ . '/../includes/email_service.php';
 
 // Usar BASE_URL desde includes/config.php
 $base_url = defined('BASE_URL') ? BASE_URL : ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://" . $_SERVER['HTTP_HOST']);
