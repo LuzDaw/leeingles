@@ -36,7 +36,7 @@ extract(get_index_page_data($conn));
   <link rel="stylesheet" href="css/index-page.css">
   <link rel="stylesheet" href="css/calendar-styles.css">
   <link rel="stylesheet" href="css/dispositivo.css">
-  <link rel="stylesheet" href="logueo_seguridad\cuenta\cuenta.css"
+  <link rel="stylesheet" href="<?php echo htmlspecialchars(asset('logueo_seguridad/cuenta/cuenta.css')); ?>">
   
 
   <!-- Favicon -->
@@ -87,7 +87,7 @@ extract(get_index_page_data($conn));
                 <span class="dropdown-icon">👤</span>
                 Mi cuenta
               </a>
-              <a href="/logueo_seguridad/logout.php" class="dropdown-item">
+              <a href="<?php echo htmlspecialchars(url('/logueo_seguridad/logout.php')); ?>" class="dropdown-item">
                 <span class="dropdown-icon">🚪</span>
                 Cerrar sesión
               </a>
