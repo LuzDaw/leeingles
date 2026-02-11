@@ -2,6 +2,8 @@
 // includes/dictionary_service.php
 // Servicio centralizado para búsquedas de diccionario y procesamiento de resultados
 
+require_once __DIR__ . '/cache.php';
+
 /**
  * Limpia el texto de ejemplos de Merriam-Webster u otras APIs.
  */
@@ -100,4 +102,36 @@ function processWordsAPIData($data) {
         if (isset($firstResult['antonyms'])) $result['antonyms'] = array_slice($firstResult['antonyms'], 0, 5);
     }
     return $result;
+}
+
+/**
+ * Obtiene información del diccionario combinando fuentes y usando caché.
+ * Devuelve array procesado o false si no se encuentra.
+ */
+function getDictionaryInfo($word) {
+    $key = 'dict_' . md5(strtolower(trim($word)));
+    $cached = cache_get($key);
+    if ($cached !== null) {
+        return $cached;
+    }
+
+    // Intentar Free Dictionary API
+    $free = getFreeDictionaryInfo($word);
+    if ($free !== false) {
+        $proc = processFreeDictionaryData($free);
+        $proc['source'] = 'Free Dictionary API';
+        try { cache_set($key, $proc, 604800); } catch (Exception $e) {}
+        return $proc;
+    }
+
+    // Intentar WordsAPI
+    $words = getWordsAPIInfo($word);
+    if ($words !== false) {
+        $proc = processWordsAPIData($words);
+        $proc['source'] = 'WordsAPI';
+        try { cache_set($key, $proc, 604800); } catch (Exception $e) {}
+        return $proc;
+    }
+
+    return false;
 }

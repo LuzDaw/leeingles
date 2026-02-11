@@ -1,4 +1,27 @@
 <?php
+/**
+ * Helpers para respuestas AJAX estandarizadas.
+ */
+function ajax_error($message = 'Error del servidor', $code = 500, $details = null) {
+    if ($details) {
+        error_log('[leeingles][ajax_error] ' . $details);
+    }
+    http_response_code($code);
+    header('Content-Type: application/json');
+    echo json_encode(['success' => false, 'message' => $message]);
+    exit;
+}
+
+function ajax_success($data = [], $code = 200) {
+    http_response_code($code);
+    header('Content-Type: application/json');
+    $payload = array_merge(['success' => true], $data ?: []);
+    echo json_encode($payload);
+    exit;
+}
+
+?>
+<?php
 // includes/ajax_helpers.php
 // Helpers reutilizables para endpoints AJAX
 

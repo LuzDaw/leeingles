@@ -203,10 +203,11 @@ foreach ($words as $word) {
 </style>
 
 <?php
-$stmt->close();
-$conn->close();
-?>
-<?php
-$stmt->close();
-$conn->close();
+// Cerrar recursos de forma segura: comprobar existencia y tipo antes de cerrar.
+if (isset($stmt) && $stmt instanceof mysqli_stmt) {
+    @ $stmt->close();
+}
+if (isset($conn) && $conn instanceof mysqli) {
+    @ $conn->close();
+}
 ?>

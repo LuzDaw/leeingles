@@ -23,9 +23,13 @@ function obtenerInfoPalabra($palabra) {
     global $claveDiccionario, $claveTesauro;
     
     require_once __DIR__ . '/../includes/dictionary_service.php';
-    
+    require_once __DIR__ . '/../includes/cache.php';
 
-    
+    $cacheKey = 'merriam_' . md5(strtolower(trim($palabra)));
+    $cached = cache_get($cacheKey);
+    if ($cached !== null) {
+        return $cached;
+    }
     $resultado = [
         'categoria'     => '',
         'definicion'    => '',
@@ -140,6 +144,7 @@ function obtenerInfoPalabra($palabra) {
         $resultado['categoria'] = 'N/A';
     }
     
+    try { cache_set($cacheKey, $resultado, 604800); } catch (Exception $e) {}
     return $resultado;
 }
 

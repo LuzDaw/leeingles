@@ -117,6 +117,10 @@ window.HTTPUtils = {
      * @returns {Promise} Promise con la respuesta
      */
     post: async function(url, data, options = {}) {
+        const base = (window.APP && window.APP.BASE_URL) ? window.APP.BASE_URL : '';
+        const normalizedBase = base.replace(/\/$/, '');
+        const normalizedPath = url.replace(/^\/+/, '');
+        const fullUrl = normalizedBase ? (normalizedBase + '/' + normalizedPath) : normalizedPath;
         const config = {
             method: 'POST',
             headers: {
@@ -137,7 +141,7 @@ window.HTTPUtils = {
         }
         
         try {
-            const response = await fetch(url, config);
+            const response = await fetch(fullUrl, config);
             return await response.json();
         } catch (error) {
             throw error;
@@ -151,8 +155,12 @@ window.HTTPUtils = {
      * @returns {Promise} Promise con la respuesta
      */
     get: async function(url, options = {}) {
+        const base = (window.APP && window.APP.BASE_URL) ? window.APP.BASE_URL : '';
+        const normalizedBase = base.replace(/\/$/, '');
+        const normalizedPath = url.replace(/^\/+/, '');
+        const fullUrl = normalizedBase ? (normalizedBase + '/' + normalizedPath) : normalizedPath;
         try {
-            const response = await fetch(url, {
+            const response = await fetch(fullUrl, {
                 method: 'GET',
                 ...options
             });
@@ -169,13 +177,30 @@ window.HTTPUtils = {
      * @returns {Promise} Promise con la respuesta
      */
     postFormData: async function(url, formData) {
+        const base = (window.APP && window.APP.BASE_URL) ? window.APP.BASE_URL : '';
+        const normalizedBase = base.replace(/\/$/, '');
+        const normalizedPath = url.replace(/^\/+/, '');
+        const fullUrl = normalizedBase ? (normalizedBase + '/' + normalizedPath) : normalizedPath;
         try {
-            const response = await fetch(url, {
+            console.debug('[HTTPUtils.postFormData] Requesting', { url, fullUrl });
+            const response = await fetch(fullUrl, {
                 method: 'POST',
                 body: formData
             });
-            return await response.json();
+
+            if (!response.ok) {
+                const text = await response.text();
+                console.error('[HTTPUtils.postFormData] HTTP error', response.status, text);
+                const err = new Error('HTTP error ' + response.status);
+                err.status = response.status;
+                err.body = text;
+                throw err;
+            }
+
+            const json = await response.json();
+            return json;
         } catch (error) {
+            console.error('[HTTPUtils.postFormData] Exception', error);
             throw error;
         }
     }

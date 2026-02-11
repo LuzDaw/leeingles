@@ -3,15 +3,17 @@ require_once __DIR__ . '/../db/connection.php';
 require_once __DIR__ . '/auth_functions.php';
 session_start();
 
+require_once __DIR__ . '/../includes/ajax_helpers.php';
+
+// Si hay un error de conexión a la base de datos, devolver JSON estandarizado.
+if (!empty($GLOBALS['db_connection_error'])) {
+    error_log('[leeingles] ajax_login detected DB connection error: ' . $GLOBALS['db_connection_error']);
+    ajax_error('Error del servidor. Intenta más tarde.', 500, $GLOBALS['db_connection_error']);
+}
+
 header('Content-Type: application/json');
 
 $response = ['success' => false, 'message' => ''];
-
-if ($conn->connect_error) {
-    $response['message'] = "Error de conexión a la db: " . $conn->connect_error;
-    echo json_encode($response);
-    exit;
-}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = trim($_POST['email'] ?? '');

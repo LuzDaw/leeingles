@@ -994,6 +994,27 @@ function handlePracticeWordClick(event) {
 }
 
 /**
+ * Traduce una palabra y muestra el tooltip correspondiente.
+ * Implementación ligera que reutiliza `TranslationUtils.translate` cuando está disponible.
+ * @param {HTMLElement} element
+ * @param {string} word
+ */
+async function translateAndShowTooltip(element, word) {
+    try {
+        const translator = (window.TranslationUtils && typeof window.TranslationUtils.translate === 'function') ? window.TranslationUtils.translate : null;
+        const translation = translator ? await translator(word, 'en', 'es') : word;
+        if (typeof showPracticeTooltip === 'function') {
+            showPracticeTooltip(element, word, translation || word);
+        } else {
+            console.warn('[translateAndShowTooltip] showPracticeTooltip no definida');
+        }
+    } catch (err) {
+        console.error('[translateAndShowTooltip] error', err);
+        try { showPracticeTooltip(element, word, word); } catch(e) {}
+    }
+}
+
+/**
  * Muestra un tooltip con la traducción de una palabra en el contexto de la práctica.
  *
  * @param {HTMLElement} element - El elemento DOM de la palabra.

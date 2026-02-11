@@ -3,6 +3,8 @@
  * Similar a Readlang - permite seleccionar múltiples palabras para traducir
  */
 
+const MW_API_BASE = (typeof API_BASE !== 'undefined') ? API_BASE : ((window.APP && window.APP.BASE_URL) ? window.APP.BASE_URL : '');
+
 /**
  * @file Implementa un sistema de selección múltiple de palabras para traducción.
  * @class MultiWordSelector
@@ -387,12 +389,17 @@ class MultiWordSelector {
         this.showTooltip(text, 'Traduciendo...', true);
         
         // Hacer petición de traducción
-        fetch('traduciones/translate.php', {
+        fetch(MW_API_BASE + 'traduciones/translate.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             body: 'text=' + encodeURIComponent(text)
         })
-        .then(res => res.json())
+        .then(res => {
+            if (!res.ok) return res.text().then(t => { throw new Error('HTTP ' + res.status + ': ' + t); });
+            const ct = res.headers.get('content-type') || '';
+            if (!ct.includes('application/json')) return res.text().then(t => { throw new Error('Non-JSON response: ' + t); });
+            return res.json();
+        })
         .then(data => {
             if (data.translation) {
                 this.showTooltip(text, data.translation, false);
@@ -407,6 +414,7 @@ class MultiWordSelector {
             }
         })
         .catch((error) => {
+            console.error('[multi-word translate] response error', error);
             this.showTooltip(text, 'Error en la traducción', false);
         });
     }

@@ -1,6 +1,8 @@
 /**
  * Funciones auxiliares para index.php
  */
+ 
+const API_BASE = (window.APP && window.APP.BASE_URL) ? (window.APP.BASE_URL.replace(/\/+$/,'') + '/') : '';
 
 // Crear tooltip flotante para traducciones
 window.createTooltip = function() {
@@ -115,7 +117,7 @@ window.printFullTextWithTranslations = async function() {
                 printContent += `<p style="margin-bottom: 5px; font-size: 16px; font-weight: normal;">${text}</p>`;
 
                 try {
-                    const response = await fetch('traduciones/translate.php', {
+                    const response = await fetch(API_BASE + 'traduciones/translate.php', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/x-www-form-urlencoded'
@@ -191,7 +193,7 @@ window.translateAllContextsForSavedWords = async function() {
         
         if (context && translationDiv && translationDiv.classList.contains('context-translation') && !translationDiv.textContent) {
             try {
-                const response = await fetch('traduciones/translate.php', {
+                const response = await fetch(API_BASE + 'traduciones/translate.php', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                     body: 'text=' + encodeURIComponent(context) + '&target_lang=es'

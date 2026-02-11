@@ -37,6 +37,8 @@ function initLector() {
         try { if (window.eSpeakAPI && window.eSpeakAPI.cancel) window.eSpeakAPI.cancel(); } catch (e) {}
     }
 
+    const API_BASE = (window.APP && window.APP.BASE_URL) ? (window.APP.BASE_URL.replace(/\/+$/,'') + '/') : '';
+
     /**
      * Scrolls the given element into view if it's out of bounds,
      * considering fixed header and pagination controls.
@@ -94,7 +96,7 @@ function initLector() {
                      document.querySelector('#pages-container')?.getAttribute('data-text-id');
         
         if (textId && duration > 0) {
-            fetch('lectura/ajax/save_reading_time.php', {
+            fetch(API_BASE + 'lectura/ajax/save_reading_time.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                 body: 'duration=' + duration + '&text_id=' + textId
@@ -948,7 +950,7 @@ function initLector() {
         const timeoutId = setTimeout(() => controller.abort(), 10000);
         const isActiveReading = window.autoReading ? '1' : '0';
         
-        fetch('traduciones/translate.php', {
+        fetch(API_BASE + 'traduciones/translate.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             body: 'word=' + encodeURIComponent(text) + '&active_reading=' + isActiveReading,
@@ -956,6 +958,9 @@ function initLector() {
         })
         .then(res => {
             clearTimeout(timeoutId);
+            if (!res.ok) return res.text().then(t => { throw new Error('HTTP ' + res.status + ': ' + t); });
+            const ct = res.headers.get('content-type') || '';
+            if (!ct.includes('application/json')) return res.text().then(t => { throw new Error('Non-JSON response: ' + t); });
             return res.json();
         })
         .then(translationData => {
@@ -976,12 +981,13 @@ function initLector() {
                     formData.append('text_id', textId);
                     formData.append('content', text);
                     formData.append('translation', translationData.translation);
-                    fetch('lectura/ajax/save_content_translation.php', { method: 'POST', body: formData });
+                    fetch(API_BASE + 'lectura/ajax/save_content_translation.php', { method: 'POST', body: formData });
                 }, 1000);
             }
         })
-        .catch(() => {
+        .catch((err) => {
             clearTimeout(timeoutId);
+            console.error('[translateAndSaveParagraph] error', err);
         });
     }
     
@@ -996,12 +1002,17 @@ function initLector() {
     function translateParagraphOnly(text, box) {
         if (window.translationLimitReached) { box.innerText = ''; return; }
         const isActiveReading = window.autoReading ? '1' : '0';
-        fetch('traduciones/translate.php', {
+        fetch(API_BASE + 'traduciones/translate.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             body: 'word=' + encodeURIComponent(text) + '&active_reading=' + isActiveReading
         })
-        .then(res => res.json())
+        .then(res => {
+            if (!res.ok) return res.text().then(t => { throw new Error('HTTP ' + res.status + ': ' + t); });
+            const ct = res.headers.get('content-type') || '';
+            if (!ct.includes('application/json')) return res.text().then(t => { throw new Error('Non-JSON response: ' + t); });
+            return res.json();
+        })
         .then(data => {
             if (window.LimitModal && window.LimitModal.checkResponse(data)) { box.innerText = ''; return; }
             if (data.translation) {
@@ -1010,7 +1021,9 @@ function initLector() {
                 scrollElementIntoViewIfNeeded(box);
             }
         })
-        .catch(() => {});
+        .catch((err) => {
+            console.error('[translateParagraphOnly] response error', err);
+        });
     }
 
     /**
@@ -1027,7 +1040,7 @@ function initLector() {
         if (!fullContent) return;
         
         try {
-            const response = await fetch('traduciones/translate.php', {
+            const response = await fetch(API_BASE + 'traduciones/translate.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                 body: 'word=' + encodeURIComponent(fullContent)
@@ -1132,12 +1145,17 @@ function initLector() {
         if (el.dataset.translation) {
             showTranslation(el.dataset.translation);
         } else {
-            fetch('traduciones/translate.php', {
+            fetch(API_BASE + 'traduciones/translate.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                 body: 'word=' + encodeURIComponent(word)
             })
-            .then(res => res.json())
+            .then(res => {
+                if (!res.ok) return res.text().then(t => { throw new Error('HTTP ' + res.status + ': ' + t); });
+                const ct = res.headers.get('content-type') || '';
+                if (!ct.includes('application/json')) return res.text().then(t => { throw new Error('Non-JSON response: ' + t); });
+                return res.json();
+            })
             .then(data => {
                 const tr = data?.translation || 'Sin traducción';
                 el.dataset.translation = tr;
@@ -1145,6 +1163,11 @@ function initLector() {
                 if (typeof saveTranslatedWord === 'function') {
                     saveTranslatedWord(word, tr, findSentenceContainingWord(el, word));
                 }
+            })
+            .catch(err => {
+                console.error('[translate word] response error', err);
+                el.dataset.translation = 'Sin traducción';
+                showTranslation('Sin traducción');
             });
         }
     }
@@ -1167,16 +1190,24 @@ function initLector() {
         highlightWord(el, word);
         if (window.explainSidebar?.showExplanation) window.explainSidebar.showExplanation(word, el);
         
-        fetch('traduciones/translate.php', {
+        fetch(API_BASE + 'traduciones/translate.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             body: 'word=' + encodeURIComponent(word)
         })
-        .then(res => res.json())
+        .then(res => {
+            if (!res.ok) return res.text().then(t => { throw new Error('HTTP ' + res.status + ': ' + t); });
+            const ct = res.headers.get('content-type') || '';
+            if (!ct.includes('application/json')) return res.text().then(t => { throw new Error('Non-JSON response: ' + t); });
+            return res.json();
+        })
         .then(data => {
             if (data.translation && typeof saveTranslatedWord === 'function') {
                 saveTranslatedWord(word, data.translation, findSentenceContainingWord(el, word));
             }
+        })
+        .catch(err => {
+            console.error('[translate double-click] response error', err);
         });
     }
 
@@ -1580,7 +1611,7 @@ function initLector() {
             }
             if (!translation) {
                 try {
-                    const res = await fetch('traduciones/translate.php', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: 'word=' + encodeURIComponent(text) });
+                    const res = await fetch(API_BASE + 'traduciones/translate.php', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: 'word=' + encodeURIComponent(text) });
                     const data = await res.json();
                     if (data.translation) {
                         translation = data.translation;

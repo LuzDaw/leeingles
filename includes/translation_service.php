@@ -2,6 +2,8 @@
 // includes/translation_service.php
 // Servicio centralizado de traducción: detecta idioma y usa DeepL o Google como fallback
 
+require_once __DIR__ . '/cache.php';
+
 /** Detecta idioma y devuelve metadatos */
 function detectLanguage($text) {
     if (preg_match('/[áéíóúñÁÉÍÓÚÑüÜ]/u', $text)) {
@@ -63,6 +65,13 @@ function translateText($text) {
     $deepl_api_key = getenv('DEEPL_API_KEY') ? getenv('DEEPL_API_KEY') : '89bb7c47-40dc-4628-9efb-8882bb6f5fba:fx';
     $lang_info = detectLanguage($text);
 
+    // Try cache first (cache key based on original text + target)
+    $cache_key = 'translate_' . md5($text . '|' . $lang_info['deepl_target']);
+    $cached = cache_get($cache_key);
+    if ($cached !== null) {
+        return $cached;
+    }
+
     $translation = translateWithDeepL($text, $lang_info['deepl_target'], $deepl_api_key);
     $source = 'DeepL';
 
@@ -75,10 +84,20 @@ function translateText($text) {
         return ['error' => 'No se pudo traducir el texto'];
     }
 
-    return [
+    $result = [
         'translation' => $translation,
         'source' => $source,
         'original' => $text,
         'detected_language' => $lang_info['source']
     ];
+
+    // Cache translation for 24 hours
+    try {
+        cache_set($cache_key, $result, 86400);
+    } catch (Exception $e) {
+        // ignore cache errors
+    }
+
+    return $result;
 }
+
