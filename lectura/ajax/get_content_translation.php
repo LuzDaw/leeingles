@@ -1,15 +1,15 @@
 <?php
 require_once __DIR__ . '/../../includes/ajax_common.php';
+require_once __DIR__ . '/../../includes/ajax_helpers.php';
 require_once __DIR__ . '/../../db/connection.php';
 require_once __DIR__ . '/../../includes/content_functions.php';
 require_once __DIR__ . '/../../dePago/subscription_functions.php';
 
-header('Content-Type: application/json; charset=utf-8');
+noCacheHeaders();
 requireUserOrExitJson();
 
 if (!isset($_GET['text_id'])) {
-    echo json_encode(['error' => 'ID de texto requerido']);
-    exit();
+    ajax_error('ID de texto requerido', 400);
 }
 
 $user_id = $_SESSION['user_id'];
@@ -20,12 +20,7 @@ $is_active_reading = isset($_GET['active_reading']) && $_GET['active_reading'] =
 $limit_check = checkTranslationLimit($user_id, $is_active_reading);
 
 if (!$limit_check['can_translate']) {
-    echo json_encode([
-        'error' => 'Has alcanzado tu límite semanal de traducciones.',
-        'limit_reached' => true,
-        'next_reset' => $limit_check['next_reset'] ?? null
-    ]);
-    exit();
+    ajax_error('Has alcanzado tu límite semanal de traducciones.', 429, json_encode($limit_check));
 }
 
 // Verificar que el texto pertenece al usuario o es público
@@ -36,15 +31,17 @@ try {
     $result = $stmt->get_result();
     
     if ($result->num_rows === 0) {
-        echo json_encode(['error' => 'Texto no encontrado o no autorizado']);
-        exit();
+        if (isset($stmt) && $stmt instanceof mysqli_stmt) { @ $stmt->close(); }
+        if (isset($conn) && $conn instanceof mysqli) { @ $conn->close(); }
+        ajax_error('Texto no encontrado o no autorizado', 404);
     }
     
     $text_data = $result->fetch_assoc();
     $stmt->close();
 } catch (Exception $e) {
-    echo json_encode(['error' => 'Error verificando autorización']);
-    exit();
+    if (isset($stmt) && $stmt instanceof mysqli_stmt) { @ $stmt->close(); }
+    if (isset($conn) && $conn instanceof mysqli) { @ $conn->close(); }
+    ajax_error('Error verificando autorización', 500, $e->getMessage());
 }
 
 // Obtener la traducción del contenido
@@ -56,39 +53,35 @@ if ($translation) {
     // incrementTranslationUsage($user_id, $text_data['content']);
 
     // Verificar si es el nuevo formato JSON o el antiguo
-    if (is_array($translation)) {
-        // Nuevo formato JSON - array de traducciones
-        echo json_encode([
-            'success' => true,
-            'text_id' => $text_id,
-            'title' => $text_data['title'],
-            'content' => $text_data['content'],
-            'translation' => $translation,
-            'format' => 'json',
-            'source' => 'database'
-        ]);
+    if ($translation) {
+        if (is_array($translation)) {
+            ajax_success([
+                'text_id' => $text_id,
+                'title' => $text_data['title'],
+                'content' => $text_data['content'],
+                'translation' => $translation,
+                'format' => 'json',
+                'source' => 'database'
+            ]);
+        } else {
+            ajax_success([
+                'text_id' => $text_id,
+                'title' => $text_data['title'],
+                'content' => $text_data['content'],
+                'translation' => $translation,
+                'format' => 'plain',
+                'source' => 'database'
+            ]);
+        }
     } else {
-        // Formato antiguo - texto plano
-        echo json_encode([
-            'success' => true,
+        ajax_success([
             'text_id' => $text_id,
             'title' => $text_data['title'],
             'content' => $text_data['content'],
-            'translation' => $translation,
-            'format' => 'plain',
-            'source' => 'database'
+            'translation' => null,
+            'needs_translation' => true
         ]);
     }
-} else {
-    echo json_encode([
-        'success' => false,
-        'text_id' => $text_id,
-        'title' => $text_data['title'],
-        'content' => $text_data['content'],
-        'translation' => null,
-        'needs_translation' => true
-    ]);
-}
 
-$conn->close();
+    if (isset($conn) && $conn instanceof mysqli) { $conn->close(); }
 ?>

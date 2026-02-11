@@ -1,6 +1,9 @@
 <?php
 require_once __DIR__ . '/../includes/ajax_common.php';
+require_once __DIR__ . '/../includes/ajax_helpers.php';
 require_once __DIR__ . '/../db/connection.php';
+
+noCacheHeaders();
 
 // Verificar si el usuario está logueado (permitir override por pruebas via GET/POST)
 if (isset($_POST['user_id']) || isset($_GET['user_id'])) {
@@ -94,8 +97,8 @@ try {
         'total_seconds' => $total_seconds
     ];
     
-    echo json_encode([
-        'success' => true,
+    $conn->close();
+    ajax_success([
         'calendar_data' => $calendar_data,
         'stats' => $stats,
         'month' => $month,
@@ -104,8 +107,9 @@ try {
     ]);
     
 } catch (Exception $e) {
-    http_response_code(500);
-    echo json_encode(['error' => 'Error al obtener datos del calendario: ' . $e->getMessage()]);
+    if (isset($stmt) && $stmt instanceof mysqli_stmt) { @ $stmt->close(); }
+    if (isset($conn) && $conn instanceof mysqli) { @ $conn->close(); }
+    ajax_error('Error al obtener datos del calendario: ' . $e->getMessage(), 500, $e->getMessage());
 }
 
 /**

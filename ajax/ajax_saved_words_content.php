@@ -1,7 +1,9 @@
 <?php
 require_once __DIR__ . '/../includes/ajax_common.php';
+require_once __DIR__ . '/../includes/ajax_helpers.php';
 require_once __DIR__ . '/../db/connection.php';
 
+noCacheHeaders();
 requireUserOrExitJson();
 $user_id = $_SESSION['user_id'];
 // Liberar bloqueo de sesión para permitir otras peticiones paralelas
@@ -17,10 +19,9 @@ if (isset($_GET['get_word_count']) && isset($_GET['text_id'])) {
     $result = $stmt->get_result();
     $data = $result->fetch_assoc();
     
-    echo json_encode(['word_count' => intval($data['word_count'])]);
     $stmt->close();
     $conn->close();
-    exit();
+    ajax_success(['word_count' => intval($data['word_count'])]);
 }
 
 // Endpoint para obtener las palabras guardadas de un texto específico
@@ -33,10 +34,9 @@ if (isset($_GET['get_words_by_text']) && isset($_GET['text_id'])) {
     $result = $stmt->get_result();
     $words = $result->fetch_all(MYSQLI_ASSOC);
     
-    echo json_encode(['success' => true, 'words' => $words]);
     $stmt->close();
     $conn->close();
-    exit();
+    ajax_success(['words' => $words]);
 }
 
 // Procesar eliminación de palabra individual
@@ -70,11 +70,12 @@ if (isset($_POST['action']) && $_POST['action'] === 'delete' && isset($_POST['se
     }
     
     if (empty($errors)) {
-        echo json_encode(['success' => true, 'message' => "$deleted_count palabra(s) eliminada(s) correctamente."]);
+        $conn->close();
+        ajax_success(['message' => "$deleted_count palabra(s) eliminada(s) correctamente."]);
     } else {
-        echo json_encode(['success' => false, 'message' => 'Error al eliminar algunas palabras.']);
+        if (isset($conn) && $conn instanceof mysqli) { @ $conn->close(); }
+        ajax_error('Error al eliminar algunas palabras.', 500, implode('; ', $errors));
     }
-    exit();
 }
 
 // Obtener palabras guardadas del usuario, con título del texto

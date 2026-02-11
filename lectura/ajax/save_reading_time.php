@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/../../includes/ajax_common.php';
-header('Content-Type: application/json');
+require_once __DIR__ . '/../../includes/ajax_helpers.php';
+noCacheHeaders();
 requireUserOrExitJson();
 $user_id = $_SESSION['user_id'];
 $duration = isset($_POST['duration']) ? intval($_POST['duration']) : 0;
@@ -8,8 +9,7 @@ $text_id = isset($_POST['text_id']) ? intval($_POST['text_id']) : 0;
 
 // Validaciones
 if ($duration <= 0 || $duration > 3600 || $text_id <= 0) {
-    echo json_encode(['success' => false, 'error' => 'Datos inválidos: duración debe estar entre 1 y 3600 segundos']);
-    exit;
+    ajax_error('Datos inválidos: duración debe estar entre 1 y 3600 segundos', 400);
 }
 
 require_once '../../db/connection.php';
@@ -45,13 +45,18 @@ if ($existing_row) {
     $stmt->bind_param('iii', $user_id, $text_id, $duration);
 }
 
-$ok = $stmt->execute();
-$stmt->close();
-$conn->close();
-
-if ($ok) {
-    echo json_encode(['success' => true]);
-} else {
-    echo json_encode(['success' => false, 'error' => 'Error al guardar en BD']);
+try {
+    $ok = $stmt->execute();
+    $stmt->close();
+    $conn->close();
+    if ($ok) {
+        ajax_success();
+    } else {
+        ajax_error('Error al guardar en BD', 500, $stmt->error ?? null);
+    }
+} catch (Exception $e) {
+    if (isset($stmt) && $stmt instanceof mysqli_stmt) { @ $stmt->close(); }
+    if (isset($conn) && $conn instanceof mysqli) { @ $conn->close(); }
+    ajax_error('Error al guardar en BD', 500, $e->getMessage());
 }
 ?>

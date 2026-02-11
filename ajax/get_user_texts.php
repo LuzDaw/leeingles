@@ -1,11 +1,9 @@
 <?php
 require_once __DIR__ . '/../includes/ajax_common.php';
+require_once __DIR__ . '/../includes/ajax_helpers.php';
 require_once __DIR__ . '/../db/connection.php';
 
-header('Content-Type: application/json; charset=utf-8');
-header('Cache-Control: no-store');
-if (function_exists('ob_get_length')) { while (ob_get_level()>0) { ob_end_clean(); } }
-
+noCacheHeaders();
 requireUserOrExitJson();
 $user_id = (int)$_SESSION['user_id'];
 
@@ -28,10 +26,10 @@ try {
     while ($r = $pubRes->fetch_assoc()) { $texts[] = $r; }
     $pub->close();
 
-    echo json_encode(['success' => true, 'texts' => $texts]);
+    $conn->close();
+    ajax_success(['texts' => $texts]);
 } catch (Exception $e) {
-    echo json_encode(['success' => false, 'message' => 'Error interno del servidor']);
-} finally {
-    if (isset($conn)) { $conn->close(); }
+    if (isset($conn) && $conn instanceof mysqli) { @ $conn->close(); }
+    ajax_error('Error interno del servidor', 500, $e->getMessage());
 }
 ?>

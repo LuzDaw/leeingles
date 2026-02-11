@@ -1,17 +1,11 @@
 <?php
 require_once __DIR__ . '/../includes/ajax_common.php';
+require_once __DIR__ . '/../includes/ajax_helpers.php';
 require_once __DIR__ . '/../db/connection.php';
 
-header('Content-Type: application/json; charset=utf-8');
-header('Cache-Control: no-store');
-if (function_exists('ob_get_length')) { while (ob_get_level()>0) { ob_end_clean(); } }
-
-// Log para debugging
-error_log("ajax_user_texts.php - Inicio de la petición");
-
+noCacheHeaders();
 requireUserOrExitJson();
 $user_id = $_SESSION['user_id'];
-error_log("ajax_user_texts.php - User ID: " . $user_id);
 
 try {
     // Nuevo modo API JSON para práctica: listar textos propios y públicos leídos
@@ -34,9 +28,8 @@ try {
         while ($r = $pubRes->fetch_assoc()) { $texts[] = $r; }
         $pub->close();
 
-        echo json_encode(['success' => true, 'texts' => $texts]);
         $conn->close();
-        exit();
+        ajax_success(['texts' => $texts]);
     }
 
     // Modo anterior: basado en saved_words (se mantiene por compatibilidad)
@@ -45,8 +38,8 @@ try {
     );
     if (!$stmt) {
         error_log("ajax_user_texts.php - Error preparando statement: " . $conn->error);
-        echo json_encode(['success' => false, 'message' => 'Error de db']);
-        exit();
+        if (isset($conn) && $conn instanceof mysqli) { @ $conn->close(); }
+        ajax_error('Error de db', 500, $conn->error);
     }
     $stmt->bind_param('ii', $user_id, $user_id);
     $stmt->execute();
@@ -54,10 +47,12 @@ try {
     $texts = $result->fetch_all(MYSQLI_ASSOC);
     $stmt->close();
     $conn->close();
-    echo json_encode(['success' => true, 'texts' => $texts]);
+    ajax_success(['texts' => $texts]);
 
 } catch (Exception $e) {
     error_log("ajax_user_texts.php - Excepción: " . $e->getMessage());
-    echo json_encode(['success' => false, 'message' => 'Error interno del servidor']);
+    if (isset($stmt) && $stmt instanceof mysqli_stmt) { @ $stmt->close(); }
+    if (isset($conn) && $conn instanceof mysqli) { @ $conn->close(); }
+    ajax_error('Error interno del servidor', 500, $e->getMessage());
 }
 ?>

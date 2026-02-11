@@ -8,8 +8,7 @@ requireUserOrExitJson();
 
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    echo json_encode(['success' => false, 'message' => 'Método no permitido']);
-    exit();
+    ajax_error('Método no permitido', 405);
 }
 
 // Validar datos de entrada
@@ -32,13 +31,11 @@ if (empty($title) && !empty($content)) {
 
 // Validaciones
 if (empty($content)) {
-    echo json_encode(['success' => false, 'message' => 'Debes incluir contenido para el texto.']);
-    exit();
+    ajax_error('Debes incluir contenido para el texto.', 400);
 }
 
 if ($is_public && $category_id === 0) {
-    echo json_encode(['success' => false, 'message' => 'Debes seleccionar una categoría para el texto público.']);
-    exit();
+    ajax_error('Debes seleccionar una categoría para el texto público.', 400);
 }
 
 // Si texto privado, category_id debe ser null

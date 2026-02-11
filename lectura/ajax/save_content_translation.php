@@ -1,14 +1,14 @@
 <?php
 require_once __DIR__ . '/../../includes/ajax_common.php';
+require_once __DIR__ . '/../../includes/ajax_helpers.php';
 require_once __DIR__ . '/../../db/connection.php';
 require_once __DIR__ . '/../../includes/content_functions.php';
 
-header('Content-Type: application/json; charset=utf-8');
+noCacheHeaders();
 requireUserOrExitJson();
 
 if (!isset($_POST['text_id']) || !isset($_POST['content']) || !isset($_POST['translation'])) {
-    echo json_encode(['error' => 'Datos incompletos']);
-    exit();
+    ajax_error('Datos incompletos', 400);
 }
 
 $user_id = $_SESSION['user_id'];
@@ -17,8 +17,7 @@ $content = trim($_POST['content']);
 $translation = trim($_POST['translation']);
 
 if (empty($content) || empty($translation)) {
-    echo json_encode(['error' => 'Contenido y traducción son requeridos']);
-    exit();
+    ajax_error('Contenido y traducción son requeridos', 400);
 }
 
 // Verificar que el texto pertenece al usuario o es público
@@ -29,23 +28,25 @@ try {
     $result = $stmt->get_result();
     
     if ($result->num_rows === 0) {
-        echo json_encode(['error' => 'Texto no encontrado o no autorizado']);
-        exit();
+        if (isset($stmt) && $stmt instanceof mysqli_stmt) { @ $stmt->close(); }
+        if (isset($conn) && $conn instanceof mysqli) { @ $conn->close(); }
+        ajax_error('Texto no encontrado o no autorizado', 404);
     }
     $stmt->close();
 } catch (Exception $e) {
-    echo json_encode(['error' => 'Error verificando autorización']);
-    exit();
+    if (isset($stmt) && $stmt instanceof mysqli_stmt) { @ $stmt->close(); }
+    if (isset($conn) && $conn instanceof mysqli) { @ $conn->close(); }
+    ajax_error('Error verificando autorización', 500, $e->getMessage());
 }
 
 // Guardar la traducción del contenido
 $result = saveContentTranslation($text_id, $content, $translation);
 
 if ($result['success']) {
-    echo json_encode(['success' => true, 'message' => 'Traducción de contenido guardada correctamente']);
+    if (isset($conn) && $conn instanceof mysqli) { $conn->close(); }
+    ajax_success(['message' => 'Traducción de contenido guardada correctamente']);
 } else {
-    echo json_encode(['error' => $result['error']]);
+    if (isset($conn) && $conn instanceof mysqli) { $conn->close(); }
+    ajax_error($result['error'] ?? 'Error al guardar', 500, json_encode($result));
 }
-
-$conn->close();
 ?>

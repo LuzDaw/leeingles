@@ -79,10 +79,12 @@ if ($_POST && isset($_POST['action']) && isset($_POST['selected_texts'])) {
                 }
 
                 $conn->commit();
-                echo json_encode(['success' => true, 'message' => 'Acción completada correctamente.']);
+                $conn->close();
+                ajax_success(['message' => 'Acción completada correctamente.']);
             } catch (Exception $e) {
                 $conn->rollback();
-                echo json_encode(['success' => false, 'message' => 'Error al procesar: ' . $e->getMessage()]);
+                if (isset($conn) && $conn instanceof mysqli) { @ $conn->close(); }
+                ajax_error('Error al procesar: ' . $e->getMessage(), 500, $e->getMessage());
             }
             exit();
         }

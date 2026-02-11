@@ -11,8 +11,7 @@ require_once __DIR__ . '/../dePago/subscription_functions.php';
 
 session_start();
 
-// Configuración DeepL
-$deepl_api_key = '89bb7c47-40dc-4628-9efb-8882bb6f5fba:fx';
+// La clave de DeepL se obtiene desde la variable de entorno `DEEPL_API_KEY` en includes/translation_service.php
 
 // Aceptar tanto 'text' como 'word' como parámetro
 $text = $_POST['text'] ?? $_POST['word'] ?? null;

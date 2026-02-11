@@ -4,6 +4,7 @@
  * Muestra estadísticas generales, tiempo de actividad y calendario
  */
 require_once __DIR__ . '/../../includes/ajax_common.php';
+require_once __DIR__ . '/../../includes/ajax_helpers.php';
 require_once __DIR__ . '/../../db/connection.php';
 require_once __DIR__ . '/../../includes/content_functions.php';
 
@@ -66,7 +67,11 @@ $stmt->close();
 // Manejo de peticiones AJAX para progreso de lectura (Legacy support)
 if (isset($_GET['text_id']) || isset($_POST['text_id'])) {
     $text_id = isset($_GET['text_id']) ? intval($_GET['text_id']) : intval($_POST['text_id']);
-    
+
+    // Para peticiones AJAX de progreso, exigimos JSON
+    noCacheHeaders();
+    requireUserOrExitJson();
+
     if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $stmt = $conn->prepare("SELECT percent, pages_read, read_count FROM reading_progress WHERE user_id = ? AND text_id = ?");
         $stmt->bind_param('ii', $user_id, $text_id);
@@ -74,36 +79,35 @@ if (isset($_GET['text_id']) || isset($_POST['text_id'])) {
         $stmt->bind_result($percent, $pages_read, $read_count);
         if ($stmt->fetch()) {
             $pages_read_arr = json_decode((string)$pages_read, true) ?: [];
-            header('Content-Type: application/json');
-            echo json_encode(['percent' => intval($percent), 'pages_read' => $pages_read_arr, 'read_count' => intval($read_count)]);
+            $stmt->close();
+            ajax_success(['percent' => intval($percent), 'pages_read' => $pages_read_arr, 'read_count' => intval($read_count)]);
         } else {
-            header('Content-Type: application/json');
-            echo json_encode(['percent' => 0, 'pages_read' => [], 'read_count' => 0]);
+            $stmt->close();
+            ajax_success(['percent' => 0, 'pages_read' => [], 'read_count' => 0]);
         }
-        $stmt->close();
         exit;
     }
-    
+
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['percent']) && isset($_POST['pages_read'])) {
         $percent = intval($_POST['percent']);
         $pages_read = $_POST['pages_read'];
         $finish = isset($_POST['finish']) ? intval($_POST['finish']) : 0;
-        
+
         // Forzar updated_at para asegurar que se registra el cambio
         $now = date('Y-m-d H:i:s');
-        
+
         $stmt = $conn->prepare("SELECT percent, read_count FROM reading_progress WHERE user_id = ? AND text_id = ?");
         $stmt->bind_param('ii', $user_id, $text_id);
         $stmt->execute();
         $stmt->bind_result($old_percent, $old_read_count);
-        
+
         if ($stmt->fetch()) {
             $stmt->close();
             $new_read_count = (int)$old_read_count;
             if ($finish === 1 || ($percent >= 100 && (int)$old_percent < 100)) {
                 $new_read_count++;
             }
-            
+
             $stmt2 = $conn->prepare("UPDATE reading_progress SET percent = ?, pages_read = ?, updated_at = ?, read_count = ? WHERE user_id = ? AND text_id = ?");
             $stmt2->bind_param('issiii', $percent, $pages_read, $now, $new_read_count, $user_id, $text_id);
             $stmt2->execute();
@@ -116,8 +120,7 @@ if (isset($_GET['text_id']) || isset($_POST['text_id'])) {
             $stmt2->execute();
             $stmt2->close();
         }
-        header('Content-Type: application/json');
-        echo json_encode(['success' => true]);
+        ajax_success(['success' => true]);
         exit;
     }
 }
