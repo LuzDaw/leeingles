@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <h1>🔒 Acceso Administrador</h1>
     
     <?php if (!empty($errors)): ?>
-        <ul style="color:red;">
+        <ul style="color:var(--accent-color);">
             <?php foreach ($errors as $error): ?>
                 <li><?= htmlspecialchars($error) ?></li>
             <?php endforeach; ?>

@@ -205,7 +205,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'set_expiration' && $user_id
         </div>
 
     <?php else: ?>
-        <p style="color: red;">No se encontró ningún usuario para realizar la prueba.</p>
+        <p style="color: var(--accent-color);">No se encontró ningún usuario para realizar la prueba.</p>
     <?php endif; ?>
 </div>
 

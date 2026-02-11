@@ -2730,7 +2730,7 @@ El enfoque actual de obtener el contenido de cada texto individualmente para cal
     *   Eliminar el bucle `Promise.all` que actualmente obtiene el contenido y calcula el recuento de palabras, ya que esta información ya estará disponible.
     *   Actualizar la generación de HTML para usar el `word_count` proporcionado en el JSON.
 
-Este cambio reducirá significativamente el número de solicitudes de red y mejorará el rendimiento de carga de los textos públicos por categorías.
+Este cambio reducirá significativamente el número de solicitudes de var(--accent-color) y mejorará el rendimiento de carga de los textos públicos por categorías.
 
 ¿Está satisfecho con este plan, o le gustaría discutir alguna alternativa o aspecto específico? Si lo aprueba, por favor, cambie al modo Act para que pueda implementar estos cambios.
 </response>

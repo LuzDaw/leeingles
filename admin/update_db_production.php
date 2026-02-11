@@ -23,7 +23,7 @@ $sql1 = "ALTER TABLE users MODIFY COLUMN tipo_usuario ENUM('EnPrueba', 'limitado
 if ($conn->query($sql1)) {
     echo "<p style='color: green;'>✅ Tabla 'users' (tipo_usuario) actualizada correctamente.</p>";
 } else {
-    echo "<p style='color: red;'>❌ Error al actualizar tabla 'users': " . $conn->error . "</p>";
+    echo "<p style='color: var(--accent-color);'>❌ Error al actualizar tabla 'users': " . $conn->error . "</p>";
 }
 
 // 2. Actualizar tabla user_subscriptions (columna plan_name)
@@ -31,7 +31,7 @@ $sql2 = "ALTER TABLE user_subscriptions MODIFY COLUMN plan_name ENUM('Inicio', '
 if ($conn->query($sql2)) {
     echo "<p style='color: green;'>✅ Tabla 'user_subscriptions' (plan_name) actualizada correctamente.</p>";
 } else {
-    echo "<p style='color: red;'>❌ Error al actualizar tabla 'user_subscriptions': " . $conn->error . "</p>";
+    echo "<p style='color: var(--accent-color);'>❌ Error al actualizar tabla 'user_subscriptions': " . $conn->error . "</p>";
 }
 
 // 3. Migrar registros antiguos de 'Inicio' a 'Basico' para consistencia

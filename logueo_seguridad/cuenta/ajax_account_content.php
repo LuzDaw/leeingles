@@ -430,7 +430,7 @@ $stmt->close();
             },
             onError: function(err) {
                 console.error('PayPal Button Error (' + planName + '):', err);
-                container.innerHTML = '<div style="color:red; padding:10px; font-size:12px;">Error al cargar el botón. Reintenta en unos segundos.</div>';
+                container.innerHTML = '<div style="color:var(--accent-color); padding:10px; font-size:12px;">Error al cargar el botón. Reintenta en unos segundos.</div>';
             }
         }).render('#' + containerId).catch(err => {
             console.error('Error al renderizar el botón en ' + containerId + ':', err);
@@ -439,8 +439,16 @@ $stmt->close();
 </script>
 
 <div class="tab-content-wrapper account-dashboard">
-    <div class="tab-header-container">
-        <h3>👤 Mi Cuenta</h3>
+    <div class="tab-header-container" style="
+    display: flex;
+    padding: 1.5%;
+    flex-direction: column;
+    align-items: center;
+">
+        <h3 style="
+    margin: 0px;
+    padding-bottom: 1%;
+"> Mi Cuenta</h3>
     </div>
     <?php 
     if (isset($_GET['payment_success'])) {
@@ -449,7 +457,7 @@ $stmt->close();
     ?>
     <!-- 1️⃣ Encabezado – Identidad del usuario -->
     <div class="dashboard-section" style="margin-bottom: 32px;">
-        <h1 style="margin: 0; font-size: 32px; font-weight: 800; color: #0f172a;">Hola, <?= htmlspecialchars($user_data['username']) ?></h1>
+        <h1 style="margin: 0; font-size: 16px; font-weight: 800; color: #0f172a;">Hola <?= htmlspecialchars($user_data['username']) ?></h1>
         
         <table class="user-info-table">
             <thead>
@@ -792,11 +800,11 @@ $stmt->close();
 <?php
 $conn->close();
 } catch (Exception $e) {
-    echo '<div style="padding: 20px; color: red; background: #fee2e2; border: 1px solid #ff8a00; border-radius: 8px; margin: 20px;">';
+    echo '<div style="padding: 20px; color: var(--accent-color); background: #fee2e2; border: 1px solid #ff8a00; border-radius: 8px; margin: 20px;">';
     echo '<strong>Error fatal:</strong> ' . htmlspecialchars($e->getMessage());
     echo '</div>';
 } catch (Error $e) {
-    echo '<div style="padding: 20px; color: red; background: #fee2e2; border: 1px solid #ff8a00; border-radius: 8px; margin: 20px;">';
+    echo '<div style="padding: 20px; color: var(--accent-color); background: #fee2e2; border: 1px solid #ff8a00; border-radius: 8px; margin: 20px;">';
     echo '<strong>Error de PHP:</strong> ' . htmlspecialchars($e->getMessage());
     echo '</div>';
 }

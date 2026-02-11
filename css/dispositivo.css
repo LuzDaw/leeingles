@@ -542,19 +542,18 @@ padding-top: 4%;
     box-shadow: var(--shadow-sm);
 }
 .mode-selector {
-    display: flex;
-    gap:12px;
-    margin-bottom: 20px;
-    flex-wrap: nowrap;
-    align-content: center;
-    justify-content: center;
+   display: flex;
+        gap: 12px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
 }
 
 .mode-btn {
     padding: 8px 2px;
     font-size: 14px;
         max-width: 32%;
-            min-width: 50px;
 }
   
            
@@ -681,8 +680,24 @@ padding-top: 4%;
     #palabra{
     display: none;
    }
+   .tab-header-container
+ {
+    padding-top: 0% !important; 
+}
    
 }
 
 
- 
+ @media (max-width: 768px) {
+
+   
+
+    .mode-selector > * {
+        flex: 0 0 calc(50% - 3px); /* dos columnas */
+    }
+
+    .mode-selector > *:last-child {
+        flex: 0 0 100%; /* el último pasa abajo y ocupa todo el ancho */
+    }
+
+}

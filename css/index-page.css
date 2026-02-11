@@ -97,7 +97,7 @@ label {
 .color-blue { color: var(--secondary-color); }
 .color-orange { color: var(--accent-color); }
 .color-green { color: #e6a50c; }
-.color-red { color: var(--error-color); }
+.color-var(--accent-color) { color:var(--accent-color) ; }
 .color-white { color: #ffffff; }
 
 .bg-white { background: #ffffff; }

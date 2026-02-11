@@ -45,9 +45,9 @@ $username = $_SESSION['username'] ?? 'No identificado';
 
 <div class="section-container">
     <h2>Diagnóstico de Sesión</h2>
-    <div class="info-box" style="background: #fff3cd; color: #856404; border-color: #ffeeba;">
+    <div class="info-box" style="background: #fff3cd; color: #856404; border-color: #e0ab0a;">
         <strong>Usuario actual:</strong> <?php echo htmlspecialchars($username); ?><br>
-        <strong>ID de Usuario:</strong> <?php echo $user_id ? $user_id : '<span style="color:red">No detectado (Inicia sesión primero)</span>'; ?>
+        <strong>ID de Usuario:</strong> <?php echo $user_id ? $user_id : '<span style="color: #e0ab0a">No detectado (Inicia sesión primero)</span>'; ?>
     </div>
 </div>
 
@@ -138,7 +138,7 @@ $username = $_SESSION['username'] ?? 'No identificado';
             }
         })
         .catch(error => {
-            log(`❌ Error de red: ${error.message}`);
+            log(`❌ Error de var(--accent-color): ${error.message}`);
         });
     }
 

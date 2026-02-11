@@ -249,6 +249,7 @@ $total_found = count($own_texts) + count($public_read_rows);
     }
     .tab-header-container #publicTextsDropdown {
         display: flex;
+        margin-right: 7%;
         
     }
     .tab-header-container .bulk-actions {

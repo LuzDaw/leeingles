@@ -18,7 +18,8 @@
 --success-dark: #0F243E;
 
 --warning-color: #ff8a00;
---error-color: #DC2626;          /* ROJO real */
+--error-color: #ff8a00;          /* ROJO real */
+--modal-error-msg: #ff8a00;
 
     
     /* Espaciado */

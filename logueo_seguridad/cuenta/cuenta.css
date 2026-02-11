@@ -111,5 +111,5 @@
 }
 
 .plan-inactive {
-    background-color: #ffe6e6; /* Light red for inactive plan */
+    background-color: #ffe6e6; /* Light var(--accent-color) for inactive plan */
 }

@@ -57,7 +57,7 @@ function enviarEmailPlantillaBase($destinatarioEmail, $destinatarioNombre, $subj
         <!-- Contenido -->
         <div style='color: {$EMAIL_COLORS['text']}; line-height: 1.6;'>
             <h2 style='color: {$EMAIL_COLORS['text']}; border-bottom: 2px solid {$EMAIL_COLORS['divider']}; padding-bottom: 10px;'>$titulo</h2>
-            <p>Hola <strong>$destinatarioNombre</strong>,</p>
+            <p>Hola <strong>$destinatarioNombre</strong></p>
             <div style='margin: 20px 0;'>
                 $mensaje
             </div>

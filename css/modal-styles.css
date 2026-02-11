@@ -281,7 +281,7 @@
     margin-bottom: 1rem;
     padding: 0.75rem;
     border-radius: 8px;
-    font-size: 0.9rem;
+    font-size: 1rem;
     text-align: center;
     animation: fadeIn 0.3s ease;
 }
@@ -291,9 +291,9 @@
 }
 
 #login-error.auth-msg.error, #register-error.auth-msg.error {
-    background-color: #fef2f2;
+  background-color: #ececec;
     color: var(--error-color);
-    border: 1px solid #fecaca;
+    border: 1px solid #1d35572e;
 }
 
 #login-error.auth-msg.info {

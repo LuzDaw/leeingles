@@ -99,11 +99,7 @@ foreach ($words as $word) {
 
 <div class="tab-content-wrapper">
     <div class="tab-header-container" style="
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    padding-left: 3%;
-    padding-top: 0%;
+    padding-top: 1%;
 ">
         <h3>📚 Mis Palabras</h3>
     </div>

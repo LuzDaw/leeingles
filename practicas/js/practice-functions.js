@@ -203,8 +203,8 @@ window.loadPracticeQuestion = function() {
         </div>
         <div class="spanish-translation hidden" id="spanish-translation"></div>
         <div class="translation-help-container" style="display:flex; align-items:center; justify-content:flex-end; width:100%; margin-top:8px; gap:6px;">
-            <button class="translation-help-btn" id="show-translation-btn" onclick="showPracticeTranslation()" style="padding:1px 12px; font-size:0.8em; height:22px;">📖 Ver traducción</button>
-            <span id="always-visible-eye" title="dejar visible" style="font-size:1.25em; color:#2563eb; cursor:pointer; padding:2px 6px;">👁️</span>
+            <button class="translation-help-btn" id="show-translation-btn" onclick="showPracticeTranslation()" style="padding:1px 12px; font-size:0.8em; height:22px;">📖 Traducción</button>
+            <span id="always-visible-eye" title="Dejar Visible Siempre" style="font-size:1.25em; color:#2563eb; cursor:pointer; padding:2px 6px;">👁️</span>
         </div>
     `;
     

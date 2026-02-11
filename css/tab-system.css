@@ -64,6 +64,7 @@
   overflow: visible;
   position: relative;
   border: none !important;
+      padding: 0.5%;
 }
 
 /* Contenido de pestañas sin márgenes externos */
@@ -501,7 +502,7 @@
 .color-green { color: #457B9D; }
 .color-blue { color: #457B9D; }
 .color-gray { color: var(--text-muted); }
-.color-red { color: var(--error-color); }
+.color-var(--accent-color) { color: var(--accent-color); }  
 .color-dark { color: var(--text-color); }
 .bg-white { background: #fff; }
 .bg-modal { background: rgba(0,0,0,0.6); }

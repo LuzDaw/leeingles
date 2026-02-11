@@ -132,8 +132,7 @@ if (isset($_GET['text_id']) || isset($_POST['text_id'])) {
 <div class="tab-content-wrapper">
     <div class="tab-header-container"  style="
     padding : 0% !important;">
-       <div class="tab-header-container"  style="
-    padding : 0% !important;">
+       <div class="tab-header-container" >
         <h3 id="progreso" style="
     padding: 0px 6px 15px 25px;
 ">📊 Mi Progreso</h3>
