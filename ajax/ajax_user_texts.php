@@ -1,6 +1,6 @@
 <?php
-session_start();
-require_once '../db/connection.php';
+require_once __DIR__ . '/../includes/ajax_common.php';
+require_once __DIR__ . '/../db/connection.php';
 
 header('Content-Type: application/json; charset=utf-8');
 header('Cache-Control: no-store');
@@ -9,12 +9,7 @@ if (function_exists('ob_get_length')) { while (ob_get_level()>0) { ob_end_clean(
 // Log para debugging
 error_log("ajax_user_texts.php - Inicio de la petición");
 
-if (!isset($_SESSION['user_id'])) {
-    error_log("ajax_user_texts.php - Usuario no autenticado");
-    echo json_encode(['success' => false, 'message' => 'No autorizado']);
-    exit();
-}
-
+requireUserOrExitJson();
 $user_id = $_SESSION['user_id'];
 error_log("ajax_user_texts.php - User ID: " . $user_id);
 

@@ -1,12 +1,7 @@
 <?php
-session_start();
+require_once __DIR__ . '/../../includes/ajax_common.php';
 header('Content-Type: application/json');
-
-if (!isset($_SESSION['user_id'])) {
-    echo json_encode(['success' => false, 'error' => 'No autorizado']);
-    exit;
-}
-
+requireUserOrExitJson();
 $user_id = $_SESSION['user_id'];
 $duration = isset($_POST['duration']) ? intval($_POST['duration']) : 0;
 $text_id = isset($_POST['text_id']) ? intval($_POST['text_id']) : 0;

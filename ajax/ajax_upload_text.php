@@ -1,13 +1,11 @@
 <?php
-session_start();
-require_once '../db/connection.php';
+require_once __DIR__ . '/../includes/ajax_common.php';
+require_once __DIR__ . '/../db/connection.php';
 
 header('Content-Type: application/json');
 
-if (!isset($_SESSION['user_id'])) {
-    echo json_encode(['success' => false, 'message' => 'No autorizado']);
-    exit();
-}
+requireUserOrExitJson();
+
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     echo json_encode(['success' => false, 'message' => 'Método no permitido']);

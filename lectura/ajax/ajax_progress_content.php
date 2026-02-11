@@ -3,15 +3,11 @@
  * Contenido de la pestaña de progreso
  * Muestra estadísticas generales, tiempo de actividad y calendario
  */
-session_start();
-require_once '../../db/connection.php';
-require_once '../../includes/content_functions.php';
+require_once __DIR__ . '/../../includes/ajax_common.php';
+require_once __DIR__ . '/../../db/connection.php';
+require_once __DIR__ . '/../../includes/content_functions.php';
 
-if (!isset($_SESSION['user_id'])) {
-    echo '<div style="text-align: center; padding: 40px; color: #ff8a00;">Debes iniciar sesión para ver tu progreso.</div>';
-    exit;
-}
-
+requireUserOrExitHtml();
 $user_id = $_SESSION['user_id'];
 
 // Liberar bloqueo de sesión para permitir otras peticiones paralelas

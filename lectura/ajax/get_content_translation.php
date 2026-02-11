@@ -1,15 +1,11 @@
 <?php
-session_start();
-require_once '../../db/connection.php';
-require_once '../../includes/content_functions.php';
-require_once '../../dePago/subscription_functions.php';
+require_once __DIR__ . '/../../includes/ajax_common.php';
+require_once __DIR__ . '/../../db/connection.php';
+require_once __DIR__ . '/../../includes/content_functions.php';
+require_once __DIR__ . '/../../dePago/subscription_functions.php';
 
 header('Content-Type: application/json; charset=utf-8');
-
-if (!isset($_SESSION['user_id'])) {
-    echo json_encode(['error' => 'Usuario no autenticado']);
-    exit();
-}
+requireUserOrExitJson();
 
 if (!isset($_GET['text_id'])) {
     echo json_encode(['error' => 'ID de texto requerido']);

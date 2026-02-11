@@ -1,22 +1,12 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-require_once '../db/connection.php';
+require_once __DIR__ . '/../includes/ajax_common.php';
+require_once __DIR__ . '/../db/connection.php';
 
-// Verificar si el usuario está logueado
-if (!isset($_SESSION['user_id'])) {
-    // Para pruebas, intentar obtener user_id desde POST/GET
-    if (isset($_POST['user_id'])) {
-        $user_id = intval($_POST['user_id']);
-    } elseif (isset($_GET['user_id'])) {
-        $user_id = intval($_GET['user_id']);
-    } else {
-        http_response_code(401);
-        echo json_encode(['error' => 'Usuario no autenticado']);
-        exit;
-    }
+// Verificar si el usuario está logueado (permitir override por pruebas via GET/POST)
+if (isset($_POST['user_id']) || isset($_GET['user_id'])) {
+    $user_id = intval($_POST['user_id'] ?? $_GET['user_id']);
 } else {
+    requireUserOrExitJson();
     $user_id = $_SESSION['user_id'];
 }
 

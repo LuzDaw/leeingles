@@ -55,46 +55,41 @@ logueo_seguridad/restablecer_contrasena.php
 index.php
 js/modal-functions.js
 
-# Current Time
-3/2/2026, 8:15:33 p. m. (Europe/Madrid, UTC+1:00)
+# datos_clean.md — resumen limpio
 
-# Current Working Directory (c:/xampp/htdocs/leeingles) Files
-.htaccess
-index.php
-leerentender.mp4
-paypal.html
-actions/
-actions/delete_text.php
-actions/email_handler.php
-actions/print_texts.php
-actions/upload_text.php
-admin/
-admin/admin_categories.php
-admin/fix_db_indexes.php
-admin/test_account.php
-admin/update_db_production.php
-admin/verificar_cambios.php
-ajax/
-ajax/ajax_calendar_data.php
-ajax/ajax_delete_category.php
-ajax/ajax_my_texts_content.php
-ajax/ajax_saved_words_content.php
-ajax/ajax_upload_content.php
-ajax/ajax_upload_text.php
-ajax/ajax_user_texts.php
-ajax/get_user_email.php
-ajax/get_user_texts.php
-ajax/load_user_texts.php
-css/
-css/calendar-styles.css
-css/color-theme.css
-css/common-styles.css
-css/dispositivo.css
-css/header-redesign.css
-css/index-page.css
-css/landing-page.css
-css/mobile-ready.css
-css/modal-styles.css
+Este documento es una versión condensada y limpia de `docs/datos.md`. Contiene solo la información útil y verificada para el equipo.
+
+## Entorno y URLs
+- Producción: https://leeingles.com
+- Local: http://localhost/leeingles
+
+## Base de datos
+- En local `db/connection.php` apunta a la base `traductor_app` (host `localhost:3306`, usuario `root`, charset `utf8mb4`).
+- En el repo aparece `db/leeingles.sql` como dump histórico; confirmar si debe importarse o mantenerse como archivo histórico.
+
+## Archivos y puntos clave
+- Archivo de configuración de rutas central: `includes/config.php` (define `BASE_URL`, `BASE_PATH`, `url()`, `asset()` y inyecta `window.APP`).
+- Entradas que requieren atención:
+    - `actions/email_handler.php` — leer credenciales SMTP desde entorno (`.env`).
+    - `recordatorio/email_templates.php` — usar `BASE_URL` para botones.
+    - JS que realiza `fetch()` hacia rutas internas — usar `window.APP.BASE_URL`.
+
+## Flujo de despliegue (resumen)
+- Subida manual por SFTP (controlada). `sftp.json` con `uploadOnSave:false`.
+- Crear `.env` en servidor (no subir desde local).
+- Backups de BD antes de cada despliegue (`mysqldump`).
+
+## Inconsistencias detectadas (acción requerida)
+- `docs/datos.md` contiene múltiples bloques repetidos y mensajes de `TASK RESUMPTION` generados automáticamente: limpiar y consolidar.
+- Documentación menciona `db/leeingles.sql` pero la configuración local usa `traductor_app`. Aclarar cuál es la BD oficial en cada entorno y documentarlo.
+
+## Estado actual
+- Código refactorizado para rutas portables (se añadió `includes/config.php`), `window.APP.BASE_URL` inyectado y varios `fetch`/links adaptados.
+- `docs/entorno.md` creado (resumen de entorno operativo).
+
+---
+Para detalles o para restaurar la versión original completa de `docs/datos.md`, consultar `docs/datos_raw.md` si existe o el historial Git.
+
 css/modern-styles.css
 css/progress-styles.css
 css/saved-words-styles.css

@@ -1,15 +1,12 @@
 <?php
-session_start();
+require_once __DIR__ . '/../includes/ajax_common.php';
+require_once __DIR__ . '/../db/connection.php';
+
 header('Content-Type: application/json; charset=utf-8');
 header('Cache-Control: no-store');
 if (function_exists('ob_get_length')) { while (ob_get_level()>0) { ob_end_clean(); } }
-require_once '../db/connection.php';
 
-if (!isset($_SESSION['user_id'])) {
-    echo json_encode(['success' => false, 'message' => 'No autorizado']);
-    exit();
-}
-
+requireUserOrExitJson();
 $user_id = (int)$_SESSION['user_id'];
 
 try {

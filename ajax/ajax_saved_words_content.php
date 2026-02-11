@@ -1,14 +1,9 @@
 <?php
-session_start();
-require_once '../db/connection.php';
+require_once __DIR__ . '/../includes/ajax_common.php';
+require_once __DIR__ . '/../db/connection.php';
 
-if (!isset($_SESSION['user_id'])) {
-    echo json_encode(['error' => 'No autorizado']);
-    exit();
-}
-
+requireUserOrExitJson();
 $user_id = $_SESSION['user_id'];
-
 // Liberar bloqueo de sesión para permitir otras peticiones paralelas
 session_write_close();
 

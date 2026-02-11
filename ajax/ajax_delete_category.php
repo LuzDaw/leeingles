@@ -1,15 +1,16 @@
 <?php
-session_start();
-require_once '../db/connection.php';
+require_once __DIR__ . '/../includes/ajax_common.php';
+require_once __DIR__ . '/../db/connection.php';
+
+header('Content-Type: application/json');
 
 // Solo admin puede eliminar categorías
-if (!isset($_SESSION['user_id']) || !isset($_SESSION['is_admin']) || $_SESSION['is_admin'] != 1) {
+requireUserOrExitJson();
+if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] != 1) {
     http_response_code(403);
     echo json_encode(['error' => 'Acceso denegado']);
     exit();
 }
-
-header('Content-Type: application/json');
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
