@@ -8,7 +8,23 @@
     // Silenciar logs verbosos del script ResponsiveVoice sin afectar el resto
     (function setupRVLogSilencer(){
         try {
-            console.warn = function(...args){ if (shouldMute(args)) return; return __orig.warn.apply(console, args); };
+            // Guardar referencias originales de console
+            const __orig = {
+                warn: console.warn.bind(console),
+                log: console.log.bind(console),
+                error: console.error.bind(console)
+            };
+
+            // Flag global opcional para silenciar mensajes relacionados
+            if (typeof window.__RV_MUTE === 'undefined') window.__RV_MUTE = false;
+
+            // Función segura para decidir si silenciar según args (extensible)
+            function shouldMute(_args){
+                try { return !!window.__RV_MUTE; } catch(e) { return false; }
+            }
+
+            // Reemplazar console.warn de forma segura
+            console.warn = function(...args){ if (shouldMute(args)) return; return __orig.warn(...args); };
             // Permitir restaurar si fuera necesario
             window.__rvConsoleSilencer = __orig;
         } catch(e) { /* silencioso */ }

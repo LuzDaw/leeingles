@@ -1,4 +1,5 @@
 # Auditoría Técnica de Código - leeingles.com
+Estamos trabajando en local y en producion funcionando los dos entornos, con sftp hacemos subidas controladas
 
 ## Fecha de la Auditoría: 11/02/2026
 

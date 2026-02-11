@@ -393,8 +393,30 @@ function initLector() {
         totalPagesSpan = document.getElementById("total-pages");
 
         // Control de visibilidad del selector de velocidad
-        const speedBtn = document.getElementById('speed-btn');
-        const speedSelector = document.getElementById('speed-selector');
+        let speedBtn = document.getElementById('speed-btn');
+        let speedSelector = document.getElementById('speed-selector');
+
+        // Si los controles de paginación existen en DOM pero faltan los elementos de velocidad,
+        // los creamos de forma no intrusiva para evitar warnings y mantener la funcionalidad.
+        const paginationControlsContainer = document.getElementById('pagination-controls');
+        if (paginationControlsContainer) {
+            if (!speedBtn) {
+                speedBtn = document.createElement('button');
+                speedBtn.id = 'speed-btn';
+                speedBtn.className = 'speed-btn';
+                speedBtn.type = 'button';
+                speedBtn.style.display = 'none'; // oculto por defecto hasta que se configure
+                paginationControlsContainer.appendChild(speedBtn);
+            }
+            if (!speedSelector) {
+                speedSelector = document.createElement('div');
+                speedSelector.id = 'speed-selector';
+                speedSelector.className = 'speed-selector';
+                speedSelector.style.display = 'none';
+                paginationControlsContainer.appendChild(speedSelector);
+            }
+        }
+
         if (speedBtn && speedSelector) {
             // Remove existing listener to prevent duplicates if this function is called multiple times
             speedBtn.removeEventListener('click', handleSpeedBtnClick);
@@ -403,7 +425,7 @@ function initLector() {
             speedBtn.addEventListener('click', handleSpeedBtnClick);
             document.addEventListener('click', handleDocumentClickForSpeed);
         } else {
-            console.warn('initializePaginationControls: speed-btn or speed-selector not found.');
+            // No hay contenedor de paginación: no es crítico en este layout, omitimos warning.
         }
 
         if (prevBtn && !prevBtn.hasAttribute('data-listener')) {
