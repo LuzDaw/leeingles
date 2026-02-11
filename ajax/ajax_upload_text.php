@@ -1,9 +1,9 @@
 <?php
 require_once __DIR__ . '/../includes/ajax_common.php';
+require_once __DIR__ . '/../includes/ajax_helpers.php';
 require_once __DIR__ . '/../db/connection.php';
 
-header('Content-Type: application/json');
-
+noCacheHeaders();
 requireUserOrExitJson();
 
 
@@ -95,9 +95,11 @@ try {
                     if (isset($translation_data['translation']) && !empty($translation_data['translation'])) {
                         // Guardar la traducción en la db
                         $update_stmt = $conn->prepare("UPDATE texts SET title_translation = ? WHERE id = ?");
-                        $update_stmt->bind_param("si", $translation_data['translation'], $text_id);
-                        $update_stmt->execute();
-                        $update_stmt->close();
+                        if ($update_stmt) {
+                            $update_stmt->bind_param("si", $translation_data['translation'], $text_id);
+                            $update_stmt->execute();
+                            $update_stmt->close();
+                        }
                     }
                 }
             } catch (Exception $e) {
@@ -105,15 +107,18 @@ try {
             }
         }
         
-        echo json_encode(['success' => true, 'message' => 'Texto subido correctamente', 'text_id' => $text_id]);
+        $stmt->close();
+        $conn->close();
+        ajax_success(['message' => 'Texto subido correctamente', 'text_id' => $text_id]);
     } else {
         throw new Exception("Error ejecutando la consulta: " . $stmt->error);
     }
-    $stmt->close();
 } catch (Exception $e) {
     error_log("Error en ajax_upload_text.php: " . $e->getMessage());
-    echo json_encode(['success' => false, 'message' => 'Error del servidor: ' . $e->getMessage()]);
+    // Asegurar cerrar recursos
+    if (isset($stmt) && $stmt instanceof mysqli_stmt) { @ $stmt->close(); }
+    if (isset($conn) && $conn instanceof mysqli) { @ $conn->close(); }
+    ajax_error('Error del servidor: ' . $e->getMessage(), 500, $e->getMessage());
 }
 
-$conn->close();
 ?>
