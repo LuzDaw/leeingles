@@ -2,6 +2,7 @@
 require_once __DIR__ . '/../includes/ajax_common.php';
 require_once __DIR__ . '/../db/connection.php';
 require_once __DIR__ . '/../includes/title_functions.php';
+require_once __DIR__ . '/../includes/db_helpers.php';
 
 header('Content-Type: application/json; charset=utf-8');
 requireUserOrExitJson();
@@ -22,24 +23,20 @@ if (empty($title) || empty($translation)) {
 }
 
 // Verificar que el texto pertenece al usuario o es público
-try {
-    $stmt = $conn->prepare("SELECT id FROM texts WHERE id = ? AND (user_id = ? OR is_public = 1)");
-    $stmt->bind_param("ii", $text_id, $user_id);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    
-    if ($result->num_rows === 0) {
-        echo json_encode(['error' => 'Texto no encontrado o no autorizado']);
-        exit();
-    }
-    $stmt->close();
-} catch (Exception $e) {
-    echo json_encode(['error' => 'Error verificando autorización']);
+$text_row = get_text_if_allowed($conn, $text_id, $user_id);
+if ($text_row === false) {
+    echo json_encode(['error' => 'Texto no encontrado o no autorizado']);
     exit();
 }
 
 // Guardar la traducción del título
-$result = saveTitleTranslation($text_id, $title, $translation);
+// Guardar traducción del título (actualizar campo en DB)
+$ok = update_text_title_translation($conn, $text_id, $translation);
+if ($ok) {
+    $result = ['success' => true, 'message' => 'Traducción guardada'];
+} else {
+    $result = ['success' => false, 'error' => 'Error al guardar traducción'];
+}
 
 if ($result['success']) {
     echo json_encode(['success' => true, 'message' => $result['message']]);

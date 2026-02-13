@@ -7,6 +7,8 @@ require_once __DIR__ . '/../../includes/ajax_common.php';
 require_once __DIR__ . '/../../includes/ajax_helpers.php';
 require_once __DIR__ . '/../../db/connection.php';
 require_once __DIR__ . '/../../includes/content_functions.php';
+require_once __DIR__ . '/../../includes/practice_functions.php';
+require_once __DIR__ . '/../../includes/word_functions.php';
 
 requireUserOrExitHtml();
 $user_id = $_SESSION['user_id'];
@@ -14,55 +16,24 @@ $user_id = $_SESSION['user_id'];
 // Liberar bloqueo de sesión para permitir otras peticiones paralelas
 session_write_close();
 
-// 1. Estadísticas de palabras guardadas
-$stmt = $conn->prepare("SELECT COUNT(*) as total_words FROM saved_words WHERE user_id = ?");
-$stmt->bind_param("i", $user_id);
-$stmt->execute();
-$result = $stmt->get_result();
-$total_words = $result->fetch_assoc()['total_words'];
-$stmt->close();
+// 1. Estadísticas de palabras guardadas (centralizado)
+$total_words = countSavedWords($user_id);
 
 // 2. Textos subidos
 $total_texts = getTotalUserTexts($user_id);
 
-// 3. Tiempo de lectura acumulado
-$total_reading_seconds = 0;
-$stmt_read = $conn->prepare("SELECT SUM(duration_seconds) as total_seconds FROM reading_time WHERE user_id = ?");
-if ($stmt_read) {
-    $stmt_read->bind_param("i", $user_id);
-    $stmt_read->execute();
-    $res_read = $stmt_read->get_result();
-    $row_read = $res_read->fetch_assoc();
-    $total_reading_seconds = $row_read['total_seconds'] ?? 0;
-    $stmt_read->close();
-}
+$total_reading_seconds = get_total_reading_seconds($user_id);
 $reading_h = floor($total_reading_seconds / 3600);
 $reading_m = floor(($total_reading_seconds % 3600) / 60);
 $reading_time = "{$reading_h}h {$reading_m}m";
 
-// 4. Tiempo de práctica acumulado
-$total_practice_seconds = 0;
-$stmt_prac = $conn->prepare("SELECT SUM(duration_seconds) as total_seconds FROM practice_time WHERE user_id = ?");
-if ($stmt_prac) {
-    $stmt_prac->bind_param("i", $user_id);
-    $stmt_prac->execute();
-    $res_prac = $stmt_prac->get_result();
-    $row_prac = $res_prac->fetch_assoc();
-    $total_practice_seconds = $row_prac['total_seconds'] ?? 0;
-    $stmt_prac->close();
-}
+$total_practice_seconds = get_total_practice_seconds($user_id);
 $practice_h = floor($total_practice_seconds / 3600);
 $practice_m = floor(($total_practice_seconds % 3600) / 60);
 $practice_time = "{$practice_h}h {$practice_m}m";
 
 // 5. Textos completados (100%)
-$read_texts_count = 0;
-$stmt = $conn->prepare("SELECT COUNT(*) as read_count FROM reading_progress WHERE user_id = ? AND percent >= 100");
-$stmt->bind_param("i", $user_id);
-$stmt->execute();
-$result = $stmt->get_result();
-$read_texts_count = $result->fetch_assoc()['read_count'];
-$stmt->close();
+$read_texts_count = get_completed_texts_count($user_id);
 
 // Manejo de peticiones AJAX para progreso de lectura (Legacy support)
 if (isset($_GET['text_id']) || isset($_POST['text_id'])) {
@@ -73,16 +44,11 @@ if (isset($_GET['text_id']) || isset($_POST['text_id'])) {
     requireUserOrExitJson();
 
     if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-        $stmt = $conn->prepare("SELECT percent, pages_read, read_count FROM reading_progress WHERE user_id = ? AND text_id = ?");
-        $stmt->bind_param('ii', $user_id, $text_id);
-        $stmt->execute();
-        $stmt->bind_result($percent, $pages_read, $read_count);
-        if ($stmt->fetch()) {
-            $pages_read_arr = json_decode((string)$pages_read, true) ?: [];
-            $stmt->close();
-            ajax_success(['percent' => intval($percent), 'pages_read' => $pages_read_arr, 'read_count' => intval($read_count)]);
+        $entry = getReadingProgressEntry($user_id, $text_id);
+        if ($entry) {
+            $pages_read_arr = json_decode((string)$entry['pages_read'], true) ?: [];
+            ajax_success(['percent' => intval($entry['percent']), 'pages_read' => $pages_read_arr, 'read_count' => intval($entry['read_count'])]);
         } else {
-            $stmt->close();
             ajax_success(['percent' => 0, 'pages_read' => [], 'read_count' => 0]);
         }
         exit;
@@ -93,34 +59,12 @@ if (isset($_GET['text_id']) || isset($_POST['text_id'])) {
         $pages_read = $_POST['pages_read'];
         $finish = isset($_POST['finish']) ? intval($_POST['finish']) : 0;
 
-        // Forzar updated_at para asegurar que se registra el cambio
-        $now = date('Y-m-d H:i:s');
-
-        $stmt = $conn->prepare("SELECT percent, read_count FROM reading_progress WHERE user_id = ? AND text_id = ?");
-        $stmt->bind_param('ii', $user_id, $text_id);
-        $stmt->execute();
-        $stmt->bind_result($old_percent, $old_read_count);
-
-        if ($stmt->fetch()) {
-            $stmt->close();
-            $new_read_count = (int)$old_read_count;
-            if ($finish === 1 || ($percent >= 100 && (int)$old_percent < 100)) {
-                $new_read_count++;
-            }
-
-            $stmt2 = $conn->prepare("UPDATE reading_progress SET percent = ?, pages_read = ?, updated_at = ?, read_count = ? WHERE user_id = ? AND text_id = ?");
-            $stmt2->bind_param('issiii', $percent, $pages_read, $now, $new_read_count, $user_id, $text_id);
-            $stmt2->execute();
-            $stmt2->close();
+        $res = saveReadingProgress($user_id, $text_id, $percent, $pages_read, $finish);
+        if (isset($res['success']) && $res['success']) {
+            ajax_success(['success' => true]);
         } else {
-            $stmt->close();
-            $init_read_count = ($percent >= 100 || $finish === 1) ? 1 : 0;
-            $stmt2 = $conn->prepare("INSERT INTO reading_progress (user_id, text_id, percent, pages_read, updated_at, read_count) VALUES (?, ?, ?, ?, ?, ?)");
-            $stmt2->bind_param('iiissi', $user_id, $text_id, $percent, $pages_read, $now, $init_read_count);
-            $stmt2->execute();
-            $stmt2->close();
+            ajax_error(['error' => $res['error'] ?? 'Error al guardar progreso']);
         }
-        ajax_success(['success' => true]);
         exit;
     }
 }

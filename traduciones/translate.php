@@ -49,9 +49,9 @@ if (isset($_SESSION['user_id'])) {
 // Especialmente importante ya que este script hace llamadas a APIs externas lentas
 session_write_close();
 
-require_once __DIR__ . '/../includes/translation_service.php';
+require_once __DIR__ . '/../includes/external_services.php';
 
-$result = translateText($text);
+$result = external_translate_text($text);
 if (isset($result['error'])) {
     echo json_encode(['error' => $result['error']]);
     exit();

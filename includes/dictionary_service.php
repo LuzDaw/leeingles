@@ -3,23 +3,7 @@
 // Servicio centralizado para búsquedas de diccionario y procesamiento de resultados
 
 require_once __DIR__ . '/cache.php';
-
-/**
- * Limpia el texto de ejemplos de Merriam-Webster u otras APIs.
- */
-function limpiarEjemploMerriamWebster($texto) {
-    $texto = preg_replace('/\{wi\}(.*?)\{\/wi\}/', '$1', $texto);
-    $texto = preg_replace('/\{it\}(.*?)\{\/it\}/', '$1', $texto);
-    $texto = preg_replace('/\{b\}(.*?)\{\/b\}/', '$1', $texto);
-    $texto = preg_replace('/\{sup\}(.*?)\{\/sup\}/', '$1', $texto);
-    $texto = preg_replace('/\{inf\}(.*?)\{\/inf\}/', '$1', $texto);
-    $texto = preg_replace('/\{dx\}(.*?)\{\/dx\}/', '$1', $texto);
-    $texto = preg_replace('/\{dxt\}(.*?)\{\/dxt\}/', '$1', $texto);
-    $texto = preg_replace('/\{ma\}(.*?)\{\/ma\}/', '$1', $texto);
-    $texto = trim($texto);
-    $texto = preg_replace('/\s+/', ' ', $texto);
-    return $texto;
-}
+require_once __DIR__ . '/helpers.php';
 
 function getFreeDictionaryInfo($word) {
     $url = "https://api.dictionaryapi.dev/api/v2/entries/en/" . urlencode($word);
@@ -109,7 +93,7 @@ function processWordsAPIData($data) {
  * Devuelve array procesado o false si no se encuentra.
  */
 function getDictionaryInfo($word) {
-    $key = 'dict_' . md5(strtolower(trim($word)));
+    $key = make_cache_key('dict', $word);
     $cached = cache_get($key);
     if ($cached !== null) {
         return $cached;
@@ -120,7 +104,7 @@ function getDictionaryInfo($word) {
     if ($free !== false) {
         $proc = processFreeDictionaryData($free);
         $proc['source'] = 'Free Dictionary API';
-        try { cache_set($key, $proc, 604800); } catch (Exception $e) {}
+        safe_cache_set($key, $proc, 604800);
         return $proc;
     }
 
@@ -129,7 +113,7 @@ function getDictionaryInfo($word) {
     if ($words !== false) {
         $proc = processWordsAPIData($words);
         $proc['source'] = 'WordsAPI';
-        try { cache_set($key, $proc, 604800); } catch (Exception $e) {}
+        safe_cache_set($key, $proc, 604800);
         return $proc;
     }
 

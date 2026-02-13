@@ -1,6 +1,8 @@
 <?php
 session_start();
 require_once '../db/connection.php';
+require_once __DIR__ . '/../includes/word_functions.php';
+require_once __DIR__ . '/../includes/practice_functions.php';
 
 // Verificar que el usuario esté logueado
 if (!isset($_SESSION['user_id'])) {
@@ -18,16 +20,14 @@ if (isset($_GET['text_id'])) {
 
     try {
         // 1. Borrar palabras guardadas asociadas a este texto
-        $stmt1 = $conn->prepare("DELETE FROM saved_words WHERE text_id = ? AND user_id = ?");
-        $stmt1->bind_param("ii", $text_id, $user_id);
-        $stmt1->execute();
-        $stmt1->close();
+        if (!deleteSavedWordsByTextIds($user_id, [$text_id])) {
+            throw new Exception('Error borrando palabras guardadas');
+        }
 
         // 2. Borrar progreso de lectura
-        $stmt4 = $conn->prepare("DELETE FROM reading_progress WHERE text_id = ? AND user_id = ?");
-        $stmt4->bind_param("ii", $text_id, $user_id);
-        $stmt4->execute();
-        $stmt4->close();
+        if (!deleteReadingProgressByTextIds($user_id, [$text_id])) {
+            throw new Exception('Error borrando progreso de lectura');
+        }
 
         // 3. Borrar de textos ocultos
         $stmt5 = $conn->prepare("DELETE FROM hidden_texts WHERE text_id = ? AND user_id = ?");

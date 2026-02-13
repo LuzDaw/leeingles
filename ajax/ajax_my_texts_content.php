@@ -42,21 +42,18 @@ if ($_POST && isset($_POST['action']) && isset($_POST['selected_texts'])) {
             
             $conn->begin_transaction();
             try {
-                $params = array_merge($selected_texts, [$user_id]);
-                $types = str_repeat('i', count($selected_texts)) . 'i';
-                $placeholders_all = str_repeat('?,', count($selected_texts) - 1) . '?';
+                require_once __DIR__ . '/../includes/word_functions.php';
+                require_once __DIR__ . '/../includes/practice_functions.php';
 
                 // 1. Borrar palabras guardadas
-                $stmt1 = $conn->prepare("DELETE FROM saved_words WHERE text_id IN ($placeholders_all) AND user_id = ?");
-                $stmt1->bind_param($types, ...$params);
-                $stmt1->execute();
-                $stmt1->close();
+                if (!deleteSavedWordsByTextIds($user_id, $selected_texts)) {
+                    throw new Exception('Error borrando palabras guardadas');
+                }
 
                 // 2. Borrar progreso de lectura
-                $stmt2 = $conn->prepare("DELETE FROM reading_progress WHERE text_id IN ($placeholders_all) AND user_id = ?");
-                $stmt2->bind_param($types, ...$params);
-                $stmt2->execute();
-                $stmt2->close();
+                if (!deleteReadingProgressByTextIds($user_id, $selected_texts)) {
+                    throw new Exception('Error borrando progreso de lectura');
+                }
 
                 // Ocultar textos públicos
                 foreach ($to_hide as $tid) {

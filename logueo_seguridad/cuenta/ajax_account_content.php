@@ -9,6 +9,7 @@ if (session_status() === PHP_SESSION_NONE) {
 require_once __DIR__ . '/../../db/connection.php';
 require_once __DIR__ . '/../../includes/content_functions.php';
 require_once __DIR__ . '/../../dePago/subscription_functions.php';
+require_once __DIR__ . '/../../includes/practice_functions.php';
 
 if (!isset($_SESSION['user_id'])) {
     echo '<div style="text-align: center; padding: 40px; color: #ff8a00;">Debes iniciar sesión para ver tu cuenta.</div>';
@@ -44,32 +45,12 @@ $limit_info = checkTranslationLimit($user_id);
 // Obtener datos reales de actividad
 $uploaded_texts = getTotalUserTexts($user_id);
 
-// Tiempo de lectura real
-$total_reading_seconds = 0;
-$stmt_read = $conn->prepare("SELECT SUM(duration_seconds) as total_seconds FROM reading_time WHERE user_id = ?");
-if ($stmt_read) {
-    $stmt_read->bind_param("i", $user_id);
-    $stmt_read->execute();
-    $res_read = $stmt_read->get_result();
-    $row_read = $res_read->fetch_assoc();
-    $total_reading_seconds = $row_read['total_seconds'] ?? 0;
-    $stmt_read->close();
-}
+$total_reading_seconds = get_total_reading_seconds($user_id);
 $reading_h = floor($total_reading_seconds / 3600);
 $reading_m = floor(($total_reading_seconds % 3600) / 60);
 $reading_time = "{$reading_h}h {$reading_m}m";
 
-// Tiempo de práctica real
-$total_practice_seconds = 0;
-$stmt_prac = $conn->prepare("SELECT SUM(duration_seconds) as total_seconds FROM practice_time WHERE user_id = ?");
-if ($stmt_prac) {
-    $stmt_prac->bind_param("i", $user_id);
-    $stmt_prac->execute();
-    $res_prac = $stmt_prac->get_result();
-    $row_prac = $res_prac->fetch_assoc();
-    $total_practice_seconds = $row_prac['total_seconds'] ?? 0;
-    $stmt_prac->close();
-}
+$total_practice_seconds = get_total_practice_seconds($user_id);
 $practice_h = floor($total_practice_seconds / 3600);
 $practice_m = floor(($total_practice_seconds % 3600) / 60);
 $practice_time = "{$practice_h}h {$practice_m}m";

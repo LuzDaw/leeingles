@@ -23,8 +23,8 @@ try {
 
         if ($result['success']) {
             $user_id = $result['user_id'];
-            $token = bin2hex(random_bytes(32));
-            $token_hash = hash('sha256', $token);
+            $token = generate_hex_token(32);
+            $token_hash = hash_token($token, 'sha256');
             $expira_en = date('Y-m-d H:i:s', strtotime('+24 hours'));
 
             $stmt_token = $conn->prepare("INSERT INTO verificaciones_email (id_usuario, token_hash, expira_en, tipo) VALUES (?, ?, ?, 'email_verification')");

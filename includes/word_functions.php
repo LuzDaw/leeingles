@@ -169,4 +169,65 @@ function getRandomWordsForPractice($user_id, $limit = 10) {
     $stmt->close();
     return $words;
 }
+
+/**
+ * Elimina una palabra guardada para un usuario. Si $text_id es null, eliminará entradas sin text_id también.
+ * @param int $user_id
+ * @param string $word
+ * @param int|null $text_id
+ * @return bool
+ */
+function deleteSavedWord($user_id, $word, $text_id = null) {
+    global $conn;
+    if ($text_id === null) {
+        $stmt = $conn->prepare("DELETE FROM saved_words WHERE user_id = ? AND word = ?");
+        $stmt->bind_param("is", $user_id, $word);
+    } else {
+        $stmt = $conn->prepare("DELETE FROM saved_words WHERE user_id = ? AND word = ? AND (text_id = ? OR (text_id IS NULL AND ? = 0))");
+        $stmt->bind_param("isii", $user_id, $word, $text_id, $text_id);
+    }
+    $ok = $stmt->execute();
+    $stmt->close();
+    return (bool)$ok;
+}
+
+/**
+ * Elimina varias palabras en lote. $items es array de ['word'=>string,'text_id'=>int]
+ * Devuelve array con 'deleted' y 'errors'.
+ */
+function deleteSavedWordsBulk($user_id, $items) {
+    $deleted = 0;
+    $errors = [];
+    foreach ($items as $it) {
+        $word = $it['word'] ?? '';
+        $text_id = isset($it['text_id']) ? intval($it['text_id']) : null;
+        if ($word === '') { $errors[] = 'Palabra vacía'; continue; }
+        if (deleteSavedWord($user_id, $word, $text_id)) {
+            $deleted++;
+        } else {
+            $errors[] = "Error eliminando: $word";
+        }
+    }
+    return ['deleted' => $deleted, 'errors' => $errors];
+}
+
+/**
+ * Elimina palabras asociadas a una lista de text_id para un usuario.
+ * @param int $user_id
+ * @param array $text_ids
+ * @return bool
+ */
+function deleteSavedWordsByTextIds($user_id, $text_ids) {
+    global $conn;
+    if (empty($text_ids)) return true;
+    $placeholders = implode(',', array_fill(0, count($text_ids), '?'));
+    $types = str_repeat('i', count($text_ids)) . 'i';
+    $params = array_merge($text_ids, [$user_id]);
+    $stmt = $conn->prepare("DELETE FROM saved_words WHERE text_id IN ($placeholders) AND user_id = ?");
+    if (!$stmt) return false;
+    $stmt->bind_param($types, ...$params);
+    $ok = $stmt->execute();
+    $stmt->close();
+    return (bool)$ok;
+}
 ?>

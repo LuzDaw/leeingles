@@ -37,35 +37,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         
         // Verificar si ya existe
-        $stmt_check = $conn->prepare("SELECT id FROM categories WHERE name = ?");
-        $stmt_check->bind_param("s", $translated_name);
-        $stmt_check->execute();
-        $stmt_check->store_result();
-
-        if ($stmt_check->num_rows > 0) {
+        // ...existing code...
+        if (category_exists_by_name($conn, $translated_name)) {
             $errors[] = "La categoría ya existe.";
         } else {
-            $stmt_insert = $conn->prepare("INSERT INTO categories (name) VALUES (?)");
-            $stmt_insert->bind_param("s", $translated_name);
-            if ($stmt_insert->execute()) {
+            if (insert_category($conn, $translated_name)) {
                 $success = "Categoría creada correctamente.";
             } else {
                 $errors[] = "Error al crear la categoría.";
             }
-            $stmt_insert->close();
         }
-        $stmt_check->close();
     }
 }
 
 // Obtener categorías actuales con conteo de textos
-$result = $conn->query("
-    SELECT c.id, c.name, COUNT(t.id) as texts_count 
-    FROM categories c 
-    LEFT JOIN texts t ON c.id = t.category_id 
-    GROUP BY c.id, c.name 
-    ORDER BY c.name
-");
+
+$categories = get_categories_with_text_count($conn);
+$categories = get_categories_with_text_count($conn);
 
 ?>
 

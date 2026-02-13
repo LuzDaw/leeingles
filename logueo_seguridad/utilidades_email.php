@@ -7,7 +7,7 @@
 require_once __DIR__ . '/../includes/config.php';
 require_once __DIR__ . '/../recordatorio/email_templates.php';
 require_once __DIR__ . '/../db/connection.php';
-require_once __DIR__ . '/../includes/email_service.php';
+require_once __DIR__ . '/../includes/external_services.php';
 
 // Usar BASE_URL desde includes/config.php
 $base_url = defined('BASE_URL') ? BASE_URL : ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://" . $_SERVER['HTTP_HOST']);
@@ -24,9 +24,7 @@ $base_url = defined('BASE_URL') ? BASE_URL : ((isset($_SERVER['HTTPS']) && $_SER
  * @param string $body El cuerpo del correo electrónico (puede contener HTML).
  * @return array El resultado de la función `sendEmail`.
  */
-function enviarEmailConPHPMailer($destinatarioEmail, $destinatarioNombre, $subject, $body) {
-    return sendEmail($destinatarioEmail, $destinatarioNombre, $subject, $body);
-}
+// Eliminada función enviarEmailConPHPMailer. Usar sendEmail() de includes/email_service.php directamente.
 
 /**
  * Envía un correo electrónico de verificación de cuenta al usuario.

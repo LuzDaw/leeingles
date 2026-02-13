@@ -3,6 +3,7 @@ require_once __DIR__ . '/../../includes/ajax_common.php';
 require_once __DIR__ . '/../../includes/ajax_helpers.php';
 noCacheHeaders();
 requireUserOrExitJson();
+
 $user_id = $_SESSION['user_id'];
 $duration = isset($_POST['duration']) ? intval($_POST['duration']) : 0;
 $text_id = isset($_POST['text_id']) ? intval($_POST['text_id']) : 0;
@@ -12,51 +13,14 @@ if ($duration <= 0 || $duration > 3600 || $text_id <= 0) {
     ajax_error('Datos inválidos: duración debe estar entre 1 y 3600 segundos', 400);
 }
 
-require_once '../../db/connection.php';
+require_once __DIR__ . '/../../db/connection.php';
+require_once __DIR__ . '/../../includes/practice_functions.php';
 
-// Verificar que la tabla existe, si no, crearla
-$conn->query("
-    CREATE TABLE IF NOT EXISTS reading_time (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        user_id INT NOT NULL,
-        text_id INT NOT NULL,
-        duration_seconds INT NOT NULL,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-        FOREIGN KEY (text_id) REFERENCES texts(id) ON DELETE CASCADE
-    )
-");
-
-// Optimización: Buscar si ya existe un registro para este usuario, texto y día actual
-$stmt_check = $conn->prepare("SELECT id FROM reading_time WHERE user_id = ? AND text_id = ? AND DATE(created_at) = CURRENT_DATE() LIMIT 1");
-$stmt_check->bind_param('ii', $user_id, $text_id);
-$stmt_check->execute();
-$res_check = $stmt_check->get_result();
-$existing_row = $res_check->fetch_assoc();
-$stmt_check->close();
-
-if ($existing_row) {
-    // Si existe, acumular el tiempo
-    $stmt = $conn->prepare("UPDATE reading_time SET duration_seconds = duration_seconds + ? WHERE id = ?");
-    $stmt->bind_param('ii', $duration, $existing_row['id']);
+$res = saveReadingTime($user_id, $text_id, $duration);
+if ($res['success']) {
+    ajax_success();
 } else {
-    // Si no existe, crear nuevo registro para hoy
-    $stmt = $conn->prepare("INSERT INTO reading_time (user_id, text_id, duration_seconds) VALUES (?, ?, ?)");
-    $stmt->bind_param('iii', $user_id, $text_id, $duration);
+    ajax_error('Error al guardar en BD', 500, $res['error'] ?? null);
 }
 
-try {
-    $ok = $stmt->execute();
-    $stmt->close();
-    $conn->close();
-    if ($ok) {
-        ajax_success();
-    } else {
-        ajax_error('Error al guardar en BD', 500, $stmt->error ?? null);
-    }
-} catch (Exception $e) {
-    if (isset($stmt) && $stmt instanceof mysqli_stmt) { @ $stmt->close(); }
-    if (isset($conn) && $conn instanceof mysqli) { @ $conn->close(); }
-    ajax_error('Error al guardar en BD', 500, $e->getMessage());
-}
 ?>

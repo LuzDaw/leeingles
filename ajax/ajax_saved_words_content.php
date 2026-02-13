@@ -2,6 +2,7 @@
 require_once __DIR__ . '/../includes/ajax_common.php';
 require_once __DIR__ . '/../includes/ajax_helpers.php';
 require_once __DIR__ . '/../db/connection.php';
+require_once __DIR__ . '/../includes/word_functions.php';
 
 noCacheHeaders();
 requireUserOrExitJson();
@@ -13,43 +14,27 @@ session_write_close();
 if (isset($_GET['get_word_count']) && isset($_GET['text_id'])) {
     $text_id = intval($_GET['text_id']);
     
-    $stmt = $conn->prepare("SELECT COUNT(*) as word_count FROM saved_words WHERE user_id = ? AND text_id = ?");
-    $stmt->bind_param("ii", $user_id, $text_id);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $data = $result->fetch_assoc();
-    
-    $stmt->close();
-    $conn->close();
-    ajax_success(['word_count' => intval($data['word_count'])]);
+    $count = countSavedWords($user_id, $text_id);
+    ajax_success(['word_count' => intval($count)]);
 }
 
 // Endpoint para obtener las palabras guardadas de un texto específico
 if (isset($_GET['get_words_by_text']) && isset($_GET['text_id'])) {
     $text_id = intval($_GET['text_id']);
     
-    $stmt = $conn->prepare("SELECT sw.word, sw.translation, sw.context, sw.text_id, t.title as text_title, t.title_translation FROM saved_words sw LEFT JOIN texts t ON sw.text_id = t.id WHERE sw.user_id = ? AND sw.text_id = ? ORDER BY sw.created_at DESC");
-    $stmt->bind_param("ii", $user_id, $text_id);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $words = $result->fetch_all(MYSQLI_ASSOC);
-    
-    $stmt->close();
-    $conn->close();
+    $words = getSavedWords($user_id, $text_id);
     ajax_success(['words' => $words]);
 }
 
 // Procesar eliminación de palabra individual
 if (isset($_POST['delete_word'])) {
     $word_to_delete = $_POST['word_to_delete'];
-    $stmt = $conn->prepare("DELETE FROM saved_words WHERE user_id = ? AND word = ?");
-    $stmt->bind_param("is", $user_id, $word_to_delete);
-    if ($stmt->execute()) {
+    $text_id = isset($_POST['text_id']) ? intval($_POST['text_id']) : null;
+    if (deleteSavedWord($user_id, $word_to_delete, $text_id)) {
         $success_message = "Palabra eliminada correctamente.";
     } else {
         $error_message = "Error al eliminar la palabra.";
     }
-    $stmt->close();
 }
 
 // Procesar acción en lote para eliminar palabras seleccionadas via AJAX
@@ -57,34 +42,21 @@ if (isset($_POST['action']) && $_POST['action'] === 'delete' && isset($_POST['se
     $deleted_count = 0;
     $errors = [];
     
+    $items = [];
     foreach ($_POST['selected_words'] as $word_info) {
         list($word, $text_id) = explode('|', $word_info);
-        $stmt = $conn->prepare("DELETE FROM saved_words WHERE user_id = ? AND word = ? AND (text_id = ? OR (text_id IS NULL AND ? = 0))");
-        $stmt->bind_param("isii", $user_id, $word, $text_id, $text_id);
-        if ($stmt->execute()) {
-            $deleted_count++;
-        } else {
-            $errors[] = "Error eliminando: $word";
-        }
-        $stmt->close();
+        $items[] = ['word' => $word, 'text_id' => intval($text_id)];
     }
-    
-    if (empty($errors)) {
-        $conn->close();
-        ajax_success(['message' => "$deleted_count palabra(s) eliminada(s) correctamente."]);
+    $res = deleteSavedWordsBulk($user_id, $items);
+    if (empty($res['errors'])) {
+        ajax_success(['message' => "$res[deleted] palabra(s) eliminada(s) correctamente."]);
     } else {
-        if (isset($conn) && $conn instanceof mysqli) { @ $conn->close(); }
-        ajax_error('Error al eliminar algunas palabras.', 500, implode('; ', $errors));
+        ajax_error('Error al eliminar algunas palabras.', 500, implode('; ', $res['errors']));
     }
 }
 
 // Obtener palabras guardadas del usuario, con título del texto
-$stmt = $conn->prepare("SELECT sw.word, sw.translation, sw.context, sw.created_at, sw.text_id, t.title as text_title, t.title_translation FROM saved_words sw LEFT JOIN texts t ON sw.text_id = t.id WHERE sw.user_id = ? ORDER BY t.title, sw.created_at DESC");
-$stmt->bind_param("i", $user_id);
-$stmt->execute();
-$result = $stmt->get_result();
-$words = $result->fetch_all(MYSQLI_ASSOC);
-
+$words = getSavedWords($user_id, null, null);
 // Agrupar palabras por texto
 $words_by_text = [];
 foreach ($words as $word) {

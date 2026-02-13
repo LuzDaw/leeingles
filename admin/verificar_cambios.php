@@ -113,15 +113,6 @@ if (file_exists('logueo_seguridad/utilidades_email.php')) {
         $checks[] = ['Inclusión', 'email_handler.php', 'Directa', 'ERROR'];
     }
     
-    // Verificar función enviarEmailConPHPMailer
-    if (strpos($content, 'function enviarEmailConPHPMailer') !== false) {
-        echo "<div class='check ok'>✓ Función enviarEmailConPHPMailer() definida</div>";
-        $checks[] = ['Función', 'enviarEmailConPHPMailer()', 'Definición', 'OK'];
-    } else {
-        echo "<div class='check error'>✗ Función enviarEmailConPHPMailer() NO encontrada</div>";
-        $errors[] = 'Función enviarEmailConPHPMailer() no definida';
-        $checks[] = ['Función', 'enviarEmailConPHPMailer()', 'Definición', 'ERROR'];
-    }
     
     // Verificar llamada a sendEmail()
     if (strpos($content, 'sendEmail(') !== false) {

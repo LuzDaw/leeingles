@@ -11,20 +11,18 @@ if (!isset($_SESSION['user_id'])) {
 
 // Manejar guardado de progreso de práctica
 if (isset($_POST['save_practice_progress'])) {
-$user_id = $_SESSION['user_id'];
+    $user_id = $_SESSION['user_id'];
     $mode = $_POST['mode'] ?? '';
     $total_words = intval($_POST['total_words'] ?? 0);
     $correct_answers = intval($_POST['correct_answers'] ?? 0);
     $incorrect_answers = intval($_POST['incorrect_answers'] ?? 0);
-    $accuracy = floatval($_POST['accuracy'] ?? 0);
+    $text_id = isset($_POST['text_id']) ? intval($_POST['text_id']) : null;
 
-    $stmt = $conn->prepare("INSERT INTO practice_progress (user_id, mode, total_words, correct_answers, incorrect_answers, accuracy) VALUES (?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("isiiid", $user_id, $mode, $total_words, $correct_answers, $incorrect_answers, $accuracy);
-    $success = $stmt->execute();
-$stmt->close();
-$conn->close();
-    
-    echo json_encode(['success' => $success]);
+    require_once __DIR__ . '/../db/connection.php';
+    require_once __DIR__ . '/../includes/practice_functions.php';
+
+    $res = savePracticeProgress($user_id, $mode, $total_words, $correct_answers, $incorrect_answers, $text_id);
+    echo json_encode(['success' => $res['success'], 'error' => $res['error'] ?? null, 'accuracy' => $res['accuracy'] ?? null]);
     exit;
 }
 

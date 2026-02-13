@@ -1,6 +1,6 @@
 <?php
 require '../db/connection.php';
-$r = $conn->query('SELECT email FROM users LIMIT 1');
-$u = $r->fetch_assoc();
-echo $u['email'];
+require_once '../includes/user_functions.php';
+$email = get_first_user_email($conn);
+echo $email !== null ? $email : '';
 ?>

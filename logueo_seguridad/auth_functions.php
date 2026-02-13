@@ -5,6 +5,7 @@
  */
 
 require_once '../db/connection.php'; // Ruta corregida
+require_once __DIR__ . '/../includes/helpers.php';
 
 // ==================== CSRF ====================
 /**
@@ -17,7 +18,7 @@ require_once '../db/connection.php'; // Ruta corregida
  */
 function generateCSRFToken() {
     if (!isset($_SESSION['csrf_token'])) {
-        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+        $_SESSION['csrf_token'] = generate_hex_token(32);
     }
     return $_SESSION['csrf_token'];
 }

@@ -8,6 +8,7 @@
 require_once __DIR__ . '/../includes/config.php';
 require_once __DIR__ . '/../actions/email_handler.php';
 require_once __DIR__ . '/../db/connection.php';
+require_once __DIR__ . '/../includes/external_services.php';
 
 // Paleta básica de colores para emails, alineada con css/color-theme.css
 $EMAIL_COLORS = [
@@ -86,7 +87,7 @@ function enviarEmailPlantillaBase($destinatarioEmail, $destinatarioNombre, $subj
 </html>
     ";
     
-    return sendEmail($destinatarioEmail, $destinatarioNombre, $subject, $body);
+    return external_send_email($destinatarioEmail, $destinatarioNombre, $subject, $body);
 }
 
 /**

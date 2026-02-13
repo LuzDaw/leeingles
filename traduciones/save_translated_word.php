@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/../includes/ajax_common.php';
 require_once __DIR__ . '/../db/connection.php';
+require_once __DIR__ . '/../includes/word_functions.php';
 
 header('Content-Type: application/json; charset=utf-8');
 requireUserOrExitJson();
@@ -36,41 +37,13 @@ if (empty($word) || empty($translation)) {
     exit();
 }
 
-try {
-    // Verificar si la palabra ya existe para este usuario y texto
-    // Si text_id es null, buscamos registros donde text_id sea null
-    if ($text_id !== null) {
-        $stmt = $conn->prepare("SELECT id FROM saved_words WHERE user_id = ? AND word = ? AND text_id = ?");
-        $stmt->bind_param("isi", $user_id, $word, $text_id);
-    } else {
-        $stmt = $conn->prepare("SELECT id FROM saved_words WHERE user_id = ? AND word = ? AND text_id IS NULL");
-        $stmt->bind_param("is", $user_id, $word);
-    }
-    
-    $stmt->execute();
-    $result = $stmt->get_result();
-    
-    if ($result->num_rows > 0) {
-        $row = $result->fetch_assoc();
-        $id = $row['id'];
-        // Actualizar traducción existente
-        $stmt = $conn->prepare("UPDATE saved_words SET translation = ?, context = ?, text_id = ?, created_at = NOW() WHERE id = ?");
-        $stmt->bind_param("ssii", $translation, $context, $text_id, $id);
-    } else {
-        // Insertar nueva palabra
-        $stmt = $conn->prepare("INSERT INTO saved_words (user_id, word, translation, context, text_id) VALUES (?, ?, ?, ?, ?)");
-        $stmt->bind_param("isssi", $user_id, $word, $translation, $context, $text_id);
-    }
-    
-    if ($stmt->execute()) {
-        echo json_encode(['success' => true, 'message' => 'Palabra guardada correctamente']);
-    } else {
-        echo json_encode(['error' => 'Error al guardar la palabra']);
-    }
-    
-    $stmt->close();
-} catch (Exception $e) {
-    echo json_encode(['error' => 'Error del servidor: ' . $e->getMessage()]);
+// Reuse centralized helper
+$res = saveTranslatedWord($user_id, $word, $translation, $context, $text_id);
+
+if ($res['success']) {
+    echo json_encode(['success' => true, 'message' => $res['message']]);
+} else {
+    echo json_encode(['error' => $res['error']]);
 }
 
 $conn->close();

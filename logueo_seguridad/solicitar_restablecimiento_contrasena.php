@@ -27,7 +27,7 @@ try {
     $email = trim($_POST['email'] ?? '');
     $email = strtolower($email); // Convertir a minúsculas para comparación
 
-    if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    if (empty($email) || !validateEmail($email)) {
         echo json_encode(['success' => false, 'message' => 'Por favor, introduce un email válido.']);
         exit;
     }
@@ -54,8 +54,8 @@ try {
     $username = $user['username'];
 
     // Generar un token único y seguro
-    $token = bin2hex(random_bytes(32));
-    $token_hash = hash('sha256', $token);
+    $token = generate_hex_token(32);
+    $token_hash = hash_token($token, 'sha256');
     $expires_at = date('Y-m-d H:i:s', strtotime('+1 hour'));
 
     // Eliminar tokens antiguos para este usuario (buena práctica)

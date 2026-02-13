@@ -4,6 +4,8 @@
  * Sigue el mismo patrón que title_functions.php para saved_words
  */
 
+require_once __DIR__ . '/word_functions.php';
+
 /**
  * Guarda una traducción de contenido para un texto específico.
  *
@@ -495,19 +497,8 @@ function get_index_page_data($conn) {
 
     // Estadísticas de progreso
     if (isset($_GET['show_progress']) && isset($_SESSION['user_id'])) {
-        $stmt = $conn->prepare("SELECT COUNT(*) as total_words FROM saved_words WHERE user_id = ?");
-        $stmt->bind_param("i", $user_id);
-        $stmt->execute();
-        $data['progress_data']['total_words'] = $stmt->get_result()->fetch_assoc()['total_words'];
-        $stmt->close();
-
-        $stmt = $conn->prepare("SELECT word, translation, created_at FROM saved_words WHERE user_id = ? ORDER BY created_at DESC LIMIT 10");
-        $stmt->bind_param("i", $user_id);
-        $stmt->execute();
-        $res = $stmt->get_result();
-        $data['progress_data']['recent_words'] = [];
-        while ($row = $res->fetch_assoc()) { $data['progress_data']['recent_words'][] = $row; }
-        $stmt->close();
+        $data['progress_data']['total_words'] = countSavedWords($user_id);
+        $data['progress_data']['recent_words'] = getSavedWords($user_id, null, 10);
 
         $data['progress_data']['total_texts'] = getTotalUserTexts($user_id);
 
@@ -519,19 +510,9 @@ function get_index_page_data($conn) {
         while ($row = $res->fetch_assoc()) { $data['progress_data']['recent_texts'][] = $row; }
         $stmt->close();
 
-        $data['progress_data']['practice'] = ['selection' => ['count' => 0, 'accuracy' => 0], 'writing' => ['count' => 0, 'accuracy' => 0], 'sentences' => ['count' => 0, 'accuracy' => 0], 'total_exercises' => 0];
-        $stmt = $conn->prepare("SELECT mode, COUNT(*) as cnt, SUM(total_words) as words, AVG(accuracy) as avg_accuracy FROM practice_progress WHERE user_id = ? GROUP BY mode");
-        $stmt->bind_param("i", $user_id);
-        $stmt->execute();
-        $res = $stmt->get_result();
-        $total_exercises = 0;
-        while ($row = $res->fetch_assoc()) {
-            $mode = $row['mode'];
-            $data['progress_data']['practice'][$mode] = ['count' => intval($row['words']), 'accuracy' => round(floatval($row['avg_accuracy']), 1)];
-            $total_exercises += intval($row['cnt']);
-        }
-        $data['progress_data']['practice']['total_exercises'] = $total_exercises;
-        $stmt->close();
+        // Obtener stats de práctica centralizadas
+        require_once __DIR__ . '/practice_functions.php';
+        $data['progress_data']['practice'] = getPracticeStats($user_id);
     }
 
     // Categorías
