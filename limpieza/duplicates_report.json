@@ -1,0 +1,2678 @@
+{
+    "generated_at": "2026-02-07T11:45:52+01:00",
+    "project_root": "C:\\xampp\\htdocs\\leeingles",
+    "total_files": 158,
+    "exact_duplicate_groups": [
+        [
+            "C:\\xampp\\htdocs\\leeingles\\ajax\\get_user_texts.php",
+            "C:\\xampp\\htdocs\\leeingles\\ajax\\load_user_texts.php",
+            "C:\\xampp\\htdocs\\leeingles\\ajax\\load_user_texts.php.bak"
+        ],
+        [
+            "C:\\xampp\\htdocs\\leeingles\\git\\SISTEMA_PESTA\u00c3\u0083\u00c2\u0091AS.md",
+            "C:\\xampp\\htdocs\\leeingles\\git\\SISTEMA_PESTA\u00c3\u0091AS.md"
+        ],
+        [
+            "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\login.php",
+            "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\register.php",
+            "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\register.php.bak"
+        ]
+    ],
+    "similar_pairs": [
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\actions\\delete_text.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\admin\\test_account.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\actions\\delete_text.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_calendar_data.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\actions\\delete_text.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_my_texts_content.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\actions\\delete_text.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_user_texts.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\actions\\delete_text.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\ajax\\get_user_email.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\actions\\delete_text.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\ajax\\get_user_texts.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\actions\\delete_text.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\ajax\\load_user_texts.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\actions\\delete_text.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_1_ano.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\actions\\delete_text.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_1_mes.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\actions\\delete_text.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_6_meses.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\actions\\delete_text.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\dePago\\test\\check_db.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\actions\\delete_text.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\includes\\content_functions.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\actions\\delete_text.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\includes\\footer.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\actions\\delete_text.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\includes\\practice_functions.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\actions\\delete_text.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\includes\\title_functions.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\actions\\delete_text.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\includes\\word_functions.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\actions\\delete_text.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\get_content_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\actions\\delete_text.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\save_content_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\actions\\delete_text.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\save_reading_time.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\actions\\delete_text.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\ajax_login.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\actions\\delete_text.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\login.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\actions\\delete_text.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\logout.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\actions\\delete_text.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\register.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\actions\\delete_text.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\ajax_practice_data.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\actions\\delete_text.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\get_practice_stats.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\actions\\delete_text.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\practice.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\actions\\delete_text.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\save_practice_progress.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\actions\\delete_text.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\dictionary_info.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\actions\\delete_text.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\get_title_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\actions\\delete_text.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\save_title_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\actions\\delete_text.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\save_translated_word.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\actions\\delete_text.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\translate.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\admin\\test_account.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_calendar_data.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\admin\\test_account.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_my_texts_content.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\admin\\test_account.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_user_texts.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\admin\\test_account.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\ajax\\get_user_email.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\admin\\test_account.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\ajax\\get_user_texts.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\admin\\test_account.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\ajax\\load_user_texts.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\admin\\test_account.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_1_ano.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\admin\\test_account.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_1_mes.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\admin\\test_account.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_6_meses.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\admin\\test_account.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\dePago\\test\\check_db.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\admin\\test_account.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\includes\\content_functions.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\admin\\test_account.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\includes\\footer.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\admin\\test_account.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\includes\\practice_functions.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\admin\\test_account.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\includes\\title_functions.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\admin\\test_account.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\includes\\word_functions.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\admin\\test_account.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\get_content_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\admin\\test_account.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\save_content_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\admin\\test_account.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\save_reading_time.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\admin\\test_account.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\ajax_login.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\admin\\test_account.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\login.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\admin\\test_account.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\logout.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\admin\\test_account.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\register.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\admin\\test_account.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\ajax_practice_data.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\admin\\test_account.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\get_practice_stats.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\admin\\test_account.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\practice.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\admin\\test_account.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\save_practice_progress.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\admin\\test_account.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\dictionary_info.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\admin\\test_account.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\get_title_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\admin\\test_account.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\save_title_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\admin\\test_account.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\save_translated_word.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\admin\\test_account.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\translate.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_calendar_data.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_my_texts_content.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_calendar_data.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_user_texts.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_calendar_data.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\ajax\\get_user_email.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_calendar_data.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\ajax\\get_user_texts.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_calendar_data.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\ajax\\load_user_texts.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_calendar_data.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_1_ano.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_calendar_data.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_1_mes.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_calendar_data.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_6_meses.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_calendar_data.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\dePago\\test\\check_db.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_calendar_data.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\includes\\content_functions.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_calendar_data.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\includes\\footer.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_calendar_data.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\includes\\practice_functions.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_calendar_data.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\includes\\title_functions.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_calendar_data.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\includes\\word_functions.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_calendar_data.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\get_content_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_calendar_data.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\save_content_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_calendar_data.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\save_reading_time.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_calendar_data.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\ajax_login.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_calendar_data.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\login.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_calendar_data.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\logout.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_calendar_data.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\register.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_calendar_data.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\ajax_practice_data.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_calendar_data.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\get_practice_stats.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_calendar_data.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\practice.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_calendar_data.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\save_practice_progress.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_calendar_data.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\dictionary_info.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_calendar_data.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\get_title_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_calendar_data.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\save_title_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_calendar_data.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\save_translated_word.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_calendar_data.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\translate.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_my_texts_content.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_user_texts.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_my_texts_content.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\ajax\\get_user_email.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_my_texts_content.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\ajax\\get_user_texts.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_my_texts_content.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\ajax\\load_user_texts.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_my_texts_content.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_1_ano.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_my_texts_content.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_1_mes.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_my_texts_content.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_6_meses.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_my_texts_content.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\dePago\\test\\check_db.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_my_texts_content.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\includes\\content_functions.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_my_texts_content.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\includes\\footer.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_my_texts_content.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\includes\\practice_functions.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_my_texts_content.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\includes\\title_functions.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_my_texts_content.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\includes\\word_functions.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_my_texts_content.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\get_content_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_my_texts_content.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\save_content_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_my_texts_content.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\save_reading_time.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_my_texts_content.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\ajax_login.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_my_texts_content.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\login.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_my_texts_content.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\logout.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_my_texts_content.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\register.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_my_texts_content.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\ajax_practice_data.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_my_texts_content.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\get_practice_stats.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_my_texts_content.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\practice.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_my_texts_content.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\save_practice_progress.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_my_texts_content.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\dictionary_info.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_my_texts_content.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\get_title_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_my_texts_content.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\save_title_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_my_texts_content.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\save_translated_word.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_my_texts_content.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\translate.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_user_texts.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\ajax\\get_user_email.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_user_texts.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\ajax\\get_user_texts.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_user_texts.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\ajax\\load_user_texts.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_user_texts.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_1_ano.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_user_texts.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_1_mes.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_user_texts.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_6_meses.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_user_texts.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\dePago\\test\\check_db.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_user_texts.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\includes\\content_functions.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_user_texts.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\includes\\footer.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_user_texts.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\includes\\practice_functions.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_user_texts.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\includes\\title_functions.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_user_texts.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\includes\\word_functions.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_user_texts.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\get_content_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_user_texts.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\save_content_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_user_texts.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\save_reading_time.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_user_texts.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\ajax_login.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_user_texts.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\login.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_user_texts.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\logout.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_user_texts.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\register.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_user_texts.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\ajax_practice_data.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_user_texts.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\get_practice_stats.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_user_texts.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\practice.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_user_texts.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\save_practice_progress.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_user_texts.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\dictionary_info.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_user_texts.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\get_title_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_user_texts.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\save_title_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_user_texts.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\save_translated_word.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_user_texts.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\translate.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\get_user_email.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\ajax\\get_user_texts.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\get_user_email.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\ajax\\load_user_texts.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\get_user_email.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_1_ano.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\get_user_email.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_1_mes.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\get_user_email.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_6_meses.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\get_user_email.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\dePago\\test\\check_db.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\get_user_email.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\includes\\content_functions.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\get_user_email.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\includes\\footer.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\get_user_email.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\includes\\practice_functions.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\get_user_email.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\includes\\title_functions.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\get_user_email.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\includes\\word_functions.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\get_user_email.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\get_content_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\get_user_email.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\save_content_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\get_user_email.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\save_reading_time.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\get_user_email.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\ajax_login.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\get_user_email.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\login.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\get_user_email.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\logout.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\get_user_email.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\register.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\get_user_email.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\ajax_practice_data.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\get_user_email.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\get_practice_stats.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\get_user_email.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\practice.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\get_user_email.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\save_practice_progress.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\get_user_email.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\dictionary_info.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\get_user_email.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\get_title_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\get_user_email.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\save_title_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\get_user_email.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\save_translated_word.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\get_user_email.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\translate.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\get_user_texts.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\ajax\\load_user_texts.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\get_user_texts.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_1_ano.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\get_user_texts.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_1_mes.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\get_user_texts.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_6_meses.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\get_user_texts.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\dePago\\test\\check_db.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\get_user_texts.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\includes\\content_functions.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\get_user_texts.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\includes\\footer.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\get_user_texts.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\includes\\practice_functions.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\get_user_texts.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\includes\\title_functions.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\get_user_texts.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\includes\\word_functions.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\get_user_texts.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\get_content_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\get_user_texts.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\save_content_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\get_user_texts.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\save_reading_time.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\get_user_texts.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\ajax_login.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\get_user_texts.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\login.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\get_user_texts.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\logout.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\get_user_texts.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\register.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\get_user_texts.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\ajax_practice_data.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\get_user_texts.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\get_practice_stats.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\get_user_texts.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\practice.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\get_user_texts.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\save_practice_progress.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\get_user_texts.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\dictionary_info.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\get_user_texts.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\get_title_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\get_user_texts.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\save_title_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\get_user_texts.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\save_translated_word.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\get_user_texts.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\translate.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\load_user_texts.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_1_ano.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\load_user_texts.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_1_mes.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\load_user_texts.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_6_meses.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\load_user_texts.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\dePago\\test\\check_db.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\load_user_texts.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\includes\\content_functions.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\load_user_texts.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\includes\\footer.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\load_user_texts.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\includes\\practice_functions.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\load_user_texts.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\includes\\title_functions.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\load_user_texts.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\includes\\word_functions.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\load_user_texts.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\get_content_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\load_user_texts.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\save_content_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\load_user_texts.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\save_reading_time.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\load_user_texts.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\ajax_login.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\load_user_texts.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\login.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\load_user_texts.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\logout.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\load_user_texts.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\register.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\load_user_texts.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\ajax_practice_data.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\load_user_texts.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\get_practice_stats.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\load_user_texts.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\practice.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\load_user_texts.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\save_practice_progress.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\load_user_texts.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\dictionary_info.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\load_user_texts.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\get_title_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\load_user_texts.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\save_title_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\load_user_texts.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\save_translated_word.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\ajax\\load_user_texts.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\translate.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_1_ano.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_1_mes.php",
+            "percent": 96.96
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_1_ano.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_6_meses.php",
+            "percent": 97.34
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_1_mes.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_6_meses.php",
+            "percent": 96.85
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_1_ano.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_1_mes.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_1_ano.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_6_meses.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_1_ano.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\dePago\\test\\check_db.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_1_ano.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\includes\\content_functions.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_1_ano.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\includes\\footer.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_1_ano.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\includes\\practice_functions.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_1_ano.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\includes\\title_functions.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_1_ano.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\includes\\word_functions.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_1_ano.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\get_content_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_1_ano.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\save_content_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_1_ano.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\save_reading_time.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_1_ano.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\ajax_login.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_1_ano.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\login.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_1_ano.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\logout.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_1_ano.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\register.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_1_ano.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\ajax_practice_data.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_1_ano.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\get_practice_stats.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_1_ano.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\practice.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_1_ano.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\save_practice_progress.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_1_ano.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\dictionary_info.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_1_ano.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\get_title_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_1_ano.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\save_title_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_1_ano.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\save_translated_word.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_1_ano.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\translate.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_1_mes.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_6_meses.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_1_mes.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\dePago\\test\\check_db.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_1_mes.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\includes\\content_functions.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_1_mes.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\includes\\footer.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_1_mes.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\includes\\practice_functions.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_1_mes.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\includes\\title_functions.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_1_mes.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\includes\\word_functions.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_1_mes.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\get_content_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_1_mes.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\save_content_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_1_mes.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\save_reading_time.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_1_mes.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\ajax_login.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_1_mes.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\login.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_1_mes.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\logout.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_1_mes.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\register.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_1_mes.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\ajax_practice_data.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_1_mes.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\get_practice_stats.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_1_mes.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\practice.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_1_mes.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\save_practice_progress.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_1_mes.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\dictionary_info.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_1_mes.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\get_title_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_1_mes.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\save_title_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_1_mes.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\save_translated_word.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_1_mes.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\translate.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_6_meses.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\dePago\\test\\check_db.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_6_meses.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\includes\\content_functions.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_6_meses.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\includes\\footer.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_6_meses.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\includes\\practice_functions.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_6_meses.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\includes\\title_functions.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_6_meses.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\includes\\word_functions.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_6_meses.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\get_content_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_6_meses.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\save_content_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_6_meses.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\save_reading_time.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_6_meses.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\ajax_login.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_6_meses.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\login.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_6_meses.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\logout.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_6_meses.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\register.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_6_meses.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\ajax_practice_data.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_6_meses.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\get_practice_stats.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_6_meses.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\practice.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_6_meses.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\save_practice_progress.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_6_meses.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\dictionary_info.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_6_meses.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\get_title_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_6_meses.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\save_title_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_6_meses.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\save_translated_word.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_6_meses.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\translate.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\test\\check_db.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\includes\\content_functions.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\test\\check_db.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\includes\\footer.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\test\\check_db.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\includes\\practice_functions.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\test\\check_db.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\includes\\title_functions.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\test\\check_db.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\includes\\word_functions.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\test\\check_db.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\get_content_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\test\\check_db.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\save_content_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\test\\check_db.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\save_reading_time.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\test\\check_db.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\ajax_login.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\test\\check_db.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\login.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\test\\check_db.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\logout.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\test\\check_db.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\register.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\test\\check_db.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\ajax_practice_data.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\test\\check_db.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\get_practice_stats.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\test\\check_db.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\practice.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\test\\check_db.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\save_practice_progress.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\test\\check_db.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\dictionary_info.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\test\\check_db.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\get_title_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\test\\check_db.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\save_title_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\test\\check_db.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\save_translated_word.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\dePago\\test\\check_db.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\translate.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\content_functions.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\includes\\footer.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\content_functions.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\includes\\practice_functions.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\content_functions.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\includes\\title_functions.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\content_functions.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\includes\\word_functions.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\content_functions.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\get_content_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\content_functions.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\save_content_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\content_functions.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\save_reading_time.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\content_functions.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\ajax_login.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\content_functions.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\login.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\content_functions.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\logout.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\content_functions.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\register.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\content_functions.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\ajax_practice_data.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\content_functions.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\get_practice_stats.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\content_functions.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\practice.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\content_functions.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\save_practice_progress.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\content_functions.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\dictionary_info.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\content_functions.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\get_title_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\content_functions.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\save_title_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\content_functions.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\save_translated_word.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\content_functions.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\translate.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\footer.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\includes\\practice_functions.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\footer.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\includes\\title_functions.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\footer.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\includes\\word_functions.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\footer.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\get_content_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\footer.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\save_content_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\footer.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\save_reading_time.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\footer.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\ajax_login.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\footer.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\login.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\footer.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\logout.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\footer.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\register.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\footer.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\ajax_practice_data.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\footer.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\get_practice_stats.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\footer.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\practice.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\footer.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\save_practice_progress.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\footer.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\dictionary_info.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\footer.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\get_title_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\footer.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\save_title_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\footer.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\save_translated_word.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\footer.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\translate.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\practice_functions.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\includes\\title_functions.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\practice_functions.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\includes\\word_functions.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\practice_functions.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\get_content_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\practice_functions.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\save_content_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\practice_functions.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\save_reading_time.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\practice_functions.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\ajax_login.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\practice_functions.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\login.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\practice_functions.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\logout.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\practice_functions.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\register.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\practice_functions.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\ajax_practice_data.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\practice_functions.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\get_practice_stats.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\practice_functions.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\practice.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\practice_functions.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\save_practice_progress.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\practice_functions.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\dictionary_info.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\practice_functions.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\get_title_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\practice_functions.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\save_title_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\practice_functions.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\save_translated_word.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\practice_functions.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\translate.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\title_functions.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\includes\\word_functions.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\title_functions.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\get_content_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\title_functions.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\save_content_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\title_functions.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\save_reading_time.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\title_functions.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\ajax_login.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\title_functions.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\login.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\title_functions.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\logout.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\title_functions.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\register.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\title_functions.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\ajax_practice_data.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\title_functions.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\get_practice_stats.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\title_functions.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\practice.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\title_functions.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\save_practice_progress.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\title_functions.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\dictionary_info.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\title_functions.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\get_title_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\title_functions.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\save_title_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\title_functions.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\save_translated_word.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\title_functions.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\translate.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\word_functions.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\get_content_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\word_functions.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\save_content_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\word_functions.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\save_reading_time.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\word_functions.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\ajax_login.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\word_functions.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\login.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\word_functions.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\logout.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\word_functions.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\register.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\word_functions.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\ajax_practice_data.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\word_functions.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\get_practice_stats.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\word_functions.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\practice.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\word_functions.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\save_practice_progress.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\word_functions.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\dictionary_info.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\word_functions.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\get_title_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\word_functions.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\save_title_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\word_functions.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\save_translated_word.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\includes\\word_functions.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\translate.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\get_content_translation.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\save_content_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\get_content_translation.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\save_reading_time.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\get_content_translation.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\ajax_login.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\get_content_translation.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\login.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\get_content_translation.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\logout.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\get_content_translation.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\register.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\get_content_translation.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\ajax_practice_data.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\get_content_translation.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\get_practice_stats.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\get_content_translation.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\practice.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\get_content_translation.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\save_practice_progress.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\get_content_translation.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\dictionary_info.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\get_content_translation.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\get_title_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\get_content_translation.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\save_title_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\get_content_translation.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\save_translated_word.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\get_content_translation.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\translate.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\save_content_translation.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\save_reading_time.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\save_content_translation.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\ajax_login.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\save_content_translation.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\login.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\save_content_translation.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\logout.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\save_content_translation.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\register.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\save_content_translation.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\ajax_practice_data.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\save_content_translation.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\get_practice_stats.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\save_content_translation.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\practice.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\save_content_translation.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\save_practice_progress.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\save_content_translation.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\dictionary_info.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\save_content_translation.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\get_title_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\save_content_translation.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\save_title_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\save_content_translation.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\save_translated_word.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\save_content_translation.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\translate.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\save_reading_time.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\ajax_login.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\save_reading_time.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\login.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\save_reading_time.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\logout.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\save_reading_time.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\register.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\save_reading_time.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\ajax_practice_data.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\save_reading_time.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\get_practice_stats.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\save_reading_time.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\practice.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\save_reading_time.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\save_practice_progress.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\save_reading_time.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\dictionary_info.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\save_reading_time.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\get_title_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\save_reading_time.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\save_title_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\save_reading_time.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\save_translated_word.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\save_reading_time.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\translate.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\ajax_login.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\login.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\ajax_login.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\logout.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\ajax_login.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\register.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\ajax_login.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\ajax_practice_data.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\ajax_login.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\get_practice_stats.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\ajax_login.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\practice.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\ajax_login.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\save_practice_progress.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\ajax_login.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\dictionary_info.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\ajax_login.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\get_title_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\ajax_login.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\save_title_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\ajax_login.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\save_translated_word.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\ajax_login.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\translate.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\login.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\logout.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\login.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\register.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\login.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\ajax_practice_data.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\login.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\get_practice_stats.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\login.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\practice.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\login.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\save_practice_progress.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\login.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\dictionary_info.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\login.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\get_title_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\login.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\save_title_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\login.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\save_translated_word.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\login.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\translate.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\logout.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\register.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\logout.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\ajax_practice_data.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\logout.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\get_practice_stats.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\logout.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\practice.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\logout.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\save_practice_progress.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\logout.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\dictionary_info.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\logout.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\get_title_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\logout.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\save_title_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\logout.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\save_translated_word.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\logout.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\translate.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\register.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\ajax_practice_data.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\register.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\get_practice_stats.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\register.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\practice.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\register.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\save_practice_progress.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\register.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\dictionary_info.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\register.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\get_title_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\register.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\save_title_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\register.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\save_translated_word.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\register.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\translate.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\practicas\\ajax_practice_data.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\get_practice_stats.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\practicas\\ajax_practice_data.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\practice.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\practicas\\ajax_practice_data.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\save_practice_progress.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\practicas\\ajax_practice_data.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\dictionary_info.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\practicas\\ajax_practice_data.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\get_title_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\practicas\\ajax_practice_data.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\save_title_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\practicas\\ajax_practice_data.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\save_translated_word.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\practicas\\ajax_practice_data.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\translate.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\practicas\\get_practice_stats.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\practice.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\practicas\\get_practice_stats.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\save_practice_progress.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\practicas\\get_practice_stats.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\dictionary_info.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\practicas\\get_practice_stats.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\get_title_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\practicas\\get_practice_stats.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\save_title_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\practicas\\get_practice_stats.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\save_translated_word.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\practicas\\get_practice_stats.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\translate.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\practicas\\practice.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\practicas\\save_practice_progress.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\practicas\\practice.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\dictionary_info.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\practicas\\practice.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\get_title_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\practicas\\practice.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\save_title_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\practicas\\practice.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\save_translated_word.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\practicas\\practice.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\translate.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\practicas\\save_practice_progress.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\dictionary_info.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\practicas\\save_practice_progress.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\get_title_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\practicas\\save_practice_progress.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\save_title_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\practicas\\save_practice_progress.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\save_translated_word.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\practicas\\save_practice_progress.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\translate.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\traduciones\\dictionary_info.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\get_title_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\traduciones\\dictionary_info.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\save_title_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\traduciones\\dictionary_info.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\save_translated_word.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\traduciones\\dictionary_info.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\translate.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\traduciones\\get_title_translation.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\save_title_translation.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\traduciones\\get_title_translation.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\save_translated_word.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\traduciones\\get_title_translation.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\translate.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\traduciones\\save_title_translation.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\save_translated_word.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\traduciones\\save_title_translation.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\translate.php",
+            "percent": 100
+        },
+        {
+            "file_a": "C:\\xampp\\htdocs\\leeingles\\traduciones\\save_translated_word.php",
+            "file_b": "C:\\xampp\\htdocs\\leeingles\\traduciones\\translate.php",
+            "percent": 100
+        }
+    ]
+}

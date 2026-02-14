@@ -1,0 +1,26 @@
+# Composer dependencies
+/vendor/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Log files
+*.log
+logs/
+*.log
+
+# Cache
+/tmp_cache/
+.php-cs-fixer.cache
+.phpunit.cache
+
+# Production build
+/build/
+
+# Miscellaneous
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db

@@ -1,0 +1,197 @@
+{
+    "generated_at": "2026-02-07T11:49:53+01:00",
+    "actions": [
+        {
+            "target": "C:\\xampp\\htdocs\\leeingles\\admin\\test_account.php",
+            "status": "replaced_with_require",
+            "canonical": "C:\\xampp\\htdocs\\leeingles\\actions\\delete_text.php",
+            "backup": "C:\\xampp\\htdocs\\leeingles\\admin\\test_account.php.bak.similar"
+        },
+        {
+            "target": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_calendar_data.php",
+            "status": "replaced_with_require",
+            "canonical": "C:\\xampp\\htdocs\\leeingles\\actions\\delete_text.php",
+            "backup": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_calendar_data.php.bak.similar"
+        },
+        {
+            "target": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_my_texts_content.php",
+            "status": "replaced_with_require",
+            "canonical": "C:\\xampp\\htdocs\\leeingles\\actions\\delete_text.php",
+            "backup": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_my_texts_content.php.bak.similar"
+        },
+        {
+            "target": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_user_texts.php",
+            "status": "replaced_with_require",
+            "canonical": "C:\\xampp\\htdocs\\leeingles\\actions\\delete_text.php",
+            "backup": "C:\\xampp\\htdocs\\leeingles\\ajax\\ajax_user_texts.php.bak.similar"
+        },
+        {
+            "target": "C:\\xampp\\htdocs\\leeingles\\ajax\\get_user_email.php",
+            "status": "replaced_with_require",
+            "canonical": "C:\\xampp\\htdocs\\leeingles\\actions\\delete_text.php",
+            "backup": "C:\\xampp\\htdocs\\leeingles\\ajax\\get_user_email.php.bak.similar"
+        },
+        {
+            "target": "C:\\xampp\\htdocs\\leeingles\\ajax\\get_user_texts.php",
+            "status": "replaced_with_require",
+            "canonical": "C:\\xampp\\htdocs\\leeingles\\actions\\delete_text.php",
+            "backup": "C:\\xampp\\htdocs\\leeingles\\ajax\\get_user_texts.php.bak.similar"
+        },
+        {
+            "target": "C:\\xampp\\htdocs\\leeingles\\ajax\\load_user_texts.php",
+            "status": "replaced_with_require",
+            "canonical": "C:\\xampp\\htdocs\\leeingles\\actions\\delete_text.php",
+            "backup": "C:\\xampp\\htdocs\\leeingles\\ajax\\load_user_texts.php.bak.similar"
+        },
+        {
+            "target": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_1_ano.php",
+            "status": "replaced_with_require",
+            "canonical": "C:\\xampp\\htdocs\\leeingles\\actions\\delete_text.php",
+            "backup": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_1_ano.php.bak.similar"
+        },
+        {
+            "target": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_1_mes.php",
+            "status": "replaced_with_require",
+            "canonical": "C:\\xampp\\htdocs\\leeingles\\actions\\delete_text.php",
+            "backup": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_1_mes.php.bak.similar"
+        },
+        {
+            "target": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_6_meses.php",
+            "status": "replaced_with_require",
+            "canonical": "C:\\xampp\\htdocs\\leeingles\\actions\\delete_text.php",
+            "backup": "C:\\xampp\\htdocs\\leeingles\\dePago\\paypal_unico_6_meses.php.bak.similar"
+        },
+        {
+            "target": "C:\\xampp\\htdocs\\leeingles\\dePago\\test\\check_db.php",
+            "status": "replaced_with_require",
+            "canonical": "C:\\xampp\\htdocs\\leeingles\\actions\\delete_text.php",
+            "backup": "C:\\xampp\\htdocs\\leeingles\\dePago\\test\\check_db.php.bak.similar"
+        },
+        {
+            "target": "C:\\xampp\\htdocs\\leeingles\\includes\\content_functions.php",
+            "status": "replaced_with_require",
+            "canonical": "C:\\xampp\\htdocs\\leeingles\\actions\\delete_text.php",
+            "backup": "C:\\xampp\\htdocs\\leeingles\\includes\\content_functions.php.bak.similar"
+        },
+        {
+            "target": "C:\\xampp\\htdocs\\leeingles\\includes\\footer.php",
+            "status": "replaced_with_require",
+            "canonical": "C:\\xampp\\htdocs\\leeingles\\actions\\delete_text.php",
+            "backup": "C:\\xampp\\htdocs\\leeingles\\includes\\footer.php.bak.similar"
+        },
+        {
+            "target": "C:\\xampp\\htdocs\\leeingles\\includes\\practice_functions.php",
+            "status": "replaced_with_require",
+            "canonical": "C:\\xampp\\htdocs\\leeingles\\actions\\delete_text.php",
+            "backup": "C:\\xampp\\htdocs\\leeingles\\includes\\practice_functions.php.bak.similar"
+        },
+        {
+            "target": "C:\\xampp\\htdocs\\leeingles\\includes\\title_functions.php",
+            "status": "replaced_with_require",
+            "canonical": "C:\\xampp\\htdocs\\leeingles\\actions\\delete_text.php",
+            "backup": "C:\\xampp\\htdocs\\leeingles\\includes\\title_functions.php.bak.similar"
+        },
+        {
+            "target": "C:\\xampp\\htdocs\\leeingles\\includes\\word_functions.php",
+            "status": "replaced_with_require",
+            "canonical": "C:\\xampp\\htdocs\\leeingles\\actions\\delete_text.php",
+            "backup": "C:\\xampp\\htdocs\\leeingles\\includes\\word_functions.php.bak.similar"
+        },
+        {
+            "target": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\get_content_translation.php",
+            "status": "replaced_with_require",
+            "canonical": "C:\\xampp\\htdocs\\leeingles\\actions\\delete_text.php",
+            "backup": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\get_content_translation.php.bak.similar"
+        },
+        {
+            "target": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\save_content_translation.php",
+            "status": "replaced_with_require",
+            "canonical": "C:\\xampp\\htdocs\\leeingles\\actions\\delete_text.php",
+            "backup": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\save_content_translation.php.bak.similar"
+        },
+        {
+            "target": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\save_reading_time.php",
+            "status": "replaced_with_require",
+            "canonical": "C:\\xampp\\htdocs\\leeingles\\actions\\delete_text.php",
+            "backup": "C:\\xampp\\htdocs\\leeingles\\lectura\\ajax\\save_reading_time.php.bak.similar"
+        },
+        {
+            "target": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\ajax_login.php",
+            "status": "replaced_with_require",
+            "canonical": "C:\\xampp\\htdocs\\leeingles\\actions\\delete_text.php",
+            "backup": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\ajax_login.php.bak.similar"
+        },
+        {
+            "target": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\login.php",
+            "status": "replaced_with_require",
+            "canonical": "C:\\xampp\\htdocs\\leeingles\\actions\\delete_text.php",
+            "backup": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\login.php.bak.similar"
+        },
+        {
+            "target": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\logout.php",
+            "status": "replaced_with_require",
+            "canonical": "C:\\xampp\\htdocs\\leeingles\\actions\\delete_text.php",
+            "backup": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\logout.php.bak.similar"
+        },
+        {
+            "target": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\register.php",
+            "status": "replaced_with_require",
+            "canonical": "C:\\xampp\\htdocs\\leeingles\\actions\\delete_text.php",
+            "backup": "C:\\xampp\\htdocs\\leeingles\\logueo_seguridad\\register.php.bak.similar"
+        },
+        {
+            "target": "C:\\xampp\\htdocs\\leeingles\\practicas\\ajax_practice_data.php",
+            "status": "replaced_with_require",
+            "canonical": "C:\\xampp\\htdocs\\leeingles\\actions\\delete_text.php",
+            "backup": "C:\\xampp\\htdocs\\leeingles\\practicas\\ajax_practice_data.php.bak.similar"
+        },
+        {
+            "target": "C:\\xampp\\htdocs\\leeingles\\practicas\\get_practice_stats.php",
+            "status": "replaced_with_require",
+            "canonical": "C:\\xampp\\htdocs\\leeingles\\actions\\delete_text.php",
+            "backup": "C:\\xampp\\htdocs\\leeingles\\practicas\\get_practice_stats.php.bak.similar"
+        },
+        {
+            "target": "C:\\xampp\\htdocs\\leeingles\\practicas\\practice.php",
+            "status": "replaced_with_require",
+            "canonical": "C:\\xampp\\htdocs\\leeingles\\actions\\delete_text.php",
+            "backup": "C:\\xampp\\htdocs\\leeingles\\practicas\\practice.php.bak.similar"
+        },
+        {
+            "target": "C:\\xampp\\htdocs\\leeingles\\practicas\\save_practice_progress.php",
+            "status": "replaced_with_require",
+            "canonical": "C:\\xampp\\htdocs\\leeingles\\actions\\delete_text.php",
+            "backup": "C:\\xampp\\htdocs\\leeingles\\practicas\\save_practice_progress.php.bak.similar"
+        },
+        {
+            "target": "C:\\xampp\\htdocs\\leeingles\\traduciones\\dictionary_info.php",
+            "status": "replaced_with_require",
+            "canonical": "C:\\xampp\\htdocs\\leeingles\\actions\\delete_text.php",
+            "backup": "C:\\xampp\\htdocs\\leeingles\\traduciones\\dictionary_info.php.bak.similar"
+        },
+        {
+            "target": "C:\\xampp\\htdocs\\leeingles\\traduciones\\get_title_translation.php",
+            "status": "replaced_with_require",
+            "canonical": "C:\\xampp\\htdocs\\leeingles\\actions\\delete_text.php",
+            "backup": "C:\\xampp\\htdocs\\leeingles\\traduciones\\get_title_translation.php.bak.similar"
+        },
+        {
+            "target": "C:\\xampp\\htdocs\\leeingles\\traduciones\\save_title_translation.php",
+            "status": "replaced_with_require",
+            "canonical": "C:\\xampp\\htdocs\\leeingles\\actions\\delete_text.php",
+            "backup": "C:\\xampp\\htdocs\\leeingles\\traduciones\\save_title_translation.php.bak.similar"
+        },
+        {
+            "target": "C:\\xampp\\htdocs\\leeingles\\traduciones\\save_translated_word.php",
+            "status": "replaced_with_require",
+            "canonical": "C:\\xampp\\htdocs\\leeingles\\actions\\delete_text.php",
+            "backup": "C:\\xampp\\htdocs\\leeingles\\traduciones\\save_translated_word.php.bak.similar"
+        },
+        {
+            "target": "C:\\xampp\\htdocs\\leeingles\\traduciones\\translate.php",
+            "status": "replaced_with_require",
+            "canonical": "C:\\xampp\\htdocs\\leeingles\\actions\\delete_text.php",
+            "backup": "C:\\xampp\\htdocs\\leeingles\\traduciones\\translate.php.bak.similar"
+        }
+    ]
+}
