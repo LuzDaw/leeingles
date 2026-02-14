@@ -1,0 +1,12 @@
+{
+    "name": "leeingles/leeingles",
+    "description": "LeeIngles App",
+    "type": "project",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Idoneo Web"
+        }
+    ],
+    "require": {}
+}

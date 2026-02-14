@@ -49,4 +49,21 @@ function inject_app_config_js() {
     echo "<script>window.APP = { BASE_URL: '" . $base . "', BASE_PATH: '" . BASE_PATH . "' };</script>\n";
 }
 
+// --- Conexión a Redis (solo si la extensión está disponible) ---
+$redis = null;
+if (class_exists('Redis')) {
+    try {
+        $redis_host = getenv('REDIS_HOST') ?: '127.0.0.1';
+        $redis_port = getenv('REDIS_PORT') ?: 6379;
+
+        $redis = new Redis();
+        // Usar pconnect para una conexión persistente
+        $redis->pconnect($redis_host, $redis_port); 
+    } catch (Exception $e) {
+        // Si la conexión falla, $redis permanecerá null y la app usará la caché de archivos.
+        // Opcional: registrar el error en un log del servidor.
+        error_log('Error al conectar con Redis: ' . $e->getMessage());
+        $redis = null;
+    }
+}
 ?>

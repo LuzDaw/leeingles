@@ -230,4 +230,106 @@ function deleteSavedWordsByTextIds($user_id, $text_ids) {
     $stmt->close();
     return (bool)$ok;
 }
-?>
+
+/**
+ * Obtiene la traducción de una palabra específica para un usuario desde la base de datos.
+ *
+ * @param mysqli $conn La conexión a la base de datos.
+ * @param string $word La palabra a buscar.
+ * @param int $user_id El ID del usuario.
+ * @return string|null La traducción si se encuentra, o null si no.
+ */
+function get_saved_word_translation($conn, $word, $user_id) {
+    $sql = "SELECT translation FROM saved_words WHERE user_id = ? AND TRIM(LOWER(word)) = TRIM(LOWER(?))";
+    
+    $stmt = $conn->prepare($sql);
+    if (!$stmt) {
+        // Manejo de error si la preparación de la consulta falla
+        return null;
+    }
+    
+    $stmt->bind_param("is", $user_id, $word);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    
+    if ($row = $result->fetch_assoc()) {
+        $stmt->close();
+        return $row['translation'];
+    }
+    
+    $stmt->close();
+    return null;
+}
+
+/**
+ * Orquesta el proceso completo de obtener una traducción.
+ * 1. Busca en la base de datos del usuario.
+ * 2. Busca en la caché compartida (Redis/Ficheros).
+ * 3. Llama a la API externa si no se encuentra.
+ * 4. Guarda el nuevo resultado en la caché y en la base de datos del usuario.
+ *
+ * @param mysqli $conn
+ * @param int $user_id
+ * @param string $word
+ * @param string $source_lang
+ * @param string $target_lang
+ * @return array ['translation' => string, 'source' => string]
+ */
+function get_or_translate_word($conn, $user_id, $word, $source_lang = 'en', $target_lang = 'es') {
+    // 1. Buscar en la base de datos del usuario
+    $translation = get_saved_word_translation($conn, $word, $user_id);
+    if ($translation !== null) {
+        return ['translation' => $translation, 'source' => 'db'];
+    }
+
+    // 2. Buscar en la caché compartida
+    $cache_key = "translation_{$source_lang}_{$target_lang}_" . strtolower($word);
+    $cache_result = cache_get($cache_key);
+    if ($cache_result !== null) {
+        // Opcional: Guardar en la BD del usuario si se encontró en caché pero no estaba en su BD
+        save_word_translation($conn, $word, $cache_result, $user_id);
+        $cache_source = ($GLOBALS['redis'] && $GLOBALS['redis']->isConnected()) ? 'redis' : 'file_cache';
+        return ['translation' => $cache_result, 'source' => $cache_source];
+    }
+
+    // 3. Llamar a la API externa
+    $api_result = translateText($word, $source_lang, $target_lang);
+    if (is_array($api_result) && !empty($api_result['translation'])) {
+        $translation = $api_result['translation'];
+        
+        // 4. Guardar en caché y en la base de datos del usuario
+        cache_set($cache_key, $translation, 3600 * 24 * 7); // Cache por 1 semana
+        save_word_translation($conn, $word, $translation, $user_id);
+        
+        return ['translation' => $translation, 'source' => 'api'];
+    }
+
+    return ['translation' => null, 'source' => 'none'];
+}
+
+/**
+ * Guarda una traducción para un usuario, evitando duplicados.
+ *
+ * @param mysqli $conn
+ * @param string $word
+ * @param string $translation
+ * @param int $user_id
+ * @return bool
+ */
+function save_word_translation($conn, $word, $translation, $user_id) {
+    // Primero, verifica si ya existe para no duplicar
+    $existing = get_saved_word_translation($conn, $word, $user_id);
+    if ($existing !== null) {
+        return true; // Ya existe, no se hace nada
+    }
+
+    $sql = "INSERT INTO saved_words (user_id, word, translation) VALUES (?, ?, ?)";
+    $stmt = $conn->prepare($sql);
+    if (!$stmt) {
+        return false;
+    }
+    $stmt->bind_param("iss", $user_id, $word, $translation);
+    $success = $stmt->execute();
+    $stmt->close();
+    return $success;
+}

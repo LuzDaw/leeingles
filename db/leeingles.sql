@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:3306
--- Tiempo de generación: 21-01-2026 a las 20:47:29
+-- Tiempo de generación: 14-02-2026 a las 12:28:14
 -- Versión del servidor: 10.11.14-MariaDB-0+deb12u2
--- Versión de PHP: 8.4.14
+-- Versión de PHP: 8.4.16
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -34,15 +34,6 @@ CREATE TABLE `categories` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Volcado de datos para la tabla `categories`
---
-
-INSERT INTO `categories` (`id`, `name`, `description`, `created_at`) VALUES
-(18, 'Technology - Tecnología', 'Textos relacionados con tecnología e informática', '2025-06-29 17:32:41'),
-(21, 'Literature - Literatura', 'Clásicos de la literatura en inglés', '2025-06-29 17:32:41'),
-(35, 'Grammar - Gramática', NULL, '2025-07-06 16:34:59');
-
 -- --------------------------------------------------------
 
 --
@@ -55,15 +46,6 @@ CREATE TABLE `hidden_texts` (
   `text_id` int(11) NOT NULL,
   `hidden_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `hidden_texts`
---
-
-INSERT INTO `hidden_texts` (`id`, `user_id`, `text_id`, `hidden_at`) VALUES
-(17, 12, 163, '2025-08-10 11:58:36'),
-(18, 23, 177, '2025-12-17 19:13:38'),
-(21, 74, 164, '2026-01-20 17:57:15');
 
 -- --------------------------------------------------------
 
@@ -84,14 +66,6 @@ CREATE TABLE `practice_progress` (
   `completed_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Volcado de datos para la tabla `practice_progress`
---
-
-INSERT INTO `practice_progress` (`id`, `user_id`, `text_id`, `mode`, `total_words`, `correct_answers`, `incorrect_answers`, `accuracy`, `session_date`, `completed_at`) VALUES
-(194, 128, 216, 'selection', 2, 2, 0, 100, '2026-01-20 10:26:01', '2026-01-20 10:26:01'),
-(195, 128, 216, 'writing', 2, 2, 0, 100, '2026-01-20 10:30:32', '2026-01-20 10:30:32');
-
 -- --------------------------------------------------------
 
 --
@@ -105,12 +79,6 @@ CREATE TABLE `practice_time` (
   `duration_seconds` int(11) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `practice_time`
---
-
-
 
 -- --------------------------------------------------------
 
@@ -128,12 +96,6 @@ CREATE TABLE `reading_progress` (
   `read_count` int(11) DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Volcado de datos para la tabla `reading_progress`
---
-
-
-
 -- --------------------------------------------------------
 
 --
@@ -147,12 +109,6 @@ CREATE TABLE `reading_time` (
   `duration_seconds` int(11) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `reading_time`
---
-
-
 
 -- --------------------------------------------------------
 
@@ -169,11 +125,6 @@ CREATE TABLE `saved_words` (
   `created_at` datetime DEFAULT current_timestamp(),
   `text_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `saved_words`
---
-
 
 -- --------------------------------------------------------
 
@@ -192,11 +143,6 @@ CREATE TABLE `texts` (
   `category_id` int(11) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `texts`
---
-
 
 -- --------------------------------------------------------
 
@@ -217,14 +163,6 @@ CREATE TABLE `users` (
   `ultima_conexion` datetime DEFAULT NULL,
   `ultimo_email_recordatorio` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `users`
---
-
-INSERT INTO `users` (`id`, `username`, `email`, `password`, `is_admin`, `estado`, `email_verificado_en`, `fecha_registro`, `tipo_usuario`, `ultima_conexion`, `ultimo_email_recordatorio`) VALUES
-(74, 'luz', 'luz@idoneoweb.es', '$2y$12$kGV1Dww3o2lk66BJcplf3eELFIMU8VKWhdGa7oU0pSgDe79GJ/oO2', 1, 'activo', NULL, '2026-01-04 20:16:18', '', '2026-01-21 20:33:55', '2026-01-05 21:42:58'),
-(128, 'info@leeingles.com', 'info@leeingles.com', '$2y$12$GLWUT4CU6wqFBRJlOlNcsOuHmUko/51MkPuDssupmxB3vZz2GW1i2', 0, 'activo', '2026-01-20 11:19:23', '2026-01-20 11:17:55', 'EnPrueba', '2026-01-21 19:44:06', NULL);
 
 -- --------------------------------------------------------
 
@@ -259,14 +197,6 @@ CREATE TABLE `uso_traducciones` (
   `contador` int(11) DEFAULT 0,
   `ultima_traduccion` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Volcado de datos para la tabla `uso_traducciones`
---
-
-INSERT INTO `uso_traducciones` (`id`, `user_id`, `semana`, `mes`, `anio`, `contador`, `ultima_traduccion`) VALUES
-(824, 74, 3, 1, 2026, 1364, '2026-01-17 20:09:52'),
-(2015, 128, 4, 1, 2026, 794, '2026-01-21 18:46:48');
 
 -- --------------------------------------------------------
 
@@ -384,73 +314,73 @@ ALTER TABLE `verificaciones_email`
 -- AUTO_INCREMENT de la tabla `categories`
 --
 ALTER TABLE `categories`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `hidden_texts`
 --
 ALTER TABLE `hidden_texts`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `practice_progress`
 --
 ALTER TABLE `practice_progress`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=196;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `practice_time`
 --
 ALTER TABLE `practice_time`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1470;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `reading_progress`
 --
 ALTER TABLE `reading_progress`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=99;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `reading_time`
 --
 ALTER TABLE `reading_time`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1720;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `saved_words`
 --
 ALTER TABLE `saved_words`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1429;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `texts`
 --
 ALTER TABLE `texts`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=225;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=130;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `user_subscriptions`
 --
 ALTER TABLE `user_subscriptions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=54;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `uso_traducciones`
 --
 ALTER TABLE `uso_traducciones`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3261;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `verificaciones_email`
 --
 ALTER TABLE `verificaciones_email`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=163;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- Restricciones para tablas volcadas
