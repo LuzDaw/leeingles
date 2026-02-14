@@ -19,7 +19,6 @@ $user_id = $_SESSION['user_id'];
 require_once __DIR__ . '/../includes/config.php';
 require_once __DIR__ . '/../includes/db_helpers.php';
 require_once __DIR__ . '/../includes/cache.php';
-require_once __DIR__ . '/../includes/translation_service.php';
 require_once __DIR__ . '/../db/connection.php';
 
 require_once __DIR__ . '/../includes/word_functions.php';

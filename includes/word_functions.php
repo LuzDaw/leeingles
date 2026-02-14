@@ -1,4 +1,7 @@
 <?php
+require_once __DIR__ . '/cache.php';
+require_once __DIR__ . '/helpers.php';
+
 /**
  * Funciones comunes para el manejo de palabras
  * Elimina duplicación entre save_word.php y save_translated_word.php
@@ -292,16 +295,24 @@ function get_or_translate_word($conn, $user_id, $word, $source_lang = 'en', $tar
         return ['translation' => $cache_result, 'source' => $cache_source];
     }
 
-    // 3. Llamar a la API externa
-    $api_result = translateText($word, $source_lang, $target_lang);
-    if (is_array($api_result) && !empty($api_result['translation'])) {
-        $translation = $api_result['translation'];
-        
+    // 3. Llamar a la API externa (lógica integrada)
+    $deepl_api_key = getenv('DEEPL_API_KEY') ?: '89bb7c47-40dc-4628-9efb-8882bb6f5fba:fx';
+    $lang_info = detectLanguage($word);
+    
+    $api_translation = translateWithDeepL($word, $lang_info['deepl_target'], $deepl_api_key);
+    $api_source = 'DeepL';
+
+    if ($api_translation === false) {
+        $api_translation = translateWithGoogle($word, $lang_info['source'], $lang_info['google_target']);
+        $api_source = 'Google Translate';
+    }
+
+    if ($api_translation !== false) {
         // 4. Guardar en caché y en la base de datos del usuario
-        cache_set($cache_key, $translation, 3600 * 24 * 7); // Cache por 1 semana
-        save_word_translation($conn, $word, $translation, $user_id);
+        cache_set($cache_key, $api_translation, 3600 * 24 * 7); // Cache por 1 semana
+        save_word_translation($conn, $word, $api_translation, $user_id);
         
-        return ['translation' => $translation, 'source' => 'api'];
+        return ['translation' => $api_translation, 'source' => $api_source];
     }
 
     return ['translation' => null, 'source' => 'none'];
@@ -332,4 +343,60 @@ function save_word_translation($conn, $word, $translation, $user_id) {
     $success = $stmt->execute();
     $stmt->close();
     return $success;
+}
+
+// --- Funciones de traducción movidas desde translation_service.php ---
+
+/** Detecta idioma y devuelve metadatos */
+function detectLanguage($text) {
+    if (preg_match('/[áéíóúñÁÉÍÓÚÑüÜ]/u', $text)) {
+        return ['source' => 'es', 'target' => 'en', 'deepl_target' => 'EN', 'google_target' => 'en'];
+    }
+    return ['source' => 'en', 'target' => 'es', 'deepl_target' => 'ES', 'google_target' => 'es'];
+}
+
+function translateWithDeepL($text, $target_lang, $api_key) {
+    $deepl_url = 'https://api-free.deepl.com/v2/translate';
+    $params = [
+        'auth_key' => $api_key,
+        'text' => $text,
+        'target_lang' => $target_lang
+    ];
+
+    $ch = curl_init($deepl_url);
+    curl_setopt($ch, CURLOPT_POST, 1);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($params));
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 3);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 2);
+    curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0');
+    $response = curl_exec($ch);
+    $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+
+    if ($response === false || $http_code !== 200) {
+        return false;
+    }
+
+    $data = json_decode($response, true);
+    if (isset($data['translations'][0]['text'])) {
+        return $data['translations'][0]['text'];
+    }
+    return false;
+}
+
+function translateWithGoogle($text, $source_lang, $target_lang) {
+    $url = "https://translate.googleapis.com/translate_a/single?client=gtx&sl=$source_lang&tl=$target_lang&dt=t&q=" . urlencode($text);
+    $context = stream_context_create([
+        'http' => [
+            'timeout' => 3,
+            'user_agent' => 'Mozilla/5.0'
+        ]
+    ]);
+
+    $response = @file_get_contents($url, false, $context);
+    if ($response === false) return false;
+    $data = json_decode($response, true);
+    if (isset($data[0][0][0])) return $data[0][0][0];
+    return false;
 }
