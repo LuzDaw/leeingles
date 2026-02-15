@@ -14,6 +14,12 @@ if (getenv('APP_ENV')) {
 }
 
 if ($env === 'production') {
+    // Configuración de errores para producción
+    ini_set('display_errors', 0);
+    ini_set('log_errors', 1);
+    ini_set('error_log', __DIR__ . '/../log/errors.log');
+    error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT);
+
     // Producción: servido en la raíz de dominio
     if (getenv('BASE_URL')) {
         define('BASE_URL', rtrim(getenv('BASE_URL'), '/'));
@@ -22,6 +28,12 @@ if ($env === 'production') {
     }
     define('BASE_PATH', '');
 } else {
+    // Configuración de errores para desarrollo
+    ini_set('display_errors', 1);
+    ini_set('log_errors', 1);
+    ini_set('error_log', __DIR__ . '/../log/dev_errors.log');
+    error_reporting(E_ALL);
+
     // Local: asumimos XAMPP en /leeingles
     if (getenv('BASE_URL')) {
         define('BASE_URL', rtrim(getenv('BASE_URL'), '/'));

@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once '../db/connection.php';
+require_once '../includes/word_functions.php';
 
 header('Content-Type: application/json');
 
@@ -67,8 +68,8 @@ foreach ($sentences as $sentence) {
     // Evitar frases con demasiados signos de puntuación complejos
     if (substr_count($sentence, '"') > 4 || substr_count($sentence, '—') > 1) continue;
     
-    // Usar el sistema de traducción existente (translate.php)
-    $translation = translateUsingExistingSystem($sentence);
+    // Usar el sistema de traducción centralizado
+    $translation = get_or_translate_word($conn, $user_id, $sentence, $text_id);
     
     // Verificar que la traducción tenga longitud similar (tolerancia de ±5 palabras)
     $translation_word_count = str_word_count($translation ?: $sentence);
@@ -83,46 +84,6 @@ foreach ($sentences as $sentence) {
         'en' => $normalizedSentence,
         'es' => $translation ?: $sentence
     ];
-}
-
-/**
- * Traduce un texto utilizando la API de Google Translate.
- *
- * Esta función realiza una solicitud a la API de Google Translate para obtener
- * la traducción de un texto del inglés al español. Incluye un timeout reducido
- * para la solicitud HTTP. En caso de fallo, devuelve el texto original con un prefijo.
- *
- * @param string $text El texto a traducir.
- * @return string La traducción del texto o un mensaje de fallback si la traducción falla.
- */
-function translateUsingExistingSystem($text) {
-    // Incluir directamente la lógica de translate.php (más eficiente)
-    $from = 'en';
-    $to = 'es';
-    
-    // Configurar contexto con timeout reducido para acelerar
-    $context = stream_context_create([
-        'http' => [
-            'timeout' => 3 // Reducido a 3 segundos para mayor velocidad
-        ]
-    ]);
-
-    // Traducción directa y rápida
-    $url = "https://translate.googleapis.com/translate_a/single?client=gtx&sl=$from&tl=$to&dt=t&q=" . urlencode($text);
-    $response = @file_get_contents($url, false, $context);
-    
-    if ($response === false) {
-        // Fallback: devolver texto original si falla la traducción
-        return "Traducción de: " . $text;
-    }
-    
-    $data = json_decode($response, true);
-    if (isset($data[0][0][0])) {
-        return $data[0][0][0];
-    }
-    
-    // Fallback si no se puede parsear
-    return "Traducción de: " . $text;
 }
 
 $stmt->close();

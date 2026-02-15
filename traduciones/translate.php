@@ -47,38 +47,15 @@ if (isset($_SESSION['user_id'])) {
 // Liberar bloqueo de sesión inmediatamente
 session_write_close();
 
-// Si el usuario no está logueado, no podemos usar la lógica de BD/Caché de usuario.
-// En este caso, la función get_or_translate_word no es adecuada.
-// Por ahora, mantenemos una llamada directa para usuarios no registrados.
-// TODO: Considerar una caché pública o una lógica unificada para no registrados.
-if ($user_id === null) {
-    // Para usuarios no registrados, llamamos directamente a las funciones de API
-    // que movimos a word_functions.php
-    $lang_info = detectLanguage($text);
-    $deepl_api_key = getenv('DEEPL_API_KEY') ?: '89bb7c47-40dc-4628-9efb-8882bb6f5fba:fx';
-    $translation = translateWithDeepL($text, $lang_info['deepl_target'], $deepl_api_key);
-    $source = 'DeepL';
+// Usuario logueado o no, usamos el sistema centralizado.
+// La función get_or_translate_word ya maneja el caso de $user_id = null.
+$result = get_or_translate_word($conn, $user_id, $text);
 
-    if ($translation === false) {
-        $translation = translateWithGoogle($text, $lang_info['source'], $lang_info['google_target']);
-        $source = 'Google Translate';
-    }
-
-    if ($translation === false) {
-        $result = ['error' => 'No se pudo traducir el texto'];
-    } else {
-        $result = ['translation' => $translation, 'source' => $source];
-    }
-
-} else {
-    // Usuario logueado: usar el sistema centralizado
-    $result = get_or_translate_word($conn, $user_id, $text);
-    if (isset($result['translation']) && $result['translation'] !== null) {
-        // Registrar el uso si la traducción fue exitosa
-        incrementTranslationUsage($user_id, $text);
-    } else {
-        $result['error'] = 'No se pudo traducir el texto';
-    }
+if ($user_id !== null && isset($result['translation']) && $result['translation'] !== null) {
+    // Registrar el uso solo si el usuario está logueado y la traducción fue exitosa
+    incrementTranslationUsage($user_id, $text);
+} elseif (!isset($result['translation']) || $result['translation'] === null) {
+    $result['error'] = 'No se pudo traducir el texto';
 }
 
 echo json_encode($result);

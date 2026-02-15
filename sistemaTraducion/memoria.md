@@ -5,11 +5,14 @@
 *   **Proyecto:** leeingles
 *   **Módulo:** Sistema de Traducción Híbrido (Base de Datos, Caché y API)
 *   **Fecha de Intervención:** 14 de febrero de 2026
+*   **Última Actualización:** 15 de febrero de 2026
 *   **Archivos Clave Modificados/Creados:**
     *   `includes/word_functions.php` (Archivo central de la nueva lógica)
     *   `includes/translation_service.php`
     *   `includes/cache.php`
     *   `includes/config.php`
+    *   `practicas/ajax_text_sentences.php` (Refactorizado)
+    *   `traduciones/translate.php` (Refactorizado)
     *   `sistemaTraducion/test_traductor.php` (Herramienta de pruebas)
     *   `sistemaTraducion/test_endpoint.php` (Endpoint para pruebas)
     *   `sistemaTraducion/baseDatosTrad.md` (Documentación)
@@ -49,4 +52,4 @@ Aunque el sistema es ahora robusto y funcional, se identificaron varias áreas d
 
 1.  **Seguridad de las Claves API (Prioridad Alta):** Es fundamental asegurarse de que el fichero `.env` que contiene las claves de las APIs de traducción esté correctamente listado en `.gitignore` para evitar que se suba a cualquier repositorio de código.
 2.  **Manejo de Errores en Producción:** Se debe implementar una política de errores que, en producción, deshabilite la visualización de errores (`display_errors = Off`) y en su lugar los registre en un archivo de log (`error_log()`).
-3.  **Refactorización y Limpieza de Código:** Ahora que `get_or_translate_word` centraliza la lógica, sería una buena práctica buscar y eliminar código antiguo o redundante que realizara tareas de traducción de forma aislada.
+3.  **Refactorización y Limpieza de Código (Completado):** Se ha refactorizado el código para centralizar la lógica de traducción en la función `get_or_translate_word`. Se eliminó código redundante en `practicas/ajax_text_sentences.php` y `traduciones/translate.php`, los cuales ahora utilizan la función central. Esto mejora la mantenibilidad y el rendimiento del sistema.
